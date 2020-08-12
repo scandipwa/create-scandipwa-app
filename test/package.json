@@ -1,0 +1,25 @@
+{
+    "name": "test",
+    "dependencies": {
+        "@scandipwa/scandipwa": "file:../packages/scandipwa",
+        "@scandipwa/scandipwa-scripts": "file:../packages/scandipwa-scripts"
+    },
+    "scripts": {
+        "start": "craco start",
+        "build": "craco build"
+    },
+    "cracoConfig": "node_modules/@scandipwa/scandipwa-scripts/craco.config.js",
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "proxy": "https://scandipwapmrev.indvp.com"
+}
