@@ -1,0 +1,373 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ */
+
+:root {
+    --checkbox-label-color: #0a0a0a;
+    --my-account-input-label-color: rgba(10, 10, 10, .59);
+    --my-account-overlay-width: 400px;
+    --my-account-overlay-border-width: 1px;
+}
+
+.MyAccountOverlay {
+    --overlay-background: var(--overlay-content-background);
+
+    justify-self: flex-end;
+    grid-column: 3;
+    right: 0;
+    padding-top: 1rem;
+
+    @include desktop {
+        position: absolute;
+        top: calc(var(--header-nav-height) - 10px);
+        right: -40px;
+        padding: 0;
+        width: var(--my-account-overlay-width);
+    }
+
+    @include before-desktop {
+        height: auto;
+        padding-bottom: 0;
+        top: 0;
+        position: relative;
+    }
+
+    &_isVisible {
+        @include desktop {
+            border: var(--my-account-overlay-border-width) solid var(--overlay-desktop-border-color);
+        }
+    }
+
+    &::before {
+        @include desktop {
+            content: '';
+            position: absolute;
+            top: -9px;
+            right: 49px;
+            height: 15px;
+            width: 15px;
+            transform: rotate(45deg);
+            background-color: var(--overlay-background);
+            border: {
+                top: var(--my-account-overlay-border-width) solid var(--overlay-desktop-border-color);
+                left: var(--my-account-overlay-border-width) solid var(--overlay-desktop-border-color);
+            }
+        }
+    }
+
+    button {
+        width: 100%;
+        margin-top: .5rem;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    &-Heading {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 0 1rem 1rem;
+
+        @include before-desktop {
+            display: none;
+        }
+    }
+
+    &-Notification {
+        background-color: var(--primary-dark-color);
+        padding: 2rem;
+    }
+
+    &-Navigation {
+        li {
+            margin: 0;
+            padding: 0;
+
+            &::before {
+                content: none;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            a {
+                display: block;
+            }
+        }
+
+        a,
+        button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+
+            &:hover {
+                background-color: var(--color-cart-light);
+                text-decoration: none;
+            }
+
+            &:focus {
+                text-decoration: none;
+            }
+
+            @include desktop {
+                padding: .5rem;
+            }
+        }
+        @include desktop {
+            padding: .5rem;
+        }
+    }
+
+    &-Action form,
+    &-Additional {
+        padding: {
+            top: 0;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+        };
+    }
+
+    &-Action {
+        display: grid;
+        grid-template-rows: max-content 1fr;
+
+        &_state {
+            &_createAccount {
+                h4 {
+                    padding-right: 1rem;
+                    display: inline;
+                }
+
+                h3 {
+                    margin-bottom: 1rem;
+                }
+
+                .Field {
+                    margin-top: .7rem;
+                }
+                @include before-desktop {
+                    padding-top: 1rem;
+                }
+            }
+
+            &_forgotPassword {
+                h4 {
+                    width: initial;
+                }
+
+                button {
+                    font-weight: bold;
+                }
+            }
+
+            &_signIn {
+                h4 {
+                    text-align: center;
+                }
+            }
+
+            &_loggedIn {
+                .MyAccountOverlay-Heading {
+                    @include desktop {
+                        display: none;
+                    }
+                }
+                @include desktop {
+                    width: 180px;
+                    padding: 0;
+                }
+            }
+        }
+
+        h4 {
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-bottom: .5rem;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+
+        @include desktop {
+            width: calc(var(--my-account-overlay-width) - (var(--my-account-overlay-border-width) * 2));
+            padding: 1rem 2rem 2rem;
+        }
+    }
+
+    &-Additional {
+        padding-top: 5.5rem;
+
+        section {
+            display: flex;
+
+            padding-top: 20px;
+
+            &:first-of-type {
+                padding-top: 0;
+            }
+        }
+
+        &_state {
+            &_createAccount {
+                padding-top: 2rem;
+
+                @include before-desktop {
+                    display: none;
+                }
+
+                h4 {
+                    margin: 0;
+                    padding-right: 0;
+                }
+
+                button {
+                    width: initial;
+                    height: initial;
+                    margin: 0;
+                    padding-left: .4rem;
+                }
+            }
+
+            &_signIn {
+                section {
+                    flex-direction: column;
+                }
+            }
+
+            &_confirmEmail {
+                padding-top: 0;
+            }
+
+            &_forgotPassword {
+                padding-top: 2.8rem;
+                padding-left: 2.1rem;
+
+                @include before-desktop {
+                    display: none;
+                }
+
+                section {
+                    display: flex;
+
+                    button {
+                        width: initial;
+                        margin-top: 0;
+                        padding-left: 5px;
+                        font-weight: 600;
+                    }
+
+                    h4 {
+                        margin-bottom: 0;
+                        align-self: center;
+                    }
+
+                    &:last-of-type {
+                        padding-top: .1rem;
+                    }
+                }
+            }
+
+            &_forgotPasswordSuccess {
+                padding-top: 0;
+
+                h4 {
+                    font-size: 1rem;
+                    line-height: 1.5;
+                    padding-bottom: 1.4rem;
+                    font-weight: normal;
+                    letter-spacing: normal;
+                }
+            }
+        }
+    }
+
+    &-CloseButton {
+        &::before,
+        &::after {
+            background-color: var(--header-color);
+            content: '';
+            height: 20px;
+            position: absolute;
+            right: 27px;
+            top: -13px;
+            transform-origin: 50% 50%;
+            width: 1px;
+            z-index: 1;
+        }
+
+        &::before {
+            transform: rotate(-45deg);
+        }
+
+        &::after {
+            transform: rotate(45deg);
+        }
+    }
+
+    &-ForgotPasswordButton {
+        @include desktop {
+            display: none;
+        }
+    }
+
+    &-Buttons {
+        margin-top: .5rem;
+    }
+
+    &-Button {
+        &_likeLink {
+            font-size: .95rem;
+            margin-top: 1.2rem;
+        }
+    }
+
+    &-Checkbox {
+        display: flex;
+        flex-direction: row-reverse;
+        right: 14px;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 2rem;
+        margin-top: .9rem;
+
+        > label:first-of-type {
+            color: var(--checkbox-label-color);
+            font-size: .8rem;
+            font-weight: 500;
+            padding-bottom: 0;
+            margin-left: .8rem;
+        }
+
+        > label:last-of-type {
+            width: 1.1rem;
+            height: 1.1rem;
+
+            &::after {
+                left: .1rem;
+                top: .4rem;
+                width: .15rem;
+                height: .15rem;
+            }
+        }
+
+        input {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            left: 20px;
+        }
+    }
+}

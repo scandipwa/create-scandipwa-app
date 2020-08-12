@@ -1,0 +1,24 @@
+{
+    "name": "@scandipwa/scandipwa",
+    "version": "0.0.1",
+    "dependencies": {
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "braintree-web-drop-in": "^1.23.0",
+        "history": "^4.9.0",
+        "html-react-parser": "^0.13.0",
+        "prop-types": "^15.6.2",
+        "react-input-range": "^1.3.0",
+        "react-redux": "^7.2.0",
+        "react-router": "^5.2.0",
+        "react-router-dom": "^5.2.0",
+        "react-stripe-elements": "^6.1.2",
+        "react-vimeo": "^2.0.0",
+        "react-visibility-sensor": "^5.1.1",
+        "react-youtube": "^7.11.2",
+        "react-zoom-pan-pinch": "^1.6.1",
+        "rebem-classname": "^0.4.0",
+        "redux": "^4.0.5",
+        "unstated": "^2.1.1"
+    }
+}

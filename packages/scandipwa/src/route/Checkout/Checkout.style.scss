@@ -1,0 +1,85 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ */
+
+:root {
+    --checkout-max-width: 1100px;
+}
+
+.Checkout {
+    @include desktop {
+        margin-top: var(--header-total-height);
+    }
+
+    @include before-desktop {
+        padding-bottom: calc(var(--navigation-tabs-height) + 100px);
+    }
+
+    &::before {
+        @include after-mobile {
+            content: '';
+            background: var(--breadcrumbs-background);
+            min-height: var(--breadcrumbs-height);
+            display: block;
+        }
+    }
+
+    &-StickyButtonWrapper {
+        @include before-desktop {
+            border-top: 1px solid var(--primary-divider-color);
+            background-color: #fff;
+            position: fixed;
+            padding: 1rem 1rem calc(env(safe-area-inset-bottom) + 1rem);
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 85;
+        }
+
+        .Button {
+            @include mobile {
+                width: 100%;
+            }
+        }
+    }
+
+    &-Step {
+        max-width: 470px;
+    }
+
+    &-Wrapper {
+        padding-top: 1px;
+        max-width: var(--checkout-max-width);
+
+        @include after-mobile {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(calc(50% - 1rem), 470px));
+            grid-gap: 2rem;
+        }
+    }
+
+    &-Heading {
+        text-transform: none;
+        font-weight: 400;
+        font-size: 20px;
+        margin: 0 0 1rem;
+    }
+
+    &-Title {
+        text-transform: capitalize;
+        font-weight: 600;
+        font-size: 25px;
+        margin: 2rem 0;
+
+        @include mobile {
+            display: none;
+        }
+    }
+}
