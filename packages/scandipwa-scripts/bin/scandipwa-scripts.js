@@ -15,7 +15,7 @@ if (args.length === 0) {
  * Added path to hard-coded CRACO configuration file
  */
 const child = spawn.sync(
-    require.resolve('@craco/craco/bin/craco'),
+    require.resolve('@scandipwa/craco/bin/craco'),
     [
         ...args,
         '--config', path.join(__dirname, '../craco.config.js')

@@ -10,7 +10,7 @@
     ],
     "dependencies": {
         "node-sass": "^4.14.1",
-        "@craco/craco": "^5.6.4",
+        "@scandipwa/craco": "^5.6.4",
         "react-scripts": "3.4.1",
         "babel-plugin-module-resolver": "^4.0.0",
         "babel-plugin-transform-rebem-jsx": "^0.3.3",

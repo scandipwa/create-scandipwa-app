@@ -47,13 +47,23 @@ class FallbackPlugin {
     }
 
     getRelativePathname(pathname) {
-        const relativePathname = pathname.split('src/')[1];
-        return `src/${ relativePathname}`;
+        const relativeSourcePathname = pathname.split('src/')[1];
+
+        if (relativeSourcePathname) {
+            return `src/${ relativeSourcePathname}`;   
+        }
+
+        const relativePublicPathname = pathname.split('public/')[1];
+
+        if (relativePublicPathname) {
+            return `pubic/${ relativePublicPathname }`;
+        }
+
+        return '';
     }
 
     fileExists(pathname) {
-        // TODO: fonts fix
-        if (/\.scss$/.test(pathname)) { // if extension is already present - check for existence
+        if (/\..{1,4}$/.test(pathname)) { // if extension is already present - check for existence
             return fs.existsSync(pathname);
         }
 
@@ -65,11 +75,25 @@ class FallbackPlugin {
         return fs.existsSync(`${ pathname }.js`) || fs.existsSync(`${ pathname }/index.js`);
     }
 
+    getRequestToPathname(request) {
+        if (path.isAbsolute(request.request)) {
+            return request.request;
+        }
+
+        return path.join(request.path, request.request);
+    }
+
     // Default plugin entry-point function
     apply(resolver) {
         resolver.getHook('resolve').tapAsync('FallbackPlugin', (request, resolveContext, callback) => {
-            const requestToPathname = path.join(request.path, request.request);
+            const requestToPathname = this.getRequestToPathname(request);
             const requestToRelativePathname = this.getRelativePathname(requestToPathname);
+
+            if (!requestToRelativePathname) {
+                callback();
+                return;
+            }
+
             const requestToProjectPathname = path.join(this.options.projectRoot, requestToRelativePathname);
 
             const resolveRequest = (to) => {

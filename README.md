@@ -10,3 +10,8 @@
 1. Run `yarn`, wait until it completes installing dependencies
 2. Go to template folder `cd packages/csa-template`
 3. Run the project with `yarn start`
+
+## Known issues
+
+- Fonts (public folder) content can not be overridden, as the are not resolved in compilation (runtime only)
+- 

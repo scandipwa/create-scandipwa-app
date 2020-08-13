@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
-const { ESLINT_MODES } = require('@craco/craco');
+const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
 const webpack = require('webpack');
 const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
@@ -9,12 +9,14 @@ const FallbackPlugin = require('../webpack-fallback-plugin'); // TODO: replace w
 
 module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss');
-    // const entryPoint = FallbackPlugin.getFallbackPathname('./src/index.js');
+    const entryPoint = FallbackPlugin.getFallbackPathname('./src/index.js');
 
-    // TODO: implement entry-points check
     // TODO: check SWorker
 
     return {
+        paths: {
+            appIndexJs: entryPoint
+        },
         eslint: {
             mode: ESLINT_MODES.file
         },
@@ -74,7 +76,7 @@ module.exports = () => {
                 webpackConfig.module.rules[2].oneOf[1].include = undefined;
 
                 // Allow having empty entry point
-                // webpackConfig.entry[whenDev(() => 1, 0)] = entryPoint;
+                webpackConfig.entry[whenDev(() => 1, 0)] = entryPoint;
 
                 return webpackConfig;
             }

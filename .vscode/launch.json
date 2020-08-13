@@ -12,7 +12,7 @@
                 "<node_internals>/**"
             ],
             "cwd": "${workspaceFolder}/packages/csa-template",
-            "program": "${workspaceFolder}/packages/csa-template/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
+            "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
             "args": [
                 "start"
             ]
