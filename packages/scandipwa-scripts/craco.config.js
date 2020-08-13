@@ -64,8 +64,10 @@ module.exports = () => {
                 // Allow importing .style files without specifying the extension
                 webpackConfig.resolve.extensions.push('.scss');
 
-                // Allow any files for loaders
-                webpackConfig.module.rules[1].include = undefined;
+                // Allow linter only in project
+                webpackConfig.module.rules[1].include = FallbackPlugin.defaultOptions.projectRoot;
+                
+                // Allow everything to processed by babel
                 webpackConfig.module.rules[2].oneOf[1].include = undefined;
 
                 // Allow having empty entry point

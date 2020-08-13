@@ -1,14 +1,13 @@
 {
-    "name": "test",
+    "name": "@scandipwa/csa-template",
     "dependencies": {
         "@scandipwa/scandipwa": "^0.0.1",
         "@scandipwa/scandipwa-scripts": "^0.0.1"
     },
     "scripts": {
-        "start": "craco start",
-        "build": "craco build"
+        "start": "scandipwa-scripts start",
+        "build": "scandipwa-scripts build"
     },
-    "cracoConfig": "node_modules/@scandipwa/scandipwa-scripts/craco.config.js",
     "browserslist": {
         "production": [
             ">0.2%",

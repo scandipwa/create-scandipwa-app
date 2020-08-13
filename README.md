@@ -1,3 +1,12 @@
-1. Install `craco-scandipwa-scripts` dependencies, use: `yarn`
-2. Install `test` dependencies, use `yarn`
-3. 
+# Create ScandiPWA app
+
+## Before you start
+
+1. Make sure `yarn` is installed on your local system. If not, follow [official installation guide](https://classic.yarnpkg.com/en/docs/install/#debian-stable)
+2. Make sure to enable "workspaces" in Yarn configuration: `yarn config set workspaces-experimental true`
+
+## Development
+
+1. Run `yarn`, wait until it completes installing dependencies
+2. Go to template folder `cd packages/csa-template`
+3. Run the project with `SKIP_PREFLIGHT_CHECK=true yarn start`

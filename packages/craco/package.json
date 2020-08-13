@@ -1,0 +1,27 @@
+{
+    "name": "@craco/craco",
+    "engines": {
+        "node": ">=6"
+    },
+    "files": [
+        "bin",
+        "lib",
+        "scripts",
+        "index.js"
+    ],
+    "bin": {
+        "craco": "./bin/craco.js"
+    },
+    "peerDependencies": {
+        "react-scripts": "*"
+    },
+    "devDependencies": {
+        "react-scripts": "3.*"
+    },
+    "dependencies": {
+        "cross-spawn": "^7.0.0",
+        "lodash": "^4.17.15",
+        "webpack-merge": "^4.2.2"
+    },
+    "version": "5.6.4"
+}

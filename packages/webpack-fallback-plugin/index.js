@@ -131,7 +131,7 @@ class FallbackPlugin {
 }
 
 FallbackPlugin.defaultOptions = {
-    fallbackRoot: path.join(process.cwd(), 'node_modules/@scandipwa/scandipwa/'),
+    fallbackRoot: path.resolve(require.resolve('@scandipwa/scandipwa/src/index.js'), '../..'),
     projectRoot: process.cwd()
 };
 
