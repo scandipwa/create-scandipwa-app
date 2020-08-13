@@ -9,4 +9,4 @@
 
 1. Run `yarn`, wait until it completes installing dependencies
 2. Go to template folder `cd packages/csa-template`
-3. Run the project with `SKIP_PREFLIGHT_CHECK=true yarn start`
+3. Run the project with `yarn start`
