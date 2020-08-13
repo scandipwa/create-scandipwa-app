@@ -2,9 +2,11 @@
 
 const spawn = require('cross-spawn');
 const path = require('path');
+
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
+    // eslint-disable-next-line no-console
     console.log('Please specify command (one of: "start", "build").');
     process.exit(1);
 }
@@ -16,8 +18,7 @@ const child = spawn.sync(
     require.resolve('@craco/craco/bin/craco'),
     [
         ...args,
-        '--config', path.join(__dirname, '../craco.config.js'),
-        // '--resolve-path', path.join(__dirname, '..')
+        '--config', path.join(__dirname, '../craco.config.js')
     ],
     { stdio: 'inherit' }
 );

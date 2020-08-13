@@ -9,10 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-// This is Webpack plugin, which fallbacks files which does not exist. Bellow is the fallback sequence:
-// 1. The file is checked in app/design (later referenced as `custom`) folder
-// 2. The file is checked in node_modules (later referenced as `core`) folder
-
 const path = require('path');
 const fs = require('fs');
 
@@ -56,6 +52,7 @@ class FallbackPlugin {
     }
 
     fileExists(pathname) {
+        // TODO: fonts fix
         if (/\.scss$/.test(pathname)) { // if extension is already present - check for existence
             return fs.existsSync(pathname);
         }
@@ -72,15 +69,6 @@ class FallbackPlugin {
     apply(resolver) {
         resolver.getHook('resolve').tapAsync('FallbackPlugin', (request, resolveContext, callback) => {
             const requestToPathname = path.join(request.path, request.request);
-
-            // if (
-            //     !request.context
-            //     || !request.context.issuer
-            // ) {
-            //     callback();
-            //     return;
-            // }
-
             const requestToRelativePathname = this.getRelativePathname(requestToPathname);
             const requestToProjectPathname = path.join(this.options.projectRoot, requestToRelativePathname);
 
@@ -130,6 +118,7 @@ class FallbackPlugin {
     }
 }
 
+// TODO: remove options
 FallbackPlugin.defaultOptions = {
     fallbackRoot: path.resolve(require.resolve('@scandipwa/scandipwa/src/index.js'), '../..'),
     projectRoot: process.cwd()

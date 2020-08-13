@@ -11,6 +11,9 @@ module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss');
     // const entryPoint = FallbackPlugin.getFallbackPathname('./src/index.js');
 
+    // TODO: implement entry-points check
+    // TODO: check SWorker
+
     return {
         eslint: {
             mode: ESLINT_MODES.file
@@ -66,7 +69,7 @@ module.exports = () => {
 
                 // Allow linter only in project
                 webpackConfig.module.rules[1].include = FallbackPlugin.defaultOptions.projectRoot;
-                
+
                 // Allow everything to processed by babel
                 webpackConfig.module.rules[2].oneOf[1].include = undefined;
 
