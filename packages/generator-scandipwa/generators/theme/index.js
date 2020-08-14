@@ -3,7 +3,7 @@ const Generator = require('yeoman-generator');
 // const chalk = require('chalk');
 const path = require('path');
 
-const DEFAULT_PROXY = 'scandipwapmrev.indvp.com';
+const DEFAULT_PROXY = 'http://scandipwapmrev.indvp.com';
 
 module.exports = class extends Generator {
     constructor(args, opts) {
@@ -12,13 +12,6 @@ module.exports = class extends Generator {
         this.argument(
             'name',
             { type: String, required: true }
-        );
-        
-        this.destinationRoot(
-            path.join(
-                this.destinationRoot(),
-                this.options.name
-            )
         );
 
         this.props = {
@@ -48,6 +41,17 @@ module.exports = class extends Generator {
     }
     
     writing() {
+        /**
+         * Setting destination root here to avoid creating directory.
+         * Useful, if user aborted prompting step.
+         */
+        this.destinationRoot(
+            path.join(
+                this.destinationRoot(),
+                this.options.name
+            )
+        );
+
         this.fs.copyTpl(
             this.templatePath('package.json'),
             this.destinationPath('package.json'),

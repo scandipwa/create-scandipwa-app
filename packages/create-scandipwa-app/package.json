@@ -5,7 +5,8 @@
     "bin": "./lib/index.js",
     "dependencies": {
         "@caporal/core": "^2.0.2",
-        "yeoman-environment": "^2.10.3",
-        "@scandipwa/generator": "^0.0.1"
+        "@scandipwa/generator": "^0.0.1",
+        "validate-npm-package-name": "^3.0.0",
+        "yeoman-environment": "^2.10.3"
     }
 }
