@@ -18,7 +18,7 @@ module.exports = () => {
             appIndexJs: entryPoint
         },
         eslint: {
-            mode: ESLINT_MODES.file
+            mode: ESLINT_MODES.extends
         },
         babel: {
             plugins: [

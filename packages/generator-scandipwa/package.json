@@ -1,9 +1,10 @@
 {
-    "name": "generator-scandipwa",
+    "name": "@scandipwa/generator",
     "version": "0.0.1",
     "files": [
         "generators"
     ],
+    "main": "./generators/theme/index.js",
     "keywords": [
         "yeoman-generator"
     ],

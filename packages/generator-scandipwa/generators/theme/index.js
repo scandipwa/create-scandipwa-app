@@ -48,8 +48,6 @@ module.exports = class extends Generator {
     }
     
     writing() {
-        this.log(this.props);
-
         this.fs.copyTpl(
             this.templatePath('package.json'),
             this.destinationPath('package.json'),
@@ -63,13 +61,13 @@ module.exports = class extends Generator {
 
         this.fs.copy(
             this.templatePath('public/**/*'),
-            this.destinationPath(),
+            this.destinationPath('public'),
             { globOptions: { dot: true } }
         );
 
         this.fs.copy(
             this.templatePath('src/**/*'),
-            this.destinationPath(),
+            this.destinationPath('src'),
             { globOptions: { dot: true } }
         );
     }

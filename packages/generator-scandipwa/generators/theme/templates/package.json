@@ -20,5 +20,8 @@
             "last 1 safari version"
         ]
     },
+    "eslintConfig": {
+        "extends": "@scandipwa"
+    },
     "proxy": "<%= proxy %>"
 }

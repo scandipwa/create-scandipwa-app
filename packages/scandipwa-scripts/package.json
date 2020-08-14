@@ -16,6 +16,7 @@
         "babel-plugin-transform-rebem-jsx": "^0.3.3",
         "craco-sass-resources-loader": "^1.1.0",
         "@scandipwa/eslint-plugin-scandipwa-guidelines": "^0.0.1",
+        "@scandipwa/eslint-config": "^0.0.1",
         "@scandipwa/webpack-fallback-plugin": "^0.0.1",
         "@scandipwa/webpack-i18n-plugin": "^0.0.1",
         "eslint-config-airbnb": "^18.2.0",

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { program } = require('@caporal/core');
-const spawn = require('cross-spawn');
+const yeoman = require('yeoman-environment');
 
 program
     .argument('<app name>', 'ScandiPWA package name to create')
@@ -9,15 +9,10 @@ program
         default: 'theme',
         validator: ['theme', 'magento']
     })
-    .action(({ args, options }) => {
-        const { appName } = args;
-        const { template } = options;
-
-        spawn.sync(
-            'yo',
-            [`scandipwa:${ template }`, appName],
-            { stdio: 'inherit' }
-        );
+    .action(({ args: { appName: name }, options: { template } }) => {
+        const env = yeoman.createEnv();
+        env.register(require.resolve(`@scandipwa/generator/generators/${ template }/index.js`));
+        env.run(`scandipwa:${ template } ${ name }`);
     });
 
 program.run();
