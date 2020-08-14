@@ -1,5 +1,10 @@
 {
   "name": "create-scandipwa-app",
   "version": "0.0.1",
-  "main": "index.js"
+  "main": "index.js",
+  "bin": "./lib/index.js",
+  "dependencies": {
+    "@caporal/core": "^2.0.2",
+    "cross-spawn": "^7.0.3"
+  }
 }

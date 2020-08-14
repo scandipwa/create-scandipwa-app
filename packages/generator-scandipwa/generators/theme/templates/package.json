@@ -1,0 +1,24 @@
+{
+    "name": "<%= name %>",
+    "dependencies": {
+        "@scandipwa/scandipwa": "^0.0.1",
+        "@scandipwa/scandipwa-scripts": "^0.0.1"
+    },
+    "scripts": {
+        "start": "scandipwa-scripts start",
+        "build": "scandipwa-scripts build"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "proxy": "<%= proxy %>"
+}

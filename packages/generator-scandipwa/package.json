@@ -1,0 +1,15 @@
+{
+    "name": "generator-scandipwa",
+    "version": "0.0.1",
+    "files": [
+        "generators"
+    ],
+    "keywords": [
+        "yeoman-generator"
+    ],
+    "dependencies": {
+        "yeoman-generator": "^2.0.1",
+        "chalk": "^2.1.0",
+        "yosay": "^2.0.1"
+    }
+}
