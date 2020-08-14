@@ -41,6 +41,7 @@ module.exports = {
         "@scandipwa/scandipwa-guidelines/derived-class-names": "error",
         "@scandipwa/scandipwa-guidelines/use-named-export": "error",
         "@scandipwa/scandipwa-guidelines/create-config-files": "error",
+        "import/no-extraneous-dependencies": "off",
         "simple-import-sort/sort": ["error", {
             "groups": [
                 ["^\\u0000"], // side effect imports

@@ -6,6 +6,7 @@ const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const FallbackPlugin = require('../webpack-fallback-plugin'); // TODO: replace with dependency
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss');
@@ -18,7 +19,12 @@ module.exports = () => {
             appIndexJs: entryPoint
         },
         eslint: {
-            mode: ESLINT_MODES.extends
+            mode: ESLINT_MODES.extends,
+            configure: {
+                extends: [
+                    require.resolve('@scandipwa/eslint-config')
+                ]
+            }
         },
         babel: {
             plugins: [
@@ -55,7 +61,9 @@ module.exports = () => {
                         REBEM_MOD_DELIM: JSON.stringify('_'),
                         REBEM_ELEM_DELIM: JSON.stringify('-')
                     }
-                })
+                }),
+
+                new ProgressBarPlugin()
             ],
             configure: (webpackConfig) => {
                 // Remove module scope plugin, it breaks FallbackPlugin and ProvidePlugin

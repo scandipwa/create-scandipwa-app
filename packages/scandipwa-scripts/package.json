@@ -9,16 +9,15 @@
         "craco.config.js"
     ],
     "dependencies": {
-        "node-sass": "^4.14.1",
         "@scandipwa/craco": "^5.6.4",
-        "react-scripts": "3.4.1",
-        "babel-plugin-module-resolver": "^4.0.0",
-        "babel-plugin-transform-rebem-jsx": "^0.3.3",
-        "craco-sass-resources-loader": "^1.1.0",
-        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^0.0.1",
         "@scandipwa/eslint-config": "^0.0.1",
+        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^0.0.1",
         "@scandipwa/webpack-fallback-plugin": "^0.0.1",
         "@scandipwa/webpack-i18n-plugin": "^0.0.1",
+        "babel-plugin-module-resolver": "^4.0.0",
+        "babel-plugin-transform-rebem-jsx": "^0.3.3",
+        "chokidar": "^3.4.2",
+        "craco-sass-resources-loader": "^1.1.0",
         "eslint-config-airbnb": "^18.2.0",
         "eslint-config-airbnb-base": "^14.2.0",
         "eslint-plugin-array-func": "^3.1.7",
@@ -29,6 +28,9 @@
         "eslint-plugin-jsx-a11y": "^6.3.1",
         "eslint-plugin-react": "^7.20.3",
         "eslint-plugin-simple-import-sort": "^5.0.3",
-        "cross-spawn": "^7.0.0"
+        "forever-monitor": "^3.0.1",
+        "node-sass": "^4.14.1",
+        "progress-bar-webpack-plugin": "^2.1.0",
+        "react-scripts": "3.4.1"
     }
 }
