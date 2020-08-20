@@ -99,10 +99,16 @@ class FallbackPlugin {
             const resolveRequest = (to) => {
                 const newRequest = { ...request };
 
-                if (to === FALLBACK) {
+                switch (to) {
+                case FALLBACK:
                     newRequest.path = this.options.fallbackRoot;
-                    newRequest.request = `./${ requestToRelativePathname}`;
+                    break;
+                case PROJECT:
+                    newRequest.path = this.options.projectRoot;
+                    break;
                 }
+
+                newRequest.request = `./${ requestToRelativePathname}`;
 
                 resolver.doResolve(
                     resolver.hooks.resolve,
