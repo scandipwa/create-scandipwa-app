@@ -62,8 +62,6 @@ Object.defineProperties(sources, {
     getRegexOf: {
         enumerable: false,
         value: (source) => {
-            // return new RegExp(sources[source]);
-            // console.log(`${ path.join(sources[source], 'src') }|${ path.join(sources[source], 'public') }`);
             return new RegExp(`${ path.join(sources[source], 'src') }|${ path.join(sources[source], 'public') }`);
         }
     }

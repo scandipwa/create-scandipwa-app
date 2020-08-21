@@ -41,20 +41,22 @@ class FallbackPlugin {
     }
 
     /**
-     * Find which source does the file given came from
+     * Find which source index does the file given came from
      *
      * @param {string} pathname - absolute path to file / folder
      * @return {string} - source key 
      * @memberof FallbackPlugin
      */
-    getSource(pathname) {
-        for (const source in sources) {
+    getSourceIndex(pathname) {
+        for (let i = 0; i < sources.keys.length; i++) {
+            const source = sources.keys[i];
+
             if (sources.getRegexOf(source).test(pathname)) {
-                return source;
+                return i;
             }
         }
 
-        return sources.firstEntry[0];
+        return 0;
     }
 
     /**
@@ -144,32 +146,9 @@ class FallbackPlugin {
                 return;
             }
 
-            // console.log('!!! CUSTOM', requestToPathname)
-
-            /**
-             * Logic responsible for request resolution in case 
-             * 
-             * @param {string} toSource 
-             */
-            const resolveRequest = (toSource) => {
-                resolver.doResolve(
-                    resolver.hooks.resolve,
-                    {
-                        ...request,
-                        path: sources[toSource],
-                        request: `./${ requestToRelativePathname}`
-                    },
-                    'Resolving with fallback!',
-                    resolveContext,
-                    callback
-                );
-            };
-
             const requestFromPathname = this.getRequestFromPathname(request);
-            const requestFromSource = this.getSource(requestFromPathname);
-            const requestFromIndex = sources.keys.indexOf(requestFromSource);
-            const requestToSource = this.getSource(requestToPathname);
-            const requestToIndex = sources.keys.indexOf(requestToSource);
+            const requestFromIndex = this.getSourceIndex(requestFromPathname);
+            const requestToIndex = this.getSourceIndex(requestToPathname);
 
             /**
              * If requestFromIndex < requestToIndex => from top priority to low priority request
@@ -189,7 +168,18 @@ class FallbackPlugin {
                         return;
                     }
     
-                    resolveRequest(source);
+                    resolver.doResolve(
+                        resolver.hooks.resolve,
+                        {
+                            ...request,
+                            path: sources[source],
+                            request: `./${ requestToRelativePathname}`
+                        },
+                        'Resolving with fallback!',
+                        resolveContext,
+                        callback
+                    );
+
                     return;
                 }
             }
