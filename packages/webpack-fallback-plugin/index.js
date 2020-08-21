@@ -12,40 +12,58 @@
 const path = require('path');
 const fs = require('fs');
 
-const PROJECT = 'project';
-const FALLBACK = 'fallback';
+/** @type {import('./lib/sources').Sources}  */
+const { sources } = require('./lib/sources');
 
 class FallbackPlugin {
-    constructor(options) {
-        this.options = Object.assign(FallbackPlugin.defaultOptions, options);
-    }
-
+    /**
+     * Get first (by priority) source which contains the file given
+     *
+     * @static
+     * @param {string} pathname - relative path to file (i.e. ./src/index.js)
+     * @return {string} - absolute path to top-priority matching source  
+     * @memberof FallbackPlugin
+     */
     static getFallbackPathname(pathname) {
-        const isProjectFilePresent = fs.existsSync(pathname);
+        for (const source in sources) {
+            const sourcePathname = path.join(sources[source], pathname);
+            const isFileExists = fs.existsSync(sourcePathname);
 
-        if (isProjectFilePresent) {
-            return pathname;
+            if (isFileExists) {
+                return sourcePathname;
+            }
         }
 
         return path.join(
-            // TODO: use actual value, not default options
-            FallbackPlugin.defaultOptions.fallbackRoot,
+            sources.firstEntry[1],
             pathname
         );
     }
 
-    getProjectRegex() {
-        return new RegExp(this.options.projectRoot);
-    }
-
-    getDestination(pathname) {
-        if (this.getProjectRegex().test(pathname)) {
-            return PROJECT;
+    /**
+     * Find which source does the file given came from
+     *
+     * @param {string} pathname - absolute path to file / folder
+     * @return {string} - source key 
+     * @memberof FallbackPlugin
+     */
+    getSource(pathname) {
+        for (const source in sources) {
+            if (sources.getRegexOf(source).test(pathname)) {
+                return source;
+            }
         }
 
-        return FALLBACK;
+        return sources.firstEntry[0];
     }
 
+    /**
+     * Get relative pathname of file given (relative to any source root)
+     *
+     * @param {string} pathname - absolute pathname
+     * @return {string} 
+     * @memberof FallbackPlugin
+     */
     getRelativePathname(pathname) {
         const relativeSourcePathname = pathname.split('src/')[1];
 
@@ -62,12 +80,21 @@ class FallbackPlugin {
         return '';
     }
 
+    /**
+     * Check for file existence, accounting for file extension
+     *
+     * @param {string} pathname - absolute pathname
+     * @return {boolean}
+     * @memberof FallbackPlugin
+     */
     fileExists(pathname) {
-        if (/\..{1,4}$/.test(pathname)) { // if extension is already present - check for existence
+        // if extension is already present - check for existence
+        if (/\..{1,4}$/.test(pathname)) {
             return fs.existsSync(pathname);
         }
 
-        if (/\.style|style\//.test(pathname)) { // all ".style" and "style/" must end with ".scss"
+        // all ".style" and "style/" must end with ".scss"
+        if (/\.style|style\//.test(pathname)) {
             return fs.existsSync(`${ pathname }.scss`);
         }
 
@@ -75,6 +102,11 @@ class FallbackPlugin {
         return fs.existsSync(`${ pathname }.js`) || fs.existsSync(`${ pathname }/index.js`);
     }
 
+    /**
+     * Get absolute path to "TO" file from resolve request
+     * 
+     * @param {object} request - Webpack resolve request
+     */
     getRequestToPathname(request) {
         if (path.isAbsolute(request.request)) {
             return request.request;
@@ -83,75 +115,88 @@ class FallbackPlugin {
         return path.join(request.path, request.request);
     }
 
-    // Default plugin entry-point function
+    /**
+     * Get absolute path to "FROM" from file resolve request
+     * 
+     * @param {object} request - Webpack resolve request
+     */
+    getRequestFromPathname(request) {
+        return request.context.issuer;
+    }
+
+    /**
+     * Webpack function responsible for resolve request handling
+     * 
+     * @param {object} resolver 
+     */
     apply(resolver) {
-        resolver.getHook('resolve').tapAsync('FallbackPlugin', (request, resolveContext, callback) => {
+        resolver.getHook('resolve').tapAsync('FallbackPlugin', (
+            request, resolveContext, callback
+        ) => {
             const requestToPathname = this.getRequestToPathname(request);
             const requestToRelativePathname = this.getRelativePathname(requestToPathname);
 
+            /**
+             * If we were unable to determine the relative pathname - we ignore the request.
+             */
             if (!requestToRelativePathname) {
                 callback();
                 return;
             }
 
-            const requestToProjectPathname = path.join(this.options.projectRoot, requestToRelativePathname);
+            // console.log('!!! CUSTOM', requestToPathname)
 
-            const resolveRequest = (to) => {
-                const newRequest = { ...request };
-
-                switch (to) {
-                case FALLBACK:
-                    newRequest.path = this.options.fallbackRoot;
-                    break;
-                case PROJECT:
-                    newRequest.path = this.options.projectRoot;
-                    break;
-                }
-
-                newRequest.request = `./${ requestToRelativePathname}`;
-
+            /**
+             * Logic responsible for request resolution in case 
+             * 
+             * @param {string} toSource 
+             */
+            const resolveRequest = (toSource) => {
                 resolver.doResolve(
                     resolver.hooks.resolve,
-                    newRequest,
+                    {
+                        ...request,
+                        path: sources[toSource],
+                        request: `./${ requestToRelativePathname}`
+                    },
                     'Resolving with fallback!',
                     resolveContext,
                     callback
                 );
             };
 
-            // the file exists in a project, prefer it
-            if (this.fileExists(requestToProjectPathname)) {
-                // request is to project file which exists, skip it
-                if (requestToProjectPathname === requestToPathname) {
-                    callback();
+            const requestFromPathname = this.getRequestFromPathname(request);
+            const requestFromSource = this.getSource(requestFromPathname);
+            const requestFromIndex = sources.keys.indexOf(requestFromSource);
+            const requestToSource = this.getSource(requestToPathname);
+            const requestToIndex = sources.keys.indexOf(requestToSource);
+
+            /**
+             * If requestFromIndex < requestToIndex => from top priority to low priority request
+             * From project to core => 0 < 1 => we should start resolving from next to project index
+             */
+            for (
+                let i = requestFromIndex < requestToIndex ? requestFromIndex + 1 : 0;
+                i < sources.entries.length;
+                i++
+            ) {
+                const [source, pathname] = sources.entries[i];
+                const requestToSourcePathname = path.join(pathname, requestToRelativePathname);
+
+                if (this.fileExists(requestToSourcePathname)) {
+                    if (requestToSourcePathname === requestToPathname) {
+                        callback();
+                        return;
+                    }
+    
+                    resolveRequest(source);
                     return;
                 }
-
-                resolveRequest(PROJECT);
-                return;
-            }
-
-            const requestToFallbackPathname = path.join(this.options.fallbackRoot, requestToRelativePathname);
-
-            if (this.fileExists(requestToFallbackPathname)) {
-                if (requestToFallbackPathname === requestToPathname) {
-                    callback();
-                    return;
-                }
-
-                resolveRequest(FALLBACK);
-                return;
             }
 
             callback();
         });
     }
 }
-
-// TODO: remove options
-FallbackPlugin.defaultOptions = {
-    fallbackRoot: path.resolve(require.resolve('@scandipwa/scandipwa/src/index.js'), '../..'),
-    projectRoot: process.cwd()
-};
 
 module.exports = FallbackPlugin;

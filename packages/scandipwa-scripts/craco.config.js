@@ -1,12 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
-const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
 const webpack = require('webpack');
 const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-const FallbackPlugin = require('../webpack-fallback-plugin'); // TODO: replace with dependency
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+
+const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
+const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
+const { sources, CORE, PROJECT } = require('@scandipwa/webpack-fallback-plugin/lib/sources');
 
 module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss');
@@ -33,7 +35,7 @@ module.exports = () => {
                 // Resolve imports like from 'Component/...'
                 [
                     'module-resolver', {
-                        root: './',
+                        root: 'src',
                         alias: {
                             Style: './src/style/',
                             Component: './src/component/',
@@ -41,7 +43,14 @@ module.exports = () => {
                             Store: './src/store/',
                             Util: './src/util/',
                             Query: './src/query/',
-                            Type: './src/type/'
+                            Type: './src/type/',
+                            SourceStyle: path.join(sources[CORE], './src/style/'),
+                            SourceComponent: path.join(sources[CORE], './src/component/'),
+                            SourceRoute: path.join(sources[CORE], './src/route/'),
+                            SourceStore: path.join(sources[CORE], './src/store/'),
+                            SourceUtil: path.join(sources[CORE], './src/util/'),
+                            SourceQuery: path.join(sources[CORE], './src/query/'),
+                            SourceType: path.join(sources[CORE], './src/type/)')
                         }
                     }
                 ]
@@ -78,7 +87,7 @@ module.exports = () => {
                 webpackConfig.resolve.extensions.push('.scss');
 
                 // Allow linter only in project
-                webpackConfig.module.rules[1].include = FallbackPlugin.defaultOptions.projectRoot;
+                webpackConfig.module.rules[1].include = sources[PROJECT];
 
                 // Allow everything to processed by babel
                 webpackConfig.module.rules[2].oneOf[1].include = undefined;
