@@ -12,6 +12,10 @@ const clearConsole = require('react-dev-utils/clearConsole');
 
 const args = process.argv.slice(2);
 
+const scriptIndex = args.findIndex((x) => x === 'build' || x === 'start');
+const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
+const isProd = script === 'build';
+
 const TIMEOUT_BETWEEN_KILL_TRIGGERS = 500;
 
 if (args.length === 0) {
@@ -44,7 +48,10 @@ const spawnUndead = (isRestarted = false) => {
             env: {
                 ...process.env,
                 BROWSER: isRestarted ? 'none' : '',
-                FORCE_COLOR: true
+                FORCE_COLOR: true,
+                ...(isProd ? {
+                    GENERATE_SOURCEMAP: false
+                } : {})
             }
         }
     );

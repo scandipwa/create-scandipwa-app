@@ -9,13 +9,8 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 
-const PROJECT = 'project';
-const CORE = 'core';
-
-const sources = {
-    [PROJECT]: process.cwd(),
-    [CORE]: path.resolve(require.resolve('@scandipwa/scandipwa/src/index.js'), '../..')
-};
+const { sources, PROJECT } = require('./lib/sources');
+const alias = require('./lib/alias');
 
 module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss', sources);
@@ -29,6 +24,7 @@ module.exports = () => {
         },
         eslint: {
             mode: ESLINT_MODES.extends,
+            // ensure we are extending the scandipwa-eslint config
             configure: {
                 extends: [
                     require.resolve('@scandipwa/eslint-config')
@@ -40,26 +36,10 @@ module.exports = () => {
                 // Allow BEM props
                 'transform-rebem-jsx',
                 // Resolve imports like from 'Component/...'
-                // TODO: auto-generate
                 [
                     'module-resolver', {
                         root: 'src',
-                        alias: {
-                            Style: './src/style/',
-                            Component: './src/component/',
-                            Route: './src/route/',
-                            Store: './src/store/',
-                            Util: './src/util/',
-                            Query: './src/query/',
-                            Type: './src/type/',
-                            SourceStyle: path.join(sources[CORE], './src/style/'),
-                            SourceComponent: path.join(sources[CORE], './src/component/'),
-                            SourceRoute: path.join(sources[CORE], './src/route/'),
-                            SourceStore: path.join(sources[CORE], './src/store/'),
-                            SourceUtil: path.join(sources[CORE], './src/util/'),
-                            SourceQuery: path.join(sources[CORE], './src/query/'),
-                            SourceType: path.join(sources[CORE], './src/type/)')
-                        }
+                        alias
                     }
                 ]
             ]
@@ -103,12 +83,15 @@ module.exports = () => {
                 // Allow having empty entry point
                 webpackConfig.entry[whenDev(() => 1, 0)] = entryPoint;
 
+                // disable LICENSE comments extraction in production
+                webpackConfig.optimization.minimizer[0].options.extractComments = whenDev(() => true, false);
+
                 return webpackConfig;
             }
         },
         plugins: [
             {
-                // Allow using SCSS mixins in any file
+                // Allow using SCSS mix-ins in any file
                 plugin: sassResourcesLoader,
                 options: {
                     resources: abstractStyle
