@@ -8,9 +8,8 @@
 ## Development
 
 1. Run `yarn`, wait until it completes installing dependencies
-2. Bootstrap project: `node packages/create-scandipwa-app/lib/index.js test && mv test packages/test`
-3. Re-run lerna bootstrap - `yarn`
-4. Run `yarn start` and open `http://127.0.0.1:3000` in browser
+2. Bootstrap project: `yarn bootstrap packages/test`
+3. Enter folder with `cd test` and run `yarn start`
 
 ## Known issues
 

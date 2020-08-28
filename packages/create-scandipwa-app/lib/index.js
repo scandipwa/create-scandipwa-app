@@ -7,10 +7,12 @@ const validatePackageName = require('validate-npm-package-name');
 program
     .argument('<app name>', 'ScandiPWA package name to create', {
         validator: (value) => {
+            const name = value.startsWith('@') ? value : value.split('/').pop();
+
             const {
                 validForNewPackages: isValidPackageName = true,
                 errors = []
-            } = validatePackageName(value);
+            } = validatePackageName(name);
 
             if (isValidPackageName) {
                 return value;

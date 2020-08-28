@@ -1,13 +1,14 @@
 {
-  "private": "true",
-  "scripts": {
-    "postinstall": "lerna bootstrap",
-    "clean": "lerna clean --yes"
-  },
-  "dependencies": {
-    "lerna": "3.20.2"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+    "private": "true",
+    "scripts": {
+        "bootstrap": "create-scandipwa-app",
+        "postinstall": "lerna bootstrap",
+        "clean": "lerna clean --yes"
+    },
+    "dependencies": {
+        "lerna": "3.20.2"
+    },
+    "workspaces": [
+        "packages/*"
+    ]
 }

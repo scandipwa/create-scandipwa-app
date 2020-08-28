@@ -14,12 +14,32 @@ module.exports = class extends Generator {
             { type: String, required: true }
         );
 
-        this.props = {
-            name: this.options.name
+        this.props = this.getPathAndName();
+    }
+
+    getPathAndName() {
+        const { name } = this.options;
+        const pathArr = name.split('/');
+        const orgPathArray = pathArr.slice(-2);
+
+        /**
+         * In case pathArr is something like ['projects', '@scandipwa', 'test']
+         * it should return '@scandipwa/test' as name as 'projects/test' as path.
+         */
+        if (orgPathArray[0].startsWith('@')) {
+            return {
+                name: path.join(...orgPathArray),
+                path: path.join(...pathArr.slice(0, -2), orgPathArray[1])
+            }
+        }
+
+        return {
+            name: pathArr[pathArr.length - 1],
+            path: path.join(...pathArr)
         };
     }
-        
-    async prompting() {        
+
+    async prompting() {
         const { isDefaultProxy } = await this.prompt([{
             type: 'confirm',
             name: 'isDefaultProxy',
@@ -28,7 +48,7 @@ module.exports = class extends Generator {
         }]);
 
         this.props.proxy = DEFAULT_PROXY;
-                
+
         if (!isDefaultProxy) {
             const { proxyUrl } = await this.prompt([{
                 type: 'input',
@@ -39,7 +59,7 @@ module.exports = class extends Generator {
             this.props.proxy = proxyUrl;
         }
     }
-    
+
     writing() {
         /**
          * Setting destination root here to avoid creating directory.
@@ -48,7 +68,7 @@ module.exports = class extends Generator {
         this.destinationRoot(
             path.join(
                 this.destinationRoot(),
-                this.options.name
+                this.props.path
             )
         );
 
@@ -75,9 +95,8 @@ module.exports = class extends Generator {
             { globOptions: { dot: true } }
         );
     }
-    
+
     install() {
         this.yarnInstall();
     }
 };
-    
