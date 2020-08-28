@@ -11,9 +11,6 @@
 
 const path = require('path');
 
-const PROJECT = 'project';
-const CORE = 'core';
-
 /**
  * Sources available for ScandiPWA Fallback mechanism
  * @typedef {Object} Sources
@@ -23,52 +20,53 @@ const CORE = 'core';
  * @property {array} keys - Array of source keys
  * @property {function} regexOf - Function to get regex of project source
  */
-const sources = {
-    [PROJECT]: process.cwd(),
-    [CORE]: path.resolve(require.resolve('@scandipwa/scandipwa/src/index.js'), '../..'),
+
+/**
+ * Prepare object of sources, add helper functions
+ * @param {} sources
+ * @returns {Sources} sources appended with helper methods
+ */
+const prepareSources = (sources) => {
+    Object.defineProperties(sources, {
+        firstEntry: {
+            enumerable: false,
+            get: () => {
+                return Object.keys(sources)[0];
+            }
+        },
+        lastEntry: {
+            enumerable: false,
+            get: () => {
+                return Object.keys(sources)[sources.length - 1];
+            }
+        },
+        entries: {
+            enumerable: false,
+            get: () => {
+                return Object.entries(sources);
+            }
+        },
+        keys: {
+            enumerable: false,
+            get: () => {
+                return Object.keys(sources);
+            }
+        },
+        values: {
+            enumerable: false,
+            get: () => {
+                return Object.values(sources);
+            }
+        },
+        getRegexOf: {
+            enumerable: false,
+            value: (source) => {
+                return new RegExp(`${ path.join(sources[source], 'src') }|${ path.join(sources[source], 'public') }`);
+            }
+        }
+    });
+
+    return sources;
 };
 
-Object.defineProperties(sources, {
-    firstEntry: {
-        enumerable: false,
-        get: () => {
-            return Object.keys(sources)[0];
-        }
-    },
-    lastEntry: {
-        enumerable: false,
-        get: () => {
-            return Object.keys(sources)[sources.length - 1];
-        }
-    },
-    entries: {
-        enumerable: false,
-        get: () => {
-            return Object.entries(sources);
-        }
-    },
-    keys: {
-        enumerable: false,
-        get: () => {
-            return Object.keys(sources);
-        }
-    },
-    values: {
-        enumerable: false,
-        get: () => {
-            return Object.values(sources);
-        }
-    },
-    getRegexOf: {
-        enumerable: false,
-        value: (source) => {
-            return new RegExp(`${ path.join(sources[source], 'src') }|${ path.join(sources[source], 'public') }`);
-        }
-    }
-})
-
-module.exports = {
-    sources,
-    PROJECT,
-    CORE
-};
+module.exports = prepareSources;

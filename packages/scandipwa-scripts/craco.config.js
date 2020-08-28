@@ -8,11 +8,18 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
-const { sources, CORE, PROJECT } = require('@scandipwa/webpack-fallback-plugin/lib/sources');
+
+const PROJECT = 'project';
+const CORE = 'core';
+
+const sources = {
+    [PROJECT]: process.cwd(),
+    [CORE]: path.resolve(require.resolve('@scandipwa/scandipwa/src/index.js'), '../..')
+};
 
 module.exports = () => {
-    const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss');
-    const entryPoint = FallbackPlugin.getFallbackPathname('./src/index.js');
+    const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss', sources);
+    const entryPoint = FallbackPlugin.getFallbackPathname('./src/index.js', sources);
 
     // TODO: check SWorker
 
@@ -33,6 +40,7 @@ module.exports = () => {
                 // Allow BEM props
                 'transform-rebem-jsx',
                 // Resolve imports like from 'Component/...'
+                // TODO: auto-generate
                 [
                     'module-resolver', {
                         root: 'src',
@@ -81,7 +89,7 @@ module.exports = () => {
                 );
 
                 // Add FallbackPlugin
-                webpackConfig.resolve.plugins.push(new FallbackPlugin());
+                webpackConfig.resolve.plugins.push(new FallbackPlugin({ sources }));
 
                 // Allow importing .style files without specifying the extension
                 webpackConfig.resolve.extensions.push('.scss');

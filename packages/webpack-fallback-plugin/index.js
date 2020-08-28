@@ -12,19 +12,39 @@
 const path = require('path');
 const fs = require('fs');
 
-/** @type {import('./lib/sources').Sources}  */
-const { sources } = require('./lib/sources');
+const prepareSources = require('./lib/sources');
 
 class FallbackPlugin {
+    /**
+     * Constructor, options provider
+     * @param {object} options
+     */
+    constructor(options = {}) {
+        if (typeof options !== 'object') {
+            throw new Error('Fallback plugin expects options argument to be an object.');
+        }
+
+        const { sources } = options;
+
+        if (!sources) {
+            throw new Error('Fallback plugin expects sources object as an option.');
+        }
+
+        this.options = {
+            sources: prepareSources(sources)
+        };
+    }
+
     /**
      * Get first (by priority) source which contains the file given
      *
      * @static
      * @param {string} pathname - relative path to file (i.e. ./src/index.js)
-     * @return {string} - absolute path to top-priority matching source  
+     * @param {object} sources - array of sources
+     * @return {string} - absolute path to top-priority matching source
      * @memberof FallbackPlugin
      */
-    static getFallbackPathname(pathname) {
+    static getFallbackPathname(pathname, sources) {
         for (const source in sources) {
             const sourcePathname = path.join(sources[source], pathname);
             const isFileExists = fs.existsSync(sourcePathname);
@@ -35,7 +55,7 @@ class FallbackPlugin {
         }
 
         return path.join(
-            sources.firstEntry[1],
+            Object.values(sources)[0],
             pathname
         );
     }
@@ -44,10 +64,12 @@ class FallbackPlugin {
      * Find which source index does the file given came from
      *
      * @param {string} pathname - absolute path to file / folder
-     * @return {string} - source key 
+     * @return {string} - source key
      * @memberof FallbackPlugin
      */
     getSourceIndex(pathname) {
+        const { sources } = this.options;
+
         for (let i = 0; i < sources.keys.length; i++) {
             const source = sources.keys[i];
 
@@ -63,14 +85,14 @@ class FallbackPlugin {
      * Get relative pathname of file given (relative to any source root)
      *
      * @param {string} pathname - absolute pathname
-     * @return {string} 
+     * @return {string}
      * @memberof FallbackPlugin
      */
     getRelativePathname(pathname) {
         const relativeSourcePathname = pathname.split('src/')[1];
 
         if (relativeSourcePathname) {
-            return `src/${ relativeSourcePathname}`;   
+            return `src/${ relativeSourcePathname}`;
         }
 
         const relativePublicPathname = pathname.split('public/')[1];
@@ -106,7 +128,7 @@ class FallbackPlugin {
 
     /**
      * Get absolute path to "TO" file from resolve request
-     * 
+     *
      * @param {object} request - Webpack resolve request
      */
     getRequestToPathname(request) {
@@ -119,7 +141,7 @@ class FallbackPlugin {
 
     /**
      * Get absolute path to "FROM" from file resolve request
-     * 
+     *
      * @param {object} request - Webpack resolve request
      */
     getRequestFromPathname(request) {
@@ -128,10 +150,12 @@ class FallbackPlugin {
 
     /**
      * Webpack function responsible for resolve request handling
-     * 
-     * @param {object} resolver 
+     *
+     * @param {object} resolver
      */
     apply(resolver) {
+        const { sources } = this.options;
+
         resolver.getHook('resolve').tapAsync('FallbackPlugin', (
             request, resolveContext, callback
         ) => {
@@ -167,7 +191,7 @@ class FallbackPlugin {
                         callback();
                         return;
                     }
-    
+
                     resolver.doResolve(
                         resolver.hooks.resolve,
                         {
