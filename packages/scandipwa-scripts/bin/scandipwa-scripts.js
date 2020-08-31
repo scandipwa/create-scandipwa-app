@@ -15,6 +15,15 @@ const args = process.argv.slice(2);
 const scriptIndex = args.findIndex((x) => x === 'build' || x === 'start');
 const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
 const isProd = script === 'build';
+const isMagento = args.indexOf('--magento') !== -1;
+
+if (isMagento) {
+    console.log(
+        `${ chalk.bgKeyword('orange').black('WARNING!') } Building as a Magento theme! `
+        + `The ${ chalk.underline.cyan('public/index.html') } file content will not be taken into account! `
+        + `Using content of ${ chalk.underline.cyan('public/index.php') } instead!`
+    );
+}
 
 const TIMEOUT_BETWEEN_KILL_TRIGGERS = 500;
 
@@ -49,9 +58,8 @@ const spawnUndead = (isRestarted = false) => {
                 ...process.env,
                 BROWSER: isRestarted ? 'none' : '',
                 FORCE_COLOR: true,
-                ...(isProd ? {
-                    GENERATE_SOURCEMAP: false
-                } : {})
+                PWA_BUILD_MODE: isMagento ? 'magento' : 'storefront',
+                ...(isProd ? { GENERATE_SOURCEMAP: false } : {})
             }
         }
     );
