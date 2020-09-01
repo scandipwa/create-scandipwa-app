@@ -54,11 +54,16 @@ module.exports = () => {
         // Try loading the composer file in - if failed, show error.
         composerContent = require(path.join(process.cwd(), 'composer.json'));
     } catch (e) {
-        console.log(`${ chalk.bgRed.black('ERROR!') } The required file ${ chalk.cyan('composer.json') } was not found! Please create a file with the name specified.`);
+        console.log(`${ chalk.bgRed.black('ERROR!') } The required file ${ chalk.cyan('composer.json') } was not found!`);
         return false;
     }
 
-    const { require: composerDeps = {} } = composerContent;
+    const { require: composerDeps } = composerContent;
+
+    if (!composerDeps) {
+        console.log(`${ chalk.bgRed.black('ERROR!') } The required filed ${ chalk.green('require') } is missing in ${ chalk.cyan('composer.json') }.`);
+        return false;
+    }
 
     for (const composerModule in indexedComposerDeps) {
         // Loop over the indexed composer dependencies, check:
