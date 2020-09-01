@@ -67,19 +67,21 @@ const spawnUndead = (isRestarted = false) => {
     child.stdout.on('data', (output) => {
         const string = output.toString();
 
-        /**
-         * Simply clear the console.
-         */
+        // Simply clear the console.
         if (/Starting the development server/gm.test(string)) {
             clearConsole();
             return;
         }
 
-        /**
-         * Clear the console, but print the error
-         */
+        // Clear the console, but print the error
         if (/Compiled successfully|Failed to compile/gm.test(string)) {
             clearConsole();
+        }
+
+        // Simply print nothing
+        // eslint-disable-next-line max-len
+        if (/folder is ready to be deployed|bit\.ly\/CRA-deploy|Find out more about deployment|You may serve it with a static|serve -s/gm.test(string)) {
+            return;
         }
 
         console.log(string);
@@ -89,6 +91,12 @@ const spawnUndead = (isRestarted = false) => {
          */
         if (isRestarted && string.includes('To create a production')) {
             console.log(chalk.yellow('Reload the page to see results!'));
+        }
+    });
+
+    child.on('close', () => {
+        if (isProd) {
+            process.exit();
         }
     });
 };

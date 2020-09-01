@@ -35,6 +35,23 @@
             "args": [
                 "build"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Build M2",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "env": {
+                "PORT": 3003
+            },
+            "cwd": "${workspaceFolder}/packages/test",
+            "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
+            "args": [
+                "build",
+                "--magento"
+            ]
         }
     ]
 }

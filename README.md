@@ -11,6 +11,14 @@
 2. Bootstrap project: `yarn bootstrap packages/test`
 3. Enter folder with `cd packages/test` and run `yarn start`
 
+## Magento-like build
+
+1. To build the Project in Magento mode, go to `cd package/test`
+2. Run build in Magento mode - `PUBLIC_URL='<public path>' yarn build --magento`.
+
+    > **Note**: the public path can be something like this: `/static/version1598355124/frontend/Scandiweb/pwa/en_US`.
+
+
 ## Known issues
 
 - Fonts (public folder) content can not be overridden, as the are not resolved in compilation (runtime only)

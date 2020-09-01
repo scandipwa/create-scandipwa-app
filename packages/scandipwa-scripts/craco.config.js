@@ -8,7 +8,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHardDiskPlugin = require('html-webpack-harddisk-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-// const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
@@ -17,10 +17,10 @@ const { sources, PROJECT } = require('./lib/sources');
 const alias = require('./lib/alias');
 const when = require('./lib/when');
 
-// the variable is passed automatically, use --magento flag
+// The variable is passed automatically, use --magento flag
 const isMagento = process.env.PWA_BUILD_MODE === 'magento';
 
-// the when handler (useful when returning)
+// The when handler (useful when returning)
 const whenMagento = (th, fh) => when(isMagento, th, fh);
 
 module.exports = () => {
@@ -32,7 +32,15 @@ module.exports = () => {
 
     return {
         paths: {
+            // Simply fallback to core, this why it's here
             appIndexJs,
+
+            // For Magento, use Magento_Theme folder as dist
+            appBuild: path.join(process.cwd(), ...whenMagento(
+                ['Magento_Theme', 'web'],
+                ['build']
+            )),
+
             // For Magento use PHP template (defined in /public/index.php)
             // otherwise use normal HTML (defined in /public/index.html)
             appHtml: whenMagento(
@@ -42,7 +50,7 @@ module.exports = () => {
         },
         eslint: {
             mode: ESLINT_MODES.extends,
-            // ensure we are extending the scandipwa-eslint config
+            // Ensure we are extending the scandipwa-eslint config
             configure: {
                 extends: [
                     require.resolve('@scandipwa/eslint-config')
@@ -64,7 +72,7 @@ module.exports = () => {
         },
         webpack: {
             plugins: [
-                // in development mode, provide simple translations and React
+                // In development mode, provide simple translations and React
                 new webpack.ProvidePlugin({
                     __: path.join(__dirname, '../webpack-i18n-plugin/translation-function'), // TODO: replace with dependency
                     React: 'react'
@@ -78,14 +86,14 @@ module.exports = () => {
                     }
                 }),
 
-                // show progress bar when building
+                // Show progress bar when building
                 new ProgressBarPlugin(),
 
                 // TODO: implement PHP-based approach for development as Magento theme. See more: https://medium.com/@agent_hunt/how-to-use-index-php-as-the-index-file-with-create-react-app-ff760c910a6a
-                // in case it is Magento - we would like to see customization,
+                // In case it is Magento - we would like to see customization,
                 // meta and other things directly from Magento 2 => require
                 // disk write for PHP to work with.
-                whenMagento(new HtmlWebpackHardDiskPlugin())
+                ...whenMagento([new HtmlWebpackHardDiskPlugin()], [])
             ],
             configure: (webpackConfig) => {
                 // Remove module scope plugin, it breaks FallbackPlugin and ProvidePlugin
@@ -113,21 +121,21 @@ module.exports = () => {
                 // Allow having empty entry point
                 webpackConfig.entry[whenDev(() => 1, 0)] = appIndexJs;
 
-                // disable LICENSE comments extraction in production
+                // Disable LICENSE comments extraction in production
                 webpackConfig.optimization.minimizer[0].options.extractComments = whenDev(() => true, false);
 
+                // Modify plugins if needed
                 webpackConfig.plugins.reduce((acc, plugin) => {
-                    // if this is a Magento setup, change output names
                     if (plugin instanceof HtmlWebpackPlugin) {
-                        plugin.options.filename = whenMagento('root.phtml', 'index.html');
+                        // If this is a Magento setup, change output names
+                        plugin.options.filename = whenMagento('../templates/root.phtml', 'index.html');
                     } else if (plugin instanceof WorkboxWebpackPlugin.GenerateSW) {
-                        plugin.config.navigateFallback = appHtml;
+                        // Patch navigate fallback originally references hard-coded index.html
+                        plugin.config.navigateFallback = '/';
+                    } else if (plugin instanceof MiniCssExtractPlugin) {
+                        // Patch mini-css-extract-plugin issue of "Conflicting Order"
+                        plugin.options.ignoreOrder = true;
                     }
-
-                    // TODO: if minifier breaks, fix this by adding code bellow
-                    // else if (plugin instanceof InterpolateHtmlPlugin) {
-                    //     console.log(plugin);
-                    // }
 
                     return [...acc, plugin];
                 }, []);
