@@ -22,6 +22,6 @@
         "unstated": "^2.1.1"
     },
     "composer": {
-        "scandipwa/scandipwa": "2.16.2"
+        "scandipwa/scandipwa": "^2.16.2"
     }
 }

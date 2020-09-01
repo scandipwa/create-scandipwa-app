@@ -8,5 +8,6 @@
         "REBEM",
         "Scandiweb",
         "scandipwa"
-    ]
+    ],
+    "eslint.enable": false
 }

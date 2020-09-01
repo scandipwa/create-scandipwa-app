@@ -22,8 +22,8 @@ const isMagento = args.indexOf('--magento') !== -1;
 if (isMagento) {
     console.log(
         `${ chalk.bgKeyword('orange').black('WARNING!') } Building as a Magento theme! `
-        + `The ${ chalk.underline.cyan('public/index.html') } file content will not be taken into account! `
-        + `Using content of ${ chalk.underline.cyan('public/index.php') } instead!`
+        + `The ${ chalk.cyan('public/index.html') } file content will not be taken into account! `
+        + `Using content of ${ chalk.cyan('public/index.php') } instead!`
     );
 }
 
@@ -104,10 +104,15 @@ const spawnUndead = (isRestarted = false) => {
 };
 
 process.on('exit', () => {
-    kill(child.pid, 'SIGTERM');
+    if (child) {
+        kill(child.pid, 'SIGTERM');
+    }
 });
 
-checkComposerDeps();
+if (!checkComposerDeps()) {
+    process.exit();
+}
+
 spawnUndead();
 
 const killChild = debounce(() => {
