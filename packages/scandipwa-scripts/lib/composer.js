@@ -95,12 +95,12 @@ module.exports = () => {
 
         // This one is unstable and can not calculate value properly.
         // An issue to track: https://github.com/npm/node-semver/issues/340
-        const { raw: minVersion } = minVersion(versionsExpected) || {};
+        const { raw: minVersionRaw } = minVersion(versionsExpected) || {};
 
         // Validate if version requested is present in composer
         if (!composerDeps[composerModule]) {
-            if (minVersion) {
-                const minVersionString = chalk.bgGreen.black(`"${ composerModule }": "${ minVersion }"`);
+            if (minVersionRaw) {
+                const minVersionString = chalk.bgGreen.black(`"${ composerModule }": "${ minVersionRaw }"`);
 
                 console.log(
                     `${ chalk.bgRed.black('ERROR!') } The required composer package is missing! `
@@ -118,10 +118,10 @@ module.exports = () => {
 
         // Check if version requested satisfies version defined
         if (!semver.satisfies(versionDefined, versionsExpected)) {
-            if (minVersion) {
+            if (minVersionRaw) {
                 console.log(
                     `${ chalk.bgRed.black('ERROR!') } There are conflicting modules in ${ chalk.cyan('composer.json') }. `
-                    + `Please update ${ chalk.green(composerModule) } to at least ${ chalk.green(minVersion) }.`
+                    + `Please update ${ chalk.green(composerModule) } to at least ${ chalk.green(minVersionRaw) }.`
                 );
             } else {
                 console.log(
