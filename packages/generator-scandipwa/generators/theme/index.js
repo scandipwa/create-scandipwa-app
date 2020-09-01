@@ -78,6 +78,12 @@ module.exports = class extends Generator {
             this.props
         );
 
+        this.fs.copyTpl(
+            this.templatePath('composer.json'),
+            this.destinationPath('composer.json'),
+            this.props
+        );
+
         this.fs.copy(
             this.templatePath('.gitignore'),
             this.destinationPath('.gitignore')

@@ -1,0 +1,8 @@
+{
+    "name": "scandipwa/<%= name %>",
+    "description": "N/A",
+    "type": "magento2-theme",
+    "require": {
+        "scandipwa/scandipwa": "2.16.4"
+    }
+}
