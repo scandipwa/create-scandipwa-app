@@ -20,5 +20,8 @@
         "rebem-classname": "^0.4.0",
         "redux": "^4.0.5",
         "unstated": "^2.1.1"
+    },
+    "composer": {
+        "scandipwa/scandipwa": "2.16.2"
     }
 }

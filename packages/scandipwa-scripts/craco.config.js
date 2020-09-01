@@ -116,7 +116,7 @@ module.exports = () => {
                 // Replace .html exclude to .php (otherwise php will compile into /media as file)
                 webpackConfig.module.rules[2].oneOf[
                     webpackConfig.module.rules[2].oneOf.length - 1
-                ].exclude[1] = /\.php$/;
+                ].exclude[1] = whenMagento(/\.php$/, /\.html$/);
 
                 // Allow having empty entry point
                 webpackConfig.entry[whenDev(() => 1, 0)] = appIndexJs;

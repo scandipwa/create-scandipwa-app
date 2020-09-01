@@ -10,6 +10,8 @@ const chalk = require('chalk');
 const kill = require('tree-kill');
 const clearConsole = require('react-dev-utils/clearConsole');
 
+const checkComposerDeps = require('../lib/composer');
+
 const args = process.argv.slice(2);
 
 const scriptIndex = args.findIndex((x) => x === 'build' || x === 'start');
@@ -105,6 +107,7 @@ process.on('exit', () => {
     kill(child.pid, 'SIGTERM');
 });
 
+checkComposerDeps();
 spawnUndead();
 
 const killChild = debounce(() => {
