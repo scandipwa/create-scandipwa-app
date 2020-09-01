@@ -2,7 +2,7 @@
 const path = require('path');
 const semver = require('semver');
 const chalk = require('chalk');
-const semverMinSatisfying = require('semver/ranges/min-satisfying');
+const minVersion = require('./helper/min-version');
 
 const visitedDeps = [];
 
@@ -95,7 +95,7 @@ module.exports = () => {
 
         // This one is unstable and can not calculate value properly.
         // An issue to track: https://github.com/npm/node-semver/issues/340
-        const minVersion = semver.minVersion(versionsExpected);
+        const { raw: minVersion } = minVersion(versionsExpected) || {};
 
         // Validate if version requested is present in composer
         if (!composerDeps[composerModule]) {
