@@ -14,12 +14,17 @@
 ## Magento-like build
 
 1. To build the Project in Magento mode, go to `cd package/test`
-2. Run build in Magento mode - `PUBLIC_URL='<public path>' yarn build --magento`.
+2. Run build in Magento mode - `yarn build --magento`.
 
-    > **Note**: the public path can be something like this: `/static/version1598355124/frontend/Scandiweb/pwa/en_US`.
+## Supported features
 
+1. Setup ScandiPWA using generator
+2. Run in development with blazing-fast create-react-app based bootstrap
+3. Build into Magento theme with `--magento` command
+4. Validate `composer.json` to include package-requested dependencies
 
-## Known issues
+## Features TODO:
 
-- Fonts (public folder) content can not be overridden, as the are not resolved in compilation (runtime only)
-
+- In Magento mode, generate PUBLIC_URL automatically from `theme.xml`
+- Deal with service-worker, find a way to change it
+- Implement PHP-based application serving (to work with M2)
