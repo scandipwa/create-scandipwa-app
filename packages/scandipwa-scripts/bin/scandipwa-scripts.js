@@ -18,7 +18,11 @@ const isProd = script === 'build';
 const isMagento = args.indexOf('--magento') !== -1;
 
 if (isMagento) {
-    logger.note(`Building as a Magento theme! The ${ logger.style.file('public/index.html') } file content will not be taken into account! Using content of ${ logger.style.file('public/index.php') } instead!`);
+    logger.note(
+        'Building as a Magento theme!',
+        `The ${ logger.style.file('public/index.html') } file content will not be taken into account!`,
+        `Using content of ${ logger.style.file('public/index.php') } instead!`
+    );
 }
 
 const TIMEOUT_BETWEEN_KILL_TRIGGERS = 500;
