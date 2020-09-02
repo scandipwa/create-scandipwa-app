@@ -4,7 +4,6 @@ const spawn = require('cross-spawn');
 const path = require('path');
 const debounce = require('debounce');
 const chokidar = require('chokidar');
-const chalk = require('chalk');
 const kill = require('tree-kill');
 const clearConsole = require('react-dev-utils/clearConsole');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
@@ -79,7 +78,7 @@ const spawnUndead = (isRestarted = false) => {
 
         // Simply print nothing
         // eslint-disable-next-line max-len
-        if (/folder is ready to be deployed|bit\.ly\/CRA-deploy|Find out more about deployment|You may serve it with a static|serve -s/gm.test(string)) {
+        if (/folder is ready to be deployed|bit\.ly\/CRA-deploy|Find out more about deployment|You may serve it with a static|serve -s|Could not resolve/gm.test(string)) {
             return;
         }
 
@@ -89,7 +88,7 @@ const spawnUndead = (isRestarted = false) => {
          * Show warning to reload the browser
          */
         if (isRestarted && string.includes('To create a production')) {
-            logger.log(chalk.yellow('Reload the page to see results!'));
+            logger.note('Reload the page to see results!');
         }
     });
 

@@ -1,6 +1,7 @@
 'use strict';
+
+const greet = require('@scandipwa/scandipwa-dev-utils/greet');
 const Generator = require('yeoman-generator');
-// const chalk = require('chalk');
 const path = require('path');
 
 const DEFAULT_PROXY = 'http://scandipwapmrev.indvp.com';
@@ -110,5 +111,9 @@ module.exports = class extends Generator {
 
     install() {
         this.yarnInstall();
+    }
+
+    end() {
+        greet(this.props);
     }
 };

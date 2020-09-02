@@ -4,7 +4,8 @@
     "description": "",
     "files": [
         "composer.js",
-        "logger.js"
+        "logger.js",
+        "greet.js"
     ],
     "dependencies": {
         "chalk": "^4.1.0",

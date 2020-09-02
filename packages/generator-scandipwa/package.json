@@ -9,8 +9,8 @@
         "yeoman-generator"
     ],
     "dependencies": {
+        "@scandipwa/scandipwa-dev-utils": "^0.0.1",
         "yeoman-generator": "^2.0.1",
-        "chalk": "^2.1.0",
         "yosay": "^2.0.1"
     }
 }
