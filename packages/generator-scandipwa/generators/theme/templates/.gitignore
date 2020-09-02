@@ -2,14 +2,10 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
 
 # production
 /build
+/magento/Magento_Theme
 
 # misc
 .DS_Store
