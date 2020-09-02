@@ -1,0 +1,16 @@
+{
+    "name": "@scandipwa/scandipwa-dev-utils",
+    "version": "0.0.1",
+    "description": "",
+    "files": [
+        "composer.js",
+        "logger.js"
+    ],
+    "dependencies": {
+        "chalk": "^4.1.0",
+        "semver": "^7.3.2"
+    },
+    "author": "",
+    "license": "ISC"
+}
+  

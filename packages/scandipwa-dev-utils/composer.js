@@ -1,11 +1,17 @@
 /* eslint-disable guard-for-in, fp/no-let, no-console, max-len, import/no-dynamic-require, global-require, fp/no-loops, no-restricted-syntax */
 const path = require('path');
 const semver = require('semver');
-const chalk = require('chalk');
-const minVersion = require('./helper/min-version');
+const minVersion = require('./lib/min-version');
+const logger = require('./logger');
 
-const visitedDeps = [];
+let visitedDeps = [];
 
+/**
+ * Get package JSON, or empty object
+ *
+ * @param {string} pathname
+ * @return {object} 
+ */
 const getPackageJson = (pathname) => {
     try {
         return require(path.join(pathname, 'package.json')) || {};
@@ -14,7 +20,13 @@ const getPackageJson = (pathname) => {
     }
 };
 
-// collect composer dependencies
+/**
+ * Recursively get "composer" field from all package.json,
+ * do the same for all module dependencies.
+ *
+ * @param {string} modulePath
+ * @return {array} an array of object entries.
+ */
 const getComposerDeps = (modulePath) => {
     if (visitedDeps.indexOf(modulePath) !== -1) {
         return [];
@@ -33,8 +45,17 @@ const getComposerDeps = (modulePath) => {
     );
 };
 
-module.exports = () => {
-    const requestedComposerDeps = getComposerDeps(process.cwd());
+/**
+ * Validate composer.json (ensure it requires all requested by npm dependencies modules)
+ *
+ * @param {string} [pathname=process.cwd()]
+ * @return {boolean} is composer is valid or not
+ */
+const isValidComposer = (pathname = process.cwd()) => {
+    // reset visited deps, in case it's the second call to this function
+    visitedDeps = [];
+
+    const requestedComposerDeps = getComposerDeps(pathname);
 
     // Index the composer deps from array of object entries.
     // Object should contain the ranges requested by requested module name
@@ -54,16 +75,21 @@ module.exports = () => {
 
     try {
         // Try loading the composer file in - if failed, show error.
-        composerContent = require(path.join(process.cwd(), 'composer.json'));
+        composerContent = require(path.join(pathname, 'composer.json'));
     } catch (e) {
-        console.log(`${ chalk.bgRed.black('ERROR!') } The required file ${ chalk.cyan('composer.json') } was not found!`);
+        if (e.message.includes('Unexpected end of JSON input')) {
+            logger.error(`The required file ${ logger.style.file('composer.json') } contains invalid JSON!`)
+        } else {
+            logger.error(`The required file ${ logger.style.file('composer.json') } was not found!`)
+        }
+
         return false;
     }
 
     const { require: composerDeps } = composerContent;
 
     if (!composerDeps) {
-        console.log(`${ chalk.bgRed.black('ERROR!') } The required field ${ chalk.green('require') } is missing in ${ chalk.cyan('composer.json') }.`);
+        logger.error(`The required field ${ logger.style.misc('require') } is missing in ${ logger.style.file('composer.json') }.`)
         return false;
     }
 
@@ -78,8 +104,8 @@ module.exports = () => {
         let rangeRequested = [];
 
         // Validate if the version required is valid
-        if (!semver.validRange(versionRequired)) {
-            console.log(`${ chalk.bgRed.black('ERROR!') } Required ${ chalk.green(composerModule) } composer module version ${ chalk.inverse(versionRequired) } is invalid.`);
+        if (versionRequired && !semver.validRange(versionRequired)) {
+            logger.error(`Required composer module ${ logger.style.misc(composerModule) } version ${ logger.style.misc(versionRequired) } is invalid.`);
             return false;
         }
 
@@ -90,7 +116,7 @@ module.exports = () => {
             if (semver.validRange(version)) {
                 rangeRequested.push(version);
             } else {
-                console.log(`${ chalk.bgRed.black('ERROR!') } The requested version ${ chalk.inverse(version) } of ${ chalk.green(composerModule) } is invalid.`);
+                logger.error(`The requested version ${ logger.style.misc(version) } of ${ logger.style.misc(composerModule) } is invalid.`);
                 return false;
             }
         }
@@ -103,44 +129,48 @@ module.exports = () => {
 
         // Validate if the version requested is possible to satisfy
         if (!minVersionRaw) {
-            console.log(
-                `${ chalk.bgRed.black('ERROR!') } The requested composer package versions conflict! `
-                + `There are no versions of ${ chalk.green(composerModule) } matching the range ${ chalk.inverse(rangeRequested) }!`
+            logger.error(
+                'The requested composer package versions conflict!',
+                `There are no versions of ${ logger.misc(composerModule) } matching the range ${ logger.misc(rangeRequested) }!`
             );
         }
 
-        const minVersionString = chalk.inverse(`"${ composerModule }": "${ minVersionRaw }"`);
+        const minVersionString = logger.style.code(`"${ composerModule }": "${ minVersionRaw }"`);
 
         // Validate if the version requested is present in composer + shwo notice about minimum version
         if (!composerDeps[composerModule]) {
-            console.log(
-                `${ chalk.bgRed.black('ERROR!') } The requested composer package is missing! `
-                + `Please add ${ minVersionString } to ${ chalk.green('"require"') } section of ${ chalk.cyan('composer.json') }! `
+            logger.error(
+                'The requested composer package is missing!',
+                `Please add ${ minVersionString } to ${ logger.style.misc('require') } section of ${ logger.style.file('composer.json') }!`
             );
 
-            console.log(
-                `${ chalk.bgKeyword('orange').black('WARNING!') } The ${ chalk.inverse(minVersionRaw) } version is the minimum requested version. `
-                `Update it at you own risk! The version of choice must meet following constraints: ${ chalk.inverse(rangeRequested) }!`
+            logger.note(
+                `The ${ logger.style.misc(minVersionRaw) } version is the minimum requested version.`,
+                `Update it at you own risk! The version of choice must meet following constraints: ${ logger.style.misc(rangeRequested) }!`
             );
-
             return false;
         }
 
         // Check if the version requested satisfies version required
         if (!semver.satisfies(versionRequired, rangeRequested)) {
-            console.log(
-                `${ chalk.bgRed.black('ERROR!') } Composer module required is conflicting with requested module versions. `
-                + `Please update ${ chalk.green(composerModule) } version to ${ chalk.green(minVersionRaw) }.`
+            logger.error(
+                'Composer module required is conflicting with requested module versions.',
+                `Please update ${ logger.style.misc(composerModule) } version to ${ logger.style.misc(minVersionRaw) }.`
             );
 
-            console.log(
-                `${ chalk.bgKeyword('orange').black('WARNING!') } The ${ chalk.inverse(minVersionRaw) } version is the minimum requested version. `
-                `Update it at you own risk! The version of choice must meet following constraints: ${ chalk.inverse(rangeRequested) }!`
+            logger.note(
+                `The ${ logger.style.misc(minVersionRaw) } version is the minimum requested version.`,
+                `Update it at you own risk! The version of choice must meet following constraints: ${ logger.style.misc(rangeRequested) }!`
             );
-
             return false;
         }
     }
 
     return true;
 };
+
+module.exports = {
+    isValidComposer,
+    getComposerDeps,
+    getPackageJson
+}

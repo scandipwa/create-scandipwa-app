@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console */
-
 const spawn = require('cross-spawn');
 const path = require('path');
 const debounce = require('debounce');
@@ -9,8 +7,8 @@ const chokidar = require('chokidar');
 const chalk = require('chalk');
 const kill = require('tree-kill');
 const clearConsole = require('react-dev-utils/clearConsole');
-
-const checkComposerDeps = require('../lib/composer');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
 
 const args = process.argv.slice(2);
 
@@ -20,18 +18,13 @@ const isProd = script === 'build';
 const isMagento = args.indexOf('--magento') !== -1;
 
 if (isMagento) {
-    console.log(
-        `${ chalk.bgKeyword('orange').black('WARNING!') } Building as a Magento theme! `
-        + `The ${ chalk.cyan('public/index.html') } file content will not be taken into account! `
-        + `Using content of ${ chalk.cyan('public/index.php') } instead!`
-    );
+    logger.note(`Building as a Magento theme! The ${ logger.style.file('public/index.html') } file content will not be taken into account! Using content of ${ logger.style.file('public/index.php') } instead!`);
 }
 
 const TIMEOUT_BETWEEN_KILL_TRIGGERS = 500;
 
 if (args.length === 0) {
-    // eslint-disable-next-line no-console
-    console.log('Please specify command (one of: "start", "build").');
+    logger.error(`Please specify command (one of: ${ logger.style.misc('start') }, ${ logger.style.misc('build') }).`);
     process.exit(1);
 }
 
@@ -69,7 +62,7 @@ const spawnUndead = (isRestarted = false) => {
     child.stdout.on('data', (output) => {
         const string = output.toString();
 
-        // Simply clear the console.
+        // Simply clear the console
         if (/Starting the development server/gm.test(string)) {
             clearConsole();
             return;
@@ -86,13 +79,13 @@ const spawnUndead = (isRestarted = false) => {
             return;
         }
 
-        console.log(string);
+        logger.log(string);
 
         /**
          * Show warning to reload the browser
          */
         if (isRestarted && string.includes('To create a production')) {
-            console.log(chalk.yellow('Reload the page to see results!'));
+            logger.log(chalk.yellow('Reload the page to see results!'));
         }
     });
 
@@ -109,7 +102,7 @@ process.on('exit', () => {
     }
 });
 
-if (!checkComposerDeps()) {
+if (!isValidComposer()) {
     process.exit();
 }
 
@@ -118,7 +111,7 @@ spawnUndead();
 const killChild = debounce(() => {
     kill(child.pid, 'SIGTERM', (err) => {
         if (err) {
-            console.log(err);
+            logger.log(err);
         }
 
         spawnUndead(true);

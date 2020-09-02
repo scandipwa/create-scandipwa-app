@@ -5,7 +5,7 @@ const Range = require('semver/classes/range')
 const gt = require('semver/functions/gt')
 
 const minVersion = (rangeExpected, loose) => {
-    let minver = new SemVer('0.0.0');
+    let minVersion = new SemVer('0.0.0');
     const range = new Range(rangeExpected, loose);
 
     for (let i = 0; i < range.set.length; ++i) {
@@ -13,24 +13,24 @@ const minVersion = (rangeExpected, loose) => {
 
         for (let i = 0; i < comparators.length; i++) {
             const comparator = comparators[i];
-            const compver = new SemVer(comparator.semver.version);
+            const version = new SemVer(comparator.semver.version);
 
             switch (comparator.operator) {
                 case '>': // Larger
-                    if (compver.prerelease.length === 0) {
+                    if (version.prerelease.length === 0) {
                         // For pre-releases, bump it one up
-                        compver.patch++
+                        version.patch++
                     } else {
                         // Otherwise, increase by one 
-                        compver.prerelease.push(0)
+                        version.prerelease.push(0)
                     }
 
-                    compver.raw = compver.format()
+                    version.raw = version.format()
                     // vvv fallthrough to case bellow vvv
                 case '':
                 case '>=': // Exact OR larger & equal
-                    if (gt(compver, minver)) {
-                        minver = compver
+                    if (gt(version, minVersion)) {
+                        minVersion = version
                     }
                     break;
                 case '<':
@@ -43,8 +43,8 @@ const minVersion = (rangeExpected, loose) => {
         }
     }
 
-    if (minver && range.test(minver)) {
-        return minver;
+    if (minVersion && range.test(minVersion)) {
+        return minVersion;
     }
 
     return null;
