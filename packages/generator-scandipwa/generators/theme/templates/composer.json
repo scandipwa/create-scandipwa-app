@@ -4,5 +4,10 @@
     "type": "magento2-theme",
     "require": {
         "scandipwa/scandipwa": "2.16.4"
+    },
+    "autoload": {
+        "files": [
+            "magento/registration.php"
+        ]
     }
 }

@@ -35,9 +35,9 @@ module.exports = () => {
             // Simply fallback to core, this why it's here
             appIndexJs,
 
-            // For Magento, use Magento_Theme folder as dist
+            // For Magento, use magento/Magento_Theme folder as dist
             appBuild: path.join(process.cwd(), ...whenMagento(
-                ['Magento_Theme', 'web'],
+                ['magento', 'Magento_Theme', 'web'],
                 ['build']
             )),
 

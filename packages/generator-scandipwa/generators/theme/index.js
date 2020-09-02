@@ -89,6 +89,12 @@ module.exports = class extends Generator {
             this.destinationPath('.gitignore')
         );
 
+        this.fs.copyTpl(
+            this.templatePath('magento/**/*'),
+            this.destinationPath('magento'),
+            this.props
+        );
+
         this.fs.copy(
             this.templatePath('public/**/*'),
             this.destinationPath('public'),
