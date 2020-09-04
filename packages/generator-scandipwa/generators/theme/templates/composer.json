@@ -2,8 +2,12 @@
     "name": "scandipwa/<%= name %>",
     "description": "N/A",
     "type": "magento2-theme",
+    "license": [
+        "proprietary"
+    ],
     "require": {
-        "scandipwa/scandipwa": "2.16.4"
+        "scandipwa/scandipwa": "2.16.4",
+        "magento/framework": "*"
     },
     "autoload": {
         "files": [

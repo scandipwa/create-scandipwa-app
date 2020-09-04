@@ -62,6 +62,8 @@ const spawnUndead = (isRestarted = false) => {
         }
     );
 
+    // TODO: resolve issue with "Could not resolve" on first run
+
     child.stdout.on('data', (output) => {
         const string = output.toString();
 
@@ -78,7 +80,7 @@ const spawnUndead = (isRestarted = false) => {
 
         // Simply print nothing
         // eslint-disable-next-line max-len
-        if (/folder is ready to be deployed|bit\.ly\/CRA-deploy|Find out more about deployment|You may serve it with a static|serve -s|Could not resolve/gm.test(string)) {
+        if (/folder is ready to be deployed|bit\.ly\/CRA-deploy|Find out more about deployment|You may serve it with a static|serve -s/gm.test(string)) {
             return;
         }
 
