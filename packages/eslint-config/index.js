@@ -46,20 +46,21 @@ module.exports = {
         "import/no-extraneous-dependencies": "off",
         "simple-import-sort/sort": [
             "error",
+            // fixed by reporting in https://github.com/lydell/eslint-plugin-simple-import-sort/issues/54
             {
                 "groups": [
-                    [
-                        "^\\u0000"
-                    ], // side effect imports
                     [
                         "^@?[a-z]"
                     ], // anything that starts with @ and lowercase
                     [
-                        "^[^.]"
-                    ], // anything but a dot
+                        "^[^.\\u0000]"
+                    ], // anything but a dot and side effect imports
                     [
                         "^\\."
-                    ] // starting with dot
+                    ], // starting with dot
+                    [
+                        "^\\u0000"
+                    ], // side effect imports
                 ]
             }
         ],
