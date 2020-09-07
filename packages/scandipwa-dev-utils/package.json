@@ -11,7 +11,9 @@
         "chalk": "^4.1.0",
         "semver": "^7.3.2"
     },
-    "author": "",
-    "license": "ISC"
+    "license": "OSL-3.0",
+    "publishConfig": {
+        "access": "public"
+    }
 }
   

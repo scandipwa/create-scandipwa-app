@@ -1,10 +1,12 @@
 {
     "name": "@scandipwa/webpack-i18n-plugin",
     "version": "0.0.1",
-    "description": "",
     "main": "index.js",
+    "license": "OSL-3.0",
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "^0.0.1"
     },
-    "license": "ISC"
+    "publishConfig": {
+        "access": "public"
+    }
 }

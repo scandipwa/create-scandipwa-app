@@ -11,7 +11,7 @@
     "dependencies": {
         "@scandipwa/craco": "^5.6.4",
         "@scandipwa/eslint-config": "^0.0.1",
-        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^0.0.1",
+        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.0",
         "@scandipwa/webpack-fallback-plugin": "^0.0.1",
         "@scandipwa/webpack-i18n-plugin": "^0.0.1",
         "@scandipwa/scandipwa-dev-utils": "^0.0.1",
@@ -37,5 +37,9 @@
         "react-dev-utils": "^10.2.1",
         "react-scripts": "3.4.1",
         "tree-kill": "^1.2.2"
+    },
+    "license": "OSL-3.0",
+    "publishConfig": {
+        "access": "public"
     }
 }

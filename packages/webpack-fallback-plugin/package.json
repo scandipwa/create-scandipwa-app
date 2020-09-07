@@ -1,8 +1,9 @@
 {
-  "name": "@scandipwa/webpack-fallback-plugin",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "author": "",
-  "license": "ISC"
+    "name": "@scandipwa/webpack-fallback-plugin",
+    "version": "0.0.1",
+    "main": "index.js",
+    "license": "OSL-3.0",
+    "publishConfig": {
+        "access": "public"
+    }
 }

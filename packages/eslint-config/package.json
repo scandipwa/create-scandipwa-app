@@ -1,8 +1,10 @@
 {
-  "name": "@scandipwa/eslint-config",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "author": "",
-  "license": "ISC"
+    "name": "@scandipwa/eslint-config",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "license": "OSL-3.0",
+    "publishConfig": {
+        "access": "public"
+    }
 }

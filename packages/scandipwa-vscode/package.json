@@ -1,4 +1,5 @@
 {
+	"private": true,
 	"name": "scandipwa-development-toolkit",
 	"publisher": "ScandiPWA",
 	"displayName": "ScandiPWA development toolkit",
