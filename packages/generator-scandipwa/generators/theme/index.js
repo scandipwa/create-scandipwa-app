@@ -1,8 +1,10 @@
 'use strict';
 
 const greet = require('@scandipwa/scandipwa-dev-utils/greet');
+const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 const Generator = require('yeoman-generator');
 const path = require('path');
+const npm = require('npm');
 
 const DEFAULT_PROXY = 'http://scandipwapmrev.indvp.com';
 
@@ -15,10 +17,48 @@ module.exports = class extends Generator {
             { type: String, required: true }
         );
 
-        this.props = this.getPathAndName();
+        this.props = this._getPathAndName();
     }
 
-    getPathAndName() {
+    _getLatestVersion(module) {
+        return new Promise((resolve) => {
+            npm.load((err, localNpm) => {
+                if (err) {
+                    resolve('0.0.x');
+                    return;
+                }
+            
+                localNpm.commands.view([module, 'dist-tags.latest'], (err, version) => {
+                    if (err) {
+                        resolve('0.0.x');
+                        return;
+                    }
+
+                    // For some reason, output looks like this:
+                    // { '0.0.3': { 'dist-tags.latest': '0.0.3' } }
+                    resolve(`^${Object.keys(version)[0]}`);
+                });
+            });
+        });
+    }
+    
+    async getLatestVersions() {
+        const [
+            scandipwaVersion,
+            scandipwaScriptsVersion
+        ] = await Promise.all([
+            this._getLatestVersion('@scandipwa/scandipwa'),
+            this._getLatestVersion('@scandipwa/scandipwa-scripts')
+        ]);
+
+        this.props = {
+            ...this.props,
+            scandipwaVersion,
+            scandipwaScriptsVersion
+        };
+    }
+
+    _getPathAndName() {
         const { name } = this.options;
         const pathArr = name.split('/');
         const orgPathArray = pathArr.slice(-2);
@@ -116,7 +156,11 @@ module.exports = class extends Generator {
     }
 
     install() {
-        this.yarnInstall();
+        if (shouldUseYarn()) {
+            this.yarnInstall();
+        } else {
+            this.npmInstall();
+        }
     }
 
     end() {

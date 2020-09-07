@@ -2,8 +2,8 @@
     "name": "<%= name %>",
     "private": true,
     "dependencies": {
-        "@scandipwa/scandipwa": "0.0.x",
-        "@scandipwa/scandipwa-scripts": "0.0.x"
+        "@scandipwa/scandipwa": "<%= scandipwaVersion %>",
+        "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>"
     },
     "scripts": {
         "start": "scandipwa-scripts start",

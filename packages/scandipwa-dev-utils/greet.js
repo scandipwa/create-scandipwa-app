@@ -7,8 +7,7 @@ const greet = ({ name, path: pathname }) => {
     clearConsole();
 
     const relativePathname = `./${pathname}`;
-    // const isYarn = fs.existsSync(path.join(pathname, 'yarn.lock'));
-    const isYarn = true;
+    const isYarn = fs.existsSync(path.join(pathname, 'yarn.lock'));
     const displayedCommand = isYarn ? 'yarn' : 'npm run';
 
     logger.logN(`Success! Created ScandiPWA theme "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
