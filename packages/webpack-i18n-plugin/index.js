@@ -18,6 +18,9 @@ const path = require('path');
 const fs = require('fs');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
+// TODO: rework it to use JSON imports, so Webpack can track changes on the fly
+// TODO: add unused, missing translation notification system
+
 const appendTranslations = (filename, content, missingTranslations) => {
     const translations = content ? JSON.parse(content) : {};
 
@@ -69,17 +72,13 @@ const addParsedVariableToModule = (parser, name) => {
         return false;
     }
 
-    const expression = `require('${path.join(
-        __dirname,
-        '../translation-function'
-    )}')`;
-
+    const pathToTranslationFunction = path.join(__dirname, './translation-function/index.js');
+    const expression = `require('${ pathToTranslationFunction }')`;
     const deps = [];
 
     parser.parse(expression, {
         current: {
             addDependency: (dep) => {
-                // eslint-disable-next-line no-param-reassign
                 dep.userRequest = name;
                 deps.push(dep);
             }
@@ -87,7 +86,11 @@ const addParsedVariableToModule = (parser, name) => {
         module: parser.state.module
     });
 
-    parser.state.current.addVariable(name, expression, deps);
+    parser.state.current.addVariable(
+        name,
+        expression,
+        deps
+    );
 
     return true;
 };
@@ -99,6 +102,7 @@ const addParsedVariableToModule = (parser, name) => {
 class I18nPlugin {
     constructor(options) {
         const { locale } = options || {};
+        this.afterEmitLogs = [];
         this.translationMap = this.loadTranslationJSON(locale)
     }
 
@@ -109,11 +113,14 @@ class I18nPlugin {
         try {
             return require(absolutePathToTry);
         } catch (e) {
-            logger.note(
-                `New locale ${ logger.style.misc(locale) } is discovered.`,
-                `Creating translation file ${ logger.style.file(`./${pathToTry}`) }.`,
-                `Provide translations for ${ logger.style.misc(locale) } locale there.`
-            );
+            this.afterEmitLogs.push({
+                type: 'note',
+                args: [
+                    `New locale ${ logger.style.misc(locale) } was discovered.`,
+                    `Created translation file ${ logger.style.file(`./${pathToTry}`) }.`,
+                    `Provide translations for ${ logger.style.misc(locale) } locale there.`
+                ]
+            });
 
             fs.writeFileSync(absolutePathToTry, JSON.stringify({}, undefined, 4));
             return {};
@@ -128,6 +135,13 @@ class I18nPlugin {
         // save missing translations into JSON
         compiler.hooks.emit.tap(plugin, () => {
             appendTranslationsToFiles(missingTranslations);
+
+            setTimeout(() => {
+                this.afterEmitLogs.forEach(
+                    ({ type, args }) => logger[type](...args)
+                );
+            }, 100);
+
             return true;
         });
 
@@ -139,6 +153,7 @@ class I18nPlugin {
                     ConstDependency,
                     new NullFactory()
                 );
+
                 compilation.dependencyTemplates.set(
                     ConstDependency,
                     new ConstDependency.Template()
@@ -153,30 +168,31 @@ class I18nPlugin {
                         // Replace translation strings
                         const result = this.translationMap[paramString];
 
-                        // Extract translation if the translated string
-                        // is missing, do nothing translation function
-                        if (!result) {
-                            missingTranslations.push(paramString);
-
-                            return true;
-                        }
-
+                        // Try adding providing variable to JS module 
                         if (!addParsedVariableToModule(parser, functionName)) {
                             return false;
                         }
 
-                        if (result) {
-                            const dep = new ConstDependency(
-                                JSON.stringify(result),
-                                firstArgument.range
-                            );
-
-                            dep.loc = firstArgument.loc;
-                            parser.state.current.addDependency(dep);
-                            return true;
+                        // Extract translation if the translated string is missing
+                        if (result === undefined) {
+                            missingTranslations.push(paramString);
+                            return false;
+                        }
+                        
+                        // Skip it, if the result is known, but not translated
+                        if (result === null) {
+                            return false;
                         }
 
-                        return false;
+                        const dep = new ConstDependency(
+                            JSON.stringify(result),
+                            firstArgument.range
+                        );
+
+                        dep.loc = firstArgument.loc;
+                        parser.state.current.addDependency(dep);
+                        
+                        return true;
                     });
                 };
 
