@@ -1,6 +1,6 @@
 {
     "name": "create-scandipwa-app",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "main": "index.js",
     "bin": "./lib/index.js",
     "license": "OSL-3.0",
