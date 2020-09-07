@@ -9,7 +9,7 @@
         "craco.config.js"
     ],
     "dependencies": {
-        "@scandipwa/craco": "^5.6.4",
+        "@scandipwa/craco": "^0.0.1",
         "@scandipwa/eslint-config": "^0.0.1",
         "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.0",
         "@scandipwa/webpack-fallback-plugin": "^0.0.1",
