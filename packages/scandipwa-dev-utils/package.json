@@ -5,7 +5,8 @@
     "files": [
         "composer.js",
         "logger.js",
-        "greet.js"
+        "greet.js",
+        "/lib"
     ],
     "dependencies": {
         "chalk": "^4.1.0",

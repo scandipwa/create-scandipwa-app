@@ -4,6 +4,9 @@
     "main": "index.js",
     "bin": "./lib/index.js",
     "license": "OSL-3.0",
+    "files": [
+        "/lib"
+    ],
     "dependencies": {
         "@caporal/core": "^2.0.2",
         "generator-scandipwa": "^0.0.3",

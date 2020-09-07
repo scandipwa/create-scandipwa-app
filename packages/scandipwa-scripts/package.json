@@ -6,7 +6,8 @@
     },
     "files": [
         "bin",
-        "craco.config.js"
+        "craco.config.js",
+        "/lib"
     ],
     "dependencies": {
         "@scandipwa/craco": "^0.0.1",

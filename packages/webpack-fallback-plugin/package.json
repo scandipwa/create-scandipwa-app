@@ -3,6 +3,9 @@
     "version": "0.0.1",
     "main": "index.js",
     "license": "OSL-3.0",
+    "files": [
+        "/lib"
+    ],
     "publishConfig": {
         "access": "public"
     }

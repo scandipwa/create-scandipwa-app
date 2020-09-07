@@ -6,6 +6,9 @@
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "^0.0.2"
     },
+    "files": [
+        "/lib"
+    ],
     "publishConfig": {
         "access": "public"
     }

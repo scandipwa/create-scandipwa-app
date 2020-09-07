@@ -72,7 +72,7 @@ const addParsedVariableToModule = (parser, name) => {
         return false;
     }
 
-    const pathToTranslationFunction = path.join(__dirname, './translation-function/index.js');
+    const pathToTranslationFunction = path.join(__dirname, './lib/translation-function.js');
     const expression = `require('${ pathToTranslationFunction }')`;
     const deps = [];
 
