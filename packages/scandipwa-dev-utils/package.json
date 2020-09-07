@@ -9,7 +9,8 @@
     ],
     "dependencies": {
         "chalk": "^4.1.0",
-        "semver": "^7.3.2"
+        "semver": "^7.3.2",
+        "react-dev-utils": "^10.2.1"
     },
     "license": "OSL-3.0",
     "publishConfig": {
