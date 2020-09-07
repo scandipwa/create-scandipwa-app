@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/webpack-fallback-plugin",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "main": "index.js",
     "license": "OSL-3.0",
     "publishConfig": {
