@@ -12,5 +12,8 @@
         "generator-scandipwa": "^0.0.6",
         "validate-npm-package-name": "^3.0.0",
         "yeoman-environment": "^2.10.3"
+    },
+    "engines": {
+        "node": ">=10"
     }
 }
