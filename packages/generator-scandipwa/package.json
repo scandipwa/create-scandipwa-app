@@ -1,6 +1,6 @@
 {
     "name": "generator-scandipwa",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "files": [
         "generators"
     ],
@@ -9,7 +9,7 @@
         "yeoman-generator"
     ],
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "^0.0.3",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.4",
         "npm": ">=5.6.0",
         "yeoman-generator": "^2.0.1"
     },
