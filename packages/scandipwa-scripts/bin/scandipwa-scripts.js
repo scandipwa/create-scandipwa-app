@@ -16,6 +16,21 @@ const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
 const isProd = script === 'build';
 const isMagento = args.indexOf('--magento') !== -1;
 
+const localeArgIndex = args.indexOf('--locale');
+const locale = localeArgIndex === -1 ? 'en_US' : args[localeArgIndex + 1];
+
+// check if the locale matches expected Regex
+if (!/^[a-z]{2}_[A-Z]{2}$/.test(locale)) {
+    logger.error(
+        'The locale format is wrong.',
+        `The argument ${ logger.style.misc('--locale') } is expected to match following pattern:`,
+        logger.style.command('<2 digit language code>_<2 digit country code (in uppercase)>'),
+        `The value received: ${ logger.style.misc(locale) }.`
+    );
+
+    process.exit(1);
+}
+
 if (isMagento) {
     logger.note(
         'Building as a Magento theme!',
@@ -57,6 +72,7 @@ const spawnUndead = (isRestarted = false) => {
                 BROWSER: isRestarted ? 'none' : '',
                 FORCE_COLOR: true,
                 PWA_BUILD_MODE: isMagento ? 'magento' : 'storefront',
+                PWA_LOCALE: locale,
                 ...(isProd ? { GENERATE_SOURCEMAP: false } : {})
             }
         }

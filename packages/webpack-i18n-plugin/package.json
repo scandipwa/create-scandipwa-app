@@ -3,7 +3,8 @@
     "version": "0.0.1",
     "description": "",
     "main": "index.js",
-    "author": "",
+    "dependencies": {
+        "@scandipwa/scandipwa-dev-utils": "^0.0.1"
+    },
     "license": "ISC"
 }
-  

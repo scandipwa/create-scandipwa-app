@@ -16,27 +16,27 @@ const ConstDependency = require('webpack/lib/dependencies/ConstDependency');
 const NullFactory = require('webpack/lib/NullFactory');
 const path = require('path');
 const fs = require('fs');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
-const sortObject = obj => Object.keys(obj).sort()
-    .reduce((result, key) => {
-        // eslint-disable-next-line no-param-reassign
-        result[key] = obj[key];
-        return result;
-    }, {});
+const appendTranslations = (filename, content, missingTranslations) => {
+    const translations = content ? JSON.parse(content) : {};
 
-const appendTranslations = (filename, content, translations) => {
-    const initialTranslations = content ? JSON.parse(content) : {};
-    const objectToWrite = { ...translations, ...initialTranslations };
-    const SPACE_COUNT = 4;
+    missingTranslations.forEach((translation) => {
+        translations[translation] = null;
+    });
 
     fs.writeFileSync(
         filename,
-        JSON.stringify(sortObject(objectToWrite), null, SPACE_COUNT)
+        JSON.stringify(
+            translations,
+            null,
+            4
+        )
     );
 };
 
-const appendTranslationsToFiles = (outputMap) => {
-    const dirname = path.join(__dirname, '../../../i18n');
+const appendTranslationsToFiles = (missingTranslations) => {
+    const dirname = path.join(process.cwd(), 'i18n');
 
     fs.readdir(dirname, (err, filenames) => {
         if (err) {
@@ -44,25 +44,23 @@ const appendTranslationsToFiles = (outputMap) => {
             return;
         }
 
-        // eslint-disable-next-line no-param-reassign
-        filenames = filenames.filter(name => /\.json$/.test(name));
+        filenames
+            .filter(name => /\.json$/.test(name))
+            .forEach((filename) => {
+                const pathToFile = path.join(dirname, filename);
 
-        if (filenames.length === 0) {
-            filenames.push('en_US.json');
-            fs.writeFileSync(path.join(dirname, 'en_US.json'), '{}');
-        }
-
-        filenames.forEach((filename) => {
-            const pathToFile = path.join(dirname, filename);
-            fs.readFile(pathToFile, 'utf-8', (err, content) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-
-                appendTranslations(pathToFile, content, outputMap);
+                fs.readFile(pathToFile, 'utf-8', (err, content) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        appendTranslations(
+                            pathToFile,
+                            content,
+                            missingTranslations
+                        );
+                    }
+                });
             });
-        });
     });
 };
 
@@ -75,6 +73,7 @@ const addParsedVariableToModule = (parser, name) => {
         __dirname,
         '../translation-function'
     )}')`;
+
     const deps = [];
 
     parser.parse(expression, {
@@ -98,39 +97,39 @@ const addParsedVariableToModule = (parser, name) => {
  * @constructor
  */
 class I18nPlugin {
-    constructor(options = {}) {
-        const {
-            functionName: name = '__',
-            extractTranslations = false,
-            translation
-        } = options;
+    constructor(options) {
+        const { locale } = options || {};
+        this.translationMap = this.loadTranslationJSON(locale)
+    }
 
-        if (!extractTranslations && !translation) {
-            throw new Error(
-                'Required param \'translation\' was not passed to options.'
+    loadTranslationJSON(locale) {
+        const pathToTry = path.join('i18n', `${locale}.json`);
+        const absolutePathToTry = path.join(process.cwd(), pathToTry);
+
+        try {
+            return require(absolutePathToTry);
+        } catch (e) {
+            logger.note(
+                `New locale ${ logger.style.misc(locale) } is discovered.`,
+                `Creating translation file ${ logger.style.file(`./${pathToTry}`) }.`,
+                `Provide translations for ${ logger.style.misc(locale) } locale there.`
             );
-        }
 
-        this.options = {
-            name,
-            extractTranslations,
-            translation
-        };
+            fs.writeFileSync(absolutePathToTry, JSON.stringify({}, undefined, 4));
+            return {};
+        }
     }
 
     apply(compiler) {
-        const { name, translation, extractTranslations } = this.options;
+        const functionName = '__';
         const plugin = { name: 'I18nPlugin' };
-        const translations = {};
+        const missingTranslations = [];
 
-        if (extractTranslations) {
-            // Tap to emit in order to save translations JSON
-            compiler.hooks.emit.tap(plugin, () => {
-                appendTranslationsToFiles(translations);
-
-                return true;
-            });
-        }
+        // save missing translations into JSON
+        compiler.hooks.emit.tap(plugin, () => {
+            appendTranslationsToFiles(missingTranslations);
+            return true;
+        });
 
         // Tap to compilation to later hook into parser to catch calls for translation function
         compiler.hooks.compilation.tap(
@@ -146,21 +145,23 @@ class I18nPlugin {
                 );
 
                 const handler = (parser) => {
-                    parser.hooks.call.for(name).tap(plugin, (expr) => {
+                    parser.hooks.call.for(functionName).tap(plugin, (expr) => {
                         const firstArgument = expr.arguments[0];
                         const param = parser.evaluateExpression(firstArgument);
                         const paramString = param.string;
 
-                        // Extract translations, do nothing translation function
-                        if (extractTranslations) {
-                            translations[paramString] = null;
+                        // Replace translation strings
+                        const result = this.translationMap[paramString];
+
+                        // Extract translation if the translated string
+                        // is missing, do nothing translation function
+                        if (!result) {
+                            missingTranslations.push(paramString);
+
                             return true;
                         }
 
-                        // Replace translation strings
-                        const result = translation[paramString];
-
-                        if (!addParsedVariableToModule(parser, name)) {
+                        if (!addParsedVariableToModule(parser, functionName)) {
                             return false;
                         }
 
@@ -174,8 +175,6 @@ class I18nPlugin {
                             parser.state.current.addDependency(dep);
                             return true;
                         }
-
-                        // console.log(`No translations generated for string: '${paramString}' \n`);
 
                         return false;
                     });
@@ -193,17 +192,4 @@ class I18nPlugin {
     }
 }
 
-const mapTranslationsToConfig = (langs, config) => {
-    const translations = langs.reduce((acc, lang) => {
-        // eslint-disable-next-line import/no-dynamic-require, global-require
-        acc[lang] = require(path.join(__dirname, `../../../i18n/${lang}.json`));
-        return acc;
-    }, {});
-
-    return Object.entries(translations).map(config);
-};
-
-module.exports = {
-    I18nPlugin,
-    mapTranslationsToConfig
-};
+module.exports = I18nPlugin;

@@ -97,6 +97,12 @@ module.exports = class extends Generator {
         );
 
         this.fs.copy(
+            this.templatePath('i18n/**/*'),
+            this.destinationPath('i18n'),
+            { globOptions: { dot: true } }
+        );
+
+        this.fs.copy(
             this.templatePath('public/**/*'),
             this.destinationPath('public'),
             { globOptions: { dot: true } }

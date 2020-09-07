@@ -12,6 +12,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
+const I18nPlugin = require('@scandipwa/webpack-i18n-plugin');
 
 const { sources, PROJECT } = require('./lib/sources');
 const alias = require('./lib/alias');
@@ -74,7 +75,6 @@ module.exports = () => {
             plugins: [
                 // In development mode, provide simple translations and React
                 new webpack.ProvidePlugin({
-                    __: path.join(__dirname, '../webpack-i18n-plugin/translation-function'), // TODO: replace with dependency
                     React: 'react'
                 }),
 
@@ -93,7 +93,9 @@ module.exports = () => {
                 // In case it is Magento - we would like to see customization,
                 // meta and other things directly from Magento 2 => require
                 // disk write for PHP to work with.
-                ...whenMagento([new HtmlWebpackHardDiskPlugin()], [])
+                ...whenMagento([new HtmlWebpackHardDiskPlugin()], []),
+
+                new I18nPlugin({ locale: process.env.PWA_LOCALE })
             ],
             configure: (webpackConfig) => {
                 // Remove module scope plugin, it breaks FallbackPlugin and ProvidePlugin
