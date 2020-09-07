@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
@@ -13,9 +13,9 @@
         "@scandipwa/craco": "^0.0.1",
         "@scandipwa/eslint-config": "^0.0.1",
         "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.0",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.4",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.5",
         "@scandipwa/webpack-fallback-plugin": "^0.0.2",
-        "@scandipwa/webpack-i18n-plugin": "^0.0.4",
+        "@scandipwa/webpack-i18n-plugin": "^0.0.5",
         "babel-plugin-module-resolver": "^4.0.0",
         "babel-plugin-transform-rebem-jsx": "^0.3.3",
         "chokidar": "^3.4.2",
