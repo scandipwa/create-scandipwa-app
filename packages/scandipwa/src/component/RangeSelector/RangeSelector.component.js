@@ -10,7 +10,7 @@
  */
 
 import 'react-input-range/lib/css/index.css';
-import './RangeSelector.style.scss';
+import './RangeSelector.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

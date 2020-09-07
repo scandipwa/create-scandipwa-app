@@ -11,7 +11,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Logo.style.scss';
+import './Logo.style';
 
 import Image from 'Component/Image/Image.component';
 import {
@@ -19,7 +19,7 @@ import {
     IMAGE_NOT_SPECIFIED
 } from 'Component/Image/Image.config';
 
-class Logo extends Image {
+export class Logo extends Image {
     renderPlaceholderLogo() {
         return (
             <svg

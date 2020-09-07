@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './NewProducts.style.scss';
+import './NewProducts.style';
 
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';

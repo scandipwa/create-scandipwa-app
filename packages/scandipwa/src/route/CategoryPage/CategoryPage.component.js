@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CategoryPage.style.scss';
+import './CategoryPage.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

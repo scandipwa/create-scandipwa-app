@@ -11,7 +11,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Slider.style.scss';
+import './Slider.style';
 
 import PropTypes from 'prop-types';
 import { Children, createRef, PureComponent } from 'react';

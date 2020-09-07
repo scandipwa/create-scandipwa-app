@@ -9,7 +9,7 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-import './InjectedStripeCheckoutForm.style.scss';
+import './InjectedStripeCheckoutForm.style';
 
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
@@ -18,7 +18,7 @@ import { CardElement, injectStripe } from 'react-stripe-elements';
 /**
  * @class InjectedStripeCheckoutForm
  */
-class InjectedStripeCheckoutForm extends PureComponent {
+export class InjectedStripeCheckoutForm extends PureComponent {
      static propTypes = {
          stripe: PropTypes.oneOfType([
              PropTypes.object,

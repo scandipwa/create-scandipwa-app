@@ -13,7 +13,7 @@
 /* eslint-disable react/no-array-index-key */
 // Disabled due placeholder needs
 
-import './ProductActions.style.scss';
+import './ProductActions.style';
 
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
@@ -34,8 +34,8 @@ import { PriceType, ProductType } from 'Type/ProductList';
 import isMobile from 'Util/Mobile';
 import {
     BUNDLE,
-    GROUPED,
-    SIMPLE
+    CONFIGURABLE,
+    GROUPED
 } from 'Util/Product';
 
 /**
@@ -264,12 +264,12 @@ export class ProductActions extends PureComponent {
 
     renderCustomizableOptions() {
         const {
-            product: { type_id, options },
+            product: { options },
             getSelectedCustomizableOptions,
             productOptionsData
         } = this.props;
 
-        if (type_id !== SIMPLE || isMobile.any()) {
+        if (isMobile.any()) {
             return null;
         }
 
@@ -376,6 +376,31 @@ export class ProductActions extends PureComponent {
         );
     }
 
+    renderConfigurablePriceBadge() {
+        const {
+            configurableVariantIndex,
+            product: { type_id }
+        } = this.props;
+
+        if (
+            type_id !== CONFIGURABLE
+            || configurableVariantIndex > -1
+        ) {
+            return null;
+        }
+
+        return (
+            <p
+              mix={ {
+                  block: 'ProductActions',
+                  elem: 'ConfigurablePriceBadge'
+              } }
+            >
+                { __('As Low as') }
+            </p>
+        );
+    }
+
     renderPriceWithSchema() {
         const {
             productPrice,
@@ -383,7 +408,11 @@ export class ProductActions extends PureComponent {
         } = this.props;
 
         return (
-            <div>
+            <div
+              block="ProductActions"
+              elem="PriceWrapper"
+            >
+                { this.renderConfigurablePriceBadge() }
                 { this.renderSchema() }
                 <ProductPrice
                   isSchemaRequired
@@ -515,7 +544,6 @@ export class ProductActions extends PureComponent {
             <article block="ProductActions">
                 { this.renderPriceWithGlobalSchema() }
                 { this.renderShortDescription() }
-                { this.renderCustomizableOptions() }
                 <div block="ProductActions" elem="AddToCartWrapper">
                     { this.renderQuantityInput() }
                     { this.renderAddToCart() }
@@ -525,6 +553,7 @@ export class ProductActions extends PureComponent {
                 { this.renderNameAndBrand() }
                 { this.renderSkuAndStock() }
                 { this.renderConfigurableAttributes() }
+                { this.renderCustomizableOptions() }
                 { this.renderBundleItems() }
                 { this.renderGroupedItems() }
                 { this.renderTierPrices() }

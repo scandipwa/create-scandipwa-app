@@ -8,7 +8,7 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-import './WishlistSharedPage.style.scss';
+import './WishlistSharedPage.style';
 
 import PropTypes from 'prop-types';
 

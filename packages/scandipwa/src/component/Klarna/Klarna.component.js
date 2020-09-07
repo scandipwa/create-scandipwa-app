@@ -10,7 +10,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Klarna.style.scss';
+import './Klarna.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -23,7 +23,10 @@ import { fetchMutation } from 'Util/Request';
 
 import { KLARNA_PAYMENTS_CONTAINER_ID, KLARNA_SCRIPT_ID } from './Klarna.config';
 
-const CartDispatcher = import(/* webpackMode: "lazy", webpackChunkName: "dispatchers" */'Store/Cart/Cart.dispatcher');
+export const CartDispatcher = import(
+    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+    'Store/Cart/Cart.dispatcher'
+);
 
 export class Klarna extends PureComponent {
     static propTypes = {

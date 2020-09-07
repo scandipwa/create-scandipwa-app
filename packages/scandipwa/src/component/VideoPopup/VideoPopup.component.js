@@ -11,7 +11,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './VideoPopup.style.scss';
+import './VideoPopup.style';
 
 import { PureComponent } from 'react';
 

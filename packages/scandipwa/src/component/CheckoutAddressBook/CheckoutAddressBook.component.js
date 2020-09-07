@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutAddressBook.style.scss';
+import './CheckoutAddressBook.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -22,7 +22,7 @@ import { BILLING_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import { ADDRESS_BOOK, customerType } from 'Type/Account';
 
-class CheckoutAddressBook extends PureComponent {
+export class CheckoutAddressBook extends PureComponent {
     static propTypes = {
         customer: customerType.isRequired,
         onAddressSelect: PropTypes.func.isRequired,

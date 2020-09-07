@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './WishlistItem.style.scss';
+import './WishlistItem.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

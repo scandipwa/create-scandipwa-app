@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CartPage.style.scss';
+import './CartPage.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -219,6 +219,14 @@ export class CartPage extends PureComponent {
         );
     }
 
+    renderHeading() {
+        return (
+            <h1 block="CartPage" elem="Heading">
+                { __('Shopping cart') }
+            </h1>
+        );
+    }
+
     render() {
         return (
             <main block="CartPage" aria-label="Cart Page">
@@ -227,7 +235,7 @@ export class CartPage extends PureComponent {
                   label="Cart page details"
                 >
                     <div block="CartPage" elem="Static">
-                        <h1 block="CartPage" elem="Heading">{ __('Shopping cart') }</h1>
+                        { this.renderHeading() }
                         { this.renderCartItems() }
                         { this.renderTotalDetails(true) }
                         { this.renderDiscountCode() }

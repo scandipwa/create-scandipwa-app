@@ -9,7 +9,7 @@
  * @link https://gitdub.com/scandipwa/base-tdeme
  */
 
-import './MyAccountOrderTableRow.style.scss';
+import './MyAccountOrderTableRow.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -17,7 +17,7 @@ import { PureComponent } from 'react';
 import { baseOrderInfoType } from 'Type/Account';
 import { formatCurrency } from 'Util/Price';
 
-class MyAccountOrderTableRow extends PureComponent {
+export class MyAccountOrderTableRow extends PureComponent {
     static propTypes = {
         currency_code: PropTypes.string.isRequired,
         base_order_info: baseOrderInfoType.isRequired,

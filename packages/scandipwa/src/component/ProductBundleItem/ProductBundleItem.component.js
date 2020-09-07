@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductBundleItem.style.scss';
+import './ProductBundleItem.style';
 
 import PropTypes from 'prop-types';
 
@@ -23,7 +23,7 @@ import {
     SELECT
 } from './ProductBundleItem.config';
 
-class ProductBundleItem extends ProductCustomizableOption {
+export class ProductBundleItem extends ProductCustomizableOption {
     static propTypes = {
         ...ProductCustomizableOption.propTypes,
         maxQuantity: PropTypes.number.isRequired,

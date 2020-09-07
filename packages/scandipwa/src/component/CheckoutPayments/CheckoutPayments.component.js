@@ -10,7 +10,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutPayments.style.scss';
+import './CheckoutPayments.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -32,7 +32,7 @@ import {
     STRIPE
 } from './CheckoutPayments.config';
 
-class CheckoutPayments extends PureComponent {
+export class CheckoutPayments extends PureComponent {
     static propTypes = {
         showError: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,

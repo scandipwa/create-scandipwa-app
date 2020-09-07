@@ -10,7 +10,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './SliderWidget.style.scss';
+import './SliderWidget.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

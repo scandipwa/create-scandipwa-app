@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './SharedWishlistItem.style.scss';
+import './SharedWishlistItem.style';
 
 import AddToCart from 'Component/AddToCart';
 import Field from 'Component/Field';

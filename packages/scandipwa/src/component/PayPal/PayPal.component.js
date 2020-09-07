@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './PayPal.style.scss';
+import './PayPal.style';
 
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';

@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './StoreSwitcher.style.scss';
+import './StoreSwitcher.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -19,7 +19,7 @@ import Field from 'Component/Field';
 import StoreItems from 'Component/StoreItems';
 import isMobile from 'Util/Mobile';
 
-class StoreSwitcher extends PureComponent {
+export class StoreSwitcher extends PureComponent {
     static propTypes = {
         storeList: PropTypes.arrayOf(
             PropTypes.objectOf(

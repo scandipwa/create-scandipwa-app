@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CmsPage.style.scss';
+import './CmsPage.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutSuccess.style.scss';
+import './CheckoutSuccess.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

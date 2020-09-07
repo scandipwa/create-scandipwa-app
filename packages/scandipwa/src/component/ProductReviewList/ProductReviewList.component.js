@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductReviewList.style.scss';
+import './ProductReviewList.style';
 
 import { PureComponent } from 'react';
 

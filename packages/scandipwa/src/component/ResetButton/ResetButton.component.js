@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ResetButton.style.scss';
+import './ResetButton.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

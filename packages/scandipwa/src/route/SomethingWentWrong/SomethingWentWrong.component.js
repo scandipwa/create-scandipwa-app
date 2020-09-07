@@ -11,7 +11,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './SomethingWentWrong.style.scss';
+import './SomethingWentWrong.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -19,7 +19,7 @@ import { PureComponent } from 'react';
 import ContentWrapper from 'Component/ContentWrapper';
 import Link from 'Component/Link';
 
-class SomethingWentWrong extends PureComponent {
+export class SomethingWentWrong extends PureComponent {
     static propTypes = {
         onClick: PropTypes.func.isRequired,
         errorDetails: PropTypes.shape({

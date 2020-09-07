@@ -1,8 +1,8 @@
 {
     "name": "<%= name %>",
     "dependencies": {
-        "@scandipwa/scandipwa": "^0.0.1",
-        "@scandipwa/scandipwa-scripts": "^0.0.1"
+        "@scandipwa/scandipwa": "^0.0.0",
+        "@scandipwa/scandipwa-scripts": "^0.0.0"
     },
     "scripts": {
         "start": "scandipwa-scripts start",

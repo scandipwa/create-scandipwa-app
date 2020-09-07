@@ -10,7 +10,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Draggable.style.scss';
+import './Draggable.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

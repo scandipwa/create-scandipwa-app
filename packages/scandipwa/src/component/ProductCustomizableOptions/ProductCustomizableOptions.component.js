@@ -8,14 +8,14 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-import './ProductCustomizableOptions.style.scss';
+import './ProductCustomizableOptions.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ProductCustomizableOption from 'Component/ProductCustomizableOption';
 
-class ProductCustomizableOptions extends PureComponent {
+export class ProductCustomizableOptions extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
         options: PropTypes.array,

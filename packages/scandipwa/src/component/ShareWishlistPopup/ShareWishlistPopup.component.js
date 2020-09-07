@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ShareWishlistPopup.style.scss';
+import './ShareWishlistPopup.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

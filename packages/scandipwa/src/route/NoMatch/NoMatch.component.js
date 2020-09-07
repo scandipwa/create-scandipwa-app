@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './NoMatch.style.scss';
+import './NoMatch.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

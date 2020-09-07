@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ReviewStar.style.scss';
+import './ReviewStar.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

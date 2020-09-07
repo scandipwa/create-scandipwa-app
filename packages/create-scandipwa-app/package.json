@@ -1,12 +1,12 @@
 {
     "name": "create-scandipwa-app",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "main": "index.js",
     "bin": "./lib/index.js",
     "license": "OSL-3.0",
     "dependencies": {
         "@caporal/core": "^2.0.2",
-        "@scandipwa/generator": "^0.0.1",
+        "generator-scandipwa": "^0.0.0",
         "validate-npm-package-name": "^3.0.0",
         "yeoman-environment": "^2.10.3"
     }

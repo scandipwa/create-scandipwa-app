@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-depth */
 /* eslint-disable max-len */
 /**
  * ScandiPWA - Progressive Web App for Magento
@@ -10,7 +11,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './MyAccountOverlay.style.scss';
+import './MyAccountOverlay.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -32,7 +33,7 @@ import {
     STATE_SIGN_IN
 } from './MyAccountOverlay.config';
 
-class MyAccountOverlay extends PureComponent {
+export class MyAccountOverlay extends PureComponent {
     static propTypes = {
         // eslint-disable-next-line react/no-unused-prop-types
         isOverlayVisible: PropTypes.bool.isRequired,
@@ -56,14 +57,11 @@ class MyAccountOverlay extends PureComponent {
         handleForgotPassword: PropTypes.func.isRequired,
         handleSignIn: PropTypes.func.isRequired,
         handleCreateAccount: PropTypes.func.isRequired,
-        closeOverlay: PropTypes.func,
-        isCheckout: PropTypes.bool,
-        showOverlay: PropTypes.func.isRequired
+        isCheckout: PropTypes.bool
     };
 
     static defaultProps = {
-        isCheckout: false,
-        closeOverlay: () => {}
+        isCheckout: false
     };
 
     renderMap = {
@@ -91,29 +89,13 @@ class MyAccountOverlay extends PureComponent {
         }
     };
 
-    componentDidMount() {
-        const { showOverlay } = this.props;
-
-        if (!isMobile.any()) {
-            showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
-        }
-    }
-
     renderMyAccount() {
-        const { state, closeOverlay, isCheckout } = this.props;
+        const { state } = this.props;
         const { render, title } = this.renderMap[state];
 
         return (
             <div block="MyAccountOverlay" elem="Action" mods={ { state } }>
                 <p block="MyAccountOverlay" elem="Heading">{ title }</p>
-                { isCheckout && isMobile.any() && (
-                    <button
-                      block="MyAccountOverlay"
-                      elem="CloseButton"
-                      onClick={ closeOverlay }
-                      aria-label={ __('Close') }
-                    />
-                ) }
                 { render() }
             </div>
         );
@@ -343,7 +325,7 @@ class MyAccountOverlay extends PureComponent {
                 >
                     <Field
                       type="text"
-                      label={ __('Login or Email') }
+                      label={ __('Email') }
                       id="email"
                       name="email"
                       autocomplete="email"
@@ -387,14 +369,18 @@ class MyAccountOverlay extends PureComponent {
     }
 
     render() {
-        const { isLoading, onVisible } = this.props;
+        const {
+            isLoading,
+            onVisible,
+            isCheckout
+        } = this.props;
 
         return (
             <Overlay
               id={ CUSTOMER_ACCOUNT_OVERLAY_KEY }
               mix={ { block: 'MyAccountOverlay' } }
               onVisible={ onVisible }
-              isStatic={ !!isMobile.any() }
+              isStatic={ !isCheckout && !!isMobile.any() }
             >
                 <Loader isLoading={ isLoading } />
                 { this.renderMyAccount() }

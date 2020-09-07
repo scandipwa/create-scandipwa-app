@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductGalleryThumbnailImage.style.scss';
+import './ProductGalleryThumbnailImage.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

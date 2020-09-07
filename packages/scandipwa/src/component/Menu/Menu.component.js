@@ -10,7 +10,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Menu.style.scss';
+import './Menu.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

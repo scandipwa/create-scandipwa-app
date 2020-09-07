@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CategorySearch.style.scss';
+import './CategorySearch.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

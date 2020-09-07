@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ContentWrapper.style.scss';
+import './ContentWrapper.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

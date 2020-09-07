@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './HomePage.style.scss';
+import './HomePage.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductList.style.scss';
+import './ProductList.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

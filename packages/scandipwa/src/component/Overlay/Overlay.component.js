@@ -11,7 +11,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Overlay.style.scss';
+import './Overlay.style';
 
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';

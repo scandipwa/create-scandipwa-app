@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductListWidget.style.scss';
+import './ProductListWidget.style';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

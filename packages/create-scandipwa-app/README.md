@@ -1,3 +1,7 @@
-[VORPAL](http://vorpal.js.org/)
-[YO](https://github.com/yeoman/yo)
-[SAO](https://github.com/saojs/sao)
+# create-scandipwa-app
+
+This package contains global command for [Create Scandipwa App](https://github.com/scandipwa/create-scandipwa-app).
+
+Package is currently under development. Docs too.
+
+**Try at your own risk!**

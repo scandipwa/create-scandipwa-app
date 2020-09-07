@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './MyAccountAddressTable.style.scss';
+import './MyAccountAddressTable.style';
 
 import PropTypes from 'prop-types';
 
@@ -18,7 +18,7 @@ import Loader from 'Component/Loader';
 import { addressType } from 'Type/Account';
 import { MixType } from 'Type/Common';
 
-class MyAccountAddressTable extends KeyValueTable {
+export class MyAccountAddressTable extends KeyValueTable {
     static propTypes = {
         mix: MixType,
         getFormatedRegion: PropTypes.func.isRequired,

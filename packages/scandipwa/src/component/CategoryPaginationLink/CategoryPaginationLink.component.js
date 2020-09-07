@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CategoryPaginationLink.style.scss';
+import './CategoryPaginationLink.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

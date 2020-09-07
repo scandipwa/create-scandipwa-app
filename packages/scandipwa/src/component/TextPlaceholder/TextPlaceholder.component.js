@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './TextPlaceholder.style.scss';
+import './TextPlaceholder.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

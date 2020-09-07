@@ -11,7 +11,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Image.style.scss';
+import './Image.style';
 
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';

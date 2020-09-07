@@ -10,7 +10,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductWishlistButton.style.scss';
+import './ProductWishlistButton.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

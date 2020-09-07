@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Footer.style.scss';
+import './Footer.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutAddressForm.style.scss';
+import './CheckoutAddressForm.style';
 
 import PropTypes from 'prop-types';
 
@@ -19,7 +19,7 @@ import { debounce } from 'Util/Request';
 
 import { UPDATE_STATE_FREQUENCY } from './CheckoutAddressForm.config';
 
-class CheckoutAddressForm extends MyAccountAddressForm {
+export class CheckoutAddressForm extends MyAccountAddressForm {
     static propTypes = {
         ...MyAccountAddressForm.propTypes,
         id: PropTypes.string.isRequired,

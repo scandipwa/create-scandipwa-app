@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './NewVersionPopup.style.scss';
+import './NewVersionPopup.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -18,7 +18,7 @@ import Popup from 'Component/Popup';
 
 import { NEW_VERSION_POPUP_ID } from './NewVersionPopup.config';
 
-class NewVersionPopup extends PureComponent {
+export class NewVersionPopup extends PureComponent {
     static propTypes = {
         toggleNewVersion: PropTypes.func.isRequired
     };

@@ -34,7 +34,7 @@ program
     })
     .action(({ args: { appName: name }, options: { template } }) => {
         const env = yeoman.createEnv();
-        env.register(require.resolve(`@scandipwa/generator/generators/${ template }/index.js`));
+        env.register(require.resolve(`generator-scandipwa/generators/${ template }/index.js`));
         env.run(`scandipwa:${ template } ${ name }`);
     });
 

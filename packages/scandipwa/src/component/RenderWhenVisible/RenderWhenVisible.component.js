@@ -1,4 +1,4 @@
-import './RenderWhenVisible.style.scss';
+import './RenderWhenVisible.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -6,7 +6,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 
 import { ChildrenType } from 'Type/Common';
 
-class RenderWhenVisible extends PureComponent {
+export class RenderWhenVisible extends PureComponent {
     static propTypes = {
         children: ChildrenType.isRequired,
         fallback: PropTypes.func

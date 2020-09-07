@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CategorySort.style.scss';
+import './CategorySort.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

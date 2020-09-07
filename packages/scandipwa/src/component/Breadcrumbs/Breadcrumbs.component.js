@@ -9,14 +9,13 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Breadcrumbs.style.scss';
+import './Breadcrumbs.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Breadcrumb from 'Component/Breadcrumb';
 import ContentWrapper from 'Component/ContentWrapper';
-import Link from 'Component/Link';
-import TextPlaceholder from 'Component/TextPlaceholder';
 import { BreadcrumbsType } from 'Type/Breadcrumbs';
 import { appendWithStoreCode } from 'Util/Url';
 
@@ -35,27 +34,13 @@ export class Breadcrumbs extends PureComponent {
         const isDisabled = !url || breadcrumbs.length - 1 === i;
 
         return (
-            <li
-              block="Breadcrumbs"
-              elem="Crumb"
+            <Breadcrumb
+              name={ name }
+              url={ url }
+              index={ i }
               key={ i }
-              itemProp="itemListElement"
-              itemScope
-              itemType="http://schema.org/ListItem"
-            >
-                <Link
-                  block="Breadcrumbs"
-                  elem="Link"
-                  to={ url || '' }
-                  tabIndex={ isDisabled ? '-1' : '0' }
-                >
-                    <meta itemProp="item" content={ window.location.origin + (url || '') } />
-                    <span itemProp="name">
-                        <TextPlaceholder content={ name } />
-                    </span>
-                    <meta itemProp="position" content={ i } />
-                </Link>
-            </li>
+              isDisabled={ isDisabled }
+            />
         );
     }
 

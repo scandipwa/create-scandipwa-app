@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductReviewForm.style.scss';
+import './ProductReviewForm.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';

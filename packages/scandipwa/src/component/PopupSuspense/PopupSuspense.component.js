@@ -1,7 +1,7 @@
-import './PopupSuspense.style.scss';
+import './PopupSuspense.style';
 // Import styles from different bundles
-import 'Component/CartOverlay/CartOverlay.style.scss';
-import 'Component/MyAccountOverlay/MyAccountOverlay.style.scss';
+import 'Component/CartOverlay/CartOverlay.style';
+import 'Component/MyAccountOverlay/MyAccountOverlay.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -13,7 +13,7 @@ import Overlay from 'Component/Overlay';
 
 import { OVERLAY_PLACEHOLDER } from './PopupSuspense.config';
 
-class PopupSuspense extends PureComponent {
+export class PopupSuspense extends PureComponent {
     static propTypes = {
         /** Passed props */
         onVisible: PropTypes.func,

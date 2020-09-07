@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Notification.style.scss';
+import './Notification.style';
 
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';

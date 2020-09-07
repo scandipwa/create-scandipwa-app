@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './AddToCart.style.scss';
+import './AddToCart.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
