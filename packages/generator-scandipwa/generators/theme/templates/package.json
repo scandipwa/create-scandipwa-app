@@ -1,5 +1,6 @@
 {
     "name": "<%= name %>",
+    "private": true,
     "dependencies": {
         "@scandipwa/scandipwa": "^0.0.0",
         "@scandipwa/scandipwa-scripts": "^0.0.0"
