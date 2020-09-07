@@ -1,7 +1,6 @@
 {
     "private": true,
     "name": "@scandipwa/eslint-plugin-scandipwa-guidelines",
-    "version": "1.10.2",
     "description": "Eslint rules for ScandiPWA",
     "keywords": [
         "eslint",

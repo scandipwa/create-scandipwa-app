@@ -4,7 +4,6 @@
 	"publisher": "ScandiPWA",
 	"displayName": "ScandiPWA development toolkit",
 	"description": "ScandiPWA VSCode development tools",
-	"version": "1.0.1",
 	"icon": "icon.png",
 	"license": "SEE LICENSE IN LICENSE",
 	"repository": {
