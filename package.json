@@ -1,5 +1,5 @@
 {
-    "private": "true",
+    "private": true,
     "scripts": {
         "bootstrap": "create-scandipwa-app",
         "postinstall": "lerna bootstrap",
