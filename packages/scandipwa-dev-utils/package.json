@@ -4,6 +4,7 @@
     "description": "",
     "files": [
         "composer.js",
+        "should-use-yarn.js",
         "logger.js",
         "greet.js",
         "/lib"
