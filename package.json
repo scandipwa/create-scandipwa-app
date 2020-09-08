@@ -4,7 +4,7 @@
         "bootstrap": "create-scandipwa-app",
         "postinstall": "lerna bootstrap",
         "clean": "lerna clean --yes",
-        "preversion": "node tasks/compile-lockfile.js"
+        "compile:lockfile": "node tasks/compile-lockfile.js"
     },
     "dependencies": {
         "fs-extra": "^9.0.1",
