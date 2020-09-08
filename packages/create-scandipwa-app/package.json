@@ -1,17 +1,17 @@
 {
     "name": "create-scandipwa-app",
     "version": "0.0.9",
-    "main": "./lib/index.js",
-    "bin": "./lib/index.js",
+    "main": "./index.js",
+    "bin": "./index.js",
     "license": "OSL-3.0",
-    "files": [
-        "/lib"
-    ],
     "dependencies": {
         "@caporal/core": "^2.0.2",
-        "generator-scandipwa": "^0.0.8",
-        "validate-npm-package-name": "^3.0.0",
-        "yeoman-environment": "^2.10.3"
+        "@scandipwa/scandipwa-dev-utils": "^0.0.5",
+        "cross-spawn": "^7.0.3",
+        "mem-fs": "^1.2.0",
+        "mem-fs-editor": "^7.0.1",
+        "semver": "^7.3.2",
+        "validate-npm-package-name": "^3.0.0"
     },
     "engines": {
         "node": ">=10"

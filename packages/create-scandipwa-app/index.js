@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
+const path = require('path');
 const { program } = require('@caporal/core');
-const yeoman = require('yeoman-environment');
 const validatePackageName = require('validate-npm-package-name');
+const init = require('./create-scandipwa-app');
 
 program
     .argument('<app name>', 'ScandiPWA package name to create', {
@@ -33,9 +34,27 @@ program
         validator: ['theme', 'magento']
     })
     .action(({ args: { appName: name }, options: { template } }) => {
-        const env = yeoman.createEnv();
-        env.register(require.resolve(`generator-scandipwa/generators/${ template }/index.js`));
-        env.run(`scandipwa:${ template } ${ name }`);
+        const pathArr = name.split('/');
+        const orgPathArray = pathArr.slice(-2);
+
+        /**
+         * In case pathArr is something like ['projects', '@scandipwa', 'test']
+         * it should return '@scandipwa/test' as name as 'projects/test' as path.
+         */
+        if (orgPathArray[0].startsWith('@')) {
+            return {
+                name: path.join(...orgPathArray),
+                path: path.join(...pathArr.slice(0, -2), orgPathArray[1])
+            }
+        }
+
+        const options = {
+            name: pathArr[pathArr.length - 1],
+            path: path.join(...pathArr),
+            template
+        };
+
+        init(options);
     });
 
 program.run();
