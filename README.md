@@ -29,3 +29,8 @@
 - Deal with service-worker, find a way to change it
 - Implement PHP-based application serving (to work with M2)
 - Rework initial boot-strapper from YO to custom
+
+## Publish instructions
+
+- Run `yarn compile:lockfile`, commit result
+- Run `lerna publish`
