@@ -120,6 +120,12 @@ module.exports = class extends Generator {
         );
 
         this.fs.copyTpl(
+            this.templatePath('yarn.lock.cached'),
+            this.destinationPath('yarn.lock'),
+            this.props
+        );
+
+        this.fs.copyTpl(
             this.templatePath('composer.json'),
             this.destinationPath('composer.json'),
             this.props

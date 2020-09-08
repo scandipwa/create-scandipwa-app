@@ -3,9 +3,11 @@
     "scripts": {
         "bootstrap": "create-scandipwa-app",
         "postinstall": "lerna bootstrap",
-        "clean": "lerna clean --yes"
+        "clean": "lerna clean --yes",
+        "preversion": "node tasks/compile-lockfile.js"
     },
     "dependencies": {
+        "fs-extra": "^9.0.1",
         "lerna": "^3.22.1"
     },
     "workspaces": [

@@ -28,3 +28,4 @@
 - In Magento mode, generate PUBLIC_URL automatically from `theme.xml`
 - Deal with service-worker, find a way to change it
 - Implement PHP-based application serving (to work with M2)
+- Rework initial boot-strapper from YO to custom
