@@ -36,4 +36,6 @@ for (const source in sourcePrefixMap) {
     }
 }
 
+// TODO: generate jsconfig.js for VSCode suggestions
+
 module.exports = alias;
