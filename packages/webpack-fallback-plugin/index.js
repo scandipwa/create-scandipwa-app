@@ -14,6 +14,8 @@ const fs = require('fs');
 
 const prepareSources = require('./lib/sources');
 
+// TODO: rework hard-coded /src and /pub apendixes, add dynamic list instead
+
 class FallbackPlugin {
     /**
      * Constructor, options provider
@@ -149,6 +151,41 @@ class FallbackPlugin {
     }
 
     /**
+     * Get if path is coming from sources src/ or /pub directory
+     * 
+     * @param {*} pathname 
+     */
+    getIsFromSources(pathname) {
+        const { sources } = this.options;
+
+        // Skip null paths
+        if (!pathname) {
+            return true;
+        }
+
+        // Skip all non-absolute paths
+        if (!path.isAbsolute(pathname)) {
+            return true;
+        }
+
+        // Check if request is coming from ScandiPWA sources (/src or /pub) folders
+        for (let i = 0; i < sources.values.length; i++) {
+            const sourcePath = sources.values[i];
+            const sourcePathSrc = path.join(sourcePath, 'src');
+            const sourcePathPublic = path.join(sourcePath, 'public');
+
+            if (
+                pathname.includes(sourcePathSrc)
+                || pathname.includes(sourcePathPublic)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Webpack function responsible for resolve request handling
      *
      * @param {object} resolver
@@ -173,6 +210,11 @@ class FallbackPlugin {
             const requestFromPathname = this.getRequestFromPathname(request);
             const requestFromIndex = this.getSourceIndex(requestFromPathname);
             const requestToIndex = this.getSourceIndex(requestToPathname);
+
+            if (!this.getIsFromSources(requestFromPathname)) {
+                callback();
+                return;
+            }
 
             /**
              * If requestFromIndex < requestToIndex => from top priority to low priority request
