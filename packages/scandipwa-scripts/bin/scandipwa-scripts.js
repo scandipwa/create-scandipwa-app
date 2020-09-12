@@ -5,7 +5,6 @@ const path = require('path');
 const debounce = require('debounce');
 const chokidar = require('chokidar');
 const kill = require('tree-kill');
-const clearConsole = require('react-dev-utils/clearConsole');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
 
@@ -66,7 +65,7 @@ const spawnUndead = (isRestarted = false) => {
             '--config', path.join(__dirname, '../craco.config.js')
         ],
         {
-            stdio: ['inherit', 'pipe', 'inherit'],
+            stdio: ['inherit', 'inherit', 'inherit'],
             env: {
                 ...process.env,
                 BROWSER: isRestarted ? 'none' : '',
@@ -78,37 +77,8 @@ const spawnUndead = (isRestarted = false) => {
         }
     );
 
-    // TODO: resolve issue with "Could not resolve" on first run
-
-    child.stdout.on('data', (output) => {
-        const string = output.toString();
-
-        // Simply clear the console
-        if (/Starting the development server/gm.test(string)) {
-            clearConsole();
-            return;
-        }
-
-        // Clear the console, but print the error
-        if (/Compiled successfully|Failed to compile/gm.test(string)) {
-            clearConsole();
-        }
-
-        // Simply print nothing
-        // eslint-disable-next-line max-len
-        if (/folder is ready to be deployed|bit\.ly\/CRA-deploy|Find out more about deployment|You may serve it with a static|serve -s/gm.test(string)) {
-            return;
-        }
-
-        logger.log(string);
-
-        /**
-         * Show warning to reload the browser
-         */
-        if (isRestarted && string.includes('To create a production')) {
-            logger.note('Reload the page to see results!');
-        }
-    });
+    // TODO: can we auto-comnnect hot-reload back?
+    // TODO: remove production build reference to React
 
     child.on('close', () => {
         if (isProd) {
