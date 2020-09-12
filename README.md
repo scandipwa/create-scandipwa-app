@@ -28,6 +28,7 @@
 - In Magento mode, generate PUBLIC_URL automatically from `theme.xml`
 - Deal with service-worker, find a way to change it
 - Implement PHP-based application serving (to work with M2)
+- Fix port is allocated issue (app does not self-restart)
 
 ## Publish instructions
 

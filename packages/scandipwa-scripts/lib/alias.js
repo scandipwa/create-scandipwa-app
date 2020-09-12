@@ -2,6 +2,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable fp/no-loops */
 const path = require('path');
+const fs = require('fs');
 const { sources, CORE, PROJECT } = require('./sources');
 
 const aliasPostfixMap = {
@@ -37,5 +38,23 @@ for (const source in sourcePrefixMap) {
 }
 
 // TODO: generate jsconfig.js for VSCode suggestions
+const jsConfig = {
+    compilerOptions: {
+        baseUrl: './',
+        paths: Object.entries(alias).reduce(
+            (acc, [key, path]) => ({
+                ...acc,
+                [`${ key }/*`]: [`${ path }/*`]
+            }),
+            {}
+        )
+    }
+};
+
+fs.writeFileSync(
+    path.join(process.cwd(), 'jsconfig.json'),
+    // eslint-disable-next-line no-magic-numbers
+    JSON.stringify(jsConfig, undefined, 4)
+);
 
 module.exports = alias;
