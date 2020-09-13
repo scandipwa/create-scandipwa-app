@@ -42,10 +42,29 @@ const jsConfig = {
     compilerOptions: {
         baseUrl: './',
         paths: Object.entries(alias).reduce(
-            (acc, [key, path]) => ({
-                ...acc,
-                [`${ key }/*`]: [`${ path }/*`]
-            }),
+            (acc, [key, path]) => {
+                const currentKey = `${ key }/*`;
+
+                /**
+                 * Map paths to a source key, include paths from keys
+                 * which include the current path, i.e.
+                 * `SourceComponent` should also include `Component`
+                */
+                const matchingPaths = Object.entries(acc).reduce(
+                    (foundPaths, [prevKey, prevPaths]) => {
+                        if (currentKey.includes(prevKey)) {
+                            foundPaths.push(...prevPaths);
+                        }
+
+                        return foundPaths;
+                    },
+                    []
+                );
+
+                acc[currentKey] = [...matchingPaths, `${path}*`];
+
+                return acc;
+            },
             {}
         )
     }
