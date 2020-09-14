@@ -42,9 +42,10 @@ const jsConfig = {
     compilerOptions: {
         baseUrl: './',
         paths: Object.entries(alias).reduce(
-            (acc, [key, path]) => ({
+            (acc, [key, pathname]) => ({
                 ...acc,
-                [`${ key }/*`]: [`${ path }/*`]
+                // take a relative pathname, so this file could be commited
+                [`${ key }/*`]: [`${ path.relative(process.cwd(), pathname) }/*`]
             }),
             {}
         )
