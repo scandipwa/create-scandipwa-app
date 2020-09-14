@@ -42,11 +42,32 @@ const jsConfig = {
     compilerOptions: {
         baseUrl: './',
         paths: Object.entries(alias).reduce(
-            (acc, [key, pathname]) => ({
-                ...acc,
-                // take a relative pathname, so this file could be commited
-                [`${ key }/*`]: [`${ path.relative(process.cwd(), pathname) }/*`]
-            }),
+            (acc, [key, pathname]) => {
+                const currentKey = `${ key }/*`;
+
+                /**
+                 * Map paths to a source key, include paths from keys
+                 * which include the current path, i.e.
+                 * `SourceComponent` should also include `Component`
+                */
+                const matchingPaths = Object.entries(acc).reduce(
+                    (foundPaths, [prevKey, prevPaths]) => {
+                        if (currentKey.includes(prevKey)) {
+                            foundPaths.push(...prevPaths);
+                        }
+
+                        return foundPaths;
+                    },
+                    []
+                );
+
+                acc[currentKey] = [
+                    ...matchingPaths,
+                    `${path.relative(process.cwd(), pathname)}*`
+                ];
+
+                return acc;
+            },
             {}
         )
     }
