@@ -63,7 +63,7 @@ const jsConfig = {
 
                 acc[currentKey] = [
                     ...matchingPaths,
-                    `${path.relative(process.cwd(), pathname)}*`
+                    `${path.relative(process.cwd(), pathname)}/*`
                 ];
 
                 return acc;
