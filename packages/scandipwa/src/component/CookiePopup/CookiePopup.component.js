@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CookiePopup.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -21,6 +19,9 @@ import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
 import { COOKIE_POPUP } from './CookiePopup.config';
 
+import './CookiePopup.style';
+
+/** @namespace Component/CookiePopup/Component */
 export class CookiePopup extends PureComponent {
     static propTypes = {
         cookieText: PropTypes.string,

@@ -19,6 +19,7 @@ import { getStore } from 'Store';
  * Update query params without adding to history
  * @param {String} name
  * @param {String} value
+ * @namespace Util/Url/updateQueryParamWithoutHistory
  */
 export const updateQueryParamWithoutHistory = (name, value, history, location) => {
     const { search, pathname } = location;
@@ -31,6 +32,7 @@ export const updateQueryParamWithoutHistory = (name, value, history, location) =
 /**
  * Remove query param without adding to history
  * @param {String} name
+ * @namespace Util/Url/removeQueryParamWithoutHistory
  */
 export const removeQueryParamWithoutHistory = (name, history, location) => {
     const { search, pathname } = location;
@@ -44,6 +46,7 @@ export const removeQueryParamWithoutHistory = (name, history, location) => {
  * Get query param from url
  * @param {Object} match match object from react-router
  * @param {Object} location location object from react-router
+ * @namespace Util/Url/getUrlParam
  */
 export const getUrlParam = (match, location) => {
     const baseUrl = match.path.replace(window.storeRegexText, '').replace('/', '');
@@ -59,6 +62,7 @@ export const getUrlParam = (match, location) => {
 /**
  * Append store code to URL
  * @param {String} pathname the URL to append store code to
+ * @namespace Util/Url/appendWithStoreCode
  */
 export const appendWithStoreCode = (pathname) => {
     const { ConfigReducer: { base_link_url = window.location.origin } = {} } = getStore().getState() || {};
@@ -88,6 +92,7 @@ export const appendWithStoreCode = (pathname) => {
  * @param {String} variable Variable from URL
  * @param {Object} variable location object from react-router
  * @return {String|false} Variable value
+ * @namespace Util/Url/getQueryParam
  */
 export const getQueryParam = (variable, location) => {
     const query = location.search.substring(1);
@@ -107,6 +112,7 @@ export const getQueryParam = (variable, location) => {
  * Convert url params to object with key value pairs
  * @param {String} queryString url query string
  * @return {Object} Key-Value pairs
+ * @namespace Util/Url/convertQueryStringToKeyValuePairs
  */
 export const convertQueryStringToKeyValuePairs = (queryString) => {
     const keyValuePairs = {};
@@ -130,6 +136,7 @@ export const convertQueryStringToKeyValuePairs = (queryString) => {
  * @param {String} currentKey key of the value to be updated
  * @param {String} currentValue value to be updated
  * @return {Object} Key-Value pairs
+ * @namespace Util/Url/updateKeyValuePairs
  */
 export const updateKeyValuePairs = (keyValuePairs, currentKey, currentValue) => {
     const updatedKeyValuePairs = {};
@@ -151,6 +158,7 @@ export const updateKeyValuePairs = (keyValuePairs, currentKey, currentValue) => 
  * Convert object with key value pairs to url query string
  * @param {Object} keyValuePairs object with key value pairs
  * @return {String} Converted query string
+ * @namespace Util/Url/convertKeyValuesToQueryString
  */
 export const convertKeyValuesToQueryString = (keyValuePairs) => {
     let newSearchQuery = '';
@@ -168,6 +176,7 @@ export const convertKeyValuesToQueryString = (keyValuePairs) => {
     return `${newSearchQuery.slice(0, -1)}`; // remove trailing '&'
 };
 
+/** @namespace Util/Url/generateQuery */
 export const generateQuery = (keyValueObject, location, history) => {
     let query = history.location.search;
 
@@ -198,6 +207,7 @@ export const generateQuery = (keyValueObject, location, history) => {
  * @param {Object} variable location object from react-router
  * @param {Object} variable react router history object
  * @param {Object} variable is url flush required
+ * @namespace Util/Url/setQueryParams
  */
 export const setQueryParams = (keyValueObject, location, history) => {
     const { state } = location;
@@ -209,6 +219,7 @@ export const setQueryParams = (keyValueObject, location, history) => {
 /**
  * Remove all queries except default sort options from url
  * @param {Object} variable react router history object
+ * @namespace Util/Url/clearQueriesFromUrl
  */
 export const clearQueriesFromUrl = (history) => {
     history.push({ search: '' });
@@ -218,6 +229,7 @@ export const clearQueriesFromUrl = (history) => {
  * Convert object with key value pairs to url query string
  * @param {Object} keyValuePairs object with key value pairs
  * @return {String} Converted query string
+ * @namespace Util/Url/objectToUri
  */
 export const objectToUri = (keyValueObject = {}) => {
     const paramString = Object.entries(keyValueObject).sort()

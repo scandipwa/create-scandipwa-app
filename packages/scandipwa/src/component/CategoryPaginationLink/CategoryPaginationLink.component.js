@@ -9,14 +9,15 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CategoryPaginationLink.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Link from 'Component/Link';
 import { ChildrenType } from 'Type/Common';
 
+import './CategoryPaginationLink.style';
+
+/** @namespace Component/CategoryPaginationLink/Component */
 export class CategoryPaginationLink extends PureComponent {
     static propTypes = {
         children: ChildrenType,

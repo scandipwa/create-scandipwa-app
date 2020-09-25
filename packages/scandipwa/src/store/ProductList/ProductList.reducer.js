@@ -17,19 +17,24 @@ import {
 } from 'Store/ProductList/ProductList.action';
 import { getIndexedProducts } from 'Util/Product';
 
-export const initialState = {
+/** @namespace Store/ProductList/Reducer/getInitialState */
+export const getInitialState = () => ({
     pages: {},
     totalItems: 0,
     totalPages: 0,
     isLoading: true,
     currentArgs: {}
-};
+});
 
 export const defaultConfig = {
     itemsPerPageCount: 12
 };
 
-export const ProductListReducer = (state = initialState, action) => {
+/** @namespace Store/ProductList/Reducer */
+export const ProductListReducer = (
+    state = getInitialState(),
+    action
+) => {
     const {
         type,
         items: initialItems = [],

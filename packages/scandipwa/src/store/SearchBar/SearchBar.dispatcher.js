@@ -18,10 +18,11 @@ import { clearSearchResults, updateLoadStatus, updateSearchBar } from './SearchB
  * Search Bar Dispatcher
  * @class SearchBarDispatcher
  * @extends QueryDispatcher
+ * @namespace Store/SearchBar/Dispatcher
  */
 export class SearchBarDispatcher extends QueryDispatcher {
-    constructor() {
-        super('SearchBar');
+    __construct() {
+        super.__construct('SearchBar');
     }
 
     onSuccess(data, dispatch) {

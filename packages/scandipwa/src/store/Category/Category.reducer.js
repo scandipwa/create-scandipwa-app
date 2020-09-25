@@ -11,11 +11,16 @@
 
 import { UPDATE_CURRENT_CATEGORY } from './Category.action';
 
-export const initialState = {
+/** @namespace Store/Category/Reducer/getInitialState */
+export const getInitialState = () => ({
     category: {}
-};
+});
 
-export const CategoryReducer = (state = initialState, { type, category }) => {
+/** @namespace Store/Category/Reducer */
+export const CategoryReducer = (
+    state = getInitialState(),
+    { type, category }
+) => {
     switch (type) {
     case UPDATE_CURRENT_CATEGORY:
         return {

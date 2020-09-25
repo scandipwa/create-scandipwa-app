@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductInformation.style';
-
 import PropTypes from 'prop-types';
 import { Fragment, PureComponent } from 'react';
 
@@ -20,6 +18,9 @@ import Html from 'Component/Html';
 import ProductAttributeValue from 'Component/ProductAttributeValue';
 import { AttributeType, ProductType } from 'Type/ProductList';
 
+import './ProductInformation.style';
+
+/** @namespace Component/ProductInformation/Component */
 export class ProductInformation extends PureComponent {
     static propTypes = {
         product: ProductType.isRequired,

@@ -19,14 +19,17 @@ import { customerType } from 'Type/Account';
 
 import MyAccountAddressBook from './MyAccountAddressBook.component';
 
+/** @namespace Component/MyAccountAddressBook/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer
 });
 
+/** @namespace Component/MyAccountAddressBook/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
 });
 
+/** @namespace Component/MyAccountAddressBook/Container */
 export class MyAccountAddressBookContainer extends PureComponent {
     static propTypes = {
         customer: customerType.isRequired,
@@ -44,13 +47,13 @@ export class MyAccountAddressBookContainer extends PureComponent {
             return '';
         }
         if (default_billing && default_shipping) {
-            return ' - default shipping, billing address';
+            return __(' - default shipping, billing address');
         }
         if (default_billing) {
-            return ' - default billing address';
+            return __(' - default billing address');
         }
 
-        return ' - default shipping address';
+        return __(' - default shipping address');
     }
 
     showCreateNewPopup() {

@@ -28,12 +28,15 @@ import {
     MENU_TAB
 } from './NavigationTabs.config';
 
+/** @namespace Component/NavigationTabs/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     navigationState: state.NavigationReducer[BOTTOM_NAVIGATION_TYPE].navigationState,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
+    device: state.ConfigReducer.device,
     cartTotals: state.CartReducer.cartTotals
 });
 
+/** @namespace Component/NavigationTabs/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
@@ -44,6 +47,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export const DEFAULT_NAVIGATION_TABS_STATE = { name: MENU_TAB };
 
+/** @namespace Component/NavigationTabsContainer/Container */
 export class NavigationTabsContainer extends NavigationAbstractContainer {
     default_state = DEFAULT_NAVIGATION_TABS_STATE;
 

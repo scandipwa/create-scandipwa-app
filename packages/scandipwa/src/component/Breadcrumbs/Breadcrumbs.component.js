@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Breadcrumbs.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -19,9 +17,12 @@ import ContentWrapper from 'Component/ContentWrapper';
 import { BreadcrumbsType } from 'Type/Breadcrumbs';
 import { appendWithStoreCode } from 'Util/Url';
 
+import './Breadcrumbs.style';
+
 /**
  * Breadcrumbs
  * @class Breadcrumbs
+ * @namespace Component/Breadcrumbs/Component
  */
 export class Breadcrumbs extends PureComponent {
     static propTypes = {

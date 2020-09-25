@@ -29,13 +29,17 @@ export const MyAccountDispatcher = import(
     'Store/MyAccount/MyAccount.dispatcher'
 );
 
+/** @namespace Route/ConfirmAccountPage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     isSignedIn: state.MyAccountReducer.isSignedIn
 });
 
+/** @namespace Route/ConfirmAccountPage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateBreadcrumbs: (breadcrumbs) => {
-        BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
+        BreadcrumbsDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
+        );
     },
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     confirmAccount: (options) => MyAccountDispatcher.then(
@@ -47,6 +51,7 @@ export const mapDispatchToProps = (dispatch) => ({
     )
 });
 
+/** @namespace Route/ConfirmAccountPage/Container */
 export class ConfirmAccountPageContainer extends PureComponent {
     static propTypes = {
         location: LocationType.isRequired,
@@ -63,8 +68,8 @@ export class ConfirmAccountPageContainer extends PureComponent {
         onFormError: this.onFormError.bind(this)
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         this.state = {
             redirect: false,
@@ -96,9 +101,18 @@ export class ConfirmAccountPageContainer extends PureComponent {
         const { email } = options;
 
         confirmAccount({ ...options, password })
-            .then(() => signIn({ email, password }))
-            .then(() => this.setState({ redirect: true }))
-            .catch(() => this.setState({ isLoading: false }));
+            .then(
+                /** @namespace Route/ConfirmAccountPage/Container/confirmAccountThen */
+                () => signIn({ email, password })
+            )
+            .then(
+                /** @namespace Route/ConfirmAccountPage/Container/confirmAccountThenThen */
+                () => this.setState({ redirect: true })
+            )
+            .catch(
+                /** @namespace Route/ConfirmAccountPage/Container/confirmAccountThenThenCatch */
+                () => this.setState({ isLoading: false })
+            );
     }
 
     onFormError() {

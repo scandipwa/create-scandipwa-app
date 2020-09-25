@@ -1,3 +1,13 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ */
 import { connect } from 'react-redux';
 
 // TODO: try SEARCH type
@@ -37,6 +47,7 @@ export const ProductListInfoDispatcher = import(
     'Store/ProductListInfo/ProductListInfo.dispatcher'
 );
 
+/** @namespace Route/SearchPage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     category: state.CategoryReducer.category,
     isOffline: state.OfflineReducer.isOffline,
@@ -46,9 +57,11 @@ export const mapStateToProps = (state) => ({
     minPriceRange: state.ProductListInfoReducer.minPrice,
     maxPriceRange: state.ProductListInfoReducer.maxPrice,
     isInfoLoading: state.ProductListInfoReducer.isLoading,
-    totalPages: state.ProductListReducer.totalPages
+    totalPages: state.ProductListReducer.totalPages,
+    device: state.ConfigReducer.device
 });
 
+/** @namespace Route/SearchPage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     toggleOverlayByKey: (key) => dispatch(toggleOverlayByKey(key)),
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
@@ -74,6 +87,7 @@ export const mapDispatchToProps = (dispatch) => ({
     updateMeta: (meta) => dispatch(updateMeta(meta))
 });
 
+/** @namespace Route/SearchPage/Container */
 export class SearchPageContainer extends CategoryPageContainer {
     static defaultProps = {
         ...this.defaultProps,

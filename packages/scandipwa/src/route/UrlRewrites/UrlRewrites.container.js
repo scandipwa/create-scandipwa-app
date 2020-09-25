@@ -28,12 +28,14 @@ export const UrlRewritesDispatcher = import(
     'Store/UrlRewrites/UrlRewrites.dispatcher'
 );
 
+/** @namespace Route/UrlRewrites/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     urlRewrite: state.UrlRewritesReducer.urlRewrite,
     isLoading: state.UrlRewritesReducer.isLoading,
     requestedUrl: state.UrlRewritesReducer.requestedUrl
 });
 
+/** @namespace Route/UrlRewrites/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     requestUrlRewrite: (urlParam) => {
         UrlRewritesDispatcher.then(
@@ -42,6 +44,7 @@ export const mapDispatchToProps = (dispatch) => ({
     }
 });
 
+/** @namespace Route/UrlRewrites/Container */
 export class UrlRewritesContainer extends PureComponent {
     static propTypes = {
         location: LocationType.isRequired,
@@ -68,8 +71,8 @@ export class UrlRewritesContainer extends PureComponent {
         page: TYPE_CMS_PAGE
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         this.requestUrlRewrite();
     }

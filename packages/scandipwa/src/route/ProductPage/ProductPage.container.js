@@ -48,19 +48,24 @@ export const ProductDispatcher = import(
     'Store/Product/Product.dispatcher'
 );
 
+/** @namespace Route/ProductPage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     isOffline: state.OfflineReducer.isOffline,
     product: state.ProductReducer.product,
     navigation: state.NavigationReducer[TOP_NAVIGATION_TYPE],
-    metaTitle: state.MetaReducer.title
+    metaTitle: state.MetaReducer.title,
+    device: state.ConfigReducer.device
 });
 
+/** @namespace Route/ProductPage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
     changeNavigationState: (state) => dispatch(changeNavigationState(BOTTOM_NAVIGATION_TYPE, state)),
     requestProduct: (options) => {
         // TODO: check linked products, there might be issues :'(
-        ProductDispatcher.then(({ default: dispatcher }) => dispatcher.handleData(dispatch, options));
+        ProductDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.handleData(dispatch, options)
+        );
     },
     setBigOfflineNotice: (isBig) => dispatch(setBigOfflineNotice(isBig)),
     updateBreadcrumbs: (breadcrumbs) => BreadcrumbsDispatcher.then(
@@ -72,6 +77,7 @@ export const mapDispatchToProps = (dispatch) => ({
     goToPreviousNavigationState: (state) => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE, state))
 });
 
+/** @namespace Route/ProductPage/Container */
 export class ProductPageContainer extends PureComponent {
     state = {
         configurableVariantIndex: -1,
@@ -166,6 +172,11 @@ export class ProductPageContainer extends PureComponent {
          * Always make sure the navigation switches into the MENU tab
          * */
         this.updateNavigationState();
+
+        /**
+         * Ensure transition PDP => homepage => PDP always having proper meta
+         */
+        this.updateMeta();
 
         /**
          * Make sure to update header state, the data-source will
@@ -515,5 +526,6 @@ export class ProductPageContainer extends PureComponent {
     }
 }
 
-export const ProductPageContainerWrapper = connect(mapStateToProps, mapDispatchToProps)(ProductPageContainer);
-export default withRouter(ProductPageContainerWrapper);
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(ProductPageContainer)
+);

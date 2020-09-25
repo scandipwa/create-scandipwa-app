@@ -25,12 +25,14 @@ export const CartDispatcher = import(
     'Store/Cart/Cart.dispatcher'
 );
 
+/** @namespace Component/ProductCard/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     addProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
     )
 });
 
+/** @namespace Component/ProductCard/Container */
 export class ProductCardContainer extends PureComponent {
     static propTypes = {
         product: ProductType,
@@ -146,15 +148,15 @@ export class ProductCardContainer extends PureComponent {
     _getProductOrVariant() {
         const { product: { type_id, variants }, product } = this.props;
 
-        return (
-            (
-                type_id === 'configurable'
-                && variants !== undefined
-                && variants.length
-            )
-                ? variants[this._getCurrentVariantIndex()]
-                : product
-        ) || {};
+        if (
+            type_id === 'configurable'
+            && variants !== undefined
+            && variants.length
+        ) {
+            return variants[this._getCurrentVariantIndex()] || {};
+        }
+
+        return product || {};
     }
 
     _getAvailableVisualOptions() {
@@ -205,4 +207,8 @@ export class ProductCardContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(ProductCardContainer);
+/** @namespace Component/ProductCard/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductCardContainer);

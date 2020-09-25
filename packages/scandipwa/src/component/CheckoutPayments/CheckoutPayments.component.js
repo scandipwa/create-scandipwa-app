@@ -10,8 +10,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutPayments.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -19,39 +17,24 @@ import Braintree from 'Component/Braintree';
 import CheckoutPayment from 'Component/CheckoutPayment';
 import Klarna from 'Component/Klarna';
 import NotSupportedPayment from 'Component/NotSupportedPayment';
-import PayPal from 'Component/PayPal';
-import Stripe from 'Component/Stripe';
 import { paymentMethodsType } from 'Type/Checkout';
 
 import {
     BRAINTREE,
-    CHECK_MONEY,
-    KLARNA,
-    PAYPAL_EXPRESS,
-    PAYPAL_EXPRESS_CREDIT,
-    STRIPE
+    KLARNA
 } from './CheckoutPayments.config';
 
+import './CheckoutPayments.style';
+
+/** @namespace Component/CheckoutPayments/Component */
 export class CheckoutPayments extends PureComponent {
     static propTypes = {
         showError: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
-        setDetailsStep: PropTypes.func.isRequired,
         selectPaymentMethod: PropTypes.func.isRequired,
         initBraintree: PropTypes.func.isRequired,
         paymentMethods: paymentMethodsType.isRequired,
-        setOrderButtonVisibility: PropTypes.func.isRequired,
-        setStripeRef: PropTypes.func.isRequired,
         setOrderButtonEnableStatus: PropTypes.func.isRequired,
-        selectedPaymentCode: PropTypes.oneOf([
-            KLARNA,
-            BRAINTREE,
-            CHECK_MONEY,
-            PAYPAL_EXPRESS,
-            PAYPAL_EXPRESS_CREDIT,
-            CHECK_MONEY,
-            STRIPE
-        ]).isRequired,
+        selectedPaymentCode: PropTypes.string.isRequired,
         billingAddress: PropTypes.shape({
             city: PropTypes.string,
             company: PropTypes.string,
@@ -78,29 +61,12 @@ export class CheckoutPayments extends PureComponent {
 
     paymentRenderMap = {
         [BRAINTREE]: this.renderBrainTreePayment.bind(this),
-        [STRIPE]: this.renderStripePayment.bind(this),
-        [KLARNA]: this.renderKlarnaPayment.bind(this),
-        [PAYPAL_EXPRESS_CREDIT]: this.renderNotSupported.bind(this)
+        [KLARNA]: this.renderKlarnaPayment.bind(this)
     };
 
     state = {
         hasError: false
     };
-
-    componentDidUpdate(prevProps) {
-        const { selectedPaymentCode, setOrderButtonVisibility } = this.props;
-        const { selectedPaymentCode: prevSelectedPaymentCode } = prevProps;
-
-        if (selectedPaymentCode !== prevSelectedPaymentCode) {
-            if (selectedPaymentCode === PAYPAL_EXPRESS) {
-                setOrderButtonVisibility(false);
-            }
-
-            if (prevSelectedPaymentCode === PAYPAL_EXPRESS) {
-                setOrderButtonVisibility(true);
-            }
-        }
-    }
 
     componentDidCatch(error, info) {
         const { showError, setOrderButtonEnableStatus } = this.props;
@@ -121,20 +87,6 @@ export class CheckoutPayments extends PureComponent {
     renderBrainTreePayment() {
         const { initBraintree } = this.props;
         return <Braintree init={ initBraintree } />;
-    }
-
-    renderStripePayment() {
-        const {
-            billingAddress,
-            setStripeRef
-        } = this.props;
-
-        return (
-            <Stripe
-              billingAddress={ billingAddress }
-              setStripeRef={ setStripeRef }
-            />
-        );
     }
 
     renderKlarnaPayment() {
@@ -189,22 +141,6 @@ export class CheckoutPayments extends PureComponent {
         );
     }
 
-    renderPayPal() {
-        const {
-            selectedPaymentCode,
-            setLoading,
-            setDetailsStep
-        } = this.props;
-
-        return (
-            <PayPal
-              setLoading={ setLoading }
-              setDetailsStep={ setDetailsStep }
-              selectedPaymentCode={ selectedPaymentCode }
-            />
-        );
-    }
-
     renderContent() {
         const { hasError } = this.state;
 
@@ -221,7 +157,6 @@ export class CheckoutPayments extends PureComponent {
                     { this.renderPayments() }
                 </ul>
                 { this.renderSelectedPayment() }
-                { this.renderPayPal() }
             </>
         );
     }

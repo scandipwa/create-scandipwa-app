@@ -15,6 +15,7 @@ import DataContainer from 'Util/Request/DataContainer';
 
 import CmsBlock from './CmsBlock.component';
 
+/** @namespace Component/CmsBlock/Container */
 export class CmsBlockContainer extends DataContainer {
     static propTypes = {
         identifier: PropTypes.string.isRequired

@@ -8,8 +8,6 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-import './CategoryProductList.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
@@ -18,11 +16,14 @@ import ProductList from 'Component/ProductList';
 import { updateLoadStatus } from 'Store/ProductList/ProductList.action';
 import { FilterInputType } from 'Type/ProductList';
 
+import './CategoryProductList.style';
+
 export const ProductListDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
     'Store/ProductList/ProductList.dispatcher'
 );
 
+/** @namespace Component/CategoryProductList/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     pages: state.ProductListReducer.pages,
     isOffline: state.OfflineReducer.isOffline,
@@ -32,6 +33,7 @@ export const mapStateToProps = (state) => ({
     totalPages: state.ProductListReducer.totalPages
 });
 
+/** @namespace Component/CategoryProductList/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     requestProductList: (options) => ProductListDispatcher.then(
         ({ default: dispatcher }) => dispatcher.handleData(dispatch, options)
@@ -39,6 +41,7 @@ export const mapDispatchToProps = (dispatch) => ({
     updateLoadStatus: (isLoading) => dispatch(updateLoadStatus(isLoading))
 });
 
+/** @namespace Component/CategoryProductList/Container */
 export class CategoryProductListContainer extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,

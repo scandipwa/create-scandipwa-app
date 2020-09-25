@@ -14,6 +14,7 @@ import ExpandableContent from 'Component/ExpandableContent';
 import ProductConfigurableAttributes from 'Component/ProductConfigurableAttributes/ProductConfigurableAttributes.component';
 import { formatCurrency } from 'Util/Price';
 
+/** @namespace Component/CategoryConfigurableAttributes/Component */
 export class CategoryConfigurableAttributes extends ProductConfigurableAttributes {
     getPriceLabel(option) {
         const { currency_code } = this.props;

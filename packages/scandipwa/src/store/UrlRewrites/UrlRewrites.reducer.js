@@ -14,12 +14,17 @@ import {
     UPDATE_URL_REWRITE
 } from './UrlRewrites.action';
 
-export const initialState = {
+/** @namespace Store/UrlRewrites/Reducer/getInitialState */
+export const getInitialState = () => ({
     urlRewrite: {},
     isLoading: false
-};
+});
 
-export const UrlRewritesReducer = (state = initialState, action) => {
+/** @namespace Store/UrlRewrites/Reducer */
+export const UrlRewritesReducer = (
+    state = getInitialState(),
+    action
+) => {
     switch (action.type) {
     case UPDATE_URL_REWRITE:
         const {

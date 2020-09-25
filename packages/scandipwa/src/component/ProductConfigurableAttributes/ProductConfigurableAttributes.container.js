@@ -14,6 +14,7 @@ import { PureComponent } from 'react';
 
 import ProductConfigurableAttributes from './ProductConfigurableAttributes.component';
 
+/** @namespace Component/ProductConfigurableAttributes/Container */
 export class ProductConfigurableAttributesContainer extends PureComponent {
     static propTypes = {
         getLink: PropTypes.func.isRequired,

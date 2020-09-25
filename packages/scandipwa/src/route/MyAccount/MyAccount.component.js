@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './MyAccount.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -32,6 +30,9 @@ import {
     tabMapType
 } from 'Type/Account';
 
+import './MyAccount.style';
+
+/** @namespace Route/MyAccount/Component */
 export class MyAccount extends PureComponent {
     static propTypes = {
         activeTab: activeTabType.isRequired,

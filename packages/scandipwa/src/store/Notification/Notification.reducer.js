@@ -11,11 +11,16 @@
 
 import { HIDE_NOTIFICATION, SHOW_NOTIFICATION } from './Notification.action';
 
-export const initialState = {
+/** @namespace Store/Notification/Reducer/getInitialState */
+export const getInitialState = () => ({
     notifications: {}
-};
+});
 
-export const NotificationReducer = (state = initialState, action) => {
+/** @namespace Store/Notification/Reducer */
+export const NotificationReducer = (
+    state = getInitialState(),
+    action
+) => {
     const notifications = { ...state.notifications };
 
     switch (action.type) {

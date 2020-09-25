@@ -10,19 +10,20 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './SliderWidget.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Html from 'Component/Html';
 import Image from 'Component/Image';
 import Slider from 'Component/Slider';
-import isMobile from 'Util/Mobile';
+import { DeviceType } from 'Type/Device';
+
+import './SliderWidget.style';
 
 /**
  * Homepage slider
  * @class SliderWidget
+ * @namespace Component/SliderWidget/Component
  */
 export class SliderWidget extends PureComponent {
     static propTypes = {
@@ -36,7 +37,8 @@ export class SliderWidget extends PureComponent {
                     isPlaceholder: PropTypes.bool
                 })
             )
-        })
+        }),
+        device: DeviceType.isRequired
     };
 
     static defaultProps = {
@@ -54,8 +56,9 @@ export class SliderWidget extends PureComponent {
             desktop_image,
             mobile_image
         } = slide;
+        const { device } = this.props;
 
-        if (isMobile.any() && mobile_image) {
+        if (device.isMobile && mobile_image) {
             return `/${mobile_image}`;
         }
 

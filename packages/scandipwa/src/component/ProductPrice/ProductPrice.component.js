@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductPrice.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -18,9 +16,12 @@ import TextPlaceholder from 'Component/TextPlaceholder';
 import { MixType } from 'Type/Common';
 import { PriceType } from 'Type/ProductList';
 
+import './ProductPrice.style';
+
 /**
  * Product price
  * @class ProductPrice
+ * @namespace Component/ProductPrice/Component
  */
 export class ProductPrice extends PureComponent {
     static propTypes = {

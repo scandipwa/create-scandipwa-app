@@ -13,6 +13,7 @@
  * Builds GraphQL query according to https://graphql.org/learn/queries/ documentation
  * @class Query
  * @extends Field
+ * @namespace Util/Query/Field
  */
 export class Field {
     /**
@@ -21,7 +22,8 @@ export class Field {
      * @param  {String} name Name of the query from Schema
      * @memberof Query
      */
-    constructor(name) {
+    __construct(name) {
+        super.__construct();
         if (!name || typeof name !== 'string') {
             throw new Error('Field name must be non-empty string');
         }

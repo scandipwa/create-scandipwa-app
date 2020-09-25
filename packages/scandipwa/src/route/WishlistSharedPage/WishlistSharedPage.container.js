@@ -33,8 +33,11 @@ export const WishlistDispatcher = import(
     'Store/Wishlist/Wishlist.dispatcher'
 );
 
+/** @namespace Route/WishlistSharedPage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
-    clearWishlist: () => WishlistDispatcher.then(({ default: dispatcher }) => dispatcher.clearWishlist(dispatch)),
+    clearWishlist: () => WishlistDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.clearWishlist(dispatch)
+    ),
     moveWishlistToCart: (sharingCode) => WishlistDispatcher.then(
         ({ default: dispatcher }) => dispatcher.moveWishlistToCart(dispatch, sharingCode)
     ),
@@ -46,6 +49,7 @@ export const mapDispatchToProps = (dispatch) => ({
     )
 });
 
+/** @namespace Route/WishlistSharedPage/Container/wishlistSharedContainer */
 export class WishlistSharedPageContainer extends MyAccountMyWishlistContainer {
     static propTypes = {
         match: MatchType.isRequired,
@@ -84,7 +88,9 @@ export class WishlistSharedPageContainer extends MyAccountMyWishlistContainer {
         this.setState({ isLoading: true });
 
         return moveWishlistToCart(sharingCode).then(
+            /** @namespace Route/WishlistSharedPage/Container/moveWishlistToCartThen */
             () => this.showNotificationAndRemoveLoading('Wishlist moved to cart'),
+            /** @namespace Route/WishlistSharedPage/Container/moveWishlistToCartCatch */
             ([{ message }]) => showError(message)
         );
     };
@@ -99,6 +105,7 @@ export class WishlistSharedPageContainer extends MyAccountMyWishlistContainer {
         this.setLoading();
 
         executeGet(query, 'SharedWishlist', FIVE_MINUTES_IN_SECONDS).then(
+            /** @namespace Route/WishlistSharedPage/Container/requestWishlistExecuteGetThen */
             ({ wishlist, wishlist: { items_count, creators_name: creatorsName } = {} }) => {
                 if (!items_count) {
                     this.setLoading(false);
@@ -143,6 +150,7 @@ export class WishlistSharedPageContainer extends MyAccountMyWishlistContainer {
                     isWishlistLoading: false
                 });
             },
+            /** @namespace Route/WishlistSharedPage/Container/executeGetCatch */
             ([{ message }]) => {
                 showError(message);
                 showNoMatch();
@@ -172,4 +180,8 @@ export class WishlistSharedPageContainer extends MyAccountMyWishlistContainer {
     }
 }
 
-export default connect(null, mapDispatchToProps)(WishlistSharedPageContainer);
+/** @namespace Route/WishlistSharedPage/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WishlistSharedPageContainer);

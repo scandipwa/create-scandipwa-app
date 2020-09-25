@@ -1,11 +1,22 @@
-import './RenderWhenVisible.style';
-
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 
 import { ChildrenType } from 'Type/Common';
 
+import './RenderWhenVisible.style';
+
+/** @namespace Component/RenderWhenVisible/Component */
 export class RenderWhenVisible extends PureComponent {
     static propTypes = {
         children: ChildrenType.isRequired,
@@ -20,8 +31,8 @@ export class RenderWhenVisible extends PureComponent {
         wasVisible: false
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         // a hack to determine if the element is on screen or not imidiatelly
         setTimeout(this.checkIsVisible, 0);

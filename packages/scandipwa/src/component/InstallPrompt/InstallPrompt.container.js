@@ -10,13 +10,28 @@
  */
 
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import InstallPromptAndroid from 'Component/InstallPromptAndroid';
 import InstallPromptIOS from 'Component/InstallPromptIOS';
+import { DeviceType } from 'Type/Device';
 import BrowserDatabase from 'Util/BrowserDatabase';
-import isMobile from 'Util/Mobile';
 
+/** @namespace Component/InstallPrompt/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    device: state.ConfigReducer.device
+});
+
+/** @namespace Component/InstallPrompt/Container/mapDispatchToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapDispatchToProps = (dispatch) => ({});
+
+/** @namespace Component/InstallPrompt/Container */
 export class InstallPromptContainer extends PureComponent {
+    static propTypes = {
+        device: DeviceType.isRequired
+    };
+
     installPromptEvent = null;
 
     state = {
@@ -41,14 +56,17 @@ export class InstallPromptContainer extends PureComponent {
         this.installPromptEvent.prompt();
 
         // Wait for the user to respond to the prompt
-        this.installPromptEvent.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted') {
-                this.setState({ isBannerClosed: true });
-            }
+        this.installPromptEvent.userChoice.then(
+            /** @namespace Component/InstallPrompt/Container/then */
+            (choice) => {
+                if (choice.outcome === 'accepted') {
+                    this.setState({ isBannerClosed: true });
+                }
 
-            // Clear the saved prompt since it can't be used again
-            this.installPromptEvent = null;
-        });
+                // Clear the saved prompt since it can't be used again
+                this.installPromptEvent = null;
+            }
+        );
     }
 
     handleBannerClose() {
@@ -67,16 +85,17 @@ export class InstallPromptContainer extends PureComponent {
 
     render() {
         const { isBannerClosed } = this.state;
+        const { device } = this.props;
 
-        if (isMobile.standaloneMode() || isBannerClosed) {
+        if (device.standaloneMode || isBannerClosed) {
             return null;
         }
 
-        if (isMobile.iOS()) {
+        if (device.ios) {
             return <InstallPromptIOS { ...this.containerFunctions } />;
         }
 
-        if (isMobile.android()) {
+        if (device.android) {
             return <InstallPromptAndroid { ...this.containerFunctions } />;
         }
 
@@ -84,4 +103,4 @@ export class InstallPromptContainer extends PureComponent {
     }
 }
 
-export default InstallPromptContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(InstallPromptContainer);

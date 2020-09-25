@@ -23,12 +23,14 @@ import { getQueryParam, setQueryParams } from 'Util/Url';
 
 import CategoryFilterOverlay from './CategoryFilterOverlay.component';
 
+/** @namespace Component/CategoryFilterOverlay/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     isInfoLoading: state.ProductListInfoReducer.isLoading,
     isProductsLoading: state.ProductListReducer.isLoading,
     totalPages: state.ProductListReducer.totalPages
 });
 
+/** @namespace Component/CategoryFilterOverlay/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     goToPreviousHeaderState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
@@ -37,6 +39,7 @@ export const mapDispatchToProps = (dispatch) => ({
     changeNavigationState: (state) => dispatch(changeNavigationState(BOTTOM_NAVIGATION_TYPE, state))
 });
 
+/** @namespace Component/CategoryFilterOverlay/Container */
 export class CategoryFilterOverlayContainer extends PureComponent {
     static propTypes = {
         history: HistoryType.isRequired,
@@ -266,4 +269,6 @@ export class CategoryFilterOverlayContainer extends PureComponent {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CategoryFilterOverlayContainer));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(CategoryFilterOverlayContainer)
+);

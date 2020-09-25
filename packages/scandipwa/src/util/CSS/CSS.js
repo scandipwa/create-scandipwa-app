@@ -12,6 +12,7 @@
 /**
  * Set of helpers related to CSS
  * @class CSS
+ * @namespace Util/CSS
  */
 export class CSS {
     /**

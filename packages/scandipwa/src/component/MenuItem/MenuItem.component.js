@@ -15,9 +15,10 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import { DeviceType } from 'Type/Device';
 import media from 'Util/Media';
-import isMobile from 'Util/Mobile';
 
+/** @namespace Component/MenuItem/Component */
 export class MenuItem extends PureComponent {
     static propTypes = {
         activeMenuItemsStack: PropTypes.array.isRequired,
@@ -25,7 +26,8 @@ export class MenuItem extends PureComponent {
         itemMods: PropTypes.object,
         handleCategoryHover: PropTypes.func.isRequired,
         isLink: PropTypes.bool,
-        closeMenu: PropTypes.func
+        closeMenu: PropTypes.func,
+        device: DeviceType.isRequired
     };
 
     static defaultProps = {
@@ -35,10 +37,11 @@ export class MenuItem extends PureComponent {
     };
 
     renderItemContentImage(icon, itemMods) {
+        const { device } = this.props;
         const { isBanner, isLogo, type } = itemMods;
 
         if (!icon
-            || ((!isMobile.any() && !isMobile.tablet()) && !isBanner && !isLogo)
+            || ((!device.isMobile && !device.isTablet) && !isBanner && !isLogo)
             || (type === 'subcategory')
         ) {
             return null;

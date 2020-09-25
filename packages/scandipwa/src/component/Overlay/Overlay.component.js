@@ -11,15 +11,16 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Overlay.style';
-
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 import { createPortal } from 'react-dom';
 
 import { ChildrenType, MixType } from 'Type/Common';
-import isMobile from 'Util/Mobile';
+import { DeviceType } from 'Type/Device';
 
+import './Overlay.style';
+
+/** @namespace Component/Overlay/Component */
 export class Overlay extends PureComponent {
     static propTypes = {
         mix: MixType,
@@ -30,7 +31,8 @@ export class Overlay extends PureComponent {
         areOtherOverlaysOpen: PropTypes.bool.isRequired,
         isStatic: PropTypes.bool,
         isRenderInPortal: PropTypes.bool,
-        children: ChildrenType
+        children: ChildrenType,
+        device: DeviceType.isRequired
     };
 
     static defaultProps = {
@@ -56,11 +58,11 @@ export class Overlay extends PureComponent {
     }
 
     onVisible() {
-        const { onVisible, isStatic } = this.props;
+        const { onVisible, isStatic, device } = this.props;
         if (isStatic) {
             return;
         }
-        if (isMobile.any()) {
+        if (device.isMobile) {
             this.freezeScroll();
         }
         this.overlayRef.current.focus();
@@ -68,11 +70,11 @@ export class Overlay extends PureComponent {
     }
 
     onHide() {
-        const { onHide, isStatic } = this.props;
+        const { onHide, isStatic, device } = this.props;
         if (isStatic) {
             return;
         }
-        if (isMobile.any()) {
+        if (device.isMobile) {
             this.unfreezeScroll();
         }
         onHide();
@@ -96,9 +98,9 @@ export class Overlay extends PureComponent {
     }
 
     renderInMobilePortal(content) {
-        const { isStatic, isRenderInPortal } = this.props;
+        const { isStatic, isRenderInPortal, device } = this.props;
 
-        if (!isStatic && isMobile.any() && isRenderInPortal) {
+        if (!isStatic && device.isMobile && isRenderInPortal) {
             return createPortal(content, document.body);
         }
 

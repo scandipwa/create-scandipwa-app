@@ -29,10 +29,12 @@ export const MyAccountDispatcher = import(
     'Store/MyAccount/MyAccount.dispatcher'
 );
 
+/** @namespace Component/MyAccountAddressPopup/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     payload: state.PopupReducer.popupPayload[ADDRESS_POPUP_ID] || {}
 });
 
+/** @namespace Component/MyAccountAddressPopup/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     showErrorNotification: (error) => dispatch(showNotification('error', error[0].message)),
@@ -43,6 +45,7 @@ export const mapDispatchToProps = (dispatch) => ({
     goToPreviousHeaderState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE))
 });
 
+/** @namespace Component/MyAccountAddressPopup/Container */
 export class MyAccountAddressPopupContainer extends PureComponent {
     static propTypes = {
         showErrorNotification: PropTypes.func.isRequired,
@@ -71,12 +74,15 @@ export class MyAccountAddressPopupContainer extends PureComponent {
             goToPreviousHeaderState
         } = this.props;
 
-        updateCustomerDetails().then(() => {
-            this.setState({ isLoading: false }, () => {
-                hideActiveOverlay();
-                goToPreviousHeaderState();
-            });
-        }, showErrorNotification);
+        updateCustomerDetails().then(
+            /** @namespace Component/MyAccountAddressPopup/Container/updateCustomerDetailsThen */
+            () => {
+                this.setState({ isLoading: false }, () => {
+                    hideActiveOverlay();
+                    goToPreviousHeaderState();
+                });
+            }, showErrorNotification
+        );
     };
 
     handleError = (error) => {

@@ -23,6 +23,7 @@ import FormPortalCollector from 'Util/FormPortalCollector';
 
 import validationConfig from './Form.config';
 
+/** @namespace Component/Form/Component */
 export class Form extends PureComponent {
     static propTypes = {
         onSubmitSuccess: PropTypes.func,
@@ -124,8 +125,8 @@ export class Form extends PureComponent {
         return {};
     }
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         if (!window.formPortalCollector) {
             window.formPortalCollector = new FormPortalCollector();
@@ -189,6 +190,7 @@ export class Form extends PureComponent {
         }, []));
 
         asyncData.then(
+            /** @namespace Component/Form/Component/handleFormSubmitAsyncDataThen */
             (asyncDataList) => {
                 if (!invalidFields.length) {
                     onSubmitSuccess(inputValues, asyncDataList);
@@ -197,6 +199,7 @@ export class Form extends PureComponent {
 
                 onSubmitError(inputValues, invalidFields);
             },
+            /** @namespace Component/Form/Component/handleFormSubmitAsyncDataCatch */
             (e) => onSubmitError(inputValues, invalidFields, e)
         );
     };

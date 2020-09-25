@@ -11,17 +11,18 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './VideoThumbnail.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Image from 'Component/Image/Image.container';
 import { MediaItemType } from 'Type/ProductList';
 
+import './VideoThumbnail.style';
+
 /**
  * VideoThumbnail component
  * @class VideoThumbnail
+ * @namespace Component/VideoThumbnail/Component/videoThumbnail
  */
 export class VideoThumbnail extends PureComponent {
     static propTypes = {
@@ -31,7 +32,8 @@ export class VideoThumbnail extends PureComponent {
 
     /**
      * Renders an icon indicating that the video can be played
-     */
+     * @namespace Component/VideoThumbnail/Component
+ */
     renderPlayIcon() {
         return (
             <span block="VideoThumbnail" elem="PlayIcon">

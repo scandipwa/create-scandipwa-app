@@ -12,6 +12,7 @@
 export const UPDATE_PRODUCT_LIST_INFO = 'UPDATE_PRODUCT_LIST_INFO';
 export const UPDATE_INFO_LOAD_STATUS = 'UPDATE_INFO_LOAD_STATUS';
 
+/** @namespace Store/ProductListInfo/Action/updateProductListInfo */
 export const updateProductListInfo = (products, filter) => ({
     type: UPDATE_PRODUCT_LIST_INFO,
     products,
@@ -22,6 +23,7 @@ export const updateProductListInfo = (products, filter) => ({
  * Update loading status
  * @param {Boolean} status Loading indication boolean
  * @return {void}
+ * @namespace Store/ProductListInfo/Action/updateInfoLoadStatus
  */
 export const updateInfoLoadStatus = (status) => ({
     type: UPDATE_INFO_LOAD_STATUS,

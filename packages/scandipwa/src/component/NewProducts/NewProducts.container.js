@@ -21,14 +21,17 @@ import { executeGet } from 'Util/Request';
 
 import NewProducts from './NewProducts.component';
 
+/** @namespace Component/NewProducts/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     timezone: state.ConfigReducer.timezone
 });
 
+/** @namespace Component/NewProducts/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, title, error) => dispatch(showNotification(type, title, error))
 });
 
+/** @namespace Component/NewProducts/Container */
 export class NewProductsContainer extends PureComponent {
     static propTypes = {
         category: PropTypes.string,
@@ -125,8 +128,14 @@ export class NewProductsContainer extends PureComponent {
 
         const query = [ProductListQuery.getQuery(options)];
         executeGet(prepareQuery(query), 'NewProducts', cacheLifetime)
-            .then(({ products: { items } }) => this.setState({ products: getIndexedProducts(items) }))
-            .catch((e) => showNotification('error', 'Error fetching NewProducts!', e));
+            .then(
+                /** @namespace Component/NewProducts/Container/executeGetThen */
+                ({ products: { items } }) => this.setState({ products: getIndexedProducts(items) })
+            )
+            .catch(
+                /** @namespace Component/NewProducts/Container/executeGetThenCatch */
+                (e) => showNotification('error', 'Error fetching NewProducts!', e)
+            );
     }
 
     render = () => <NewProducts { ...this.props } { ...this.state } />;

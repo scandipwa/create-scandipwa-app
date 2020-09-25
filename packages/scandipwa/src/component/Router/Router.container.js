@@ -13,7 +13,13 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { updateConfigDevice } from 'Store/Config/Config.action';
 import { updateMeta } from 'Store/Meta/Meta.action';
+import {
+    isMobile,
+    isMobileClientHints,
+    isUsingClientHints
+} from 'Util/Mobile';
 
 import Router from './Router.component';
 
@@ -30,6 +36,7 @@ export const WishlistDispatcher = import(
     'Store/Wishlist/Wishlist.dispatcher'
 );
 
+/** @namespace Component/Router/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     isLoading: state.ConfigReducer.isLoading,
     default_description: state.ConfigReducer.default_description,
@@ -37,12 +44,15 @@ export const mapStateToProps = (state) => ({
     default_title: state.ConfigReducer.default_title,
     title_prefix: state.ConfigReducer.title_prefix,
     title_suffix: state.ConfigReducer.title_suffix,
+    device: state.ConfigReducer.device,
     isOffline: state.OfflineReducer.isOffline,
     isBigOffline: state.OfflineReducer.isBig
 });
 
+/** @namespace Component/Router/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateMeta: (meta) => dispatch(updateMeta(meta)),
+    updateConfigDevice: (device) => dispatch(updateConfigDevice(device)),
     init: () => {
         WishlistDispatcher.then(
             ({ default: dispatcher }) => dispatcher.updateInitialWishlistData(dispatch)
@@ -56,10 +66,12 @@ export const mapDispatchToProps = (dispatch) => ({
     }
 });
 
+/** @namespace Component/Router/Container */
 export class RouterContainer extends PureComponent {
     static propTypes = {
         init: PropTypes.func.isRequired,
         updateMeta: PropTypes.func.isRequired,
+        updateConfigDevice: PropTypes.func.isRequired,
         base_link_url: PropTypes.string,
         default_description: PropTypes.string,
         default_keywords: PropTypes.string,
@@ -81,11 +93,16 @@ export class RouterContainer extends PureComponent {
         isBigOffline: false
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         this.initializeApplication();
         this.redirectFromPartialUrl();
+        this.handleResize();
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this.handleResize);
     }
 
     componentDidUpdate(prevProps) {
@@ -113,6 +130,36 @@ export class RouterContainer extends PureComponent {
             });
         }
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+    }
+
+    handleResize = async () => {
+        const { updateConfigDevice } = this.props;
+        if (isUsingClientHints) {
+            const { platform, model } = await isMobileClientHints.getDeviceData();
+            updateConfigDevice({
+                isMobile: navigator.userAgentData.mobile,
+                isTablet: isMobile.tablet(model),
+                android: isMobile.android(platform),
+                ios: isMobile.iOS(platform),
+                blackberry: isMobile.blackBerry(model),
+                opera: isMobile.opera(model),
+                windows: isMobile.windows(model)
+            });
+        } else {
+            updateConfigDevice({
+                isMobile: isMobile.any(),
+                isTablet: isMobile.tablet(),
+                android: isMobile.android(),
+                ios: isMobile.iOS(),
+                blackberry: isMobile.blackBerry(),
+                opera: isMobile.opera(),
+                windows: isMobile.windows()
+            });
+        }
+    };
 
     containerProps = () => {
         const { isBigOffline } = this.props;

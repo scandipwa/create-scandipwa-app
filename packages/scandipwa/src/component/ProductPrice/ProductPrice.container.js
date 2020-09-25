@@ -21,9 +21,11 @@ import {
 } from 'Util/Price';
 
 import ProductPrice from './ProductPrice.component';
+
 /**
  * Product price
  * @class ProductPrice
+ * @namespace Component/ProductPrice/Container
  */
 export class ProductPriceContainer extends PureComponent {
     static propTypes = {

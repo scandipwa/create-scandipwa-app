@@ -19,6 +19,7 @@ import {
     AREA_FIELD, CHECKBOX, DROPDOWN, TEXT_FIELD
 } from './ProductCustomizableOption.config';
 
+/** @namespace Component/ProductCustomizableOption/Component */
 export class ProductCustomizableOption extends PureComponent {
     static propTypes = {
         option: PropTypes.object.isRequired,

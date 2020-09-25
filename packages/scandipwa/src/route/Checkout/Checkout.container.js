@@ -45,6 +45,7 @@ export const MyAccountDispatcher = import(
     'Store/MyAccount/MyAccount.dispatcher'
 );
 
+/** @namespace Route/Checkout/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
     customer: state.MyAccountReducer.customer,
@@ -52,9 +53,12 @@ export const mapStateToProps = (state) => ({
     countries: state.ConfigReducer.countries
 });
 
+/** @namespace Route/Checkout/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateMeta: (meta) => dispatch(updateMeta(meta)),
-    resetCart: () => CartDispatcher.then(({ default: dispatcher }) => dispatcher.updateInitialCartData(dispatch)),
+    resetCart: () => CartDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.updateInitialCartData(dispatch)
+    ),
     toggleBreadcrumbs: (state) => dispatch(toggleBreadcrumbs(state)),
     showErrorNotification: (message) => dispatch(showNotification('error', message)),
     showInfoNotification: (message) => dispatch(showNotification('info', message)),
@@ -65,6 +69,7 @@ export const mapDispatchToProps = (dispatch) => ({
     )
 });
 
+/** @namespace Route/Checkout/Container */
 export class CheckoutContainer extends PureComponent {
     static propTypes = {
         showErrorNotification: PropTypes.func.isRequired,
@@ -105,8 +110,8 @@ export class CheckoutContainer extends PureComponent {
         goBack: this.goBack.bind(this)
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const {
             toggleBreadcrumbs,
@@ -191,6 +196,7 @@ export class CheckoutContainer extends PureComponent {
             address,
             this._getGuestCartId()
         )).then(
+            /** @namespace Route/Checkout/Container/onShippingEstimationFieldsChangeFetchMutationThen */
             ({ estimateShippingCosts: shippingMethods }) => {
                 const { requestsSent } = this.state;
 
@@ -282,6 +288,7 @@ export class CheckoutContainer extends PureComponent {
         return false;
     };
 
+    // eslint-disable-next-line no-unused-vars
     _handlePaymentError = (error, paymentInformation) => {
         const [{ debugMessage: message = '' }] = error;
         const { paymentMethod: { handleAuthorization } } = paymentInformation;
@@ -305,6 +312,7 @@ export class CheckoutContainer extends PureComponent {
         fetchQuery(CheckoutQuery.getPaymentMethodsQuery(
             this._getGuestCartId()
         )).then(
+            /** @namespace Route/Checkout/Container/fetchQueryThen */
             ({ getPaymentMethods: paymentMethods }) => {
                 this.setState({ isLoading: false, paymentMethods });
             },
@@ -327,6 +335,7 @@ export class CheckoutContainer extends PureComponent {
         const mutation = CheckoutQuery.getSaveGuestEmailMutation(email, guestCartId);
 
         return fetchMutation(mutation).then(
+            /** @namespace Route/Checkout/Container/saveGuestEmailFetchMutationThen */
             ({ setGuestEmailOnCart: data }) => {
                 if (data) {
                     this.setState({ isGuestEmailSaved: true });
@@ -399,6 +408,7 @@ export class CheckoutContainer extends PureComponent {
             addressInformation,
             this._getGuestCartId()
         )).then(
+            /** @namespace Route/Checkout/Container/saveAddressInformationFetchMutationThen */
             ({ saveAddressInformation: data }) => {
                 const { payment_methods, totals } = data;
 
@@ -431,6 +441,7 @@ export class CheckoutContainer extends PureComponent {
         }
 
         await this.saveBillingAddress(paymentInformation).then(
+            /** @namespace Route/Checkout/Container/saveBillingAddressThen */
             () => this.savePaymentMethodAndPlaceOrder(paymentInformation),
             this._handleError
         );

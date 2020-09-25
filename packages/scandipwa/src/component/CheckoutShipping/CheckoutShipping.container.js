@@ -19,10 +19,12 @@ import { trimAddressFields, trimCustomerAddress } from 'Util/Address';
 
 import CheckoutShipping from './CheckoutShipping.component';
 
+/** @namespace Component/CheckoutShipping/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer
 });
 
+/** @namespace Component/CheckoutShipping/Container */
 export class CheckoutShippingContainer extends PureComponent {
     static propTypes = {
         saveAddressInformation: PropTypes.func.isRequired,
@@ -37,8 +39,8 @@ export class CheckoutShippingContainer extends PureComponent {
         onShippingMethodSelect: this.onShippingMethodSelect.bind(this)
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const { shippingMethods } = props;
         const [selectedShippingMethod] = shippingMethods;
@@ -105,4 +107,8 @@ export class CheckoutShippingContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps)(CheckoutShippingContainer);
+/** @namespace Component/CheckoutShipping/Container/mapDispatchToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutShippingContainer);

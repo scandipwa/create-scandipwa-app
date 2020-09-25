@@ -9,6 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
+import 'Util/Extensions';
 import 'Util/Polyfill';
 import 'Style/main';
 

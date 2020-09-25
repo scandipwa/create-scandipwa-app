@@ -16,6 +16,7 @@ import { BUNDLE, CONFIGURABLE, SIMPLE } from 'Util/Product';
  * @param {Object} attributes
  * @param {{ attribute_code: string }[]} options
  * @returns {boolean}
+ * @namespace Util/Product/checkEveryOption
  */
 export const checkEveryOption = (attributes, options) => Object.keys(options)
     .every((option) => {
@@ -31,6 +32,7 @@ export const checkEveryOption = (attributes, options) => Object.keys(options)
         return options[option].includes(attribute_value);
     });
 
+/** @namespace Util/Product/getIndexedAttributeOption */
 export const getIndexedAttributeOption = (option) => {
     const { swatch_data: defaultSwatchData } = option;
     if (!defaultSwatchData) {
@@ -46,6 +48,7 @@ export const getIndexedAttributeOption = (option) => {
     };
 };
 
+/** @namespace Util/Product/getIndexedAttributes */
 export const getIndexedAttributes = (attributes) => attributes.reduce((indexedAttributes, attribute) => {
     const { attribute_code, attribute_options = [] } = attribute;
 
@@ -65,6 +68,7 @@ export const getIndexedAttributes = (attributes) => attributes.reduce((indexedAt
     };
 }, {});
 
+/** @namespace Util/Product/getIndexedConfigurableOptions */
 export const getIndexedConfigurableOptions = (configurableOptions, indexedAttributes) => (
     configurableOptions.reduce((indexedConfigurableOptions, configurableOption) => {
         const { values, attribute_code } = configurableOption;
@@ -80,6 +84,7 @@ export const getIndexedConfigurableOptions = (configurableOptions, indexedAttrib
     }, {})
 );
 
+/** @namespace Util/Product/getIndexedVariants */
 export const getIndexedVariants = (variants) => variants.map(({ product }) => {
     const { attributes } = product;
     return {
@@ -93,10 +98,12 @@ export const getIndexedVariants = (variants) => variants.map(({ product }) => {
  * @param {Object[]} variants
  * @param {{ attribute_code: string }[]} options
  * @returns {number}
+ * @namespace Util/Product/getVariantIndex
  */
 export const getVariantIndex = (variants, options) => variants
     .findIndex((variant) => checkEveryOption(variant.attributes, options));
 
+/** @namespace Util/Product/getVariantsIndexes */
 export const getVariantsIndexes = (variants, options) => Object.entries(variants)
     .reduce((indexes, [index, variant]) => {
         if (checkEveryOption(variant.attributes, options)) {
@@ -106,6 +113,7 @@ export const getVariantsIndexes = (variants, options) => Object.entries(variants
         return indexes;
     }, []);
 
+/** @namespace Util/Product/getIndexedCustomOption */
 export const getIndexedCustomOption = (option) => {
     const {
         checkboxValues,
@@ -135,6 +143,7 @@ export const getIndexedCustomOption = (option) => {
     return null;
 };
 
+/** @namespace Util/Product/getIndexedCustomOptions */
 export const getIndexedCustomOptions = (options) => options.reduce(
     (acc, option) => {
         const indexedOption = getIndexedCustomOption(option);
@@ -148,6 +157,7 @@ export const getIndexedCustomOptions = (options) => options.reduce(
     []
 );
 
+/** @namespace Util/Product/getIndexedProduct */
 export const getIndexedProduct = (product) => {
     const {
         variants: initialVariants = [],
@@ -167,14 +177,17 @@ export const getIndexedProduct = (product) => {
     };
 };
 
+/** @namespace Util/Product/getIndexedProducts */
 export const getIndexedProducts = (products) => products.map(getIndexedProduct);
 
+/** @namespace Util/Product/getIndexedParameteredProducts */
 export const getIndexedParameteredProducts = (products) => Object.entries(products)
     .reduce((products, [id, product]) => ({
         ...products,
         [id]: getIndexedProduct(product)
     }), {});
 
+/** @namespace Util/Product/getExtensionAttributes */
 export const getExtensionAttributes = (product) => {
     const {
         configurable_options,

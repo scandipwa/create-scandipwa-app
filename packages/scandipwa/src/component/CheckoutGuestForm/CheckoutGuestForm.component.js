@@ -9,14 +9,15 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutGuestForm.style';
-
 import PropTypes from 'prop-types';
 
 import Field from 'Component/Field';
 import FieldForm from 'Component/FieldForm/FieldForm.component';
 import FormPortal from 'Component/FormPortal';
 
+import './CheckoutGuestForm.style';
+
+/** @namespace Component/CheckoutGuestForm/Component */
 export class CheckoutGuestForm extends FieldForm {
     static propTypes = {
         formId: PropTypes.string.isRequired,

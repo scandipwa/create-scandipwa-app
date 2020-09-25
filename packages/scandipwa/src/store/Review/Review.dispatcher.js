@@ -16,6 +16,7 @@ import { fetchMutation } from 'Util/Request';
 /**
  * Product Review Dispatcher
  * @class WishlistDispatcher
+ * @namespace Store/Review/Dispatcher
  */
 export class ReviewDispatcher {
     prepareRatingData(reviewItem) {
@@ -37,7 +38,9 @@ export class ReviewDispatcher {
         return fetchMutation(ReviewQuery.getAddProductReviewMutation(
             reviewItem
         )).then(
+            /** @namespace Store/Review/Dispatcher/submitProductReviewFetchMutationThen */
             () => dispatch(showNotification('success', 'You submitted your review for moderation.')),
+            /** @namespace Store/Review/Dispatcher/submitProductReviewFetchMutationError */
             // eslint-disable-next-line no-console
             (error) => dispatch(showNotification('error', 'Error submitting review!')) && console.log(error)
         );

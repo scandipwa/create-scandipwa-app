@@ -12,6 +12,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+/** @namespace Component/FieldInput/Component */
 export class FieldInput extends PureComponent {
     static propTypes = {
         formRef: PropTypes.oneOfType([

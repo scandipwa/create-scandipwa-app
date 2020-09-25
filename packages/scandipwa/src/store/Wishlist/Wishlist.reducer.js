@@ -22,13 +22,16 @@ import {
 
 export const PRODUCTS_IN_WISHLIST = 'wishlist_products';
 
-export const initialState = {
+/** @namespace Store/Wishlist/Reducer/getInitialState */
+export const getInitialState = () => ({
     productsInWishlist: BrowserDatabase.getItem(PRODUCTS_IN_WISHLIST) || {},
     isLoading: true
-};
+});
 
+/** @namespace Store/Wishlist/Reducer/deleteProperty */
 export const deleteProperty = (key, { [key]: _, ...newObj }) => newObj;
 
+/** @namespace Store/Wishlist/Reducer/removeItemFromWishlist */
 export const removeItemFromWishlist = ({ item_id }, { productsInWishlist: initialProducts }) => {
     const productsInWishlist = deleteProperty(item_id, initialProducts) || {};
 
@@ -40,6 +43,7 @@ export const removeItemFromWishlist = ({ item_id }, { productsInWishlist: initia
     return { productsInWishlist };
 };
 
+/** @namespace Store/Wishlist/Reducer/clearWishlist */
 export const clearWishlist = () => {
     const productsInWishlist = {};
 
@@ -47,6 +51,7 @@ export const clearWishlist = () => {
     return { productsInWishlist };
 };
 
+/** @namespace Store/Wishlist/Reducer/updateAllProductsInWishlist */
 export const updateAllProductsInWishlist = (action) => {
     const { products: initialProducts } = action;
 
@@ -60,6 +65,7 @@ export const updateAllProductsInWishlist = (action) => {
     return { productsInWishlist: products, isLoading: false };
 };
 
+/** @namespace Store/Wishlist/Reducer/updateItemOptions */
 export const updateItemOptions = (options, { productsInWishlist }) => {
     const { item_id } = options;
     const cleanedOptions = deleteProperty('item_id', options) || {};
@@ -83,7 +89,11 @@ export const updateItemOptions = (options, { productsInWishlist }) => {
     return { productsInWishlist: products };
 };
 
-export const WishlistReducer = (state = initialState, action) => {
+/** @namespace Store/Wishlist/Reducer */
+export const WishlistReducer = (
+    state = getInitialState(),
+    action
+) => {
     const { type, options } = action;
 
     switch (type) {

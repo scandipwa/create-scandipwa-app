@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Checkout.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -36,6 +34,9 @@ import {
     SHIPPING_STEP
 } from './Checkout.config';
 
+import './Checkout.style';
+
+/** @namespace Route/Checkout/Component */
 export class Checkout extends PureComponent {
     static propTypes = {
         setLoading: PropTypes.func.isRequired,

@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CartPage.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -25,6 +23,9 @@ import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
 import { TotalsType } from 'Type/MiniCart';
 import { formatCurrency, roundPrice } from 'Util/Price';
 
+import './CartPage.style';
+
+/** @namespace Route/CartPage/Component */
 export class CartPage extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
@@ -148,7 +149,8 @@ export class CartPage extends PureComponent {
 
     renderTotals() {
         return (
-            <article block="CartPage" elem="Summary">
+            /** Id is required to measure the element`s height in ExpandableContent.component.js */
+            <article id="CartPageSummary" block="CartPage" elem="Summary">
                 <h4 block="CartPage" elem="SummaryHeading">{ __('Summary') }</h4>
                 { this.renderTotalDetails() }
                 { this.renderTotal() }

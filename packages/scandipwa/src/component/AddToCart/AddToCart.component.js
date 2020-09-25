@@ -9,17 +9,18 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './AddToCart.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { MixType } from 'Type/Common';
 import { ProductType } from 'Type/ProductList';
 
+import './AddToCart.style';
+
 /**
  * Button for adding product to Cart
  * @class AddToCart
+ * @namespace Component/AddToCart/Component
  */
 export class AddToCart extends PureComponent {
     static propTypes = {

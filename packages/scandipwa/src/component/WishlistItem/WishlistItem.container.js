@@ -29,6 +29,7 @@ export const WishlistDispatcher = import(
     'Store/Wishlist/Wishlist.dispatcher'
 );
 
+/** @namespace Component/WishlistItem/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     addProductToCart: (options) => CartDispatcher.then(
@@ -42,6 +43,7 @@ export const mapDispatchToProps = (dispatch) => ({
     )
 });
 
+/** @namespace Component/WishlistItem/Container */
 export class WishlistItemContainer extends PureComponent {
     static propTypes = {
         product: ProductType.isRequired,
@@ -135,11 +137,19 @@ export class WishlistItemContainer extends PureComponent {
 
         return addProductToCart({ product, quantity })
             .then(
+                /** @namespace Component/WishlistItem/Container/addItemToCartAddProductToCartThen */
                 () => this.removeItem(id),
+                /** @namespace Component/WishlistItem/Container/addItemToCartAddProductToCartCatch */
                 () => this.showNotification('error', __('Error Adding Product To Cart'))
             )
-            .then(() => showNotification('success', __('Product Added To Cart')))
-            .catch(() => this.showNotification('error', __('Error cleaning wishlist')));
+            .then(
+                /** @namespace Component/WishlistItem/Container/addItemToCartAddProductToCartThenThen */
+                () => showNotification('success', __('Product Added To Cart'))
+            )
+            .catch(
+                /** @namespace Component/WishlistItem/Container/addItemToCartAddProductToCartThenThenCatch */
+                () => this.showNotification('error', __('Error cleaning wishlist'))
+            );
     }
 
     showNotification(...args) {
@@ -165,4 +175,8 @@ export class WishlistItemContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(WishlistItemContainer);
+/** @namespace Component/WishlistItem/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WishlistItemContainer);

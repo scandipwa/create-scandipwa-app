@@ -13,6 +13,7 @@ import { updateNoMatch } from 'Store/NoMatch/NoMatch.action';
 /**
  * NoMatch Dispatcher
  * @class NoMatchDispatcher
+ * @namespace Store/NoMatch/Dispatcher
  */
 export class NoMatchDispatcher {
     updateNoMatch(dispatch, options) {

@@ -9,13 +9,14 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutPayment.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { paymentMethodType } from 'Type/Checkout';
 
+import './CheckoutPayment.style';
+
+/** @namespace Component/CheckoutPayment/Component */
 export class CheckoutPayment extends PureComponent {
     static propTypes = {
         method: paymentMethodType.isRequired,

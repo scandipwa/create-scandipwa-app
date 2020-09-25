@@ -10,8 +10,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './WidgetFactory.style';
-
 import PropTypes from 'prop-types';
 import { lazy, PureComponent, Suspense } from 'react';
 
@@ -19,10 +17,13 @@ import RenderWhenVisible from 'Component/RenderWhenVisible';
 
 import { CATALOG_PRODUCT_LIST, NEW_PRODUCTS, SLIDER } from './WidgetFactory.config';
 
+import './WidgetFactory.style';
+
 export const ProductListWidget = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "category" */ 'Component/ProductListWidget'));
 export const NewProducts = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "category" */ 'Component/NewProducts'));
 export const HomeSlider = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "cms" */ 'Component/SliderWidget'));
 
+/** @namespace Component/WidgetFactory/Component */
 export class WidgetFactory extends PureComponent {
     static propTypes = {
         type: PropTypes.string.isRequired

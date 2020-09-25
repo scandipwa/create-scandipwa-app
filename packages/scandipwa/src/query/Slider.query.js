@@ -14,6 +14,7 @@ import { Field } from 'Util/Query';
 /**
  * Slider Query
  * @class Slider
+ * @namespace Query/Slider
  */
 export class SliderQuery {
     getQuery(options) {

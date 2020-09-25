@@ -13,6 +13,7 @@ import ProductListQuery from 'Query/ProductList.query';
 import { isSignedIn } from 'Util/Auth';
 import { Field } from 'Util/Query';
 
+/** @namespace Query/Cart */
 export class CartQuery {
     getCartQuery(quoteId) {
         const query = new Field('getCartForCustomer')

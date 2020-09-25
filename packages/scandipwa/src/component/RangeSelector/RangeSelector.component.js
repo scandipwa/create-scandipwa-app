@@ -10,15 +10,17 @@
  */
 
 import 'react-input-range/lib/css/index.css';
-import './RangeSelector.style';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import InputRange from 'react-input-range';
 
+import './RangeSelector.style';
+
 /**
  * Product Sort
  * @class ProductSort
+ * @namespace Component/RangeSelector/Component/rangeSelector
  */
 export class RangeSelector extends PureComponent {
     static propTypes = {
@@ -31,8 +33,8 @@ export class RangeSelector extends PureComponent {
         onChangeComplete: PropTypes.func.isRequired
     };
 
-    constructor() {
-        super();
+    __construct() {
+        super.__construct();
 
         this.state = {
             value: false
@@ -72,7 +74,8 @@ export class RangeSelector extends PureComponent {
      * Limit selected value to min and max bounds
      * @param {Object} value sliders mix and max values
      * @return {Number} value within bounds
-     */
+     * @namespace Component/RangeSelector/Component
+ */
     limitValueToBounds(value) {
         const { minValue, maxValue } = this.props;
         const newValue = { ...value };

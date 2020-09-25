@@ -34,10 +34,12 @@ export const WishlistDispatcher = import(
     'Store/Wishlist/Wishlist.dispatcher'
 );
 
+/** @namespace Component/AddToCart/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
+/** @namespace Component/AddToCart/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     addProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
@@ -48,6 +50,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
+/* @namespace Component/AddToCart/Container */
 export class AddToCartContainer extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
@@ -238,7 +241,9 @@ export class AddToCartContainer extends PureComponent {
                 quantity
             });
         })).then(
+            /** @namespace Component/AddToCart/Container/addGroupedProductToCartPromiseAllThen */
             () => this.afterAddToCart(),
+            /** @namespace Component/AddToCart/Container/addGroupedProductToCartPromiseAllCatch */
             () => this.resetLoading()
         );
     }
@@ -260,7 +265,9 @@ export class AddToCartContainer extends PureComponent {
             quantity,
             productOptionsData
         }).then(
+            /** @namespace Component/AddToCart/Container/addConfigurableProductToCartAddProductThen */
             () => this.afterAddToCart(),
+            /** @namespace Component/AddToCart/Container/addConfigurableProductToCartAddProductCatch */
             () => this.resetLoading()
         );
     }
@@ -278,7 +285,9 @@ export class AddToCartContainer extends PureComponent {
             quantity,
             productOptionsData
         }).then(
+            /** @namespace Component/AddToCart/Container/addSimpleProductToCartAddProductThen */
             () => this.afterAddToCart(),
+            /** @namespace Component/AddToCart/Container/addSimpleProductToCartAddProductCatch */
             () => this.resetLoading()
         );
     }

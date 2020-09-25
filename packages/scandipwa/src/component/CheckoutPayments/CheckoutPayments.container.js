@@ -21,12 +21,14 @@ import { paymentMethodsType } from 'Type/Checkout';
 import BraintreeDropIn from 'Util/Braintree';
 
 import CheckoutPayments from './CheckoutPayments.component';
-import { BRAINTREE, KLARNA, STRIPE } from './CheckoutPayments.config';
+import { BRAINTREE, KLARNA } from './CheckoutPayments.config';
 
+/** @namespace Component/CheckoutPayments/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showError: (message) => dispatch(showNotification('error', message))
 });
 
+/** @namespace Component/CheckoutPayments/Container */
 export class CheckoutPaymentsContainer extends PureComponent {
     static propTypes = {
         onPaymentMethodSelect: PropTypes.func.isRequired,
@@ -36,7 +38,6 @@ export class CheckoutPaymentsContainer extends PureComponent {
 
     containerFunctions = {
         initBraintree: this.initBraintree.bind(this),
-        setStripeRef: this.setStripeRef.bind(this),
         selectPaymentMethod: this.selectPaymentMethod.bind(this)
     };
 
@@ -44,12 +45,11 @@ export class CheckoutPaymentsContainer extends PureComponent {
 
     dataMap = {
         [BRAINTREE]: this.getBraintreeData.bind(this),
-        [STRIPE]: this.getStripeData.bind(this),
         [KLARNA]: this.getKlarnaData.bind(this)
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const { paymentMethods } = props;
         const [{ code } = {}] = paymentMethods;
@@ -68,20 +68,12 @@ export class CheckoutPaymentsContainer extends PureComponent {
         }
     }
 
-    setStripeRef(ref) {
-        this.stripeRef = ref;
-    }
-
     getKlarnaData() {
         return { asyncData: KlarnaContainer.authorize() };
     }
 
     getBraintreeData() {
         return { asyncData: this.braintree.requestPaymentNonce() };
-    }
-
-    getStripeData() {
-        return { asyncData: this.stripeRef.submit() };
     }
 
     collectAdditionalData = () => {
@@ -123,4 +115,8 @@ export class CheckoutPaymentsContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CheckoutPaymentsContainer);
+/** @namespace Component/CheckoutPayments/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutPaymentsContainer);

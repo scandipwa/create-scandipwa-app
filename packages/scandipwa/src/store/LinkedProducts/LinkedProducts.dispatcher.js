@@ -23,10 +23,11 @@ export const LINKED_PRODUCTS = 'LINKED_PRODUCTS';
  * Linked Prodcts List Dispatcher
  * @class LinkedProductsDispatcher
  * @extends QueryDispatcher
+ * @namespace Store/LinkedProducts/Dispatcher
  */
 export class LinkedProductsDispatcher extends QueryDispatcher {
-    constructor() {
-        super('LinkedProducts', ONE_MONTH_IN_SECONDS);
+    __construct() {
+        super.__construct('LinkedProducts', ONE_MONTH_IN_SECONDS);
     }
 
     onSuccess(data, dispatch, product_links) {

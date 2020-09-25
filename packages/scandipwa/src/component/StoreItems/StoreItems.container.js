@@ -11,10 +11,10 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import { connect } from 'react-redux';
 
 import StoreItems from './StoreItems.component';
 
+/** @namespace Component/StoreItems/Container/storeItemsContainer */
 export class StoreItemsContainer extends PureComponent {
     static propTypes = {
         item: PropTypes.object.isRequired,
@@ -46,4 +46,4 @@ export class StoreItemsContainer extends PureComponent {
     }
 }
 
-export default connect(null)(StoreItemsContainer);
+export default StoreItemsContainer;

@@ -12,11 +12,13 @@ import { getIndexedProduct } from 'Util/Product';
 
 import { UPDATE_PRODUCT_DETAILS } from './Product.action';
 
-export const initialState = {
+/** @namespace Store/Product/Reducer/getInitialState */
+export const getInitialState = () => ({
     product: {},
     formattedConfigurableOptions: {}
-};
+});
 
+/** @namespace Store/Product/Reducer/formatConfigurableOptions */
 export const formatConfigurableOptions = (configurable_options) => configurable_options
     .reduce((prev, option) => {
         const {
@@ -34,7 +36,11 @@ export const formatConfigurableOptions = (configurable_options) => configurable_
         };
     }, {});
 
-export const ProductReducer = (state = initialState, action) => {
+/** @namespace Store/Product/Reducer */
+export const ProductReducer = (
+    state = getInitialState(),
+    action
+) => {
     switch (action.type) {
     case UPDATE_PRODUCT_DETAILS:
         const { product } = action;

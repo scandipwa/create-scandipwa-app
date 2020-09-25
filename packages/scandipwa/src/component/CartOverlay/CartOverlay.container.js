@@ -31,12 +31,15 @@ export const CartDispatcher = import(
     'Store/Cart/Cart.dispatcher'
 );
 
+/** @namespace Component/CartOverlay/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
+    device: state.ConfigReducer.device,
     guest_checkout: state.ConfigReducer.guest_checkout,
     currencyCode: state.ConfigReducer.default_display_currency_code
 });
 
+/** @namespace Component/CartOverlay/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     setNavigationState: (stateName) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, stateName)),
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
@@ -47,6 +50,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
+/** @namespace Component/CartOverlay/Container */
 export class CartOverlayContainer extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,

@@ -15,6 +15,7 @@ import { PureComponent } from 'react';
 import ExpandableContent from 'Component/ExpandableContent';
 import RangeSelector from 'Component/RangeSelector';
 
+/** @namespace Component/CategoryPriceRange/Component */
 export class CategoryPriceRange extends PureComponent {
     static propTypes = {
         minPriceValue: PropTypes.number.isRequired,

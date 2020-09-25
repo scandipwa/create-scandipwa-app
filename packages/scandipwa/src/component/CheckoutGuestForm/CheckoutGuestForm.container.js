@@ -18,15 +18,18 @@ import { showNotification } from 'Store/Notification/Notification.action';
 
 import CheckoutGuestForm from './CheckoutGuestForm.component';
 
+/** @namespace Component/CheckoutGuestForm/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     isSignedIn: state.MyAccountReducer.isSignedIn,
     isEmailConfirmationRequired: state.ConfigReducer.is_email_confirmation_required
 });
 
+/** @namespace Component/CheckoutGuestForm/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showErrorNotification: (error) => dispatch(showNotification('error', error[0].message))
 });
 
+/** @namespace Component/CheckoutGuestForm/Container */
 export class CheckoutGuestFormContainer extends PureComponent {
     static propTypes = {
         isBilling: PropTypes.bool,

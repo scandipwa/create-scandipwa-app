@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CheckoutBilling.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -24,6 +22,9 @@ import { addressType } from 'Type/Account';
 import { paymentMethodsType } from 'Type/Checkout';
 import { TotalsType } from 'Type/MiniCart';
 
+import './CheckoutBilling.style';
+
+/** @namespace Component/CheckoutBilling/Component */
 export class CheckoutBilling extends PureComponent {
     state = {
         isOrderButtonVisible: true,

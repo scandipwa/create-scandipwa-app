@@ -14,14 +14,17 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import { getOrderList } from 'Store/Order/Order.action';
 import { fetchQuery } from 'Util/Request';
 
+/** @namespace Store/Order/Dispatcher */
 export class OrderDispatcher {
     requestOrders(dispatch) {
         const query = OrderQuery.getOrderListQuery();
 
         return fetchQuery(query).then(
+            /** @namespace Store/Order/Dispatcher/requestOrdersFetchQueryThen */
             ({ getOrderList: orders }) => {
                 dispatch(getOrderList(orders, false));
             },
+            /** @namespace Store/Order/Dispatcher/requestOrdersFetchQueryError */
             (error) => dispatch(showNotification('error', error[0].message))
         );
     }

@@ -30,6 +30,7 @@ export const CmsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkNam
  * Additional types possible:
  * const TYPE_PWA = 'PWA_ROUTER';
  * const TYPE_CUSTOM = 'CUSTOM';
+ * @namespace Route/UrlRewrites/Component
  */
 export class UrlRewrites extends PureComponent {
     static propTypes = {

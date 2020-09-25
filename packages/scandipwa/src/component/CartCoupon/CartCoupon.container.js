@@ -20,6 +20,7 @@ export const CartDispatcher = import(
     'Store/Cart/Cart.dispatcher'
 );
 
+/** @namespace Component/CartCoupon/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     applyCouponToCart: (couponCode) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.applyCouponToCart(dispatch, couponCode)
@@ -29,6 +30,7 @@ export const mapDispatchToProps = (dispatch) => ({
     )
 });
 
+/** @namespace Component/CartCoupon/Container */
 export class CartCouponContainer extends PureComponent {
     static propTypes = {
         couponCode: PropTypes.string,
@@ -53,6 +55,7 @@ export class CartCouponContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         applyCouponToCart(couponCode).then(
+            /** @namespace Component/CartCoupon/Container/applyCouponToCartThen */
             () => this.setState({ isLoading: false })
         );
     }
@@ -63,6 +66,7 @@ export class CartCouponContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         removeCouponFromCart().then(
+            /** @namespace Component/CartCoupon/Container/removeCouponFromCartThen */
             () => this.setState({ isLoading: false })
         );
     }
@@ -78,4 +82,8 @@ export class CartCouponContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CartCouponContainer);
+/** @namespace Component/CartCoupon/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CartCouponContainer);

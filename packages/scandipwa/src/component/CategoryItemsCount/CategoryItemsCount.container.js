@@ -13,8 +13,13 @@ import { connect } from 'react-redux';
 
 import CategoryItemsCount from './CategoryItemsCount.component';
 
+/** @namespace Component/CategoryItemsCount/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     totalItems: state.ProductListReducer.totalItems
 });
 
-export default connect(mapStateToProps)(CategoryItemsCount);
+/** @namespace Component/CategoryItemsCount/Container/mapDispatchToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryItemsCount);

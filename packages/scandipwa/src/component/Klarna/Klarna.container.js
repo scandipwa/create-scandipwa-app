@@ -17,14 +17,16 @@ import { showNotification } from 'Store/Notification/Notification.action';
 
 import KlarnaComponent from './Klarna.component';
 
+/** @namespace Component/Klarna/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showError: (message) => dispatch(showNotification('error', message))
 });
 
+/** @namespace Component/Klarna/Container */
 export class KlarnaContainer extends PureComponent {
     static authorize() {
         return new Promise((resolve, reject) => {
-            Klarna.Payments.authorize(
+            window.Klarna.Payments.authorize(
                 { payment_method_category: 'pay_later' },
                 {},
                 (res) => {
@@ -44,4 +46,8 @@ export class KlarnaContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(KlarnaContainer);
+/** @namespace Component/Klarna/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(KlarnaContainer);

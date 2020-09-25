@@ -14,6 +14,7 @@ import { PureComponent } from 'react';
 
 import TextPlaceholder from 'Component/TextPlaceholder';
 
+/** @namespace Component/CategoryItemsCount/Component */
 export class CategoryItemsCount extends PureComponent {
     static propTypes = {
         totalItems: PropTypes.number.isRequired,

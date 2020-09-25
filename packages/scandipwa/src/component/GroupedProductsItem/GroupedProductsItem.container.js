@@ -16,6 +16,7 @@ import { ProductType } from 'Type/ProductList';
 
 import GroupedProductsItem from './GroupedProductsItem.component';
 
+/** @namespace Component/GroupedProductsItem/Container */
 export class GroupedProductsItemContainer extends PureComponent {
     static propTypes = {
         product: ProductType.isRequired,
@@ -28,8 +29,8 @@ export class GroupedProductsItemContainer extends PureComponent {
         changeCount: this.changeCount.bind(this)
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const { defaultQuantity } = this.props;
         this.changeCount(defaultQuantity);

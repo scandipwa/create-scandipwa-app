@@ -21,6 +21,7 @@ export const FIVE_MINUTES_IN_SECONDS = 300;
  * Abstract request dispatcher.
  * IMPORTANT: it is required to implement `prepareRequest(options)` before using!
  * @class QueryDispatcher
+ * @namespace Util/Request/QueryDispatcher
  */
 export class QueryDispatcher {
     /**
@@ -29,7 +30,8 @@ export class QueryDispatcher {
      * @param  {Number} cacheTTL Cache TTL (in seconds) for ServiceWorker to cache responses
      * @memberof QueryDispatcher
      */
-    constructor(name, cacheTTL = ONE_MONTH_IN_SECONDS) {
+    __construct(name, cacheTTL = ONE_MONTH_IN_SECONDS) {
+        super.__construct();
         this.name = name;
         this.cacheTTL = cacheTTL;
         this.promise = null;
@@ -60,18 +62,23 @@ export class QueryDispatcher {
             new Promise((resolve, reject) => {
                 executeGet(prepareQuery(queries), name, cacheTTL)
                     .then(
+                        /** @namespace Util/Request/QueryDispatcher/handleData/executeGetThen */
                         (data) => resolve(data),
+                        /** @namespace Util/Request/QueryDispatcher/handleData/executeGetError */
                         (error) => reject(error)
                     );
             })
         );
 
         this.promise.promise.then(
+            /** @namespace Util/Request/QueryDispatcher/handleData/thisPromisePromiseThen */
             (data) => this.onSuccess(data, dispatch, options),
+            /** @namespace Util/Request/QueryDispatcher/handleData/thisPromisePromiseError */
             (error) => this.onError(error, dispatch, options),
         );
 
         listenForBroadCast(name).then(
+            /** @namespace Util/Request/QueryDispatcher/handleData/listenForBroadCastThen */
             (data) => this.onUpdate(data, dispatch, options),
         );
     }

@@ -18,6 +18,7 @@ import SharedTransition from 'Component/SharedTransition';
 import SomethingWentWrong from 'Route/SomethingWentWrong';
 import configureStore from 'Store';
 
+/** @namespace Component/App/Component */
 export class App extends PureComponent {
     productionFunctions = [
         this.disableReactDevTools.bind(this),
@@ -43,8 +44,8 @@ export class App extends PureComponent {
         errorDetails: {}
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         this.configureAppBasedOnEnvironment();
     }
@@ -89,7 +90,7 @@ export class App extends PureComponent {
      */
     disableReactDevTools() {
         if (typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object') {
-            // eslint-disable-next-line no-restricted-syntax, fp/no-loops
+            // eslint-disable-next-line no-restricted-syntax, fp/no-loops, no-unused-vars
             for (const [key, value] of Object.entries(window.__REACT_DEVTOOLS_GLOBAL_HOOK__)) {
                 window.__REACT_DEVTOOLS_GLOBAL_HOOK__[key] = typeof value === 'function' ? () => {} : null;
             }

@@ -14,6 +14,7 @@ import { PureComponent } from 'react';
 
 import CategorySort from './CategorySort.component';
 
+/** @namespace Component/CategorySort/Container */
 export class CategorySortContainer extends PureComponent {
     static propTypes = {
         sortFields: PropTypes.oneOfType([

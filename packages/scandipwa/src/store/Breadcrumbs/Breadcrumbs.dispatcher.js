@@ -14,6 +14,7 @@ import { toggleBreadcrumbs, updateBreadcrumbs } from 'Store/Breadcrumbs/Breadcru
 /**
  * Breadcrumbs Dispatcher
  * @class BreadcrumbsDispatcher
+ * @namespace Store/Breadcrumbs/Dispatcher
  */
 export class BreadcrumbsDispatcher {
     /**

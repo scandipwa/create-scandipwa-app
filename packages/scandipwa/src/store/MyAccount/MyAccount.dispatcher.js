@@ -43,6 +43,7 @@ export const ONE_MONTH_IN_SECONDS = 2628000;
 /**
  * My account actions
  * @class MyAccount
+ * @namespace Store/MyAccount/Dispatcher
  */
 export class MyAccountDispatcher {
     requestCustomerData(dispatch) {
@@ -54,10 +55,12 @@ export class MyAccountDispatcher {
         }
 
         return executePost(prepareQuery([query])).then(
+            /** @namespace Store/MyAccount/Dispatcher/requestCustomerDataExecutePostThen */
             ({ customer }) => {
                 dispatch(updateCustomerDetails(customer));
                 BrowserDatabase.setItem(customer, CUSTOMER, ONE_MONTH_IN_SECONDS);
             },
+            /** @namespace Store/MyAccount/Dispatcher/requestCustomerDataExecutePostError */
             (error) => dispatch(showNotification('error', error[0].message))
         );
     }
@@ -65,8 +68,15 @@ export class MyAccountDispatcher {
     logout(_, dispatch) {
         dispatch(updateCustomerSignInStatus(false));
         deleteAuthorizationToken();
-        CartDispatcher.then(({ default: dispatcher }) => dispatcher.updateInitialCartData(dispatch));
-        WishlistDispatcher.then(({ default: dispatcher }) => dispatcher.updateInitialWishlistData(dispatch));
+        CartDispatcher.then(
+            ({ default: dispatcher }) => {
+                dispatcher.createGuestEmptyCart(dispatch);
+                dispatcher.updateInitialCartData(dispatch);
+            }
+        );
+        WishlistDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.updateInitialWishlistData(dispatch)
+        );
         BrowserDatabase.deleteItem(ORDERS);
         BrowserDatabase.deleteItem(CUSTOMER);
         dispatch(updateCustomerDetails({}));
@@ -81,7 +91,9 @@ export class MyAccountDispatcher {
     forgotPassword(options = {}, dispatch) {
         const mutation = MyAccountQuery.getForgotPasswordMutation(options);
         return fetchMutation(mutation).then(
+            /** @namespace Store/MyAccount/Dispatcher/forgotPasswordFetchMutationThen */
             () => dispatch(updateCustomerPasswordForgotStatus()),
+            /** @namespace Store/MyAccount/Dispatcher/forgotPasswordFetchMutationError */
             (error) => dispatch(showNotification('error', error[0].message))
         );
     }
@@ -96,7 +108,9 @@ export class MyAccountDispatcher {
         const mutation = MyAccountQuery.getResetPasswordMutation(options);
 
         return fetchMutation(mutation).then(
+            /** @namespace Store/MyAccount/Dispatcher/resetPasswordFetchMutationThen */
             ({ resetPassword: { status } }) => dispatch(updateCustomerPasswordResetStatus(status)),
+            /** @namespace Store/MyAccount/Dispatcher/resetPasswordFetchMutationError */
             () => dispatch(updateCustomerPasswordResetStatus('error'))
         );
     }
@@ -111,6 +125,7 @@ export class MyAccountDispatcher {
         const mutation = MyAccountQuery.getCreateAccountMutation(options);
 
         return fetchMutation(mutation).then(
+            /** @namespace Store/MyAccount/Dispatcher/createAccountFetchMutationThen */
             (data) => {
                 const { createCustomer: { customer } } = data;
                 const { confirmation_required } = customer;
@@ -121,6 +136,7 @@ export class MyAccountDispatcher {
 
                 return this.signIn({ email, password }, dispatch);
             },
+            /** @namespace Store/MyAccount/Dispatcher/createAccountFetchMutationError */
             (error) => {
                 dispatch(showNotification('error', error[0].message));
                 Promise.reject();
@@ -139,7 +155,9 @@ export class MyAccountDispatcher {
         const mutation = MyAccountQuery.getConfirmAccountMutation(options);
 
         return fetchMutation(mutation).then(
+            /** @namespace Store/MyAccount/Dispatcher/confirmAccountFetchMutationThen */
             () => dispatch(showNotification('success', __('Your account is confirmed!'))),
+            /** @namespace Store/MyAccount/Dispatcher/confirmAccountFetchMutationError */
             () => dispatch(showNotification('error', __('Something went wrong! Please, try again!')))
         );
     }
@@ -158,8 +176,12 @@ export class MyAccountDispatcher {
 
             setAuthorizationToken(token);
             dispatch(updateCustomerSignInStatus(true));
-            CartDispatcher.then(({ default: dispatcher }) => dispatcher.updateInitialCartData(dispatch));
-            WishlistDispatcher.then(({ default: dispatcher }) => dispatcher.updateInitialWishlistData(dispatch));
+            CartDispatcher.then(
+                ({ default: dispatcher }) => dispatcher.updateInitialCartData(dispatch)
+            );
+            WishlistDispatcher.then(
+                ({ default: dispatcher }) => dispatcher.updateInitialWishlistData(dispatch)
+            );
 
             return true;
         } catch ([e]) {

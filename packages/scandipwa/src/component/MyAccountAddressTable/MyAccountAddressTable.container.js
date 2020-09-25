@@ -24,14 +24,17 @@ import { countriesType } from 'Type/Config';
 
 import MyAccountAddressTable from './MyAccountAddressTable.component';
 
+/** @namespace Component/MyAccountAddressTable/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     countries: state.ConfigReducer.countries
 });
 
+/** @namespace Component/MyAccountAddressTable/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showEditPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
 });
 
+/** @namespace Component/MyAccountAddressTable/Container */
 export class MyAccountAddressTableContainer extends PureComponent {
     static propTypes = {
         address: addressType.isRequired,

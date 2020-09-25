@@ -19,6 +19,7 @@ import {
 
 import { ChildrenType } from 'Type/Common';
 
+/** @namespace Component/ClickOutside/Component */
 export class ClickOutside extends PureComponent {
     static propTypes = {
         onClick: PropTypes.func,
@@ -30,8 +31,8 @@ export class ClickOutside extends PureComponent {
         children: []
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const { children } = this.props;
 

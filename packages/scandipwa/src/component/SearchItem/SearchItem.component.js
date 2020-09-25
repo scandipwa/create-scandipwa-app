@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './SearchItem.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -20,6 +18,9 @@ import ProductAttributeValue from 'Component/ProductAttributeValue';
 import TextPlaceholder from 'Component/TextPlaceholder';
 import { AttributeType, ProductType } from 'Type/ProductList';
 
+import './SearchItem.style';
+
+/** @namespace Component/SearchItem/Component */
 export class SearchItem extends PureComponent {
     static propTypes = {
         linkTo: PropTypes.oneOfType([

@@ -23,10 +23,12 @@ import { customerType } from 'Type/Account';
 
 import MyAccountCustomerTable from './MyAccountCustomerTable.component';
 
+/** @namespace Component/MyAccountCustomerTable/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showPopup: (payload) => dispatch(showPopup(CUSTOMER_POPUP_ID, payload))
 });
 
+/** @namespace Component/MyAccountCustomerTable/Container */
 export class MyAccountCustomerTableContainer extends PureComponent {
     static propTypes = {
         showPopup: PropTypes.func.isRequired,
@@ -68,4 +70,8 @@ export class MyAccountCustomerTableContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(MyAccountCustomerTableContainer);
+/** @namespace Component/MyAccountCustomerTable/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyAccountCustomerTableContainer);

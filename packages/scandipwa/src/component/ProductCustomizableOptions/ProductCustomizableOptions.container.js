@@ -16,6 +16,7 @@ import { OptionsType } from 'Type/ProductList';
 
 import ProductCustomizableOptions from './ProductCustomizableOptions.component';
 
+/** @namespace Component/ProductCustomizableOptions/Container */
 export class ProductCustomizableOptionsContainer extends PureComponent {
     static propTypes = {
         options: OptionsType,

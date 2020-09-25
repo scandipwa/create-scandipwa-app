@@ -18,6 +18,7 @@ import { hash } from 'Util/Request/Hash';
 
 import { ONE_MONTH_IN_SECONDS } from './QueryDispatcher';
 
+/** @namespace Util/Request/DataContainer */
 export class DataContainer extends PureComponent {
     dataModelName = 'DataContainer';
 
@@ -46,10 +47,12 @@ export class DataContainer extends PureComponent {
         );
 
         this.promise.promise.then(
+            /** @namespace Util/Request/DataContainer/fetchData/thisPromisePromiseThen */
             (response) => {
                 window.dataCache[queryHash] = response;
                 onSucces(response);
             },
+            /** @namespace Util/Request/DataContainer/fetchData/thisPromisePromiseCatch */
             (err) => onError(err)
         );
     }

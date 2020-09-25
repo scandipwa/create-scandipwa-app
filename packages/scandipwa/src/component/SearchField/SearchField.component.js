@@ -10,8 +10,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './SearchField.style';
-
 import PropTypes from 'prop-types';
 import {
     createRef,
@@ -22,8 +20,10 @@ import {
 
 import ClickOutside from 'Component/ClickOutside';
 import Loader from 'Component/Loader';
+import { DeviceType } from 'Type/Device';
 import history from 'Util/History';
-import isMobile from 'Util/Mobile';
+
+import './SearchField.style';
 
 export const SearchOverlay = lazy(
     () => import(
@@ -32,6 +32,7 @@ export const SearchOverlay = lazy(
     )
 );
 
+/** @namespace Component/SearchField/Component */
 export class SearchField extends PureComponent {
     static propTypes = {
         searchCriteria: PropTypes.string,
@@ -41,7 +42,8 @@ export class SearchField extends PureComponent {
         onClearSearchButtonClick: PropTypes.func.isRequired,
         isVisible: PropTypes.bool,
         isActive: PropTypes.bool,
-        hideActiveOverlay: PropTypes.func
+        hideActiveOverlay: PropTypes.func,
+        device: DeviceType.isRequired
     };
 
     static defaultProps = {
@@ -218,9 +220,10 @@ export class SearchField extends PureComponent {
     }
 
     renderDesktopContent() {
+        const { device } = this.props;
         const { showSearch } = this.state;
 
-        if (isMobile.any() || isMobile.tablet()) {
+        if (device.isMobile || device.isTablet) {
             return null;
         }
 
@@ -242,10 +245,11 @@ export class SearchField extends PureComponent {
         const {
             searchCriteria,
             onSearchBarFocus,
-            isActive
+            isActive,
+            device
         } = this.props;
 
-        if (!isMobile.any() && !isMobile.tablet()) {
+        if (!device.isMobile && !device.isTablet) {
             return null;
         }
 

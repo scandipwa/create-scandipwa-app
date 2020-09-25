@@ -34,17 +34,23 @@ export const MyAccountDispatcher = import(
     'Store/MyAccount/MyAccount.dispatcher'
 );
 
+/** @namespace Route/PasswordChangePage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     passwordResetStatus: state.MyAccountReducer.passwordResetStatus
 });
 
+/** @namespace Route/PasswordChangePage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     updateBreadcrumbs: (breadcrumbs) => {
-        BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
+        BreadcrumbsDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
+        );
     },
     resetPassword(options) {
-        MyAccountDispatcher.then(({ default: dispatcher }) => dispatcher.resetPassword(options, dispatch));
+        MyAccountDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.resetPassword(options, dispatch)
+        );
     },
     updateCustomerPasswordResetStatus(options) {
         MyAccountDispatcher.then(
@@ -56,6 +62,7 @@ export const mapDispatchToProps = (dispatch) => ({
     }
 });
 
+/** @namespace Route/PasswordChangePage/Container */
 export class PasswordChangePageContainer extends PureComponent {
     static propTypes = {
         updateMeta: PropTypes.func.isRequired,

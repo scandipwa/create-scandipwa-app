@@ -14,6 +14,7 @@ import { Field } from 'Util/Query';
 /**
  * CMS Page Query
  * @class CmsPageQuery
+ * @namespace Query/CmsPage
  */
 export class CmsPageQuery {
     /**

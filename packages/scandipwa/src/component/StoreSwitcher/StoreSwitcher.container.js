@@ -18,14 +18,18 @@ import DataContainer from 'Util/Request/DataContainer';
 
 import StoreSwitcher from './StoreSwitcher.component';
 
+/** @namespace Component/StoreSwitcher/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
+    device: state.ConfigReducer.device,
     currentStoreCode: state.ConfigReducer.code
 });
 
+/** @namespace Component/StoreSwitcher/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showErrorNotification: (message) => dispatch(showNotification('error', message))
 });
 
+/** @namespace Component/StoreSwitcher/Container */
 export class StoreSwitcherContainer extends DataContainer {
     static propTypes = {
         showErrorNotification: PropTypes.func.isRequired,
@@ -67,8 +71,8 @@ export class StoreSwitcherContainer extends DataContainer {
     }
 
     containerProps = () => {
-        const { currentStoreCode } = this.props;
-        return { currentStoreCode };
+        const { currentStoreCode, device } = this.props;
+        return { currentStoreCode, device };
     };
 
     onStoreSwitcherClick() {

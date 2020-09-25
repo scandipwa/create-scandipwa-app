@@ -16,17 +16,24 @@ import { withRouter } from 'react-router-dom';
 
 import ProductListInfoDispatcher from 'Store/ProductListInfo/ProductListInfo.dispatcher';
 import { HistoryType } from 'Type/Common';
+import { DeviceType } from 'Type/Device';
 import { FilterInputType, PagesType } from 'Type/ProductList';
 import { LocationType } from 'Type/Router';
-import isMobile from 'Util/Mobile';
 import { getQueryParam, setQueryParams } from 'Util/Url';
 
 import ProductList from './ProductList.component';
 
+/** @namespace Component/ProductList/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    device: state.ConfigReducer.device
+});
+
+/** @namespace Component/ProductList/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     requestProductListInfo: (options) => ProductListInfoDispatcher.handleData(dispatch, options)
 });
 
+/** @namespace Component/ProductList/Container */
 export class ProductListContainer extends PureComponent {
     containerFunctions = {
         loadPrevPage: this.loadPage.bind(this, false),
@@ -53,7 +60,8 @@ export class ProductListContainer extends PureComponent {
         sort: PropTypes.objectOf(PropTypes.string),
         noAttributes: PropTypes.bool,
         noVariants: PropTypes.bool,
-        isWidget: PropTypes.bool
+        isWidget: PropTypes.bool,
+        device: DeviceType.isRequired
     };
 
     static defaultProps = {
@@ -197,10 +205,10 @@ export class ProductListContainer extends PureComponent {
     });
 
     _getIsInfiniteLoaderEnabled() { // disable infinite scroll on mobile
-        const { isInfiniteLoaderEnabled } = this.props;
+        const { isInfiniteLoaderEnabled, device } = this.props;
 
-        // allow scroll on tablet and mobile
-        if (isMobile.any() || isMobile.tablet()) {
+        // allow scroll and mobile and tablet
+        if (device.isMobile || device.isTablet) {
             return isInfiniteLoaderEnabled;
         }
 
@@ -274,4 +282,4 @@ export class ProductListContainer extends PureComponent {
     }
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(ProductListContainer));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProductListContainer));

@@ -19,6 +19,7 @@ import { ProductType } from 'Type/ProductList';
 import ProductGallery from './ProductGallery.component';
 import { AMOUNT_OF_PLACEHOLDERS, IMAGE_TYPE, THUMBNAIL_KEY } from './ProductGallery.config';
 
+/** @namespace Component/ProductGallery/Container */
 export class ProductGalleryContainer extends PureComponent {
     static propTypes = {
         product: ProductType.isRequired,
@@ -35,8 +36,8 @@ export class ProductGalleryContainer extends PureComponent {
         disableZoom: this.disableZoom.bind(this)
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const { product: { id } } = props;
 

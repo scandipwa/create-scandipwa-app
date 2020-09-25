@@ -23,17 +23,22 @@ export const NoMatchDispatcher = import(
     'Store/NoMatch/NoMatch.dispatcher'
 );
 
+/** @namespace Route/NoMatchHandler/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     noMatch: state.NoMatchReducer.noMatch
 });
 
+/** @namespace Route/NoMatchHandler/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     updateNoMatch: (options) => {
-        NoMatchDispatcher.then(({ default: dispatcher }) => dispatcher.updateNoMatch(dispatch, options));
+        NoMatchDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.updateNoMatch(dispatch, options)
+        );
     }
 });
 
+/** @namespace Route/NoMatchHandler/Container */
 export class NoMatchHandlerContainer extends PureComponent {
     static propTypes = {
         updateMeta: PropTypes.func.isRequired,
@@ -58,4 +63,6 @@ export class NoMatchHandlerContainer extends PureComponent {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NoMatchHandlerContainer));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(NoMatchHandlerContainer)
+);

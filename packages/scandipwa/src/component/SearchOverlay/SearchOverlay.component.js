@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './SearchOverlay.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -23,6 +21,9 @@ import {
     SEARCH_TIMEOUT
 } from './SearchOverlay.config';
 
+import './SearchOverlay.style';
+
+/** @namespace Component/SearchOverlay/Component */
 export class SearchOverlay extends PureComponent {
     static propTypes = {
         searchCriteria: PropTypes.string,

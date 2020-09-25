@@ -15,6 +15,7 @@ import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { Field } from 'Util/Query';
 
+/** @namespace Query/Wishlist */
 export class WishlistQuery {
     getWishlistQuery(sharingCode) {
         const field = new Field('wishlist')

@@ -23,10 +23,11 @@ export const LinkedProductsDispatcher = import(
  * Product List Dispatcher
  * @class ProductDispatcher
  * @extends ProductDispatcher
+ * @namespace Store/Product/Dispatcher
  */
 export class ProductDispatcher extends QueryDispatcher {
-    constructor() {
-        super('Product');
+    __construct() {
+        super.__construct('Product');
     }
 
     onSuccess(data, dispatch) {

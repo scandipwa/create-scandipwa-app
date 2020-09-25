@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductGallery.style';
-
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 import { withRouter } from 'react-router';
@@ -29,9 +27,12 @@ import {
     GALLERY_LENGTH_BEFORE_COLLAPSE, IMAGE_TYPE, MAX_ZOOM_SCALE, PLACEHOLDER_TYPE, VIDEO_TYPE
 } from './ProductGallery.config';
 
+import './ProductGallery.style';
+
 /**
  * Product gallery
  * @class ProductGallery
+ * @namespace Component/ProductGallery/Component
  */
 export class ProductGallery extends PureComponent {
     static propTypes = {
@@ -71,8 +72,8 @@ export class ProductGallery extends PureComponent {
         scrollEnabled: true
     };
 
-    constructor(props, context) {
-        super(props, context);
+    __construct(props, context) {
+        super.__construct(props, context);
         this.renderSlide = this.renderSlide.bind(this);
     }
 

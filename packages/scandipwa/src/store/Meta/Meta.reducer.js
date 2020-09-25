@@ -18,6 +18,7 @@ export const updateEveryTime = [
     'canonical_url'
 ];
 
+/** @namespace Store/Meta/Reducer/filterData */
 export const filterData = (data) => {
     const updated = updateEveryTime.reduce((acc, key) => {
         acc[key] = data[key];
@@ -27,16 +28,21 @@ export const filterData = (data) => {
     return { ...data, ...updated };
 };
 
-export const initialState = {
+/** @namespace Store/Meta/Reducer/getInitialState */
+export const getInitialState = () => ({
     title: '',
     title_prefix: '',
     title_suffix: '',
     description: '',
     keywords: '',
     canonical_url: ''
-};
+});
 
-export const MetaReducer = (state = initialState, action) => {
+/** @namespace Store/Meta/Reducer */
+export const MetaReducer = (
+    state = getInitialState(),
+    action
+) => {
     const { payload = {}, type } = action;
 
     switch (type) {

@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -9,5 +8,11 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
+/* eslint-disable */
+import generateConfig from './generateConfig';
 
-export const STRIPE_MODE_TEST = 'test';
+export const extensions = [];
+// See config/loaders/extension-import-injector
+// * ScandiPWA extension importing magic comment! */
+
+globalThis.plugins = generateConfig(extensions);

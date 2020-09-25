@@ -9,23 +9,25 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Footer.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
-import isMobile from 'Util/Mobile';
+import { DeviceType } from 'Type/Device';
+
+import './Footer.style';
 
 /**
  * Page footer
  * @class Footer
+ * @namespace Component/Footer/Component
  */
 export class Footer extends PureComponent {
     static propTypes = {
         copyright: PropTypes.string,
-        isVisibleOnMobile: PropTypes.bool
+        isVisibleOnMobile: PropTypes.bool,
+        device: DeviceType.isRequired
     };
 
     static defaultProps = {
@@ -61,13 +63,13 @@ export class Footer extends PureComponent {
     }
 
     render() {
-        const { copyright, isVisibleOnMobile } = this.props;
+        const { copyright, isVisibleOnMobile, device } = this.props;
 
-        if (!isVisibleOnMobile && (isMobile.any() || isMobile.tablet())) {
+        if (!isVisibleOnMobile && (device.isMobile || device.isTablet)) {
             return null;
         }
 
-        if (isVisibleOnMobile && (!isMobile.any() && !isMobile.tablet())) {
+        if (isVisibleOnMobile && (!device.isMobile && device.isTablet)) {
             return null;
         }
 

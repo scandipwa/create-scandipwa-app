@@ -8,7 +8,6 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -18,6 +17,7 @@ import { ChildrenType } from 'Type/Common';
 /**
  * Cms Block
  * @class CmsBlock
+ * @namespace Component/CmsBlock/Component
  */
 export class CmsBlock extends PureComponent {
     static propTypes = {

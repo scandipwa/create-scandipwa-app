@@ -20,18 +20,22 @@ import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 
 import Popup from './Popup.component';
 
+/** @namespace Component/Popup/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     activeOverlay: state.OverlayReducer.activeOverlay,
     areOtherOverlaysOpen: state.OverlayReducer.areOtherOverlaysOpen,
-    payload: state.PopupReducer.popupPayload
+    payload: state.PopupReducer.popupPayload,
+    device: state.ConfigReducer.device
 });
 
+/** @namespace Component/Popup/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
     goToPreviousNavigationState: (state) => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE, state))
 });
 
+/** @namespace Component/Popup/Container */
 export class PopupContainer extends PureComponent {
     static propTypes = {
         payload: PropTypes.objectOf(

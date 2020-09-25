@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Notification.style';
-
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 
@@ -21,9 +19,12 @@ import {
     ANIMATION_DURATION, ERROR_NOTIFICATION_LIFETIME, ERROR_TYPE, NOTIFICATION_LIFETIME
 } from './Notification.config';
 
+import './Notification.style';
+
 /**
  * Notification block
  * @class Notification
+ * @namespace Component/Notification/Component
  */
 export class Notification extends PureComponent {
     static propTypes = {
@@ -57,7 +58,7 @@ export class Notification extends PureComponent {
 
     /**
      * Remove notification from screen
-     * @return {void}
+     * @return {void
      */
     hideNotification = () => {
         const { onHideNotification, notificationId } = this.props;

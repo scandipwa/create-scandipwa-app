@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 
 import FieldForm from 'Component/FieldForm';
 
+/** @namespace Component/MyAccountPasswordForm/Component */
 export class MyAccountPasswordForm extends FieldForm {
     static propTypes = {
         onPasswordChange: PropTypes.func.isRequired

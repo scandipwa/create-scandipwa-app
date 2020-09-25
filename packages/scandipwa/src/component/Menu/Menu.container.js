@@ -16,21 +16,30 @@ import { MENU_SUBCATEGORY } from 'Component/Header/Header.config';
 import MenuQuery from 'Query/Menu.query';
 import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { DeviceType } from 'Type/Device';
 import MenuHelper from 'Util/Menu';
-import isMobile from 'Util/Mobile';
 import DataContainer from 'Util/Request/DataContainer';
 
 import Menu from './Menu.component';
 
+/** @namespace Component/Menu/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({
+    device: state.ConfigReducer.device
+});
+
+/** @namespace Component/Menu/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     goToPreviousHeaderState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state))
 });
 
+/** @namespace Component/Menu/Container */
 export class MenuContainer extends DataContainer {
     static propTypes = {
         goToPreviousHeaderState: PropTypes.func.isRequired,
-        changeHeaderState: PropTypes.func.isRequired
+        changeHeaderState: PropTypes.func.isRequired,
+        device: DeviceType.isRequired
     };
 
     state = {
@@ -90,7 +99,8 @@ export class MenuContainer extends DataContainer {
     }
 
     onCategoryHover(activeSubcategory) {
-        if (isMobile.any()) {
+        const { device } = this.props;
+        if (device.isMobile) {
             return;
         }
 
@@ -103,7 +113,8 @@ export class MenuContainer extends DataContainer {
     }
 
     closeMenu() {
-        if (isMobile.any()) {
+        const { device } = this.props;
+        if (device.isMobile) {
             return;
         }
 
@@ -121,4 +132,4 @@ export class MenuContainer extends DataContainer {
     }
 }
 
-export default connect(null, mapDispatchToProps)(MenuContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MenuContainer);

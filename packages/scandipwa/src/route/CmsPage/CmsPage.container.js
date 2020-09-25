@@ -33,10 +33,12 @@ export const BreadcrumbsDispatcher = import(
     'Store/Breadcrumbs/Breadcrumbs.dispatcher'
 );
 
+/** @namespace Route/CmsPage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     isOffline: state.OfflineReducer.isOffline
 });
 
+/** @namespace Route/CmsPage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateBreadcrumbs: (breadcrumbs) => BreadcrumbsDispatcher.then(
         ({ default: dispatcher }) => dispatcher.updateWithCmsPage(breadcrumbs, dispatch)
@@ -45,11 +47,14 @@ export const mapDispatchToProps = (dispatch) => ({
     setBigOfflineNotice: (isBig) => dispatch(setBigOfflineNotice(isBig)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     toggleBreadcrumbs: (isActive) => {
-        BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update([], dispatch));
+        BreadcrumbsDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.update([], dispatch)
+        );
         dispatch(toggleBreadcrumbs(isActive));
     }
 });
 
+/** @namespace Route/CmsPage/Container */
 export class CmsPageContainer extends DataContainer {
     static propTypes = {
         match: MatchType.isRequired,
@@ -76,8 +81,8 @@ export class CmsPageContainer extends DataContainer {
         isLoading: true
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         this.updateBreadcrumbs();
     }

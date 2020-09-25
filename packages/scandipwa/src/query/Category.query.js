@@ -14,9 +14,11 @@ import { Field } from 'Util/Query';
 /**
  * Category Query
  * @class CategoryQuery
+ * @namespace Query/Category
  */
 export class CategoryQuery {
-    constructor() {
+    __construct() {
+        super.__construct();
         this.options = {};
     }
 

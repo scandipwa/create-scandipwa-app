@@ -16,10 +16,12 @@ import ProductConfigurableAttributesContainer from 'Component/ProductConfigurabl
 
 import CategoryConfigurableAttributes from './CategoryConfigurableAttributes.component';
 
+/** @namespace Component/CategoryConfigurableAttributes/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     currency_code: state.ConfigReducer.default_display_currency_code
 });
 
+/** @namespace Component/CategoryConfigurableAttributes/Container */
 export class CategoryConfigurableAttributesContainer extends ProductConfigurableAttributesContainer {
     render() {
         return (
@@ -31,4 +33,8 @@ export class CategoryConfigurableAttributesContainer extends ProductConfigurable
     }
 }
 
-export default connect(mapStateToProps)(CategoryConfigurableAttributesContainer);
+/** @namespace Component/CategoryConfigurableAttributes/Container/mapDispatchToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryConfigurableAttributesContainer);

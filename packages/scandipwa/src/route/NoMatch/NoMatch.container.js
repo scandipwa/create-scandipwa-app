@@ -24,13 +24,21 @@ export const BreadcrumbsDispatcher = import(
     'Store/Breadcrumbs/Breadcrumbs.dispatcher'
 );
 
+/** @namespace Route/NoMatch/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateBreadcrumbs: (breadcrumbs) => {
-        BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
+        BreadcrumbsDispatcher.then(
+            ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
+        );
     },
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state))
 });
 
+/** @namespace Route/NoMatch/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+/** @namespace Route/NoMatch/Container */
 export class NoMatchContainer extends PureComponent {
     render() {
         return (
@@ -45,4 +53,4 @@ export class NoMatchContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(NoMatchContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(NoMatchContainer);

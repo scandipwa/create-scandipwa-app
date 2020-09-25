@@ -14,12 +14,17 @@ import {
     SHOW_OFFLINE_NOTICE
 } from './Offline.action';
 
-export const initialState = {
+/** @namespace Store/Offline/Reducer/getInitialState */
+export const getInitialState = () => ({
     isOffline: true,
     isBig: false
-};
+});
 
-export const OfflineReducer = (state = initialState, action) => {
+/** @namespace Store/Offline/Reducer */
+export const OfflineReducer = (
+    state = getInitialState(),
+    action
+) => {
     switch (action.type) {
     case SHOW_OFFLINE_NOTICE:
         const { isOffline } = action;

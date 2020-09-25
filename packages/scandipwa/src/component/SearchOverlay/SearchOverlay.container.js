@@ -20,11 +20,13 @@ export const SearchBarDispatcher = import(
     'Store/SearchBar/SearchBar.dispatcher'
 );
 
+/** @namespace Component/SearchOverlay/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     searchResults: state.SearchBarReducer.productsInSearch,
     isLoading: state.SearchBarReducer.isLoading
 });
 
+/** @namespace Component/SearchOverlay/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     makeSearchRequest: (options) => SearchBarDispatcher.then(
         ({ default: dispatcher }) => dispatcher.handleData(dispatch, options)
@@ -34,6 +36,7 @@ export const mapDispatchToProps = (dispatch) => ({
     )
 });
 
+/** @namespace Component/SearchOverlay/Container */
 export class SearchOverlayContainer extends PureComponent {
     static propTypes = {
         makeSearchRequest: PropTypes.func.isRequired,

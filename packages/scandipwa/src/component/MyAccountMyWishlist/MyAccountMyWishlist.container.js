@@ -25,13 +25,17 @@ export const WishlistDispatcher = import(
     'Store/Wishlist/Wishlist.dispatcher'
 );
 
+/** @namespace Component/MyAccountMyWishlist/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     wishlistItems: state.WishlistReducer.productsInWishlist,
     isWishlistLoading: state.WishlistReducer.isLoading
 });
 
+/** @namespace Component/MyAccountMyWishlist/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
-    clearWishlist: () => WishlistDispatcher.then(({ default: dispatcher }) => dispatcher.clearWishlist(dispatch)),
+    clearWishlist: () => WishlistDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.clearWishlist(dispatch)
+    ),
     moveWishlistToCart: () => WishlistDispatcher.then(
         ({ default: dispatcher }) => dispatcher.moveWishlistToCart(dispatch)
     ),
@@ -39,6 +43,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (message) => dispatch(showNotification('success', message))
 });
 
+/** @namespace Component/MyAccountMyWishlist/Container */
 export class MyAccountMyWishlistContainer extends PureComponent {
     static propTypes = {
         showPopup: PropTypes.func.isRequired,
@@ -73,6 +78,7 @@ export class MyAccountMyWishlistContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         return moveWishlistToCart().then(
+            /** @namespace Component/MyAccountMyWishlist/Container/moveWishlistToCartThen */
             () => this.showNotificationAndRemoveLoading('Wishlist moved to cart')
         );
     };
@@ -83,6 +89,7 @@ export class MyAccountMyWishlistContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         return clearWishlist().then(
+            /** @namespace Component/MyAccountMyWishlist/Container/clearWishlistThen */
             () => this.showNotificationAndRemoveLoading('Wishlist cleared')
         );
     };

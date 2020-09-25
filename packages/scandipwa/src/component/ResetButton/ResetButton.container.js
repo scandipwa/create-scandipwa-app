@@ -17,6 +17,7 @@ import { setQueryParams } from 'Util/Url';
 
 import ResetButton from './ResetButton.component';
 
+/** @namespace Component/ResetButton/Container */
 export class ResetButtonContainer extends PureComponent {
     static propTypes = {
         history: HistoryType.isRequired,
@@ -66,4 +67,6 @@ export class ResetButtonContainer extends PureComponent {
     }
 }
 
-export default withRouter(ResetButtonContainer);
+export default withRouter(
+    ResetButtonContainer
+);

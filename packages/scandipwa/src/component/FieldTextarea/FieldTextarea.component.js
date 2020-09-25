@@ -12,6 +12,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+/** @namespace Component/FieldTextarea/Component */
 export class FieldTextarea extends PureComponent {
     static propTypes = {
         id: PropTypes.string.isRequired,

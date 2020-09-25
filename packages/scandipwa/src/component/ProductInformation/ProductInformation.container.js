@@ -15,6 +15,7 @@ import { ProductType } from 'Type/ProductList';
 
 import ProductInformation from './ProductInformation.component';
 
+/** @namespace Component/ProductInformation/Container */
 export class ProductInformationContainer extends PureComponent {
     static propTypes = {
         product: ProductType.isRequired

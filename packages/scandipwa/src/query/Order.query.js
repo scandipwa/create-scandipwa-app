@@ -14,6 +14,7 @@ import { Field } from 'Util/Query';
 /**
  * Order Query
  * @class OrderQuery
+ * @namespace Query/Order
  */
 export class OrderQuery {
     getOrderListQuery() {

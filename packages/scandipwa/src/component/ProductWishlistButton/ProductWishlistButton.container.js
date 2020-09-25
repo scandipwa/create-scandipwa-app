@@ -26,11 +26,13 @@ export const WishlistDispatcher = import(
     'Store/Wishlist/Wishlist.dispatcher'
 );
 
+/** @namespace Component/ProductWishlistButton/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     productsInWishlist: state.WishlistReducer.productsInWishlist,
     isLoading: state.WishlistReducer.isLoading
 });
 
+/** @namespace Component/ProductWishlistButton/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     addProductToWishlist: (wishlistItem) => WishlistDispatcher.then(
         ({ default: dispatcher }) => dispatcher.addItemToWishlist(dispatch, wishlistItem)
@@ -41,6 +43,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
+/** @namespace Component/ProductWishlistButton/Container */
 export class ProductWishlistButtonContainer extends PureComponent {
     static propTypes = {
         quantity: PropTypes.number,

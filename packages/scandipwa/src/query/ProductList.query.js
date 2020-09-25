@@ -16,9 +16,11 @@ import { Field, Fragment } from 'Util/Query';
 /**
  * Product List Query
  * @class ProductListQuery
+ * @namespace Query/ProductList
  */
 export class ProductListQuery {
-    constructor() {
+    __construct() {
+        super.__construct();
         this.options = {};
     }
 

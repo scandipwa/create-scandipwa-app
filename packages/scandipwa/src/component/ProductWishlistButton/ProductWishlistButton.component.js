@@ -10,8 +10,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductWishlistButton.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -19,6 +17,9 @@ import Loader from 'Component/Loader';
 import { ProductType } from 'Type/ProductList';
 import { isSignedIn } from 'Util/Auth';
 
+import './ProductWishlistButton.style';
+
+/** @namespace Component/ProductWishlistButton/Component */
 export class ProductWishlistButton extends PureComponent {
     static propTypes = {
         isReady: PropTypes.bool,

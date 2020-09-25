@@ -18,10 +18,12 @@ import history from 'Util/History';
 
 import CategorySubcategories from './CategorySubcategories.component';
 
+/** @namespace Component/CategorySubcategories/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
+/** @namespace Component/CategorySubcategories/Container */
 export class CategorySubcategoriesContainer extends PureComponent {
     static propTypes = {
         hideActiveOverlay: PropTypes.func.isRequired,
@@ -59,4 +61,8 @@ export class CategorySubcategoriesContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CategorySubcategoriesContainer);
+/** @namespace Component/CategorySubcategories/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategorySubcategoriesContainer);

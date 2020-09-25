@@ -14,6 +14,7 @@ import { Field } from 'Util/Query';
 /**
  * Email availability check Query
  * @class CheckEmailQuery
+ * @namespace Query/CheckEmail
  */
 export class CheckEmailQuery {
     getIsEmailAvailableQuery(email) {

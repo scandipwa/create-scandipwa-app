@@ -1,9 +1,20 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import Meta from './Meta.component';
 
+/** @namespace Component/Meta/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     default_description: state.MetaReducer.default_description,
     default_keywords: state.MetaReducer.default_keywords,
@@ -16,6 +27,7 @@ export const mapStateToProps = (state) => ({
     title: state.MetaReducer.title
 });
 
+/** @namespace Component/Meta/Container */
 export class MetaContainer extends PureComponent {
     static propTypes = {
         default_description: PropTypes.string,
@@ -91,4 +103,8 @@ export class MetaContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps)(MetaContainer);
+/** @namespace Component/Meta/Container/mapDispatchToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MetaContainer);

@@ -60,6 +60,7 @@ export const NoMatchDispatcher = import(
     'Store/NoMatch/NoMatch.dispatcher'
 );
 
+/** @namespace Route/CategoryPage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     category: state.CategoryReducer.category,
     isOffline: state.OfflineReducer.isOffline,
@@ -68,9 +69,11 @@ export const mapStateToProps = (state) => ({
     currentArgs: state.ProductListReducer.currentArgs,
     selectedInfoFilter: state.ProductListInfoReducer.selectedFilter,
     isInfoLoading: state.ProductListInfoReducer.isLoading,
-    totalPages: state.ProductListReducer.totalPages
+    totalPages: state.ProductListReducer.totalPages,
+    device: state.ConfigReducer.device
 });
 
+/** @namespace Route/CategoryPage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     toggleOverlayByKey: (key) => dispatch(toggleOverlayByKey(key)),
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
@@ -100,6 +103,7 @@ export const mapDispatchToProps = (dispatch) => ({
     clearCategory: () => dispatch(updateCurrentCategory({}))
 });
 
+/** @namespace Route/CategoryPage/Container */
 export class CategoryPageContainer extends PureComponent {
     static propTypes = {
         history: HistoryType.isRequired,
@@ -177,6 +181,11 @@ export class CategoryPageContainer extends PureComponent {
                 id
             }
         } = this.props;
+
+        /**
+         * Ensure transition PLP => homepage => PLP always having proper meta
+         */
+        this.updateMeta();
 
         /**
          * Always make sure the navigation show / hide mode (on scroll)

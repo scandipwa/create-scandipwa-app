@@ -27,6 +27,7 @@ import { hash } from 'Util/Request/Hash';
  * Html content parser
  * Component converts HTML strings to React components
  * @class Html
+ * @namespace Component/Html/Component
  */
 export class Html extends PureComponent {
     static propTypes = {

@@ -16,6 +16,7 @@ import { createPortal } from 'react-dom';
 /**
  * Page Meta data
  * @class Meta
+ * @namespace Component/Meta/Component
  */
 export class Meta extends PureComponent {
     static propTypes = {
@@ -67,6 +68,7 @@ export class Meta extends PureComponent {
         }
 
         return (
+            // eslint-disable-next-line jsx-a11y/control-has-associated-label
             <link rel="canonical" href={ canonical_url } />
         );
     }

@@ -35,7 +35,8 @@ import SearchBarReducer from 'Store/SearchBar/SearchBar.reducer';
 import UrlRewritesReducer from 'Store/UrlRewrites/UrlRewrites.reducer';
 import WishlistReducer from 'Store/Wishlist/Wishlist.reducer';
 
-export const staticReducers = {
+/** @namespace Store/Index/getReducers */
+export const getStaticReducers = () => ({
     CategoryReducer,
     NotificationReducer,
     BreadcrumbsReducer,
@@ -56,11 +57,11 @@ export const staticReducers = {
     ConfigReducer,
     MetaReducer,
     LinkedProductsReducer
-};
+});
 
 export function createReducer(asyncReducers) {
     return combineReducers({
-        ...staticReducers,
+        ...getStaticReducers(),
         ...asyncReducers
     });
 }

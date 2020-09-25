@@ -16,12 +16,17 @@ import {
     TOGGLE_OVERLAY
 } from './Overlay.action';
 
-export const initialState = {
+/** @namespace Store/Overlay/Reducer/getInitialState */
+export const getInitialState = () => ({
     activeOverlay: '',
     areOtherOverlaysOpen: false
-};
+});
 
-export const OverlayReducer = (state = initialState, action) => {
+/** @namespace Store/Overlay/Reducer */
+export const OverlayReducer = (
+    state = getInitialState(),
+    action
+) => {
     const { overlayKey } = action;
     const {
         activeOverlay: prevActiveOverlay

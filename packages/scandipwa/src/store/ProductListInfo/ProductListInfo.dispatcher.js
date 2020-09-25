@@ -22,10 +22,11 @@ import { QueryDispatcher } from 'Util/Request';
  * Product List Info Dispatcher
  * @class ProductListInfoDispatcher
  * @extends QueryDispatcher
+ * @namespace Store/ProductListInfo/Dispatcher
  */
 export class ProductListInfoDispatcher extends QueryDispatcher {
-    constructor() {
-        super('ProductListInfo');
+    __construct() {
+        super.__construct('ProductListInfo');
     }
 
     onSuccess({ products }, dispatch, options) {

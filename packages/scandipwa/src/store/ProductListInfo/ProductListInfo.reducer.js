@@ -14,6 +14,7 @@ import {
     UPDATE_PRODUCT_LIST_INFO
 } from 'Store/ProductListInfo/ProductListInfo.action';
 
+/** @namespace Store/ProductListInfo/Reducer/reduceFilters */
 export const reduceFilters = (filters) => filters.reduce((co, item) => {
     const {
         request_var: attribute_code,
@@ -48,15 +49,20 @@ export const reduceFilters = (filters) => filters.reduce((co, item) => {
     };
 }, {});
 
-export const initialState = {
+/** @namespace Store/ProductListInfo/Reducer/getInitialState */
+export const getInitialState = () => ({
     minPrice: 0,
     maxPrice: 0,
     sortFields: {},
     filters: {},
     isLoading: true
-};
+});
 
-export const ProductListReducer = (state = initialState, action) => {
+/** @namespace Store/ProductListInfo/Reducer */
+export const ProductListReducer = (
+    state = getInitialState(),
+    action
+) => {
     const {
         type,
         isLoading,

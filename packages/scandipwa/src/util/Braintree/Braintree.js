@@ -12,10 +12,12 @@
 import { Field } from 'Util/Query';
 import { fetchMutation } from 'Util/Request';
 
+/** @namespace Util/Braintree */
 export class Braintree {
     isLoading = false;
 
-    constructor(containerId) {
+    __construct(containerId) {
+        super.__construct();
         this.containerId = containerId;
     }
 
@@ -32,7 +34,10 @@ export class Braintree {
 
     requestBraintreeClientToken() {
         const mutation = (new Field('createBraintreeClientToken')).setAlias('token');
-        return fetchMutation(mutation).then(({ token }) => token);
+        return fetchMutation(mutation).then(
+            /** @namespace Util/Braintree/fetchMutationThen */
+            ({ token }) => token
+        );
     }
 
     requestPaymentNonce = () => this.braintreeDropIn.requestPaymentMethod();

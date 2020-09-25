@@ -20,14 +20,19 @@ import {
     UPDATE_CUSTOMER_SIGN_IN_STATUS
 } from './MyAccount.action';
 
-export const initialState = {
+/** @namespace Store/MyAccount/Reducer/getInitialState */
+export const getInitialState = () => ({
     isSignedIn: isInitiallySignedIn(),
     passwordResetStatus: false,
     isPasswordForgotSend: false,
     customer: {}
-};
+});
 
-export const MyAccountReducer = (state = initialState, action) => {
+/** @namespace Store/MyAccount/Reducer */
+export const MyAccountReducer = (
+    state = getInitialState(),
+    action
+) => {
     const { status, customer } = action;
 
     switch (action.type) {

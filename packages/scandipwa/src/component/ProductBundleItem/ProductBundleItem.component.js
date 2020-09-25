@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductBundleItem.style';
-
 import PropTypes from 'prop-types';
 
 import Field from 'Component/Field';
@@ -23,6 +21,9 @@ import {
     SELECT
 } from './ProductBundleItem.config';
 
+import './ProductBundleItem.style';
+
+/** @namespace Component/ProductBundleItem/Component */
 export class ProductBundleItem extends ProductCustomizableOption {
     static propTypes = {
         ...ProductCustomizableOption.propTypes,

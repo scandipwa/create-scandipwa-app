@@ -14,6 +14,7 @@
 /**
  * Set of helpers related to Browser Database
  * @class CSS
+ * @namespace Util/BrowserDatabase
  */
 export class BrowserDatabase {
     /**

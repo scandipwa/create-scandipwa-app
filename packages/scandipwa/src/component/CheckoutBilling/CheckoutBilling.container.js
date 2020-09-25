@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { BRAINTREE, KLARNA, STRIPE } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { BRAINTREE, KLARNA } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import {
     TERMS_AND_CONDITIONS_POPUP_ID
 } from 'Component/CheckoutTermsAndConditionsPopup/CheckoutTermsAndConditionsPopup.config';
@@ -26,6 +26,7 @@ import { trimAddressFields, trimCustomerAddress } from 'Util/Address';
 
 import CheckoutBilling from './CheckoutBilling.component';
 
+/** @namespace Component/CheckoutBilling/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer,
     totals: state.CartReducer.cartTotals,
@@ -33,11 +34,13 @@ export const mapStateToProps = (state) => ({
     termsAndConditions: state.ConfigReducer.checkoutAgreements
 });
 
+/** @namespace Component/CheckoutBilling/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showErrorNotification: (message) => dispatch(showNotification('error', message)),
     showPopup: (payload) => dispatch(showPopup(TERMS_AND_CONDITIONS_POPUP_ID, payload))
 });
 
+/** @namespace Component/CheckoutBilling/Container */
 export class CheckoutBillingContainer extends PureComponent {
     static propTypes = {
         showErrorNotification: PropTypes.func.isRequired,
@@ -80,8 +83,8 @@ export class CheckoutBillingContainer extends PureComponent {
         showPopup: this.showPopup.bind(this)
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const { paymentMethods, customer } = props;
         const [method] = paymentMethods;
@@ -163,28 +166,17 @@ export class CheckoutBillingContainer extends PureComponent {
                     is_active_payment_token_enabler: false
                 }
             };
-        case STRIPE:
-            const [{ token, handleAuthorization }] = asyncData;
-            if (token === null) {
-                return false;
-            }
 
-            return {
-                code,
-                additional_data: {
-                    cc_stripejs_token: token,
-                    cc_save: false
-                },
-                handleAuthorization
-            };
         case KLARNA:
             const [{ authorization_token }] = asyncData;
+
             return {
                 code,
                 additional_data: {
                     authorization_token
                 }
             };
+
         default:
             return { code };
         }

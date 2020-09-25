@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './GroupedProductsItem.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -21,9 +19,12 @@ import TextPlaceholder from 'Component/TextPlaceholder';
 import { ProductType } from 'Type/ProductList';
 import media, { PRODUCT_MEDIA } from 'Util/Media';
 
+import './GroupedProductsItem.style';
+
 /**
  * Grouped Product Item
  * @class GroupedProduct
+ * @namespace Component/GroupedProductsItem/Component
  */
 export class GroupedProductsItem extends PureComponent {
     static propTypes = {
@@ -93,7 +94,7 @@ export class GroupedProductsItem extends PureComponent {
             <li block="GroupedProductsItem" aria-label="Product Item">
                 { this.renderImage() }
                 { this.renderTitle() }
-                { this.renderQuantity }
+                { this.renderQuantity() }
             </li>
         );
     }

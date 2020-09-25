@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CmsPage.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -18,6 +16,9 @@ import Html from 'Component/Html';
 import TextPlaceholder from 'Component/TextPlaceholder';
 import { BlockListType } from 'Type/CMS';
 
+import './CmsPage.style';
+
+/** @namespace Route/CmsPage/Component */
 export class CmsPage extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,

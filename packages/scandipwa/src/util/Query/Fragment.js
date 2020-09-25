@@ -11,14 +11,15 @@
 
 import Field from 'Util/Query/Field';
 
+/** @namespace Util/Query/Fragment */
 export class Fragment extends Field {
     /**
      * Creates an instance of Fragment.
      * @param  {String} name Name of the Fragment
      * @memberof Fragment
      */
-    constructor(name) {
-        super(name);
+    __construct(name) {
+        super.__construct(name);
         this._name = name;
     }
 

@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './CategoryFilterOverlay.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -21,6 +19,9 @@ import ResetButton from 'Component/ResetButton';
 
 import { CATEGORY_FILTER_OVERLAY_ID } from './CategoryFilterOverlay.config';
 
+import './CategoryFilterOverlay.style';
+
+/** @namespace Component/CategoryFilterOverlay/Component */
 export class CategoryFilterOverlay extends PureComponent {
     static propTypes = {
         availableFilters: PropTypes.objectOf(PropTypes.shape).isRequired,

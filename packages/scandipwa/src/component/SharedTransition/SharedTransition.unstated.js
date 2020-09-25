@@ -18,6 +18,7 @@ export const sharedTransitionInitialState = {
     startingPosition: {}
 };
 
+/** @namespace Component/SharedTransition/Unstated */
 export class SharedTransitionUnstated extends Container {
     state = sharedTransitionInitialState;
 

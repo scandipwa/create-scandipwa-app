@@ -14,6 +14,7 @@ import { Field } from 'Util/Query';
 /**
  * RegionQuery Mutations
  * @class RegionQuery
+ * @namespace Query/Region
  */
 export class RegionQuery {
     getCountriesQuery() {

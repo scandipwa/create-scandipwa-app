@@ -16,6 +16,7 @@ import { Field } from 'Util/Query';
 /**
  * MyAccount Mutations
  * @class MyAccount
+ * @namespace Query/MyAccount
  */
 export class MyAccountQuery {
     /**

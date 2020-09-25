@@ -19,16 +19,19 @@ import { LocationType } from 'Type/Common';
 
 import OfflineNotice from './OfflineNotice.component';
 
+/** @namespace Component/OfflineNotice/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     isOffline: state.OfflineReducer.isOffline,
     isBig: state.OfflineReducer.isBig
 });
 
+/** @namespace Component/OfflineNotice/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showOfflineNotice: (isOffline) => dispatch(showOfflineNotice(isOffline)),
     setBigOfflineNotice: (isBig) => dispatch(setBigOfflineNotice(isBig))
 });
 
+/** @namespace Component/OfflineNotice/Container */
 export class OfflineNoticeContainer extends PureComponent {
     static propTypes = {
         setBigOfflineNotice: PropTypes.func.isRequired,
@@ -117,4 +120,6 @@ export class OfflineNoticeContainer extends PureComponent {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(OfflineNoticeContainer));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(OfflineNoticeContainer)
+);

@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductCard.style';
-
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 
@@ -25,9 +23,12 @@ import TierPrices from 'Component/TierPrices';
 import { ProductType } from 'Type/ProductList';
 import { CONFIGURABLE } from 'Util/Product';
 
+import './ProductCard.style';
+
 /**
  * Product card
  * @class ProductCard
+ * @namespace Component/ProductCard/Component
  */
 export class ProductCard extends PureComponent {
     static propTypes = {
@@ -83,7 +84,7 @@ export class ProductCard extends PureComponent {
     }
 
     renderProductPrice() {
-        const { productOrVariant: { price_range } } = this.props;
+        const { product: { price_range } } = this.props;
 
         if (!price_range) {
             return <TextPlaceholder />;

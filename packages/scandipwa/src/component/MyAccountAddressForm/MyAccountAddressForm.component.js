@@ -15,6 +15,7 @@ import FieldForm from 'Component/FieldForm';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 
+/** @namespace Component/MyAccountAddressForm/Component */
 export class MyAccountAddressForm extends FieldForm {
     static propTypes = {
         address: addressType.isRequired,
@@ -28,8 +29,8 @@ export class MyAccountAddressForm extends FieldForm {
         onSave: () => {}
     };
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const {
             countries,

@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './ProductListWidget.style';
-
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -21,11 +19,16 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import { getIndexedProducts } from 'Util/Product';
 import DataContainer from 'Util/Request/DataContainer';
 
-export const mapDispatchToProps = {
+import './ProductListWidget.style';
+
+/** @namespace Component/ProductListWidget/Container/mapDispatchToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapDispatchToProps = (dispatch) => ({
     updateNoMatch,
     showNotification
-};
+});
 
+/** @namespace Component/ProductListWidget/Container */
 export class ProductListWidgetContainer extends DataContainer {
     static propTypes = {
         showPager: PropTypes.number,
@@ -167,4 +170,8 @@ export class ProductListWidgetContainer extends DataContainer {
     }
 }
 
-export default connect(null, mapDispatchToProps)(ProductListWidgetContainer);
+/** @namespace Component/ProductListWidget/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListWidgetContainer);

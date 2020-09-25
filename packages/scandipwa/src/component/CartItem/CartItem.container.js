@@ -26,6 +26,7 @@ export const CartDispatcher = import(
     'Store/Cart/Cart.dispatcher'
 );
 
+/** @namespace Component/CartItem/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     addProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
@@ -38,6 +39,7 @@ export const mapDispatchToProps = (dispatch) => ({
     )
 });
 
+/** @namespace Component/CartItem/Container */
 export class CartItemContainer extends PureComponent {
     static propTypes = {
         item: CartItemType.isRequired,
@@ -216,4 +218,8 @@ export class CartItemContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CartItemContainer);
+/** @namespace Component/CartItem/Container/mapStateToProps */
+// eslint-disable-next-line no-unused-vars
+export const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CartItemContainer);

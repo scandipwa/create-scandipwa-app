@@ -28,12 +28,14 @@ export const ReviewDispatcher = import(
     'Store/Review/Review.dispatcher'
 );
 
+/** @namespace Component/ProductReviewForm/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer,
     isSignedIn: state.MyAccountReducer.isSignedIn,
     reviewRatings: state.ConfigReducer.reviewRatings
 });
 
+/** @namespace Component/ProductReviewForm/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     addReview: (options) => ReviewDispatcher.then(
         ({ default: dispatcher }) => dispatcher.submitProductReview(dispatch, options)
@@ -43,6 +45,7 @@ export const mapDispatchToProps = (dispatch) => ({
     goToPreviousHeaderState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE))
 });
 
+/** @namespace Component/ProductReviewForm/Container */
 export class ProductReviewFormContainer extends PureComponent {
     static propTypes = {
         showNotification: PropTypes.func.isRequired,
@@ -64,8 +67,8 @@ export class ProductReviewFormContainer extends PureComponent {
         onReviewError: this._onReviewError.bind(this)
     });
 
-    constructor(props) {
-        super(props);
+    __construct(props) {
+        super.__construct(props);
 
         const { customer: { firstname: nickname } } = this.props;
         const reviewData = { nickname };
@@ -120,22 +123,25 @@ export class ProductReviewFormContainer extends PureComponent {
                 detail,
                 product_sku,
                 rating_data
-            }).then((success) => {
-                if (success) {
-                    this.setState({
-                        ratingData: {},
-                        reviewData: {},
-                        isLoading: false
-                    });
+            }).then(
+                /** @namespace Component/ProductReviewForm/Container/addReviewThen */
+                (success) => {
+                    if (success) {
+                        this.setState({
+                            ratingData: {},
+                            reviewData: {},
+                            isLoading: false
+                        });
 
-                    goToPreviousHeaderState();
-                    hideActiveOverlay();
+                        goToPreviousHeaderState();
+                        hideActiveOverlay();
 
-                    return;
+                        return;
+                    }
+
+                    this.setState({ isLoading: false });
                 }
-
-                this.setState({ isLoading: false });
-            });
+            );
         }
     }
 

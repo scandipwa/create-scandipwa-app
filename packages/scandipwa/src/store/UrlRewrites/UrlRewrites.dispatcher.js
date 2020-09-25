@@ -18,10 +18,11 @@ import { QueryDispatcher } from 'Util/Request';
  * Url Rewrite Dispathcer
  * @class UrlRewritesDispatcher
  * @extends RequestDispatcher
+ * @namespace Store/UrlRewrites/Dispatcher
  */
 export class UrlRewritesDispatcher extends QueryDispatcher {
-    constructor() {
-        super('UrlRewrites');
+    __construct() {
+        super.__construct('UrlRewrites');
     }
 
     onSuccess({ urlResolver }, dispatch, { urlParam }) {

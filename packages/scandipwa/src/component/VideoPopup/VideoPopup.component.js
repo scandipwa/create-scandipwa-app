@@ -11,8 +11,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './VideoPopup.style';
-
 import { PureComponent } from 'react';
 
 import Popup from 'Component/Popup';
@@ -21,9 +19,12 @@ import { makeCancelable } from 'Util/Promise';
 
 import { VIDEO_POPUP_ID, VIMEO_FORMAT, YOUTUBE_FORMAT } from './VideoPopup.config';
 
+import './VideoPopup.style';
+
 /**
  * A popup capable of displaying a video
  * @class VideoPopup
+ * @namespace Component/VideoPopup/Component
  */
 export class VideoPopup extends PureComponent {
     static propTypes = {
@@ -37,9 +38,10 @@ export class VideoPopup extends PureComponent {
         Promise.all([
             this.vimeoPromise,
             this.youTubePromise
-        ]).then(() => {
-            this.forceUpdate();
-        });
+        ]).then(
+            /** @namespace Component/VideoPopup/Component/videoLibrariesThen */
+            () => this.forceUpdate()
+        );
     }
 
     componentWillUnmount() {
@@ -101,6 +103,7 @@ export class VideoPopup extends PureComponent {
         this.vimeoPromise = makeCancelable(import('react-vimeo'));
 
         this.vimeoPromise.promise.then(
+            /** @namespace Component/VideoPopup/Component/vimeoPromisePromiseThen */
             ({ default: vimeo }) => {
                 this.vimeoComponent = vimeo;
             }
@@ -111,6 +114,7 @@ export class VideoPopup extends PureComponent {
         this.youTubePromise = makeCancelable(import('react-youtube'));
 
         this.youTubePromise.promise.then(
+            /** @namespace Component/VideoPopup/Component/youTubePromisePromiseThen */
             ({ default: youTube }) => {
                 this.youTubeComponent = youTube;
             }

@@ -9,8 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './WishlistItem.style';
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -18,6 +16,9 @@ import Field from 'Component/Field';
 import ProductCard from 'Component/ProductCard';
 import { FilterType, ProductType } from 'Type/ProductList';
 
+import './WishlistItem.style';
+
+/** @namespace Component/WishlistItem/Component */
 export class WishlistItem extends PureComponent {
     static propTypes = {
         addToCart: PropTypes.func,
@@ -100,12 +101,22 @@ export class WishlistItem extends PureComponent {
         );
     }
 
+    getWishlistProduct() {
+        const { product, product: { url } } = this.props;
+        const wishedVariant = product.variants.find(({ sku }) => sku === product.wishlist.sku);
+
+        return {
+            ...wishedVariant,
+            url
+        };
+    }
+
     render() {
-        const { product, parameters, isLoading } = this.props;
+        const { parameters, isLoading } = this.props;
 
         return (
             <ProductCard
-              product={ product }
+              product={ this.getWishlistProduct() }
               selectedFilters={ parameters }
               mix={ { block: 'WishlistItem' } }
               isLoading={ isLoading }

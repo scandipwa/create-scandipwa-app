@@ -16,6 +16,7 @@ import { UPDATE_TOTALS } from './Cart.action';
 
 export const CART_TOTALS = 'cart_totals';
 
+/** @namespace Store/Cart/Reducer/updateCartTotals */
 export const updateCartTotals = (action) => {
     const { cartData: cartTotals } = action;
 
@@ -38,11 +39,16 @@ export const updateCartTotals = (action) => {
     return { cartTotals };
 };
 
-export const initialState = {
+/** @namespace Store/Cart/Reducer/getInitialState */
+export const getInitialState = () => ({
     cartTotals: BrowserDatabase.getItem(CART_TOTALS) || {}
-};
+});
 
-export const CartReducer = (state = initialState, action) => {
+/** @namespace Store/Cart/Reducer */
+export const CartReducer = (
+    state = getInitialState(),
+    action
+) => {
     const { type } = action;
 
     switch (type) {
