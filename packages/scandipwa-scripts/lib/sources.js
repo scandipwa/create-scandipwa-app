@@ -1,15 +1,13 @@
-const path = require('path');
+const { getParentThemeSources } = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 
 const PROJECT = 'project';
-const CORE = 'core';
 
 const sources = {
     [PROJECT]: process.cwd(),
-    [CORE]: path.resolve(require.resolve('@scandipwa/scandipwa/src/index.js'), '../..')
+    ...getParentThemeSources()
 };
 
 module.exports = {
     sources,
-    PROJECT,
-    CORE
+    PROJECT
 };

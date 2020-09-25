@@ -5,6 +5,10 @@
         "@scandipwa/scandipwa": "<%= scandipwaVersion %>",
         "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>"
     },
+    "scandipwa": {
+        "parentTheme": "@scandipwa/scandipwa",
+        "extensions": {}
+    },
     "scripts": {
         "start": "scandipwa-scripts start",
         "build": "scandipwa-scripts build"

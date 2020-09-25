@@ -1,4 +1,4 @@
-const { getPackageJson } = require('./composer');
+const { getPackageJson } = require('./package-json');
 
 let visitedDeps = [];
 
@@ -18,7 +18,9 @@ const getAllExtensions = (modulePath) => {
 
     const {
         dependencies = {},
-        extensions = []
+        scandipwa: {
+            extensions = []
+        } = {}
     } = getPackageJson(modulePath);
 
     return Object.keys(dependencies).reduce(

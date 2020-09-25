@@ -3,22 +3,9 @@ const path = require('path');
 const semver = require('semver');
 const minVersion = require('./lib/min-version');
 const logger = require('./logger');
+const { getPackageJson } = require('./package-json');
 
 let visitedDeps = [];
-
-/**
- * Get package JSON, or empty object
- *
- * @param {string} pathname
- * @return {object} 
- */
-const getPackageJson = (pathname) => {
-    try {
-        return require(path.join(pathname, 'package.json')) || {};
-    } catch (e) {
-        return {};
-    }
-};
 
 /**
  * Recursively get "composer" field from all package.json,
@@ -36,7 +23,9 @@ const getComposerDeps = (modulePath) => {
 
     const {
         dependencies = {},
-        composer = []
+        scandipwa: {
+            composer = []
+        } = {}
     } = getPackageJson(modulePath);
 
     return Object.keys(dependencies).reduce(

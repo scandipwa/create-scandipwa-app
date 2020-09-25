@@ -3,7 +3,8 @@
 /* eslint-disable fp/no-loops */
 const path = require('path');
 const fs = require('fs');
-const { sources, CORE, PROJECT } = require('./sources');
+const { sources, PROJECT } = require('./sources');
+const { getParentThemeAliases } = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 
 const aliasPostfixMap = {
     Style: './src/style/',
@@ -17,7 +18,7 @@ const aliasPostfixMap = {
 
 const sourcePrefixMap = {
     [PROJECT]: '',
-    [CORE]: 'Source'
+    ...getParentThemeAliases()
 };
 
 const alias = {};

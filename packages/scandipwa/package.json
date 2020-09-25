@@ -21,8 +21,11 @@
         "redux": "^4.0.5",
         "unstated": "^2.1.1"
     },
-    "composer": {
-        "scandipwa/scandipwa": "^2.16.2"
+    "scandipwa": {
+        "themeAlias": "Source",
+        "composer": {
+            "scandipwa/scandipwa": "^2.16.2"
+        }
     },
     "license": "OSL-3.0",
     "publishConfig": {

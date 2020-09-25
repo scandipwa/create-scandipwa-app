@@ -91,9 +91,9 @@ module.exports = function injectImports(source) {
                 logger.warn(
                     `Loading of plugin ${ logger.style.misc(package) } failed.`,
                     `Try installing it using ${ logger.style.command(`${ installCommand } ${ package } command.`) }`,
-                    `Othwerise, disable the extension in the root ${ logger.style.file('package.json') } file:`
-                    `Append ${ logger.style.command(`"${ package }": false`) } line to the end of the ${ logger.style.misc('extensions') } section.`
-                )
+                    `Otherwise, disable the extension in the root ${ logger.style.file('package.json') } file:`
+                    `Append ${ logger.style.code(`"${ package }": false`) } line to the end of the ${ logger.style.code('scandipwa.extensions') } field.`
+                );
 
                 return acc;
             }
