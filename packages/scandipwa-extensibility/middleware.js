@@ -4,10 +4,6 @@ const generateConstructHandler = require('./lib/handlers/generateConstructHandle
 const applyClassWrappers = require('./lib/middlewarers/generateMiddlewaredClass');
 
 const addNamespaceToMiddlewarable = (Middlewarable, namespace) => {
-    console.log(typeof Middlewarable);
-    console.log(Middlewarable);
-    console.log(Middlewarable.prototype);
-
     // Retrieve already existing namespaces
     // Prevent mutating the namespaces of parent object
     const namespaces = Object.assign(
