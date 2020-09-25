@@ -1,4 +1,4 @@
-import prepareSources from './sources';
+const prepareSources = require('./sources');
 
 /**
  * Extensions available for ScandiPWA Fallback mechanism
@@ -9,14 +9,15 @@ import prepareSources from './sources';
 
 /**
  * Prepare object of extensions, add helper functions
+ * 
  * @param {} packages
- * @returns {Sources} extensions appended with helper methods
+ * @returns {Extensions} extensions appended with helper methods
  */
 const prepareExtensions = (packages) => {
-    const rawExtensions = packages.reduce((acc, package) => {
+    const rawExtensions = packages.reduce((acc, packageName) => {
         try {
-            const pathname = require.resolve(`${ package }/package.json`);
-            acc[package] = pathname;
+            const pathname = require.resolve(`${ packageName }/package.json`);
+            acc[packageName] = pathname;
         } catch (e) {
             // Ingore the error, the warning had to be generated before
         }
@@ -24,7 +25,7 @@ const prepareExtensions = (packages) => {
         return acc;
     }, {});
 
-    const extensions = prepareSources(extensions);
+    const extensions = prepareSources(rawExtensions);
 
     Object.defineProperties(extensions, {
         isExtension: {

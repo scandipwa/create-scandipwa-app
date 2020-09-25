@@ -1,3 +1,5 @@
+const path = require('path');
+
 /**
  * Get package JSON, or empty object
  *

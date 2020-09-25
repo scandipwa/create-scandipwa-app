@@ -63,7 +63,7 @@ module.exports = () => {
                 // Allow BEM props
                 'transform-rebem-jsx',
                 // Enable 3.x middleware decorators
-                '@scandipwa/babel-middleware-decorator-plugin',
+                '@scandipwa/babel-plugin-middleware-decorator',
                 // Resolve imports like from 'Component/...'
                 [
                     'module-resolver', {
@@ -147,9 +147,10 @@ module.exports = () => {
                 }, []);
 
                 // Inject extension import loader
-                webpackConfig.resolveLoader.modules.push(
+                webpackConfig.resolveLoader.modules = [
+                    'node_modules', // TODO: determine the reason of being here
                     '@scandipwa/webpack-extension-import-loader'
-                );
+                ];
 
                 return webpackConfig;
             }

@@ -1,4 +1,4 @@
-# @scandipwa/babel-middleware-decorator-plugin
+# @scandipwa/babel-plugin-middleware-decorator
 
 This package includes babel middleware decorator plugin used by [Create Scandipwa App](https://github.com/scandipwa/create-scandipwa-app).
 

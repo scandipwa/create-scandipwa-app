@@ -180,7 +180,7 @@ class FallbackPlugin {
         }
 
         for (let i = 0; i < extensions.entries.length; i++) {
-            const [package, sourcePath] = extensions.entries[i];
+            const [packageName, sourcePath] = extensions.entries[i];
             const sourcePathSrc = path.join(sourcePath, 'src');
             const sourcePathPublic = path.join(sourcePath, 'public');
 
@@ -188,7 +188,7 @@ class FallbackPlugin {
                 pathname.includes(sourcePathSrc)
                 || pathname.includes(sourcePathPublic)
             ) {
-                return package;
+                return packageName;
             }
         }
 

@@ -70,10 +70,10 @@ module.exports = function injectImports(source) {
     );
 
     const allExtensionImports = getEnabledExtensions().reduce(
-        (acc, package) => {
+        (acc, packageName) => {
             try {
                 const pluginDirectory = path.join(
-                    require.resolve(`${ package }/package.json`),
+                    require.resolve(`${ packageName }/package.json`),
                     '..',
                     'src',
                     'plugin'
@@ -89,10 +89,10 @@ module.exports = function injectImports(source) {
                 const installCommand = shouldUseYarn() ? 'yarn add' : 'npm i';
 
                 logger.warn(
-                    `Loading of plugin ${ logger.style.misc(package) } failed.`,
-                    `Try installing it using ${ logger.style.command(`${ installCommand } ${ package } command.`) }`,
+                    `Loading of plugin ${ logger.style.misc(packageName) } failed.`,
+                    `Try installing it using ${ logger.style.command(`${ installCommand } ${ packageName } command.`) }`,
                     `Otherwise, disable the extension in the root ${ logger.style.file('package.json') } file:`
-                    `Append ${ logger.style.code(`"${ package }": false`) } line to the end of the ${ logger.style.code('scandipwa.extensions') } field.`
+                    `Append ${ logger.style.code(`"${ packageName }": false`) } line to the end of the ${ logger.style.code('scandipwa.extensions') } field.`
                 );
 
                 return acc;

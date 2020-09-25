@@ -34,3 +34,14 @@
 
 - Run `yarn compile:lockfile`, commit result
 - Run `lerna publish`
+
+## Version 3 support changes
+
+### No more `scandipwa.json` file
+
+The file `scandipwa.json` has been moved and merged with `package.json`. Now, you must use `scandipwa` field inside `package.json`. What fields are avilable there?
+
+- `parentTheme` **[optional]** - specify which NPM package is a parent theme of your package.
+- `themeAlias` **[optional]** - specify which alias to use, if your theme is installed as parent theme. In example, core theme has an alias `Source`.
+- `composer` **[optional]** - specify composer dependencies, the root package will be validate to incude the proper version, use format: `"<COMPOSER PACKAGE NAME>": "<VALID SEMVER RANGE>"`.
+- `extensions` **[optional]** - specify a list of packages to be used as extensions. You can enable and disable (overriding parent theme values), use format: `"<NPM PACKAGE NAME>": true`.

@@ -37,11 +37,11 @@ const getEnabledExtensions = (pathname = process.cwd()) => {
 
     return Array.from(extensions.reduceRight(
         // Run reduce backwards - prefer root package declaration
-        (acc, [package, isEnabled]) => {
+        (acc, [packageName, isEnabled]) => {
             if (isEnabled) {
-                acc.add(package);
-            } else if (acc.has(package)) {
-                acc.delete(package);
+                acc.add(packageName);
+            } else if (acc.has(packageName)) {
+                acc.delete(packageName);
             }
         },
         new Set()
