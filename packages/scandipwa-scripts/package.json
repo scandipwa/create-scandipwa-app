@@ -11,6 +11,9 @@
     ],
     "dependencies": {
         "@scandipwa/craco": "^0.0.1",
+        "@scandipwa/webpack-extension-import-loader": "^0.0.0",
+        "@scandipwa/scandipwa-extensibility": "^0.0.0",
+        "@scandipwa/babel-middleware-decorator-plugin": "^0.0.0",
         "@scandipwa/eslint-config": "^0.0.1",
         "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.0",
         "@scandipwa/scandipwa-dev-utils": "^0.0.5",

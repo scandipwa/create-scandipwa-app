@@ -62,6 +62,8 @@ module.exports = () => {
             plugins: [
                 // Allow BEM props
                 'transform-rebem-jsx',
+                // Enable 3.x middleware decorators
+                '@scandipwa/babel-middleware-decorator-plugin',
                 // Resolve imports like from 'Component/...'
                 [
                     'module-resolver', {
@@ -75,7 +77,9 @@ module.exports = () => {
             plugins: [
                 // In development mode, provide simple translations and React
                 new webpack.ProvidePlugin({
-                    React: 'react'
+                    React: 'react',
+                    middleware: require.resolve('@scandipwa/scandipwa-extensibility/middleware'),
+                    Extensible: require.resolve('@scandipwa/scandipwa-extensibility/Extensible')
                 }),
 
                 // Provide BEM specific variables
@@ -141,6 +145,11 @@ module.exports = () => {
 
                     return [...acc, plugin];
                 }, []);
+
+                // Inject extension import loader
+                webpackConfig.resolveLoader.modules.push(
+                    '@scandipwa/webpack-extension-import-loader'
+                );
 
                 return webpackConfig;
             }

@@ -13,6 +13,8 @@ const path = require('path');
 const fs = require('fs');
 
 const prepareSources = require('./lib/sources');
+const prepareExtensions = require('./lib/extensions');
+const { getEnabledExtensions } = require('@scandipwa/scandipwa-dev-utils/extensions');
 
 // TODO: rework hard-coded /src and /pub apendixes, add dynamic list instead
 
@@ -33,7 +35,8 @@ class FallbackPlugin {
         }
 
         this.options = {
-            sources: prepareSources(sources)
+            sources: prepareSources(sources),
+            extensions: prepareExtensions(getEnabledExtensions())
         };
     }
 
@@ -92,6 +95,13 @@ class FallbackPlugin {
      */
     getRelativePathname(pathname) {
         const relativeSourcePathname = pathname.split('src/')[1];
+        const extension = this.getBelongingExtension(pathname);
+
+        if (extension) {
+            // If this is extension, the path to override files can be located
+            // in src/<EXTENSION NAME>/component/etc -> use it
+            return `src/${ extension }/${ relativeSourcePathname }`;
+        }
 
         if (relativeSourcePathname) {
             return `src/${ relativeSourcePathname}`;
@@ -151,12 +161,47 @@ class FallbackPlugin {
     }
 
     /**
+     * Get the extension which the pathname belongs to
+     * can be changed to regex later on
+     * 
+     * @param {String} pathname 
+     */
+    getBelongingExtension(pathname) {
+        const { extensions } = this.options;
+
+        // Skip null paths
+        if (!pathname) {
+            return '';
+        }
+
+        // Skip all non-absolute paths
+        if (!path.isAbsolute(pathname)) {
+            return '';
+        }
+
+        for (let i = 0; i < extensions.entries.length; i++) {
+            const [package, sourcePath] = extensions.entries[i];
+            const sourcePathSrc = path.join(sourcePath, 'src');
+            const sourcePathPublic = path.join(sourcePath, 'public');
+
+            if (
+                pathname.includes(sourcePathSrc)
+                || pathname.includes(sourcePathPublic)
+            ) {
+                return package;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * Get if path is coming from sources src/ or /pub directory
      * 
      * @param {*} pathname 
      */
-    getIsFromSources(pathname) {
-        const { sources } = this.options;
+    getIsFallbackNeeded(pathname) {
+        const { sources, extensions } = this.options;
 
         // Skip null paths
         if (!pathname) {
@@ -168,9 +213,15 @@ class FallbackPlugin {
             return true;
         }
 
-        // Check if request is coming from ScandiPWA sources (/src or /pub) folders
-        for (let i = 0; i < sources.values.length; i++) {
-            const sourcePath = sources.values[i];
+        const paths = [
+            ...sources.values,
+            ...extensions.values,
+        ];
+
+        // Check if request is coming from ScandiPWA
+        // sources or extension folders (/src or /pub)
+        for (let i = 0; i < paths.length; i++) {
+            const sourcePath = paths[i];
             const sourcePathSrc = path.join(sourcePath, 'src');
             const sourcePathPublic = path.join(sourcePath, 'public');
 
@@ -211,7 +262,7 @@ class FallbackPlugin {
             const requestFromIndex = this.getSourceIndex(requestFromPathname);
             const requestToIndex = this.getSourceIndex(requestToPathname);
 
-            if (!this.getIsFromSources(requestFromPathname)) {
+            if (!this.getIsFallbackNeeded(requestFromPathname)) {
                 callback();
                 return;
             }

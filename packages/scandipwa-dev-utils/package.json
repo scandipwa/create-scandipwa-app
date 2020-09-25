@@ -5,6 +5,7 @@
     "files": [
         "composer.js",
         "should-use-yarn.js",
+        "extensions.js",
         "logger.js",
         "greet.js",
         "/lib"
