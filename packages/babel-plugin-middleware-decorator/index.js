@@ -121,6 +121,7 @@ module.exports = ({ types, parse }) => ({
 
         ClassDeclaration: (path) => {
             const namespace = getNamespaceFromPath(path);
+
             if (!namespace) {
                 return;
             }

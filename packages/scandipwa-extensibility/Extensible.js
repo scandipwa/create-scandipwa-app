@@ -11,6 +11,8 @@ const generated = [];
 class EmptyBase {}
 
 module.exports = (BaseClass = EmptyBase) => {
+    // NOTE! Base class is original class which class extends
+
     // Handle already extensible classes
     if (BaseClass[extensible]) {
         return BaseClass;
@@ -24,6 +26,12 @@ module.exports = (BaseClass = EmptyBase) => {
 
     // If such class is not yet generated => generate the class
     if (!generated[cacheIdentity]) {
+        /**
+         * What this class does, is:
+         * - extends what original class did extend
+         * - defines a constructor which calls original parent
+         */
+
         const GeneratedClass = class Extensible extends BaseClass {
             constructor(...args) {
                 super(...args);

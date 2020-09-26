@@ -10,13 +10,14 @@
         "/lib"
     ],
     "dependencies": {
-        "@scandipwa/craco": "^0.0.1",
-        "@scandipwa/webpack-extension-import-loader": "^0.0.0",
-        "@scandipwa/scandipwa-extensibility": "^0.0.0",
+        "@babel/plugin-transform-arrow-functions": "^7.10.4",
         "@scandipwa/babel-plugin-middleware-decorator": "^0.0.0",
+        "@scandipwa/craco": "^0.0.1",
         "@scandipwa/eslint-config": "^0.0.1",
         "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.0",
         "@scandipwa/scandipwa-dev-utils": "^0.0.5",
+        "@scandipwa/scandipwa-extensibility": "^0.0.0",
+        "@scandipwa/webpack-extension-import-loader": "^0.0.0",
         "@scandipwa/webpack-fallback-plugin": "^0.0.3",
         "@scandipwa/webpack-i18n-plugin": "^0.0.5",
         "babel-plugin-module-resolver": "^4.0.0",

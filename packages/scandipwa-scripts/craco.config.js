@@ -64,6 +64,8 @@ module.exports = () => {
                 'transform-rebem-jsx',
                 // Enable 3.x middleware decorators
                 '@scandipwa/babel-plugin-middleware-decorator',
+                // Required for extension mechnaism to work
+                '@babel/plugin-transform-arrow-functions',
                 // Resolve imports like from 'Component/...'
                 [
                     'module-resolver', {

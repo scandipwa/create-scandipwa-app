@@ -1,9 +1,9 @@
 const getWrapperFromPlugin = require('../helpers/getWrapperFromPlugin');
 const getPluginsForMember = require('../helpers/getPluginsForMember');
 
-module.exports = (namespaces) => function (TargetClass, args) {
+module.exports = (namespaces) => function (TargetClass, args, newTarget) {
     // Get an instance
-    const instance = new TargetClass(...args);
+    const instance = Reflect.construct(TargetClass, args, newTarget);
 
     // Get all member-property plugins
     const namespacesPluginsConstruct = getPluginsForMember(namespaces, 'member-property');
