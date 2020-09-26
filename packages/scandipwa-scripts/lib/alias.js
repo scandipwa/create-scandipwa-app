@@ -21,7 +21,7 @@ const sourcePrefixMap = {
     ...getParentThemeAliases()
 };
 
-const alias = {};
+const aliasMap = {};
 
 /**
  * Glue together:
@@ -30,47 +30,54 @@ const alias = {};
  */
 for (const source in sourcePrefixMap) {
     const prefix = sourcePrefixMap[source];
+    aliasMap[source] = {};
 
     for (const postfix in aliasPostfixMap) {
         const aliasKey = prefix + postfix;
         const aliasPath = path.join(sources[source], aliasPostfixMap[postfix]);
-        alias[aliasKey] = aliasPath;
+        aliasMap[source][aliasKey] = aliasPath;
     }
 }
+
+/**
+ * These aliases are used by Babel
+ */
+const alias = Object.entries(aliasMap).reduce(
+    (acc, [, values]) => ({ ...acc, ...values }), {}
+);
+
+/**
+ * These aliases are used in JSConfig by VSCode
+ *
+ * NOTE: the reduce right is used, so child themes, contain alises
+ * to their child parent themes
+ */
+const { jsConfigAlises } = Object.entries(aliasMap).reduceRight(
+    (acc, [, aliasPathMap]) => {
+        Object.entries(aliasPathMap).forEach(
+            ([alias, pathname], i) => {
+                acc.aliasStack[i].push(
+                    // it is required to be relative, otherwise it does not work
+                    `${path.relative(process.cwd(), pathname)}/*`
+                );
+
+                acc.jsConfigAlises[`${ alias }/*`] = Array.from(acc.aliasStack[i]);
+            }
+        );
+
+        return acc;
+    },
+    {
+        aliasStack: Array.from(Object.keys(aliasPostfixMap), () => ([])),
+        jsConfigAlises: {}
+    }
+);
 
 // TODO: generate jsconfig.js for VSCode suggestions
 const jsConfig = {
     compilerOptions: {
         baseUrl: './',
-        paths: Object.entries(alias).reduce(
-            (acc, [key, pathname]) => {
-                const currentKey = `${ key }/*`;
-
-                /**
-                 * Map paths to a source key, include paths from keys
-                 * which include the current path, i.e.
-                 * `SourceComponent` should also include `Component`
-                */
-                const matchingPaths = Object.entries(acc).reduce(
-                    (foundPaths, [prevKey, prevPaths]) => {
-                        if (currentKey.includes(prevKey)) {
-                            foundPaths.push(...prevPaths);
-                        }
-
-                        return foundPaths;
-                    },
-                    []
-                );
-
-                acc[currentKey] = [
-                    ...matchingPaths,
-                    `${path.relative(process.cwd(), pathname)}/*`
-                ];
-
-                return acc;
-            },
-            {}
-        )
+        paths: jsConfigAlises
     }
 };
 

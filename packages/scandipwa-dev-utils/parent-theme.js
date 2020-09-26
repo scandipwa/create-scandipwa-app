@@ -83,7 +83,7 @@ const getParentThemeAliases = () => {
     // Use theme alias as a key
     return Object.keys(parentThemeSources).reduce((acc, key) => ({
         ...acc,
-        [key]: key  
+        [key]: key
     }), {});
 };
 
