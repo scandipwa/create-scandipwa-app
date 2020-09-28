@@ -45,9 +45,8 @@ try {
             __dirname,
             '..',
             'packages',
-            'create-scandipwa-app',
-            'templates',
-            'theme',
+            'csa-generator-theme',
+            'template',
             'yarn.lock.cached'
         )
     );

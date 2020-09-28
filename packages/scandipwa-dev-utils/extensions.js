@@ -43,6 +43,8 @@ const getEnabledExtensions = (pathname = process.cwd()) => {
             } else if (acc.has(packageName)) {
                 acc.delete(packageName);
             }
+
+            return acc;
         },
         new Set()
     ));

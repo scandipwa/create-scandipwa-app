@@ -6,10 +6,10 @@
         "composer.js",
         "should-use-yarn.js",
         "package-json.js",
+        "latest-version.js",
         "parent-theme.js",
         "extensions.js",
         "logger.js",
-        "greet.js",
         "/lib"
     ],
     "dependencies": {

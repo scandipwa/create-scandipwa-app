@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const clearConsole = require('react-dev-utils/clearConsole');
 
 const logWithBanner = (banner, ...args) => {
     if (args.length > 1) {
@@ -20,6 +21,7 @@ module.exports = {
     logN: (...args) => console.log(...args, '\n'),
     logT: (...args) => console.log('    ', ...args),
     log: console.log,
+    clear: clearConsole,
     error: logWithBanner.bind(this, chalk.bgRed.black('ERROR!')),
     warn: logWithBanner.bind(this, chalk.bgKeyword('orange').black('WARNING!')),
     note: logWithBanner.bind(this, chalk.bgGreen.black('NOTE!'))

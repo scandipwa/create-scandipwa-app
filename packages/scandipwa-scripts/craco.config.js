@@ -126,6 +126,12 @@ module.exports = () => {
                     webpackConfig.module.rules[2].oneOf.length - 1
                 ].exclude[1] = whenMagento(/\.php$/, /\.html$/);
 
+                // Inject extension import loader
+                webpackConfig.module.rules.push({
+                    test: /util\/Extensions\/index\.js/,
+                    loader: '@scandipwa/webpack-extension-import-loader'
+                });
+
                 // Allow having empty entry point
                 webpackConfig.entry[whenDev(() => 1, 0)] = appIndexJs;
 
@@ -147,12 +153,6 @@ module.exports = () => {
 
                     return [...acc, plugin];
                 }, []);
-
-                // Inject extension import loader
-                webpackConfig.resolveLoader.modules = [
-                    'node_modules', // TODO: determine the reason of being here
-                    '@scandipwa/webpack-extension-import-loader'
-                ];
 
                 return webpackConfig;
             }

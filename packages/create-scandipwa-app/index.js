@@ -31,7 +31,7 @@ program
     })
     .option('--template <type>', 'Template to use', {
         default: 'theme',
-        validator: ['theme', 'magento']
+        validator: ['theme', 'extension']
     })
     .action(({ args: { appName: name }, options: { template } }) => {
         const pathArr = name.split('/');

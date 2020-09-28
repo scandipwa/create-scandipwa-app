@@ -1,10 +1,12 @@
-const logger = require('./logger');
-const clearConsole = require('react-dev-utils/clearConsole');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const path = require('path');
 const fs = require('fs');
 
-const greet = ({ name, path: pathname }) => {
-    clearConsole();
+const greet = (
+    name,
+    pathname
+) => {
+    logger.clear();
 
     const relativePathname = `./${pathname}`;
     const isYarn = fs.existsSync(path.join(pathname, 'yarn.lock'));

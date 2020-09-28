@@ -21,7 +21,7 @@ const minVersion = (rangeExpected, loose) => {
                         // For pre-releases, bump it one up
                         version.patch++
                     } else {
-                        // Otherwise, increase by one 
+                        // Otherwise, increase by one
                         version.prerelease.push(0)
                     }
 

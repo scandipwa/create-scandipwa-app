@@ -10,14 +10,14 @@ const isDirectory = (entry) => !!fs.lstatSync(entry).isDirectory();
 /**
  * Retrieve a list of recursively located *.plugin.js files
  * Concat due to a flat structure
- * 
- * @param {String} basepath 
+ *
+ * @param {String} basepath
  */
 const findPluginFiles = (basepath) => (
     fs.readdirSync(basepath).reduce((acc, pathname) => {
-        const path = path.join(basepath, pathname);
-        const isPlugin = isPluginFile(path);
-        const isDir = isDirectory(path);
+        const pluginPath = path.join(basepath, pathname);
+        const isPlugin = isPluginFile(pluginPath);
+        const isDir = isDirectory(pluginPath);
 
         // We only care about plugin files or directories
         if (!isDir && !isPlugin) {
@@ -28,22 +28,22 @@ const findPluginFiles = (basepath) => (
         if (isPlugin) {
             return [
                 ...acc,
-                path
+                pluginPath
             ];
         }
 
         return [
             ...acc,
             // recursively walk the child directory
-            findPluginFiles(path)
+            findPluginFiles(pluginPath)
         ];
     }, [])
 );
 
 /**
  * Get the list of import declaration strings
- * 
- * @param {String} pathname 
+ *
+ * @param {String} pathname
  */
 const getExtensionImports = (pathname) => {
     // TODO: determine why it's needed
@@ -71,9 +71,16 @@ module.exports = function injectImports(source) {
 
     const allExtensionImports = getEnabledExtensions().reduce(
         (acc, packageName) => {
+            const possibleRelativePath = path.join(process.cwd(), packageName, 'package.json');
+            const isPathReference = fs.existsSync(possibleRelativePath);
+
             try {
+                const pluginPath = isPathReference
+                    ? possibleRelativePath
+                    : require.resolve(`${ packageName }/package.json`);
+
                 const pluginDirectory = path.join(
-                    require.resolve(`${ packageName }/package.json`),
+                    pluginPath,
                     '..',
                     'src',
                     'plugin'
@@ -87,6 +94,8 @@ module.exports = function injectImports(source) {
                 return acc.concat(getExtensionImports(pluginDirectory));
             } catch (e) {
                 const installCommand = shouldUseYarn() ? 'yarn add' : 'npm i';
+
+                logger.logN(e);
 
                 logger.warn(
                     `Loading of plugin ${ logger.style.misc(packageName) } failed.`,
