@@ -9,8 +9,11 @@ const installDeps = (pathname) => {
 
         const child = spawn(
             command,
-            ['install', '--cwd', pathname],
-            { stdio: 'inherit' }
+            ['install'],
+            {
+                stdio: 'inherit',
+                cwd: pathname
+            }
         );
 
         child.on('close', code => {

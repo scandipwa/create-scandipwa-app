@@ -3,8 +3,7 @@ const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version'
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const templateMap = {
-    'theme': require('@scandipwa/csa-generator-theme'),
-    'extension': require('@scandipwa/csa-generator-extension')
+    'theme': require('@scandipwa/csa-generator-theme')
 };
 
 const createApp = async (options) => {

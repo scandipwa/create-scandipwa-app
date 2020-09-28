@@ -1,7 +1,11 @@
 {
     "name": "<%= name %>",
+    "version": "0.0.0",
     "dependencies": {
         "@scandipwa/scandipwa": "<%= scandipwaVersion %>"
+    },
+    "scandipwa": {
+        "type": "extension"
     },
     "eslintConfig": {
         "extends": "@scandipwa"

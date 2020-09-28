@@ -6,6 +6,7 @@
         "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>"
     },
     "scandipwa": {
+        "type": "theme",
         "parentTheme": "@scandipwa/scandipwa",
         "extensions": {}
     },

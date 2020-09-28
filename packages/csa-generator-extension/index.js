@@ -1,5 +1,4 @@
 const path = require('path');
-const installDeps = require('create-scandipwa-app/lib/install-deps');
 const createFilesystem = require('create-scandipwa-app/lib/filesystem');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
 const fileSystemCreator = require('./lib/filesystem');
@@ -24,9 +23,6 @@ const run = async (options) => {
         path.join(__dirname, 'template'),
         fileSystemCreator(templateOptions)
     );
-
-    // install dependencies
-    await installDeps(destination);
 
     // greet the user
     greet(name, pathname);

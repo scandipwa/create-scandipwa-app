@@ -17,6 +17,7 @@ const NullFactory = require('webpack/lib/NullFactory');
 const path = require('path');
 const fs = require('fs');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
 // TODO: rework it to use JSON imports, so Webpack can track changes on the fly
 // TODO: add unused, missing translation notification system
@@ -28,13 +29,9 @@ const appendTranslations = (filename, content, missingTranslations) => {
         translations[translation] = null;
     });
 
-    fs.writeFileSync(
+    writeJson(
         filename,
-        JSON.stringify(
-            translations,
-            null,
-            4
-        )
+        translations
     );
 };
 
@@ -122,7 +119,11 @@ class I18nPlugin {
                 ]
             });
 
-            fs.writeFileSync(absolutePathToTry, JSON.stringify({}, undefined, 4));
+            writeJson(
+                absolutePathToTry,
+                {}
+            );
+
             return {};
         }
     }
@@ -168,7 +169,7 @@ class I18nPlugin {
                         // Replace translation strings
                         const result = this.translationMap[paramString];
 
-                        // Try adding providing variable to JS module 
+                        // Try adding providing variable to JS module
                         if (!addParsedVariableToModule(parser, functionName)) {
                             return false;
                         }
@@ -178,7 +179,7 @@ class I18nPlugin {
                             missingTranslations.push(paramString);
                             return false;
                         }
-                        
+
                         // Skip it, if the result is known, but not translated
                         if (result === null) {
                             return false;
@@ -191,7 +192,7 @@ class I18nPlugin {
 
                         dep.loc = firstArgument.loc;
                         parser.state.current.addDependency(dep);
-                        
+
                         return true;
                     });
                 };

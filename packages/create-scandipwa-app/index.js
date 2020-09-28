@@ -2,56 +2,47 @@
 
 const path = require('path');
 const { program } = require('@caporal/core');
-const validatePackageName = require('validate-npm-package-name');
 const init = require('./create-scandipwa-app');
+const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
 
 program
-    .argument('<app name>', 'ScandiPWA package name to create', {
-        validator: (value) => {
-            const name = value.startsWith('@') ? value : value.split('/').pop();
-
-            const {
-                validForNewPackages: isValidPackageName = true,
-                errors = []
-            } = validatePackageName(name);
-
-            if (isValidPackageName) {
-                return value;
-            }
-
-            if (errors.length) {
-                throw new Error(
-                    `The package name '${ value }' breaks following rules: \n`
-                    + errors.map((e, i) => `${ ++i }) ${ e }`).join('\n')
-                );
-            }
-
-            throw new Error('The package name is invalid!');
-        }
-    })
+    .argument('<app name>', 'ScandiPWA package name to create')
     .option('--template <type>', 'Template to use', {
         default: 'theme',
         validator: ['theme', 'extension']
     })
-    .action(({ args: { appName: name }, options: { template } }) => {
+    .action(({
+        args: {
+            appName: name = ''
+        },
+        options: {
+            template
+        }
+    }) => {
         const pathArr = name.split('/');
         const orgPathArray = pathArr.slice(-2);
+        const isOrg = orgPathArray[0].startsWith('@');
 
-        /**
-         * In case pathArr is something like ['projects', '@scandipwa', 'test']
-         * it should return '@scandipwa/test' as name as 'projects/test' as path.
-         */
-        if (orgPathArray[0].startsWith('@')) {
-            return {
-                name: path.join(...orgPathArray),
-                path: path.join(...pathArr.slice(0, -2), orgPathArray[1])
-            }
+        const packageName = isOrg
+            ? path.join(...orgPathArray)
+            : pathArr[pathArr.length - 1];
+
+        if (!isValidPackageName(packageName)) {
+            process.exit();
         }
 
+        const pathToDist = isOrg
+            ? path.join(...pathArr.slice(0, -2), orgPathArray[1])
+            : path.join(...pathArr);
+
         const options = {
-            name: pathArr[pathArr.length - 1],
-            path: path.join(...pathArr),
-            template
+            template,
+            /**
+             * In case pathArr is something like ['projects', '@scandipwa', 'test']
+             * it should return '@scandipwa/test' as name as 'projects/test' as path.
+             */
+            name: packageName,
+            path: pathToDist
         };
 
         init(options);

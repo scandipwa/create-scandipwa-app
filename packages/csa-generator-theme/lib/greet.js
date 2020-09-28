@@ -1,6 +1,5 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const path = require('path');
-const fs = require('fs');
+const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 
 const greet = (
     name,
@@ -9,8 +8,7 @@ const greet = (
     logger.clear();
 
     const relativePathname = `./${pathname}`;
-    const isYarn = fs.existsSync(path.join(pathname, 'yarn.lock'));
-    const displayedCommand = isYarn ? 'yarn' : 'npm run';
+    const displayedCommand = shouldUseYarn() ? 'yarn' : 'npm run';
 
     logger.logN(`Success! Created ScandiPWA theme "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
 

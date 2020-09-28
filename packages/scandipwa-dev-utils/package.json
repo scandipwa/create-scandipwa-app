@@ -5,6 +5,9 @@
     "files": [
         "composer.js",
         "should-use-yarn.js",
+        "validate-package-name.js",
+        "validate-theme.js",
+        "write-json.js",
         "package-json.js",
         "latest-version.js",
         "parent-theme.js",
@@ -15,7 +18,8 @@
     "dependencies": {
         "chalk": "^4.1.0",
         "react-dev-utils": "^10.2.1",
-        "semver": "^7.3.2"
+        "semver": "^7.3.2",
+        "validate-npm-package-name": "^3.0.0"
     },
     "license": "OSL-3.0",
     "publishConfig": {

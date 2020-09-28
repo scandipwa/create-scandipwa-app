@@ -2,9 +2,9 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable fp/no-loops */
 const path = require('path');
-const fs = require('fs');
 const { sources, PROJECT } = require('./sources');
 const { getParentThemeAliases } = require('@scandipwa/scandipwa-dev-utils/parent-theme');
+const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
 const aliasPostfixMap = {
     Style: './src/style/',
@@ -81,10 +81,9 @@ const jsConfig = {
     }
 };
 
-fs.writeFileSync(
+writeJson(
     path.join(process.cwd(), 'jsconfig.json'),
-    // eslint-disable-next-line no-magic-numbers
-    JSON.stringify(jsConfig, undefined, 4)
+    jsConfig
 );
 
 module.exports = alias;
