@@ -45,8 +45,8 @@ module.exports = {
         "@scandipwa/scandipwa-guidelines/create-config-files": "error",
         // Prevent from { ...this.props } destruction in containers
         "@scandipwa/scandipwa-guidelines/jsx-no-props-destruction": "error",
-        // ban setting JSX in state
-        "@scandipwa/scandipwa-guidelines/no-jsx-in-state": "error",
+        // ban setting JSX in state (via variable)
+        "@scandipwa/scandipwa-guidelines/no-jsx-variables": "error",
         // force only render methods in component classes
         "@scandipwa/scandipwa-guidelines/only-render-in-component": "error",
         // force not using conditional expressions in JSX

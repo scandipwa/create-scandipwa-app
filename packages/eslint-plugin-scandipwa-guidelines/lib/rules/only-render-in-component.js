@@ -35,7 +35,7 @@ module.exports = {
                 message: 'Component should only contain rendering logic.',
                 suggest: [
                     {
-                        desc: "Move the method into container class.",
+                        desc: 'Move the method into container class.',
                     }
                 ]
             });

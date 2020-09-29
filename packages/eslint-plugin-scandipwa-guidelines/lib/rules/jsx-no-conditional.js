@@ -23,7 +23,7 @@ module.exports = {
                     message: 'Do not use conditional expressions in JSX.',
                     suggest: [
                         {
-                            desc: "Move conditional expression to a new function.",
+                            desc: 'Move conditional expression to a new function.',
                         }
                     ]
                 });
