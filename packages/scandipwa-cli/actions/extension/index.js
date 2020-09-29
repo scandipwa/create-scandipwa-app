@@ -55,7 +55,7 @@ module.exports = (program) => {
 
             // Use 0.0.0 in case the package is bootstrapped as new
             const realVersion = isCreate
-                ? `link:${ distPath }`
+                ? `file:${ distPath }`
                 : version;
 
             // Inject dependency to package.json

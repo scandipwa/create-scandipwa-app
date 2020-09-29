@@ -1,7 +1,7 @@
 {
     "name": "<%= name %>",
     "version": "0.0.0",
-    "dependencies": {
+    "peerDependencies": {
         "@scandipwa/scandipwa": "<%= scandipwaVersion %>"
     },
     "scandipwa": {

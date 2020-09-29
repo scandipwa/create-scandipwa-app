@@ -60,6 +60,36 @@ const getExtensionImports = (pathname) => {
     );
 }
 
+const getPluginPath = (packageName) => {
+    const possibleRelativePath = path.join(
+        process.cwd(),
+        packageName,
+        'package.json'
+    );
+
+    const isPathReference = fs.existsSync(possibleRelativePath);
+
+    if (isPathReference) {
+        return possibleRelativePath;
+    }
+
+    const possiblePackagePath = path.join(
+        process.cwd(),
+        'packages',
+        packageName,
+        'package.json'
+    );
+
+    const isLocalPackage = fs.existsSync(possiblePackagePath);
+
+    if (isLocalPackage) {
+        return possiblePackagePath;
+    }
+
+    // This is not a local package, path based extension -> try loading it as a package
+    return require.resolve(`${ packageName }/package.json`)
+};
+
 module.exports = function injectImports(source) {
     const rootExtensionImports = getExtensionImports(
         path.join(
@@ -71,13 +101,8 @@ module.exports = function injectImports(source) {
 
     const allExtensionImports = getEnabledExtensions().reduce(
         (acc, packageName) => {
-            const possibleRelativePath = path.join(process.cwd(), packageName, 'package.json');
-            const isPathReference = fs.existsSync(possibleRelativePath);
-
             try {
-                const pluginPath = isPathReference
-                    ? possibleRelativePath
-                    : require.resolve(`${ packageName }/package.json`);
+                const pluginPath = getPluginPath(packageName);
 
                 const pluginDirectory = path.join(
                     pluginPath,
