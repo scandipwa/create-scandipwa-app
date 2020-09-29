@@ -5,7 +5,7 @@ const generateExtension = require('@scandipwa/csa-generator-extension');
 const addDependency = require('./lib/add-dependency');
 const enableExtension = require('./lib/enable-extension');
 const installDeps = require('create-scandipwa-app/lib/install-deps');
-const installLerna = require('./lib/install-lerna');
+// const installLerna = require('./lib/install-lerna');
 
 module.exports = (program) => {
     program
@@ -42,7 +42,7 @@ module.exports = (program) => {
 
             if (isCreate || isSymlink) {
                 // Install lerna if this is a create or symlink request
-                await installLerna();
+                // await installLerna();
             }
 
             if (isCreate) {
@@ -54,7 +54,9 @@ module.exports = (program) => {
             }
 
             // Use 0.0.0 in case the package is bootstrapped as new
-            const realVersion = isCreate ? '0.0.0' : version;
+            const realVersion = isCreate
+                ? `link:${ distPath }`
+                : version;
 
             // Inject dependency to package.json
             await addDependency(name, realVersion);
