@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/csa-generator-extension",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "index.js",
     "license": "OSL-3.0",
     "dependencies": {
