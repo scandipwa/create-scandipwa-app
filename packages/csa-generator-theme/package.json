@@ -1,11 +1,11 @@
 {
     "name": "@scandipwa/csa-generator-theme",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "index.js",
     "license": "OSL-3.0",
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "^0.0.6",
-        "create-scandipwa-app": "^1.0.0"
+        "create-scandipwa-app": "^1.0.1"
     },
     "publishConfig": {
         "access": "public"

@@ -1,6 +1,6 @@
 {
     "name": "scandipwa-cli",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "bin": {
         "scandipwa": "index.js"
     },
@@ -9,7 +9,7 @@
         "@caporal/core": "^2.0.2",
         "@scandipwa/csa-generator-extension": "^0.0.1",
         "@scandipwa/scandipwa-dev-utils": "^0.0.6",
-        "create-scandipwa-app": "^1.0.0"
+        "create-scandipwa-app": "^1.0.1"
     },
     "publishConfig": {
         "access": "public"
