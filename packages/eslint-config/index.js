@@ -43,6 +43,8 @@ module.exports = {
         "@scandipwa/scandipwa-guidelines/derived-class-names": "error",
         "@scandipwa/scandipwa-guidelines/use-named-export": "error",
         "@scandipwa/scandipwa-guidelines/create-config-files": "error",
+        // Prevent from { ...this.props } destruction in containers
+        "@scandipwa/scandipwa-guidelines/jsx-no-props-destruction": "error",
         // ban setting JSX in state
         "@scandipwa/scandipwa-guidelines/no-jsx-in-state": "error",
         // force only render methods in component classes
@@ -92,8 +94,6 @@ module.exports = {
         ],
         // Force boolean prop naming with isXX
         "react/boolean-prop-naming": ["error", { "rule": "^is[A-Z]([A-Za-z0-9]?)+" }],
-        // Prevent from { ...this.props } destruction in containers
-        // TODO: implement custom rule here
         "react/state-in-constructor": "off",
         "no-restricted-globals": [
             "error",
