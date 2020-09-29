@@ -27,6 +27,11 @@ const fileSystemCreator = (templateOptions) => (
             destinationPath('.gitignore')
         );
 
+        filesystem.copy(
+            templatePath('README.md'),
+            destinationPath('README.md')
+        );
+
         filesystem.copyTpl(
             templatePath('magento/**/*'),
             destinationPath('magento'),
