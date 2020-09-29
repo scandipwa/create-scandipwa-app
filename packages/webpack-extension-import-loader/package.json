@@ -1,10 +1,10 @@
 {
     "name": "@scandipwa/webpack-extension-import-loader",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "main": "index.js",
     "license": "OSL-3.0",
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "^0.0.5"
+        "@scandipwa/scandipwa-dev-utils": "^0.0.6"
     },
     "publishConfig": {
         "access": "public"
