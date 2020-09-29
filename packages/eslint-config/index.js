@@ -93,7 +93,7 @@ module.exports = {
         // Force boolean prop naming with isXX
         "react/boolean-prop-naming": ["error", { "rule": "^is[A-Z]([A-Za-z0-9]?)+" }],
         // Prevent from { ...this.props } destruction in containers
-        "react/jsx-props-no-spreading": "error",
+        // TODO: implement custom rule here
         "react/state-in-constructor": "off",
         "no-restricted-globals": [
             "error",
