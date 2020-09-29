@@ -43,7 +43,15 @@ module.exports = {
         "@scandipwa/scandipwa-guidelines/derived-class-names": "error",
         "@scandipwa/scandipwa-guidelines/use-named-export": "error",
         "@scandipwa/scandipwa-guidelines/create-config-files": "error",
+        // ban setting JSX in state
+        "@scandipwa/scandipwa-guidelines/no-jsx-in-state": "error",
+        // force only render methods in component classes
+        "@scandipwa/scandipwa-guidelines/only-render-in-component": "error",
+        // force not using conditional expressions in JSX
+        "@scandipwa/scandipwa-guidelines/jsx-no-conditional": "error",
         "import/no-extraneous-dependencies": "off",
+        // enforce small files
+        "max-lines": ["error", 250],
         "simple-import-sort/sort": [
             "error",
             // fixed by reporting in https://github.com/lydell/eslint-plugin-simple-import-sort/issues/54
@@ -82,7 +90,10 @@ module.exports = {
             "error",
             "static public field"
         ],
-        "react/jsx-props-no-spreading": "off",
+        // Force boolean prop naming with isXX
+        "react/boolean-prop-naming": ["error", { "rule": "^is[A-Z]([A-Za-z0-9]?)+" }],
+        // Prevent from { ...this.props } destruction in containers
+        "react/jsx-props-no-spreading": "error",
         "react/state-in-constructor": "off",
         "no-restricted-globals": [
             "error",
