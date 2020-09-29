@@ -6,8 +6,8 @@
 const getIsValidCallExpression = (node) => {
     const {
         callee: {
-            object: { type },
-            property: { name }
+            object: { type } = {},
+            property: { name } = {}
         }
     } = node;
 
@@ -16,8 +16,8 @@ const getIsValidCallExpression = (node) => {
 
 const getIsValidMemberExpression = (node) => {
     const {
-        object: { type },
-        property: { name }
+        object: { type } = {},
+        property: { name } = {}
     } = node;
 
     return type === "ThisExpression" && name === "containerFunctions";
