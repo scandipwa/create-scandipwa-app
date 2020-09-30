@@ -80,8 +80,15 @@ const spawnUndead = (isRestarted = false) => {
     // TODO: can we auto-comnnect hot-reload back?
     // TODO: remove production build reference to React
 
-    child.on('close', () => {
-        if (isProd) {
+    child.on('error', (e) => {
+        logger.log('error', e);
+        process.exit();
+    });
+
+    child.on('close', (code) => {
+        if (code !== null || isProd) {
+            // if the process exits "voluntarily" stop the parent as well
+            // See more in answer here: https://stackoverflow.com/a/39169784
             process.exit();
         }
     });

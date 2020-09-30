@@ -9,7 +9,7 @@
     },
     "devDependencies": {
         "babel-eslint": "^10.1.0",
-        "eslint": "^7.10.0",
+        "eslint": "^6.6.0",
         "fs-extra": "^9.0.1",
         "husky": "^4.3.0",
         "lerna": "^3.22.1"
@@ -25,7 +25,8 @@
             "packages/craco/**",
             "packages/scandipwa/**",
             "packages/eslint-plugin-scandipwa-guidelines/**",
-            "packages/scandipwa-vscode/**"
+            "packages/scandipwa-vscode/**",
+            "**/node_modules/**"
         ],
         "rules": {
             "no-magic-numbers": "off",

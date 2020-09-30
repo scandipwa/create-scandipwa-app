@@ -72,11 +72,10 @@ const addParsedVariableToModule = (parser, name) => {
 
     parser.parse(expression, {
         current: {
-            addDependency: (dependency) => {
-                deps.push({
-                    ...dependency,
-                    userRequest: name
-                });
+            addDependency: (dep) => {
+                // eslint-disable-next-line no-param-reassign
+                dep.userRequest = name;
+                deps.push(dep);
             }
         },
         module: parser.state.module
