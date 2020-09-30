@@ -1,7 +1,7 @@
 // TODO update this import when renamed
 import { action } from 'Store/Placeholder';
 
-export class Dispatcher-regular {
+export class PlaceholderDispatcher {
     update(payload, dispatch) {
         // TODO implement
 

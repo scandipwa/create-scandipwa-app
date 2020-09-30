@@ -1,6 +1,6 @@
 import { Field } from 'Util/Query';
 
-export class Query {
+export class Placeholder {
     getQuery() {
         // TODO implement query
     }
