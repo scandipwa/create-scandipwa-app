@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
@@ -11,15 +11,15 @@
     ],
     "dependencies": {
         "@babel/plugin-transform-arrow-functions": "^7.10.4",
-        "@scandipwa/babel-plugin-middleware-decorator": "^0.0.1",
+        "@scandipwa/babel-plugin-middleware-decorator": "^0.0.2",
         "@scandipwa/craco": "^0.0.1",
-        "@scandipwa/eslint-config": "^0.0.1",
-        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.0",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.6",
-        "@scandipwa/scandipwa-extensibility": "^0.0.1",
-        "@scandipwa/webpack-extension-import-loader": "^0.0.2",
-        "@scandipwa/webpack-fallback-plugin": "^1.0.0",
-        "@scandipwa/webpack-i18n-plugin": "^0.0.6",
+        "@scandipwa/eslint-config": "^0.0.2",
+        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.10.2",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.7",
+        "@scandipwa/scandipwa-extensibility": "^0.0.2",
+        "@scandipwa/webpack-extension-import-loader": "^0.0.3",
+        "@scandipwa/webpack-fallback-plugin": "^1.0.1",
+        "@scandipwa/webpack-i18n-plugin": "^0.0.7",
         "babel-plugin-module-resolver": "^4.0.0",
         "babel-plugin-transform-rebem-jsx": "^0.3.3",
         "chokidar": "^3.4.2",

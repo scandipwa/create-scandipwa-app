@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/babel-plugin-middleware-decorator",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "index.js",
     "license": "OSL-3.0",
     "publishConfig": {
