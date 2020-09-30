@@ -15,14 +15,27 @@ module.exports = {
 
     create: (context) => ({
         JSXExpressionContainer(node) {
-            const { expression: { type, loc } } = node;
+            const {
+                expression: {
+                    type,
+                    loc
+                },
+                parent: {
+                    type: parentType
+                }
+            } = node;
 
-            if (type === 'ConditionalExpression') {
-                context.report({
-                    loc,
-                    message: 'Do not use conditional expressions in JSX.'
-                });
+            if (
+                type !== 'ConditionalExpression'
+                || parentType !== 'JSXElement'
+            ) {
+                return;
             }
+
+            context.report({
+                loc,
+                message: 'Do not use conditional expressions in JSX.'
+            });
         }
     }),
 };

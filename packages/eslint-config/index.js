@@ -44,6 +44,7 @@ module.exports = {
         '@scandipwa/scandipwa-guidelines/use-named-export': 'error',
         '@scandipwa/scandipwa-guidelines/create-config-files': 'error',
         // Prevent from { ...this.props } destruction in containers
+        'react/jsx-props-no-spreading': 'off',
         '@scandipwa/scandipwa-guidelines/jsx-no-props-destruction': 'error',
         // ban setting JSX in state (via variable)
         '@scandipwa/scandipwa-guidelines/no-jsx-variables': 'error',
