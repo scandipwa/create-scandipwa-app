@@ -7,10 +7,11 @@
         "clean": "lerna clean --yes",
         "compile:lockfile": "node tasks/compile-lockfile.js"
     },
-    "dependencies": {
+    "devDependencies": {
         "babel-eslint": "^10.1.0",
         "eslint": "^7.10.0",
         "fs-extra": "^9.0.1",
+        "husky": "^4.3.0",
         "lerna": "^3.22.1"
     },
     "husky": {
@@ -32,10 +33,13 @@
             "import/no-dynamic-require": "off",
             "fp/no-let": "off",
             "global-require": "off",
-            "max-len": ["error", {
-                "code": 150,
-                "ignorePattern": "logger."
-            }]
+            "max-len": [
+                "error",
+                {
+                    "code": 150,
+                    "ignorePattern": "logger."
+                }
+            ]
         }
     },
     "workspaces": [
