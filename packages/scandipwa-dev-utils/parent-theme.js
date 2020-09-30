@@ -27,8 +27,8 @@ const getParentThemePaths = (pathname = process.cwd()) => {
     return [
         parentThemePathname,
         ...getParentThemePaths(parentThemePathname)
-    ]
-}
+    ];
+};
 
 const getParentThemeSources = () => {
     const parentThemeList = getParentThemePaths();
@@ -92,4 +92,4 @@ module.exports = {
     getParentThemePaths,
     getParentThemeSources,
     getParentThemeAliases
-}
+};

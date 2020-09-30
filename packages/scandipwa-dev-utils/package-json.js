@@ -4,7 +4,7 @@ const path = require('path');
  * Get package JSON, or empty object
  *
  * @param {string} pathname
- * @return {object} 
+ * @return {object}
  */
 const getPackageJson = (pathname) => {
     try {

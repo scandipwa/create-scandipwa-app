@@ -32,12 +32,7 @@ module.exports = {
 
             context.report({
                 node,
-                message: 'Component should only contain rendering logic.',
-                suggest: [
-                    {
-                        desc: 'Move the method into container class.',
-                    }
-                ]
+                message: 'Component should only contain rendering logic.'
             });
         }
     })

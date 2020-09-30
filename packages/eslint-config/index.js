@@ -1,240 +1,240 @@
 module.exports = {
-    "extends": [
-        "airbnb",
-        "plugin:array-func/recommended"
+    extends: [
+        'airbnb',
+        'plugin:array-func/recommended'
     ],
-    "env": {
-        "browser": true
+    env: {
+        browser: true
     },
-    "parser": "babel-eslint",
-    "globals": {
-        "window": true,
-        "document": true,
-        "sessionStorage": true,
-        "localStorage": true,
-        "jest": true,
-        "__": true,
-        "workbox": true,
-        "importScripts": true
+    parser: 'babel-eslint',
+    globals: {
+        window: true,
+        document: true,
+        sessionStorage: true,
+        localStorage: true,
+        jest: true,
+        __: true,
+        workbox: true,
+        importScripts: true
     },
-    "plugins": [
-        "@scandipwa/scandipwa-guidelines",
-        "simple-import-sort",
-        "import",
-        "react",
-        "import",
-        "jest",
-        "babel",
-        "fp"
+    plugins: [
+        '@scandipwa/scandipwa-guidelines',
+        'simple-import-sort',
+        'import',
+        'react',
+        'import',
+        'jest',
+        'babel',
+        'fp'
     ],
-    "overrides": [
+    overrides: [
         {
-            "files": [
-                "*.config.js"
+            files: [
+                '*.config.js'
             ],
-            "rules": {
-                "@scandipwa/scandipwa-guidelines/create-config-files": "off"
+            rules: {
+                '@scandipwa/scandipwa-guidelines/create-config-files': 'off'
             }
         }
     ],
-    "rules": {
-        "@scandipwa/scandipwa-guidelines/file-structure": "error",
-        "@scandipwa/scandipwa-guidelines/only-one-class": "error",
-        "@scandipwa/scandipwa-guidelines/derived-class-names": "error",
-        "@scandipwa/scandipwa-guidelines/use-named-export": "error",
-        "@scandipwa/scandipwa-guidelines/create-config-files": "error",
+    rules: {
+        '@scandipwa/scandipwa-guidelines/file-structure': 'error',
+        '@scandipwa/scandipwa-guidelines/only-one-class': 'error',
+        '@scandipwa/scandipwa-guidelines/derived-class-names': 'error',
+        '@scandipwa/scandipwa-guidelines/use-named-export': 'error',
+        '@scandipwa/scandipwa-guidelines/create-config-files': 'error',
         // Prevent from { ...this.props } destruction in containers
-        "@scandipwa/scandipwa-guidelines/jsx-no-props-destruction": "error",
+        '@scandipwa/scandipwa-guidelines/jsx-no-props-destruction': 'error',
         // ban setting JSX in state (via variable)
-        "@scandipwa/scandipwa-guidelines/no-jsx-variables": "error",
+        '@scandipwa/scandipwa-guidelines/no-jsx-variables': 'error',
         // force only render methods in component classes
-        "@scandipwa/scandipwa-guidelines/only-render-in-component": "error",
+        '@scandipwa/scandipwa-guidelines/only-render-in-component': 'error',
         // force not using conditional expressions in JSX
-        "@scandipwa/scandipwa-guidelines/jsx-no-conditional": "error",
-        "import/no-extraneous-dependencies": "off",
+        '@scandipwa/scandipwa-guidelines/jsx-no-conditional': 'error',
+        'import/no-extraneous-dependencies': 'off',
         // enforce small files
-        "max-lines": ["error", 250],
-        "simple-import-sort/sort": [
-            "error",
+        'max-lines': ['error', 250],
+        'simple-import-sort/sort': [
+            'error',
             // fixed by reporting in https://github.com/lydell/eslint-plugin-simple-import-sort/issues/54
             {
-                "groups": [
+                groups: [
                     [
-                        "^@?[a-z]"
+                        '^@?[a-z]'
                     ], // anything that starts with @ and lowercase
                     [
-                        "^[^.\\u0000]"
+                        '^[^.\\u0000]'
                     ], // anything but a dot and side effect imports
                     [
-                        "^\\."
+                        '^\\.'
                     ], // starting with dot
                     [
-                        "^\\u0000"
-                    ], // side effect imports
+                        '^\\u0000'
+                    ] // side effect imports
                 ]
             }
         ],
-        "sort-imports": "off",
-        "import/order": "off",
-        "import/no-cycle": [
-            "error",
+        'sort-imports': 'off',
+        'import/order': 'off',
+        'import/no-cycle': [
+            'error',
             {
-                "maxDepth": 4
+                maxDepth: 4
             }
         ],
-        "fp/no-let": "error",
-        "fp/no-arguments": "error",
+        'fp/no-let': 'warn',
+        'fp/no-arguments': 'error',
         // "fp/no-loops": "error",
-        "fp/no-delete": "error",
-        "no-var": "error",
-        "css-rcurlyexpected": 0,
-        "react/static-property-placement": [
-            "error",
-            "static public field"
+        'fp/no-delete': 'error',
+        'no-var': 'error',
+        'css-rcurlyexpected': 0,
+        'react/static-property-placement': [
+            'error',
+            'static public field'
         ],
         // Force boolean prop naming with isXX
-        "react/boolean-prop-naming": ["error", { "rule": "^is[A-Z]([A-Za-z0-9]?)+" }],
-        "react/state-in-constructor": "off",
-        "no-restricted-globals": [
-            "error",
-            "isFinite",
-            "isNaN"
+        'react/boolean-prop-naming': ['error', { rule: '^is[A-Z]([A-Za-z0-9]?)+' }],
+        'react/state-in-constructor': 'off',
+        'no-restricted-globals': [
+            'error',
+            'isFinite',
+            'isNaN'
         ],
-        "max-len": [
+        'max-len': [
             2,
             {
-                "ignoreComments": true,
-                "ignoreUrls": true,
-                "code": 120
+                ignoreComments: true,
+                ignoreUrls: true,
+                code: 120
             }
         ],
-        "jest/no-disabled-tests": "warn",
-        "jest/no-focused-tests": "error",
-        "jest/no-identical-title": "error",
-        "jest/prefer-to-have-length": "warn",
-        "jest/valid-expect": "error",
-        "no-shadow": 0,
-        "class-methods-use-this": 0,
-        "camelcase": 0,
-        "no-underscore-dangle": "off",
-        "template-curly-spacing": "off",
-        "computed-property-spacing": "off",
-        "import/no-unresolved": 0,
-        "import/named": 0,
-        "no-plusplus": 0,
-        "no-unused-vars": [
-            "error",
+        'jest/no-disabled-tests': 'warn',
+        'jest/no-focused-tests': 'error',
+        'jest/no-identical-title': 'error',
+        'jest/prefer-to-have-length': 'warn',
+        'jest/valid-expect': 'error',
+        'no-shadow': 0,
+        'class-methods-use-this': 0,
+        camelcase: 0,
+        'no-underscore-dangle': 'off',
+        'template-curly-spacing': 'off',
+        'computed-property-spacing': 'off',
+        'import/no-unresolved': 0,
+        'import/named': 0,
+        'no-plusplus': 0,
+        'no-unused-vars': [
+            'error',
             {
-                "vars": "all",
-                "args": "after-used",
-                "ignoreRestSiblings": false,
-                "argsIgnorePattern": "^_"
+                vars: 'all',
+                args: 'after-used',
+                ignoreRestSiblings: false,
+                argsIgnorePattern: '^_'
             }
         ],
-        "react/react-in-jsx-scope": 0,
-        "react/jsx-curly-spacing": [
+        'react/react-in-jsx-scope': 0,
+        'react/jsx-curly-spacing': [
             2,
             {
-                "when": "always",
-                "allowMultiline": false,
-                "children": true
+                when: 'always',
+                allowMultiline: false,
+                children: true
             }
         ],
-        "import/no-named-as-default": 0,
-        "import/no-named-as-default-member": 0,
+        'import/no-named-as-default': 0,
+        'import/no-named-as-default-member': 0,
         // "react/jsx-max-depth": [2, { "max": 2 }],
-        "react/jsx-no-useless-fragment": [
+        'react/jsx-no-useless-fragment': [
             2,
             {
-                "max": 2
+                max: 2
             }
         ],
-        "curly": [
+        curly: [
             2,
-            "all"
+            'all'
         ],
-        "brace-style": [
+        'brace-style': [
             2,
-            "1tbs",
+            '1tbs',
             {
-                "allowSingleLine": false
+                allowSingleLine: false
             }
         ],
-        "react/sort-comp": [
+        'react/sort-comp': [
             2,
             {
-                "order": [
-                    "type-annotations",
-                    "static-variables",
-                    "static-methods",
-                    "instance-variables",
-                    "lifecycle",
-                    "everything-else",
-                    "render"
+                order: [
+                    'type-annotations',
+                    'static-variables',
+                    'static-methods',
+                    'instance-variables',
+                    'lifecycle',
+                    'everything-else',
+                    'render'
                 ]
             }
         ],
-        "react/jsx-filename-extension": 0,
-        "react/prefer-stateless-function": 0,
-        "react/button-has-type": 0,
-        "react/jsx-indent": 0,
-        "react/jsx-indent-props": 2,
-        "react/jsx-no-bind": [
+        'react/jsx-filename-extension': 0,
+        'react/prefer-stateless-function': 0,
+        'react/button-has-type': 0,
+        'react/jsx-indent': 0,
+        'react/jsx-indent-props': 2,
+        'react/jsx-no-bind': [
             2,
             {
-                "ignoreDOMComponents": false,
-                "ignoreRefs": true,
-                "allowArrowFunctions": false,
-                "allowFunctions": false,
-                "allowBind": false
+                ignoreDOMComponents: false,
+                ignoreRefs: true,
+                allowArrowFunctions: false,
+                allowFunctions: false,
+                allowBind: false
             }
         ],
-        "react/forbid-prop-types": [
+        'react/forbid-prop-types': [
             2,
             {
-                "forbid": [
-                    "className"
+                forbid: [
+                    'className'
                 ]
             }
         ],
-        "react/forbid-component-props": [
+        'react/forbid-component-props': [
             2,
             {
-                "forbid": [
-                    "className"
+                forbid: [
+                    'className'
                 ]
             }
         ],
-        "react/forbid-dom-props": [
+        'react/forbid-dom-props': [
             2,
             {
-                "forbid": [
-                    "className"
+                forbid: [
+                    'className'
                 ]
             }
         ],
-        "react/no-deprecated": 2,
-        "babel/semi": 1,
-        "new-cap": [
-            "error",
+        'react/no-deprecated': 2,
+        'babel/semi': 1,
+        'new-cap': [
+            'error',
             {
-                "newIsCap": true
+                newIsCap: true
             }
         ],
-        "no-param-reassign": [
-            "error",
+        'no-param-reassign': [
+            'error',
             {
-                "props": true,
-                "ignorePropertyModificationsFor": [
-                    "acc",
-                    "sum"
+                props: true,
+                ignorePropertyModificationsFor: [
+                    'acc',
+                    'sum'
                 ]
             }
         ],
-        "no-magic-numbers": [
-            "error",
+        'no-magic-numbers': [
+            'error',
             {
-                "ignore": [
+                ignore: [
                     1,
                     0,
                     2,
@@ -242,94 +242,94 @@ module.exports = {
                 ]
             }
         ],
-        "indent": [
-            "error",
+        indent: [
+            'error',
             4,
             {
-                "ignoredNodes": [
-                    "JSXElement",
-                    "JSXElement > *",
-                    "JSXAttribute",
-                    "JSXIdentifier",
-                    "JSXNamespacedName",
-                    "JSXMemberExpression",
-                    "JSXSpreadAttribute",
-                    "JSXExpressionContainer",
-                    "JSXOpeningElement",
-                    "JSXClosingElement",
-                    "JSXText",
-                    "JSXEmptyExpression",
-                    "JSXSpreadChild"
+                ignoredNodes: [
+                    'JSXElement',
+                    'JSXElement > *',
+                    'JSXAttribute',
+                    'JSXIdentifier',
+                    'JSXNamespacedName',
+                    'JSXMemberExpression',
+                    'JSXSpreadAttribute',
+                    'JSXExpressionContainer',
+                    'JSXOpeningElement',
+                    'JSXClosingElement',
+                    'JSXText',
+                    'JSXEmptyExpression',
+                    'JSXSpreadChild'
                 ]
             }
         ],
-        "comma-dangle": [
-            "error",
-            "never"
+        'comma-dangle': [
+            'error',
+            'never'
         ],
-        "no-case-declarations": "off",
-        "jsx-a11y/label-has-for": 0,
-        "padding-line-between-statements": [
-            "error",
+        'no-case-declarations': 'off',
+        'jsx-a11y/label-has-for': 0,
+        'padding-line-between-statements': [
+            'error',
             {
-                "blankLine": "always",
-                "prev": [
-                    "const",
-                    "let",
-                    "var"
+                blankLine: 'always',
+                prev: [
+                    'const',
+                    'let',
+                    'var'
                 ],
-                "next": "*"
+                next: '*'
             },
             {
-                "blankLine": "any",
-                "prev": [
-                    "const",
-                    "let",
-                    "var"
+                blankLine: 'any',
+                prev: [
+                    'const',
+                    'let',
+                    'var'
                 ],
-                "next": [
-                    "const",
-                    "let",
-                    "var"
+                next: [
+                    'const',
+                    'let',
+                    'var'
                 ]
             },
             {
-                "blankLine": "always",
-                "prev": [
-                    "block",
-                    "block-like",
-                    "multiline-block-like",
-                    "multiline-expression",
-                    "multiline-const",
-                    "multiline-let",
-                    "multiline-var"
+                blankLine: 'always',
+                prev: [
+                    'block',
+                    'block-like',
+                    'multiline-block-like',
+                    'multiline-expression',
+                    'multiline-const',
+                    'multiline-let',
+                    'multiline-var'
                 ],
-                "next": "return"
+                next: 'return'
             },
             {
-                "blankLine": "any",
-                "prev": [
-                    "singleline-const",
-                    "singleline-let",
-                    "singleline-var"
+                blankLine: 'any',
+                prev: [
+                    'singleline-const',
+                    'singleline-let',
+                    'singleline-var'
                 ],
-                "next": "*"
+                next: '*'
             }
         ],
-        "prefer-destructuring": [
-            "error",
+        'prefer-destructuring': [
+            'error',
             {
-                "array": false,
-                "object": true
+                array: false,
+                object: true
             },
             {
-                "enforceForRenamedProperties": false
+                enforceForRenamedProperties: false
             }
         ],
-        "lines-between-class-members": [
-            "error",
-            "always"
+        'lines-between-class-members': [
+            'error',
+            'always'
         ],
-        "no-extra-semi": "error"
+        'no-extra-semi': 'error'
     }
 };

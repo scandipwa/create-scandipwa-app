@@ -17,6 +17,7 @@ const addNamespaceToMiddlewarable = (Middlewarable, namespace) => {
     }
 
     // Set the namespaces for class
+    // eslint-disable-next-line no-param-reassign
     Middlewarable.prototype.__namespaces__ = namespaces;
 };
 

@@ -1,11 +1,10 @@
 // TODO update this import when action is done
-import { action } from 'Store/Placeholder/Placeholder.action';
-
 import PlaceholderQuery from 'Query/Placeholder.query';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { action } from 'Store/Placeholder/Placeholder.action';
 import { QueryDispatcher } from 'Util/Request';
 
-export class PlaceholderDispatcher extends QueryDispatcher {
+export class Dispatcher-query extends QueryDispatcher {
     constructor() {
         super('Placeholder');
     }

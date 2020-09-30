@@ -1,6 +1,7 @@
-import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 import { connect } from 'react-redux';
+
 import Placeholder from './Placeholder.component';
 
 export const mapStateToProps = (state) => ({
@@ -11,7 +12,7 @@ export const mapDispatchToProps = (dispatch) => ({
     // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 
-export class PlaceholderContainer extends PureComponent {
+export class Container-logic-state extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types
     };

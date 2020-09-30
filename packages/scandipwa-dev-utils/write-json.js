@@ -5,6 +5,6 @@ const writeJson = (pathname, json) => {
         pathname,
         JSON.stringify(json, undefined, 4)
     );
-}
+};
 
 module.exports = writeJson;

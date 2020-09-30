@@ -19,39 +19,27 @@ const prepareSources = (sources) => {
     Object.defineProperties(sources, {
         firstEntry: {
             enumerable: false,
-            get: () => {
-                return Object.keys(sources)[0];
-            }
+            get: () => Object.keys(sources)[0]
         },
         lastEntry: {
             enumerable: false,
-            get: () => {
-                return Object.keys(sources)[sources.length - 1];
-            }
+            get: () => Object.keys(sources)[sources.length - 1]
         },
         entries: {
             enumerable: false,
-            get: () => {
-                return Object.entries(sources);
-            }
+            get: () => Object.entries(sources)
         },
         keys: {
             enumerable: false,
-            get: () => {
-                return Object.keys(sources);
-            }
+            get: () => Object.keys(sources)
         },
         values: {
             enumerable: false,
-            get: () => {
-                return Object.values(sources);
-            }
+            get: () => Object.values(sources)
         },
         getRegexOf: {
             enumerable: false,
-            value: (source) => {
-                return new RegExp(`${ path.join(sources[source], 'src') }|${ path.join(sources[source], 'public') }`);
-            }
+            value: (source) => new RegExp(`${ path.join(sources[source], 'src') }|${ path.join(sources[source], 'public') }`)
         }
     });
 

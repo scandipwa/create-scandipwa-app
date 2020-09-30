@@ -1,9 +1,10 @@
+const { execSync } = require('child_process');
 const semver = require('semver');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const templateMap = {
-    'theme': require('@scandipwa/csa-generator-theme')
+    theme: require('@scandipwa/csa-generator-theme')
 };
 
 const createApp = async (options) => {
@@ -41,7 +42,7 @@ const init = (options) => {
                 return null;
             }
         })
-        .then(latest => {
+        .then((latest) => {
             const packageJson = require('./package.json');
 
             if (latest && semver.lt(packageJson.version, latest)) {
@@ -59,6 +60,6 @@ const init = (options) => {
                 createApp(options);
             }
         });
-}
+};
 
 module.exports = init;

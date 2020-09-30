@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * Get plugins for provided namespaces
  * @param {String[]} namespaces

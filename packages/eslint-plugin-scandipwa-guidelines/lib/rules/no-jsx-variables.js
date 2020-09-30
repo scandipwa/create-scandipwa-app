@@ -3,6 +3,21 @@
  * @author Alfreds Genkins
  */
 
+const getName = (node) => {
+    const {
+        id: {
+            name: varName = ''
+        } = {},
+        left: {
+            property: {
+                name: propName
+            } = {}
+        } = {}
+    } = node;
+
+    return varName || propName || '';
+}
+
 module.exports = {
     meta: {
         docs: {
@@ -14,7 +29,13 @@ module.exports = {
     },
     create: (context) => ({
         VariableDeclarator(node) {
-            const { init: { type } } = node;
+            const { init } = node;
+
+            if (!init) {
+                return;
+            }
+
+            const { type } = init;
 
             if (type !== 'JSXElement') {
                 return;
@@ -26,18 +47,16 @@ module.exports = {
             });
         },
         Property(node) {
-            const { value: { type } } = node;
+            const { value: { type } = {} } = node;
 
             if (type !== 'JSXElement') {
                 return;
             }
 
-            const { parent: { parent } } = node;
+            const { parent: { parent } = {} } = node;
 
             if (parent) {
                 const name = getName(parent);
-
-                console.log(name);
 
                 if (/(map|list)/.test(name.toLowerCase())) {
                     return;

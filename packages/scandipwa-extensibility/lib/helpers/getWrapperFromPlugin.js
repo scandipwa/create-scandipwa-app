@@ -1,8 +1,8 @@
 /**
  * TODO: Describe
- * 
- * @param {Object} plugin 
- * @param {String} memberName 
+ *
+ * @param {Object} plugin
+ * @param {String} memberName
  */
 module.exports = (plugin, memberName) => {
     const { implementation } = plugin;

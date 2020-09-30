@@ -95,7 +95,8 @@ module.exports = () => {
                 // Show progress bar when building
                 new ProgressBarPlugin(),
 
-                // TODO: implement PHP-based approach for development as Magento theme. See more: https://medium.com/@agent_hunt/how-to-use-index-php-as-the-index-file-with-create-react-app-ff760c910a6a
+                // TODO: implement PHP-based approach for development as Magento theme.
+                // See more: https://medium.com/@agent_hunt/how-to-use-index-php-as-the-index-file-with-create-react-app-ff760c910a6a
                 // In case it is Magento - we would like to see customization,
                 // meta and other things directly from Magento 2 => require
                 // disk write for PHP to work with.

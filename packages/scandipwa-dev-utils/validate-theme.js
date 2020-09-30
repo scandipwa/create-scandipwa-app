@@ -3,7 +3,7 @@ const logger = require('./logger');
 
 const isTheme = (pathname, quiet = false) => {
     try {
-        const packageJson = require(`${pathname}/package.json`);
+        const packageJson = require(path.join(pathname, 'package.json'));
         const { scandipwa: { type } = {} } = packageJson;
         const isTheme = type === 'theme';
 

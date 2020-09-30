@@ -1,8 +1,9 @@
-import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
+
 import Placeholder from './Placeholder.component';
 
-class PlaceholderContainer extends PureComponent {
+class Container-logic extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types
     };

@@ -58,7 +58,7 @@ const getExtensionImports = (pathname) => {
             `${importAggregator}.push(require('${pluginFile}').default);\n`
         ), ''
     );
-}
+};
 
 const getPluginPath = (packageName) => {
     const possibleRelativePath = path.join(
@@ -87,7 +87,7 @@ const getPluginPath = (packageName) => {
     }
 
     // This is not a local package, path based extension -> try loading it as a package
-    return require.resolve(`${ packageName }/package.json`)
+    return require.resolve(`${ packageName }/package.json`);
 };
 
 module.exports = function injectImports(source) {

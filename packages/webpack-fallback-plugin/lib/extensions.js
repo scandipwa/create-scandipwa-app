@@ -9,7 +9,7 @@ const prepareSources = require('./sources');
 
 /**
  * Prepare object of extensions, add helper functions
- * 
+ *
  * @param {} packages
  * @returns {Extensions} extensions appended with helper methods
  */
@@ -31,7 +31,7 @@ const prepareExtensions = (packages) => {
         isExtension: {
             enumerable: false,
             get: () => true
-        },
+        }
     });
 
     // Add them the same API as for sources

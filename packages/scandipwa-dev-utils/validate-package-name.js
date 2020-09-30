@@ -27,6 +27,6 @@ const isValidName = (packageName) => {
     );
 
     return false;
-}
+};
 
 module.exports = isValidName;

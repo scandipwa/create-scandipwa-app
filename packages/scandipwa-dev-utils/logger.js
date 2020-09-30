@@ -1,11 +1,12 @@
+/* eslint-disable no-console */
 const chalk = require('chalk');
 const clearConsole = require('react-dev-utils/clearConsole');
 
 const logWithBanner = (banner, ...args) => {
     if (args.length > 1) {
-        console.log(`\n${ banner }\n\n`, ...args.map(arg => `    ${arg}\n`))
+        console.log(`\n${ banner }\n\n`, ...args.map((arg) => `    ${arg}\n`));
     } else {
-        console.log(banner, ...args)
+        console.log(banner, ...args);
     }
 };
 
@@ -16,7 +17,7 @@ module.exports = {
         link: chalk.yellow,
         code: chalk.bgBlack.keyword('orange'),
         misc: chalk.bold,
-        comment: (...args) => chalk.gray('//', ...args),
+        comment: (...args) => chalk.gray('//', ...args)
     },
     logN: (...args) => console.log(...args, '\n'),
     logT: (...args) => console.log('    ', ...args),

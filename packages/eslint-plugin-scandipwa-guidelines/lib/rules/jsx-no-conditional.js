@@ -20,12 +20,7 @@ module.exports = {
             if (type === 'ConditionalExpression') {
                 context.report({
                     loc,
-                    message: 'Do not use conditional expressions in JSX.',
-                    suggest: [
-                        {
-                            desc: 'Move conditional expression to a new function.',
-                        }
-                    ]
+                    message: 'Do not use conditional expressions in JSX.'
                 });
             }
         }

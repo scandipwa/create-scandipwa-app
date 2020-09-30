@@ -24,4 +24,6 @@ yarn-error.log*
 
 packages/test/**/*
 
+# build specifc files
 lerna-debug.log
+.eslintcache

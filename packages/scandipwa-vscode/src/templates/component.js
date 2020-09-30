@@ -1,8 +1,9 @@
-import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
+
 import './Placeholder.style';
 
-class Placeholder extends PureComponent {
+class Component extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types
     };
@@ -10,7 +11,7 @@ class Placeholder extends PureComponent {
     render() {
         return (
             <div block="Placeholder">
-                {/* TODO: Implement render method */}
+                { /* TODO: Implement render method */ }
             </div>
         );
     }

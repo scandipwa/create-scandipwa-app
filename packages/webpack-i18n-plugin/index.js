@@ -9,9 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-/* eslint-disable no-unused-vars */
-/* eslint-disable import/no-extraneous-dependencies */
-
 const ConstDependency = require('webpack/lib/dependencies/ConstDependency');
 const NullFactory = require('webpack/lib/NullFactory');
 const path = require('path');
@@ -40,18 +37,18 @@ const appendTranslationsToFiles = (missingTranslations) => {
 
     fs.readdir(dirname, (err, filenames) => {
         if (err) {
-            console.log(err);
+            logger.logN(err);
             return;
         }
 
         filenames
-            .filter(name => /\.json$/.test(name))
+            .filter((name) => /\.json$/.test(name))
             .forEach((filename) => {
                 const pathToFile = path.join(dirname, filename);
 
                 fs.readFile(pathToFile, 'utf-8', (err, content) => {
                     if (err) {
-                        console.log(err);
+                        logger.logN(err);
                     } else {
                         appendTranslations(
                             pathToFile,
@@ -75,9 +72,11 @@ const addParsedVariableToModule = (parser, name) => {
 
     parser.parse(expression, {
         current: {
-            addDependency: (dep) => {
-                dep.userRequest = name;
-                deps.push(dep);
+            addDependency: (dependency) => {
+                deps.push({
+                    ...dependency,
+                    userRequest: name
+                });
             }
         },
         module: parser.state.module
@@ -100,7 +99,7 @@ class I18nPlugin {
     constructor(options) {
         const { locale } = options || {};
         this.afterEmitLogs = [];
-        this.translationMap = this.loadTranslationJSON(locale)
+        this.translationMap = this.loadTranslationJSON(locale);
     }
 
     loadTranslationJSON(locale) {

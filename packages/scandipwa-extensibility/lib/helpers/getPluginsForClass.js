@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * Get `class` plugins for provided namespaces' outer one (last assigned)
  * These plugins cannot be inherited

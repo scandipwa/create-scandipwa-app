@@ -1,4 +1,4 @@
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 
 module.exports = () => {
     try {
@@ -7,4 +7,4 @@ module.exports = () => {
     } catch (e) {
         return false;
     }
-}
+};

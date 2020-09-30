@@ -7,6 +7,6 @@ const actions = [
 ];
 
 // Initilize program actions
-actions.forEach(action => action(program));
+actions.forEach((action) => action(program));
 
 program.run();

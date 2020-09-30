@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 const generateGetHandler = require('./lib/handlers/generateGetHandler');
 
 // Key for processable classes to determine whether they are already extensible

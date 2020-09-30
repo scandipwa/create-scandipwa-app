@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+
 import Placeholder from './Placeholder.component';
 
 export const mapStateToProps = (state) => ({

@@ -67,9 +67,9 @@ const isValidComposer = (pathname = process.cwd()) => {
         composerContent = require(path.join(pathname, 'composer.json'));
     } catch (e) {
         if (e.message.includes('Unexpected end of JSON input')) {
-            logger.error(`The required file ${ logger.style.file('composer.json') } contains invalid JSON!`)
+            logger.error(`The required file ${ logger.style.file('composer.json') } contains invalid JSON!`);
         } else {
-            logger.error(`The required file ${ logger.style.file('composer.json') } was not found!`)
+            logger.error(`The required file ${ logger.style.file('composer.json') } was not found!`);
         }
 
         return false;
@@ -78,7 +78,7 @@ const isValidComposer = (pathname = process.cwd()) => {
     const { require: composerDeps } = composerContent;
 
     if (!composerDeps) {
-        logger.error(`The required field ${ logger.style.misc('require') } is missing in ${ logger.style.file('composer.json') }.`)
+        logger.error(`The required field ${ logger.style.misc('require') } is missing in ${ logger.style.file('composer.json') }.`);
         return false;
     }
 
@@ -137,6 +137,7 @@ const isValidComposer = (pathname = process.cwd()) => {
                 `The ${ logger.style.misc(minVersionRaw) } version is the minimum requested version.`,
                 `Update it at you own risk! The version of choice must meet following constraints: ${ logger.style.misc(rangeRequested) }!`
             );
+
             return false;
         }
 
@@ -151,6 +152,7 @@ const isValidComposer = (pathname = process.cwd()) => {
                 `The ${ logger.style.misc(minVersionRaw) } version is the minimum requested version.`,
                 `Update it at you own risk! The version of choice must meet following constraints: ${ logger.style.misc(rangeRequested) }!`
             );
+
             return false;
         }
     }
@@ -162,4 +164,4 @@ module.exports = {
     isValidComposer,
     getComposerDeps,
     getPackageJson
-}
+};

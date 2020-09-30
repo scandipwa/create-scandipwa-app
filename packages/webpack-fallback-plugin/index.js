@@ -39,8 +39,11 @@ class FallbackPlugin {
      * @memberof FallbackPlugin
      */
     static getFallbackPathname(pathname, sources) {
-        for (const source in sources) {
-            const sourcePathname = path.join(sources[source], pathname);
+        const sourcePaths = Object.values(sources);
+
+        for (let i = 0; i < sourcePaths.length; i++) {
+            const sourcePath = sourcePaths[i];
+            const sourcePathname = path.join(sourcePath, pathname);
             const isFileExists = fs.existsSync(sourcePathname);
 
             if (isFileExists) {
@@ -49,7 +52,7 @@ class FallbackPlugin {
         }
 
         return path.join(
-            Object.values(sources)[0],
+            sourcePaths[0],
             pathname
         );
     }
@@ -152,8 +155,8 @@ class FallbackPlugin {
     /**
      * Get the extension which the pathname belongs to
      * can be changed to regex later on
-     * 
-     * @param {String} pathname 
+     *
+     * @param {String} pathname
      */
     getBelongingExtension(pathname) {
         const { extensions } = this.options;
@@ -186,8 +189,8 @@ class FallbackPlugin {
 
     /**
      * Get if path is coming from sources src/ or /pub directory
-     * 
-     * @param {*} pathname 
+     *
+     * @param {*} pathname
      */
     getIsFallbackNeeded(pathname) {
         const { sources, extensions } = this.options;
@@ -204,7 +207,7 @@ class FallbackPlugin {
 
         const paths = [
             ...sources.values,
-            ...extensions.values,
+            ...extensions.values
         ];
 
         // Check if request is coming from ScandiPWA

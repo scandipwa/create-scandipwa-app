@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 // TODO: comment
 // TODO: add examples of transformations
 
@@ -140,6 +141,7 @@ module.exports = ({ types, parse }) => ({
 
             const { node: { name } } = path.get('id');
             const newName = path.scope.generateUidIdentifier(name);
+            // eslint-disable-next-line no-param-reassign
             path.get('id').node.name = newName.name;
 
             const wrappedInMiddeware = types.callExpression(
@@ -163,14 +165,14 @@ module.exports = ({ types, parse }) => ({
 
             /**
              * Remove export from initial classes declaration
-             * 
+             *
              * TODO: fix AST explorer handles this OK, but our babel throws
-             * 
+             *
              * if (path.parentPath.type === 'ExportNamedDeclaration') {
              *     path.parentPath.skip();
              *     path.parentPath.replaceWith(path);
              * }
              */
-        },
-    },
+        }
+    }
 });

@@ -11,19 +11,15 @@ const createFilesystem = (
     const store = memFs.create();
     const filesystem = editor.create(store);
 
-    const templatePath = (pathname = '') => {
-        return path.join(
-            templatePathname,
-            pathname
-        );
-    };
+    const templatePath = (pathname = '') => path.join(
+        templatePathname,
+        pathname
+    );
 
-    const destinationPath = (pathname = '') => {
-        return path.join(
-            destinationPathname,
-            pathname
-        );
-    }
+    const destinationPath = (pathname = '') => path.join(
+        destinationPathname,
+        pathname
+    );
 
     // Create destination path
     fs.mkdirSync(destinationPath(), { recursive: true });

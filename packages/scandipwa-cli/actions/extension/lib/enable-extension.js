@@ -1,6 +1,6 @@
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
-const enableExtension = (package) => {
+const enableExtension = (packageName) => {
     const packagePath = `${process.cwd()}/package.json`;
     const packageJson = require(packagePath);
 
@@ -8,7 +8,7 @@ const enableExtension = (package) => {
         packageJson.scandipwa.extensions = {};
     }
 
-    packageJson.scandipwa.extensions[package] = true;
+    packageJson.scandipwa.extensions[packageName] = true;
 
     writeJson(
         packagePath,
