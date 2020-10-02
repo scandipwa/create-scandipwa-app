@@ -1,5 +1,5 @@
 // TODO update this import when renamed
-import { action } from 'Store/Placeholder';
+import { action } from 'Store/Placeholder/Placeholder.action';
 
 export class PlaceholderDispatcher {
     update(payload, dispatch) {

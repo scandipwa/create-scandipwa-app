@@ -8,10 +8,10 @@ export const getInitialState = () => ({
 export const PlaceholderReducer = (state = getInitialState(), action) => {
     switch (action.type) {
     case ACTION_TYPE:
-        const { payload } = action;
+        // const { payload } = action;
 
         return {
-            ...state,
+            ...state
             // TODO implement payload handling
         };
 

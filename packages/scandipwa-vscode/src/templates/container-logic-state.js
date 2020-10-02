@@ -1,13 +1,14 @@
+// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import Placeholder from './Placeholder.component';
 
-export const mapStateToProps = (state) => ({
+export const mapStateToProps = (_state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = (_dispatch) => ({
     // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 
@@ -27,7 +28,6 @@ export class PlaceholderContainer extends PureComponent {
     render() {
         return (
             <Placeholder
-              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

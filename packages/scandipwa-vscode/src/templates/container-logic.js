@@ -1,5 +1,6 @@
+// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+
 import Placeholder from './Placeholder.component';
 
 class PlaceholderContainer extends PureComponent {
@@ -18,7 +19,6 @@ class PlaceholderContainer extends PureComponent {
     render() {
         return (
             <Placeholder
-              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
