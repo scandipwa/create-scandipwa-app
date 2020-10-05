@@ -1,4 +1,5 @@
 const prepareSources = require('./sources');
+const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
 
 /**
  * Extensions available for ScandiPWA Fallback mechanism
@@ -16,8 +17,7 @@ const prepareSources = require('./sources');
 const prepareExtensions = (packages) => {
     const rawExtensions = packages.reduce((acc, packageName) => {
         try {
-            const pathname = require.resolve(`${ packageName }/package.json`);
-            acc[packageName] = pathname;
+            acc[packageName] = getPackagePath(packageName);
         } catch (e) {
             // Ingore the error, the warning had to be generated before
         }

@@ -3,6 +3,7 @@ const fs = require('fs');
 const { getEnabledExtensions } = require('@scandipwa/scandipwa-dev-utils/extensions');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
+const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
 
 const isPluginFile = (entry) => /\.plugin\.js$/.test(entry);
 const isDirectory = (entry) => !!fs.lstatSync(entry).isDirectory();
@@ -60,36 +61,6 @@ const getExtensionImports = (pathname) => {
     );
 };
 
-const getPluginPath = (packageName) => {
-    const possibleRelativePath = path.join(
-        process.cwd(),
-        packageName,
-        'package.json'
-    );
-
-    const isPathReference = fs.existsSync(possibleRelativePath);
-
-    if (isPathReference) {
-        return possibleRelativePath;
-    }
-
-    const possiblePackagePath = path.join(
-        process.cwd(),
-        'packages',
-        packageName,
-        'package.json'
-    );
-
-    const isLocalPackage = fs.existsSync(possiblePackagePath);
-
-    if (isLocalPackage) {
-        return possiblePackagePath;
-    }
-
-    // This is not a local package, path based extension -> try loading it as a package
-    return require.resolve(`${ packageName }/package.json`);
-};
-
 module.exports = function injectImports(source) {
     const rootExtensionImports = getExtensionImports(
         path.join(
@@ -102,11 +73,10 @@ module.exports = function injectImports(source) {
     const allExtensionImports = getEnabledExtensions().reduce(
         (acc, packageName) => {
             try {
-                const pluginPath = getPluginPath(packageName);
+                const pluginPath = getPackagePath(packageName);
 
                 const pluginDirectory = path.join(
                     pluginPath,
-                    '..',
                     'src',
                     'plugin'
                 );

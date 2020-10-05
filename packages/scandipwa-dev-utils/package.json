@@ -8,6 +8,7 @@
         "validate-package-name.js",
         "validate-theme.js",
         "write-json.js",
+        "package-path.js",
         "package-json.js",
         "latest-version.js",
         "parent-theme.js",
