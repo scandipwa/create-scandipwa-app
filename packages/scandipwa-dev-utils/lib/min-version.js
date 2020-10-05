@@ -8,6 +8,10 @@ const minVersion = (rangeExpected, loose) => {
     let minVersion = new SemVer('0.0.0');
     const range = new Range(rangeExpected, loose);
 
+    if (rangeExpected === '*') {
+        return { raw: '*' };
+    }
+
     for (let i = 0; i < range.set.length; ++i) {
         const comparators = range.set[i];
 

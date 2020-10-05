@@ -120,7 +120,7 @@ const isValidComposer = (pathname = process.cwd()) => {
         if (!minVersionRaw) {
             logger.error(
                 'The requested composer package versions conflict!',
-                `There are no versions of ${ logger.misc(composerModule) } matching the range ${ logger.misc(rangeRequested) }!`
+                `There are no versions of ${ logger.style.misc(composerModule) } matching the range ${ logger.style.misc(rangeRequested) }!`
             );
         }
 
@@ -139,6 +139,11 @@ const isValidComposer = (pathname = process.cwd()) => {
             );
 
             return false;
+        }
+
+        if (rangeRequested === '*') {
+            // eslint-disable-next-line no-continue
+            continue;
         }
 
         // Check if the version requested satisfies version required

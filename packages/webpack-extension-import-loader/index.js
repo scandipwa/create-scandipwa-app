@@ -92,14 +92,14 @@ module.exports = function injectImports(source) {
 
                 logger.logN(e);
 
-                logger.warn(
+                logger.error(
                     `Loading of plugin ${ logger.style.misc(packageName) } failed.`,
                     `Try installing it using ${ logger.style.command(`${ installCommand } ${ packageName } command.`) }`,
                     `Otherwise, disable the extension in the root ${ logger.style.file('package.json') } file:`,
                     `Append ${ logger.style.code(`"${ packageName }": false`) } line to the end of the ${ logger.style.code('scandipwa.extensions') } field.`
                 );
 
-                return acc;
+                process.exit();
             }
         }, rootExtensionImports
     );
