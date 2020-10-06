@@ -2,10 +2,11 @@ const path = require('path');
 const fs = require('fs');
 
 const prepareSources = require('./lib/sources');
-const prepareExtensions = require('./lib/extensions');
-const { getEnabledExtensions } = require('@scandipwa/scandipwa-dev-utils/extensions');
 
-// TODO: rework hard-coded /src and /pub apendixes, add dynamic list instead
+const {
+    prepareExtensions,
+    getExtensionProvisionedPath
+} = require('./lib/extensions');
 
 class FallbackPlugin {
     /**
@@ -25,7 +26,7 @@ class FallbackPlugin {
 
         this.options = {
             sources: prepareSources(sources),
-            extensions: prepareExtensions(getEnabledExtensions())
+            extensions: prepareExtensions()
         };
     }
 
@@ -49,6 +50,13 @@ class FallbackPlugin {
             if (isFileExists) {
                 return sourcePathname;
             }
+        }
+
+        const { absolutePath } = getExtensionProvisionedPath(pathname);
+
+        if (absolutePath) {
+            // check if the pathname is available in provisioned paths of extensions
+            return absolutePath;
         }
 
         return path.join(
@@ -291,6 +299,23 @@ class FallbackPlugin {
 
                     return;
                 }
+            }
+
+            const { packagePath } = getExtensionProvisionedPath(requestToRelativePathname);
+
+            if (packagePath) {
+                // check if the pathname is available in provisioned paths of extensions
+                resolver.doResolve(
+                    resolver.hooks.resolve,
+                    {
+                        ...request,
+                        path: packagePath,
+                        request: `./${ requestToRelativePathname}`
+                    },
+                    'Resolving with fallback!',
+                    resolveContext,
+                    callback
+                );
             }
 
             callback();

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
 const webpack = require('webpack');
+const fs = require('fs');
 const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
@@ -28,6 +29,7 @@ module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss', sources);
     const appIndexJs = FallbackPlugin.getFallbackPathname('./src/index.js', sources);
     const appHtml = FallbackPlugin.getFallbackPathname('./public/index.html', sources);
+    const appPHP = FallbackPlugin.getFallbackPathname('./public/index.php', sources);
 
     // TODO: check SWorker
 
@@ -44,10 +46,7 @@ module.exports = () => {
 
             // For Magento use PHP template (defined in /public/index.php)
             // otherwise use normal HTML (defined in /public/index.html)
-            appHtml: whenMagento(
-                FallbackPlugin.getFallbackPathname('./public/index.php', sources),
-                appHtml
-            )
+            appHtml: whenMagento(appPHP, appHtml)
         },
         eslint: {
             mode: ESLINT_MODES.extends,
@@ -158,7 +157,8 @@ module.exports = () => {
                 return webpackConfig;
             }
         },
-        plugins: [
+        // if there is no abstract style, do not inject it
+        plugins: when(fs.existsSync(abstractStyle), [
             {
                 // Allow using SCSS mix-ins in any file
                 plugin: sassResourcesLoader,
@@ -166,6 +166,6 @@ module.exports = () => {
                     resources: abstractStyle
                 }
             }
-        ]
+        ], [])
     };
 };

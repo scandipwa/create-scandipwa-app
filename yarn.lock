@@ -2293,7 +2293,7 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@scandiweb/pay-pal@file:packages/test/packages/pay-pal":
+"@scandipwa/framework@file:packages/test/packages/framework":
   version "0.0.0"
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":

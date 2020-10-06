@@ -38,6 +38,8 @@ module.exports = {
         }
     ],
     rules: {
+        // disable import extension (.js, index.js)
+        'import/extensions': 'off',
         '@scandipwa/scandipwa-guidelines/file-structure': 'error',
         '@scandipwa/scandipwa-guidelines/only-one-class': 'error',
         '@scandipwa/scandipwa-guidelines/derived-class-names': 'error',

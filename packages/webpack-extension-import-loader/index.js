@@ -1,9 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-const { getEnabledExtensions } = require('@scandipwa/scandipwa-dev-utils/extensions');
+const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
-const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
 
 const isPluginFile = (entry) => /\.plugin\.js$/.test(entry);
 const isDirectory = (entry) => !!fs.lstatSync(entry).isDirectory();
@@ -70,38 +68,27 @@ module.exports = function injectImports(source) {
         )
     );
 
-    const allExtensionImports = getEnabledExtensions().reduce(
+    const allExtensionImports = extensions.reduce(
         // eslint-disable-next-line consistent-return,  array-callback-return
-        (acc, packageName) => {
-            try {
-                const pluginPath = getPackagePath(packageName);
+        (acc, { packagePath, packageName }) => {
+            const pluginDirectory = path.join(
+                packagePath,
+                'src',
+                'plugin'
+            );
 
-                const pluginDirectory = path.join(
-                    pluginPath,
-                    'src',
-                    'plugin'
+            if (!fs.existsSync(pluginDirectory)) {
+                // Warn and skip plugin from resolution
+                logger.warn(
+                    `The plugin ${ logger.style.misc(packageName) } has no directory ${ logger.style.file('plugins') }`,
+                    'This directory is required for plugin mechanism to work.',
+                    'This extension will not participate in plugin resolution.'
                 );
 
-                if (!fs.existsSync(pluginDirectory)) {
-                    // throw to handle this an exception
-                    throw new Error('Plugin not found');
-                }
-
-                return acc.concat(getExtensionImports(pluginDirectory));
-            } catch (e) {
-                const installCommand = shouldUseYarn() ? 'yarn add' : 'npm i';
-
-                logger.logN(e);
-
-                logger.error(
-                    `Loading of plugin ${ logger.style.misc(packageName) } failed.`,
-                    `Try installing it using ${ logger.style.command(`${ installCommand } ${ packageName } command.`) }`,
-                    `Otherwise, disable the extension in the root ${ logger.style.file('package.json') } file:`,
-                    `Append ${ logger.style.code(`"${ packageName }": false`) } line to the end of the ${ logger.style.code('scandipwa.extensions') } field.`
-                );
-
-                process.exit();
+                return acc;
             }
+
+            return acc.concat(getExtensionImports(pluginDirectory));
         }, rootExtensionImports
     );
 

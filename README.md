@@ -8,7 +8,7 @@
 ## Development
 
 1. Run `yarn`, wait until it completes installing dependencies
-2. Bootstrap project: `yarn bootstrap packages/test`
+2. Bootstrap project: `yarn bootstrap`
 3. Enter folder with `cd packages/test` and run `yarn start`
 
 ## Magento-like build
@@ -45,3 +45,4 @@ The file `scandipwa.json` has been moved and merged with `package.json`. Now, yo
 - `themeAlias` **[optional]** - specify which alias to use, if your theme is installed as parent theme. In example, core theme has an alias `Source`.
 - `composer` **[optional]** - specify composer dependencies, the root package will be validate to incude the proper version, use format: `"<COMPOSER PACKAGE NAME>": "<VALID SEMVER RANGE>"`.
 - `extensions` **[optional]** - specify a list of packages to be used as extensions. You can enable and disable (overriding parent theme values), use format: `"<NPM PACKAGE NAME>": true`.
+- `provide` **[optional]** - specify provisioned files. This is useful if extension implements an entry-point file (`src/index.js`, `src/registerServiceWorker.js`) or any other, discoverable by fallback mechanism.

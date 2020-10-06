@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "eslint": "eslint ./packages --cache --fix --resolve-plugins-relative-to .",
-        "bootstrap": "create-scandipwa-app",
+        "bootstrap": "create-scandipwa-app packages/test && yarn",
         "postinstall": "lerna bootstrap",
         "clean": "lerna clean --yes",
         "compile:lockfile": "node tasks/compile-lockfile.js"

@@ -6,6 +6,7 @@ const addDependency = require('./lib/add-dependency');
 const linkDependency = require('./lib/link-dependency');
 const enableExtension = require('./lib/enable-extension');
 const installDeps = require('create-scandipwa-app/lib/install-deps');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 // const installLerna = require('./lib/install-lerna');
 
 module.exports = (program) => {
@@ -65,9 +66,30 @@ module.exports = (program) => {
             // Enable extension in scandipwa field ofg package.json
             enableExtension(name);
 
-            // Install dependencies
-            await installDeps(process.cwd());
+            const tryInstall = async (maxTries, tries = 1) => {
+                try {
+                    // Install and link dependencies
+                    await installDeps(process.cwd());
 
-            await linkDependency(name, distPath);
+                    if (isCreate) {
+                        // Symlink modules in case it is create extension
+                        await linkDependency(name, distPath);
+                    }
+                } catch (e) {
+                    if (tries === maxTries) {
+                        logger.logN(e);
+                        logger.error(
+                            `Failed to bootstrap extension ${ logger.style.misc(name) }.`,
+                            'See the error log above.'
+                        );
+
+                        return;
+                    }
+
+                    tryInstall(maxTries, tries + 1);
+                }
+            };
+
+            tryInstall(2);
         });
 };

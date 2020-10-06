@@ -1,4 +1,7 @@
 const { getPackageJson } = require('./package-json');
+const getPackagePath = require('./package-path');
+const shouldUseYarn = require('./should-use-yarn');
+const logger = require('./logger');
 
 let visitedDeps = [];
 
@@ -19,7 +22,7 @@ const getAllExtensions = (modulePath) => {
     const {
         dependencies = {},
         scandipwa: {
-            extensions = []
+            extensions = {}
         } = {}
     } = getPackageJson(modulePath);
 
@@ -50,6 +53,41 @@ const getEnabledExtensions = (pathname = process.cwd()) => {
     ));
 };
 
-module.exports = {
-    getEnabledExtensions
-};
+/**
+ * Extensions available for ScandiPWA Fallback mechanism
+ * @typedef {Object} ExtensionObject
+ * @property {String} packagePath - path to extension package root
+ * @property {Object} packageJson - extension package.json source
+ * @property {String} packageName - extension package name
+ */
+
+/** @type {*} */
+const extensions = getEnabledExtensions().reduce((acc, packageName) => {
+    try {
+        const packagePath = getPackagePath(packageName);
+        const packageJson = getPackageJson(packagePath);
+
+        acc.push({
+            packagePath,
+            packageName,
+            packageJson
+        });
+    } catch (e) {
+        const installCommand = shouldUseYarn() ? 'yarn add' : 'npm i';
+
+        logger.logN(e);
+
+        logger.error(
+            `Loading of plugin ${ logger.style.misc(packageName) } failed.`,
+            `Try installing it using ${ logger.style.command(`${ installCommand } ${ packageName } command.`) }`,
+            `Otherwise, disable the extension in the root ${ logger.style.file('package.json') } file:`,
+            `Append ${ logger.style.code(`"${ packageName }": false`) } line to the end of the ${ logger.style.code('scandipwa.extensions') } field.`
+        );
+
+        process.exit();
+    }
+
+    return acc;
+}, []);
+
+module.exports = extensions;

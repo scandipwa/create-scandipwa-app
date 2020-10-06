@@ -1,5 +1,6 @@
 const prepareSources = require('./sources');
-const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
+const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
+const path = require('path');
 
 /**
  * Extensions available for ScandiPWA Fallback mechanism
@@ -14,20 +15,14 @@ const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
  * @param {} packages
  * @returns {Extensions} extensions appended with helper methods
  */
-const prepareExtensions = (packages) => {
-    const rawExtensions = packages.reduce((acc, packageName) => {
-        try {
-            acc[packageName] = getPackagePath(packageName);
-        } catch (e) {
-            // Ingore the error, the warning had to be generated before
-        }
+const prepareExtensions = () => {
+    const rawExtensions = extensions.reduce((acc, { packageName, packagePath }) => (
+        { ...acc, [packageName]: packagePath }
+    ), {});
 
-        return acc;
-    }, {});
+    const extensionsSources = prepareSources(rawExtensions);
 
-    const extensions = prepareSources(rawExtensions);
-
-    Object.defineProperties(extensions, {
+    Object.defineProperties(extensionsSources, {
         isExtension: {
             enumerable: false,
             get: () => true
@@ -35,7 +30,38 @@ const prepareExtensions = (packages) => {
     });
 
     // Add them the same API as for sources
-    return extensions;
+    return extensionsSources;
 };
 
-module.exports = prepareExtensions;
+/**
+ * Get pathname provisioned by the extension
+ *
+ * @param {String} pathname - relative pathname
+ */
+const getExtensionProvisionedPath = (pathname) => {
+    for (let j = 0; j < extensions.length; j++) {
+        const { packageJson, packagePath } = extensions[j];
+
+        // Take provide field, check if pathname is not available in provisioned names
+        const { scandipwa: { provide = [] } = {} } = packageJson;
+
+        for (let i = 0; i < provide.length; i++) {
+            const provisionedPath = provide[i];
+
+            if (path.normalize(provisionedPath) === path.normalize(pathname)) {
+                // if path is provisioned, resolve to extension
+                return {
+                    absolutePath: path.join(packagePath, pathname),
+                    packagePath
+                };
+            }
+        }
+    }
+
+    return {};
+};
+
+module.exports = {
+    prepareExtensions,
+    getExtensionProvisionedPath
+};

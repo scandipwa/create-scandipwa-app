@@ -5,7 +5,7 @@ const greet = (
     name,
     pathname
 ) => {
-    logger.clear();
+    // logger.clear();
 
     const relativePathname = `./${pathname}`;
     const displayedCommand = shouldUseYarn() ? 'yarn' : 'npm run';
