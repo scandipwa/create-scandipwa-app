@@ -21,7 +21,7 @@ const actions = [
         );
     }
 
-    // Initilize program actions
+    // Initialize program actions
     actions.forEach((action) => action(program));
 
     program.run();
