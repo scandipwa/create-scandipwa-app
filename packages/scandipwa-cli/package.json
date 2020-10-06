@@ -10,7 +10,6 @@
         "@scandipwa/csa-generator-extension": "^0.0.3",
         "@scandipwa/scandipwa-dev-utils": "^0.0.7",
         "create-scandipwa-app": "^1.0.2",
-        "find-yarn-workspace-root": "^2.0.0",
         "semver": "^7.3.2"
     },
     "publishConfig": {

@@ -1,6 +1,7 @@
 const path = require('path');
 const { getPackageJson } = require('./package-json');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
 
 const getParentTheme = (pathname) => {
     const {
@@ -19,10 +20,7 @@ const getParentThemePaths = (pathname = process.cwd()) => {
         return [];
     }
 
-    const parentThemePathname = path.join(
-        require.resolve(`${ parentThemePackage }/package.json`),
-        '..'
-    );
+    const parentThemePathname = getPackagePath(parentThemePackage);
 
     return [
         parentThemePathname,

@@ -71,6 +71,7 @@ module.exports = function injectImports(source) {
     );
 
     const allExtensionImports = getEnabledExtensions().reduce(
+        // eslint-disable-next-line consistent-return,  array-callback-return
         (acc, packageName) => {
             try {
                 const pluginPath = getPackagePath(packageName);

@@ -3,28 +3,10 @@ const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-pack
 const isValidTheme = require('@scandipwa/scandipwa-dev-utils/validate-theme');
 const generateExtension = require('@scandipwa/csa-generator-extension');
 const addDependency = require('./lib/add-dependency');
+const linkDependency = require('./lib/link-dependency');
 const enableExtension = require('./lib/enable-extension');
 const installDeps = require('create-scandipwa-app/lib/install-deps');
-const findWorkspaceRoot = require('find-yarn-workspace-root');
-const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 // const installLerna = require('./lib/install-lerna');
-
-const getLocalPath = (distPath) => {
-    if (!shouldUseYarn()) {
-        // if it is not Yarn - return
-        return distPath;
-    }
-
-    const root = findWorkspaceRoot(process.cwd());
-
-    if (!root) {
-        // if yarn has no workspace root - return
-        return distPath;
-    }
-
-    const prefix = path.relative(root, process.cwd());
-    return path.join(prefix, distPath);
-};
 
 module.exports = (program) => {
     program
@@ -74,7 +56,7 @@ module.exports = (program) => {
 
             // Use 0.0.0 in case the package is bootstrapped as new
             const realVersion = isCreate
-                ? `file:${ getLocalPath(distPath) }`
+                ? `file:${ distPath }`
                 : version;
 
             // Inject dependency to package.json
@@ -85,5 +67,7 @@ module.exports = (program) => {
 
             // Install dependencies
             await installDeps(process.cwd());
+
+            await linkDependency(name, distPath);
         });
 };

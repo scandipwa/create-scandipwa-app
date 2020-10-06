@@ -11,6 +11,7 @@
         "package-path.js",
         "package-json.js",
         "latest-version.js",
+        "exec-command.js",
         "parent-theme.js",
         "extensions.js",
         "logger.js",
@@ -18,6 +19,7 @@
     ],
     "dependencies": {
         "chalk": "^4.1.0",
+        "cross-spawn": "^7.0.3",
         "react-dev-utils": "^10.2.1",
         "semver": "^7.3.2",
         "validate-npm-package-name": "^3.0.0"

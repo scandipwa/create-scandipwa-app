@@ -29,7 +29,7 @@ const getPackagePath = (packageName) => {
 
     // This is not a local package, path based extension -> try loading it as a package
     return path.join(
-        require.resolve(`${ packageName }/package.json`),
+        require.resolve(`${ packageName }/package.json`, { paths: [process.cwd()] }),
         '..'
     );
 };

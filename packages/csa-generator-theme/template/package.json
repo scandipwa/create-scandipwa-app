@@ -1,6 +1,6 @@
 {
     "name": "<%= name %>",
-    "private": true,
+    "version": "0.0.1",
     "dependencies": {
         "@scandipwa/scandipwa": "<%= scandipwaVersion %>",
         "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>"
