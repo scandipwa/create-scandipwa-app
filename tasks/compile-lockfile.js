@@ -20,8 +20,8 @@ try {
     const scriptsDeps = require('@scandipwa/scandipwa-scripts/package.json').dependencies;
 
     const descriptors = [
-        ...Object.keys(themeDeps).map(dep => `${dep}@${themeDeps[dep]}`),
-        ...Object.keys(scriptsDeps).map(dep => `${dep}@${scriptsDeps[dep]}`),
+        ...Object.keys(themeDeps).map((dep) => `${dep}@${themeDeps[dep]}`),
+        ...Object.keys(scriptsDeps).map((dep) => `${dep}@${scriptsDeps[dep]}`)
     ];
 
     // Run "yarn add" with all the dependencies of react-scripts
