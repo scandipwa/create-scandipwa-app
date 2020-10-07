@@ -1,6 +1,6 @@
 const { getPackageJson } = require('./package-json');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
+const logger = require('./logger');
+const getPackagePath = require('./package-path');
 
 const getParentTheme = (pathname) => {
     const {
