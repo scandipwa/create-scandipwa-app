@@ -46,9 +46,8 @@ const getExtensionProvisionedPath = (pathname) => {
         const { scandipwa: { provide = [] } = {} } = packageJson;
 
         for (let i = 0; i < provide.length; i++) {
-            const provisionedPath = provide[i];
-
-            if (path.normalize(provisionedPath) === path.normalize(pathname)) {
+            // for strings, treat provision as regex, try providing the file match
+            if (new RegExp(provide[i]).test(path.normalize(pathname))) {
                 // if path is provisioned, resolve to extension
                 return {
                     absolutePath: path.join(packagePath, pathname),
