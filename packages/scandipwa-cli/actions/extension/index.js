@@ -3,8 +3,8 @@ const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-pack
 const isValidTheme = require('@scandipwa/scandipwa-dev-utils/validate-theme');
 const generateExtension = require('@scandipwa/csa-generator-extension');
 const addDependency = require('./lib/add-dependency');
-const linkDependency = require('./lib/link-dependency');
 const enableExtension = require('./lib/enable-extension');
+const injectScripts = require('./lib/inject-scripts');
 const installDeps = require('create-scandipwa-app/lib/install-deps');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 // const installLerna = require('./lib/install-lerna');
@@ -43,13 +43,13 @@ module.exports = (program) => {
             }
 
             if (isCreate || isSymlink) {
-                // Install lerna if this is a create or symlink request
-                // await installLerna();
+                // Inject script which symlinks packages
+                await injectScripts();
             }
 
             if (isCreate) {
                 // Generate extension from template
-                generateExtension({
+                await generateExtension({
                     name,
                     path: distPath
                 });
@@ -70,14 +70,10 @@ module.exports = (program) => {
                 try {
                     // Install and link dependencies
                     await installDeps(process.cwd());
-
-                    if (isCreate) {
-                        // Symlink modules in case it is create extension
-                        await linkDependency(name, distPath);
-                    }
                 } catch (e) {
                     if (tries === maxTries) {
                         logger.logN(e);
+
                         logger.error(
                             `Failed to bootstrap extension ${ logger.style.misc(name) }.`,
                             'See the error log above.'
