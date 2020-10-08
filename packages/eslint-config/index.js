@@ -27,22 +27,35 @@ module.exports = {
         'babel',
         'fp'
     ],
-    overrides: [
-        {
-            files: [
-                '*.config.js'
-            ],
-            rules: {
-                '@scandipwa/scandipwa-guidelines/create-config-files': 'off'
-            }
+    overrides: [{
+        files: ['*.config.js'],
+        rules: {
+            '@scandipwa/scandipwa-guidelines/use-named-export': 'off',
+            '@scandipwa/scandipwa-guidelines/create-config-files': 'off'
         }
-    ],
+    }],
     rules: {
         // disable import extension (.js, index.js)
         'import/extensions': 'off',
+        // Allow only files with proper postfix notations
         '@scandipwa/scandipwa-guidelines/file-structure': 'error',
+        // Make sure there is no more than one class per file
         '@scandipwa/scandipwa-guidelines/only-one-class': 'error',
+        // Derive class name from file name
         '@scandipwa/scandipwa-guidelines/derived-class-names': 'error',
+        // sing legacy "middleware" function
+        '@scandipwa/scandipwa-guidelines/no-middleware': 'error',
+        // Force @namespace comments in the code
+        '@scandipwa/scandipwa-guidelines/use-namespace': 'error',
+        // Use "__construct" instead of "constructor"
+        '@scandipwa/scandipwa-guidelines/use-magic-construct': 'error',
+        // Force exporting every variable and class on Program level of a module
+        '@scandipwa/scandipwa-guidelines/export-level-one': 'error',
+        // Ban using legacy "ExtensibleComponent" and "ExtensiblePureComponent"
+        '@scandipwa/scandipwa-guidelines/no-extensible-base': 'error',
+        // Force provide mapStateToProps and mapDispatchToProps (even if there are none)
+        '@scandipwa/scandipwa-guidelines/always-both-mappings': 'error',
+        // Force named and default exports (i.e. on class)
         '@scandipwa/scandipwa-guidelines/use-named-export': 'error',
         '@scandipwa/scandipwa-guidelines/create-config-files': 'error',
         // Prevent from { ...this.props } destruction in containers

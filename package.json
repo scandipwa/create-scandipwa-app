@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "eslint": "eslint ./packages --cache --fix --resolve-plugins-relative-to .",
+        "eslint": "eslint ./packages --cache --resolve-plugins-relative-to .",
         "bootstrap": "create-scandipwa-app packages/test && yarn",
         "postinstall": "lerna bootstrap",
         "clean": "lerna clean --yes",
@@ -23,12 +23,20 @@
         "extends": "@scandipwa",
         "ignorePatterns": [
             "packages/craco/**",
+            "packages/test/**",
             "packages/scandipwa/**",
             "packages/eslint-plugin-scandipwa-guidelines/**",
             "packages/scandipwa-vscode/**",
             "**/node_modules/**"
         ],
         "rules": {
+            "@scandipwa/scandipwa-guidelines/only-one-class": "off",
+            "@scandipwa/scandipwa-guidelines/derived-class-names": "off",
+            "@scandipwa/scandipwa-guidelines/use-namespace": "off",
+            "@scandipwa/scandipwa-guidelines/export-level-one": "off",
+            "@scandipwa/scandipwa-guidelines/use-named-export": "off",
+            "@scandipwa/scandipwa-guidelines/create-config-files": "off",
+            "@scandipwa/scandipwa-guidelines/use-magic-construct": "off",
             "no-magic-numbers": "off",
             "max-lines": "off",
             "import/no-dynamic-require": "off",
