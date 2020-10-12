@@ -45,4 +45,5 @@ The file `scandipwa.json` has been moved and merged with `package.json`. Now, yo
 - `themeAlias` **[optional]** - specify which alias to use, if your theme is installed as parent theme. In example, core theme has an alias `Source`.
 - `composer` **[optional]** - specify composer dependencies, the root package will be validate to incude the proper version, use format: `"<COMPOSER PACKAGE NAME>": "<VALID SEMVER RANGE>"`.
 - `extensions` **[optional]** - specify a list of packages to be used as extensions. You can enable and disable (overriding parent theme values), use format: `"<NPM PACKAGE NAME>": true`.
-- `provide` **[optional]** - the regex of provisioned paths. This is useful if extension implements an entry-point file (`src/index.js`, `src/registerServiceWorker.js`) or any other, discoverable by fallback mechanism. Or if it implements a virtual module, like UI, or SDK.
+- `provide` **[optional]** - the provisioned paths. This is useful if extension implements an entry-point file (`src/index.js`, `src/registerServiceWorker.js`) or any other path, discoverable by fallback mechanism.
+- `preference` **[optional]** - define a module to "preference" (by specifying preference, you make program use your module instead of preference). Commonly used to implement `@virtual-module` modules.

@@ -301,21 +301,32 @@ class FallbackPlugin {
                 }
             }
 
-            const { packagePath } = getExtensionProvisionedPath(requestToRelativePathname);
+            const {
+                packagePath,
+                relativePath,
+                absolutePath
+            } = getExtensionProvisionedPath(requestToRelativePathname);
 
             if (packagePath) {
+                if (!this.fileExists(absolutePath)) {
+                    callback();
+                    return;
+                }
+
                 // check if the pathname is available in provisioned paths of extensions
                 resolver.doResolve(
                     resolver.hooks.resolve,
                     {
                         ...request,
                         path: packagePath,
-                        request: `./${ requestToRelativePathname}`
+                        request: `./${ relativePath }`
                     },
                     'Resolving with fallback!',
                     resolveContext,
                     callback
                 );
+
+                return;
             }
 
             callback();

@@ -43,14 +43,43 @@ const getExtensionProvisionedPath = (pathname) => {
         const { packageJson, packagePath } = extensions[j];
 
         // Take provide field, check if pathname is not available in provisioned names
-        const { scandipwa: { provide = [] } = {} } = packageJson;
+        const {
+            scandipwa: {
+                provide = [],
+                preference = ''
+            } = {},
+            main
+        } = packageJson;
+
+        if (preference) {
+            const moduleIndex = pathname.indexOf(preference);
+
+            if (moduleIndex !== -1) {
+                const relativePathname = pathname.slice(moduleIndex + preference.length);
+
+                if (path.normalize(relativePathname) === '.') {
+                    return {
+                        absolutePath: path.join(packagePath, main),
+                        relativePath: path.normalize(main),
+                        packagePath
+                    };
+                }
+
+                return {
+                    absolutePath: path.join(packagePath, relativePathname),
+                    relativePath: path.normalize(relativePathname),
+                    packagePath
+                };
+            }
+        }
 
         for (let i = 0; i < provide.length; i++) {
             // for strings, treat provision as regex, try providing the file match
-            if (new RegExp(provide[i]).test(path.normalize(pathname))) {
+            if (path.normalize(provide[i]) === path.normalize(pathname)) {
                 // if path is provisioned, resolve to extension
                 return {
                     absolutePath: path.join(packagePath, pathname),
+                    relativePath: pathname,
                     packagePath
                 };
             }
