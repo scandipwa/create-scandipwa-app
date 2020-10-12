@@ -1,5 +1,5 @@
 const path = require('path');
-const { execAsync } = require('../exec-async');
+const { execAsync } = require('../util/exec-async');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const dockerRun = (options) => {
@@ -38,13 +38,14 @@ const deployServices = async (ports) => {
     } catch (e) {
         logger.logN(e);
 
-        logger.error('Faield to create volumes. See ERROR log above');
+        logger.error('Failed to create volumes. See ERROR log above');
     }
 
     logger.logN('Running docker containers');
 
     await Promise.all([
         Promise.all(
+            [
             // Varnish+Nginx
             dockerRun({
                 expose: [80],
@@ -72,6 +73,7 @@ const deployServices = async (ports) => {
             // TODO: I think they should run after image creation,
             // execAsync('docker network connect --alias nginx custom-network name_of_nginx_container'),
             // execAsync('docker network connect --link nginx:nginx custom-network varnish')
+            ]
         ),
         // Redis
         dockerRun({
@@ -114,4 +116,4 @@ const deployServices = async (ports) => {
     ]);
 };
 
-module.exports = (ports) => deployServices(ports);
+module.exports = deployServices;
