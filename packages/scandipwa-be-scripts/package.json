@@ -6,6 +6,7 @@
     "license": "OSL-3.0",
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "^0.0.7",
+        "get-port": "^5.1.1",
         "semver": "^7.3.2"
     },
     "publishConfig": {
