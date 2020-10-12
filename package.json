@@ -23,7 +23,6 @@
         "extends": "@scandipwa",
         "ignorePatterns": [
             "packages/craco/**",
-            "packages/test/**",
             "packages/scandipwa/**",
             "packages/eslint-plugin-scandipwa-guidelines/**",
             "packages/scandipwa-vscode/**",

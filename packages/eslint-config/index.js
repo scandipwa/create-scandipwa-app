@@ -33,6 +33,14 @@ module.exports = {
             '@scandipwa/scandipwa-guidelines/use-named-export': 'off',
             '@scandipwa/scandipwa-guidelines/create-config-files': 'off'
         }
+    }, {
+        files: ['*.plugin.js'],
+        rules: {
+            '@scandipwa/scandipwa-guidelines/use-named-export': 'off',
+            '@scandipwa/scandipwa-guidelines/create-config-files': 'off',
+            '@scandipwa/scandipwa-guidelines/use-namespace': 'off',
+            '@scandipwa/scandipwa-guidelines/export-level-one': 'off'
+        }
     }],
     rules: {
         // disable import extension (.js, index.js)
