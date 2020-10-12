@@ -4,6 +4,7 @@ const semver = require('semver');
 const os = require('os');
 const getAnswer = require('../util/get-user-answer');
 const { darwin } = require('./install-deps');
+const getMissingPackages = require('../util/get-missing-packages');
 
 const commonPackages = [
     'php',
@@ -29,10 +30,7 @@ const linuxPackages = [
 ];
 
 const linuxValidator = async () => {
-    const packages = await Promise.allSettled(linuxPackages.map(packageExists));
-    const missingPackages = packages
-        .filter(({ status }) => status === 'rejected')
-        .map(({ reason }) => reason)
+    const missingPackages = await getMissingPackages(linuxPackages)
 
     // TODO: add installation instructions
     if (missingPackages.length > 0) {
@@ -77,17 +75,20 @@ const darwinValidator = async () => {
         }
     }
 
-    try {
-        await Promise.all(macPackages.map(packageExists));
-        return true;
-    } catch (packageName) {
-        logger.error(
-            // TODO: add installation instructions
-            `Package ${ logger.style.misc(packageName) } is not installed!`
-        );
+    const missingPackages = await getMissingPackages(macPackages)
+
+    // TODO: add installation instructions
+    if (missingPackages.length > 0) {
+        if (missingPackages.length === 1) {
+            logger.error(`Package ${ logger.style.misc(missingPackages[0]) } is not installed!`)
+        } else {
+            logger.error(`Packages ${ logger.style.misc(missingPackages.join(', ')) } are not installed!`);
+        }
 
         return false;
     }
+
+    return true
 };
 
 const platformValidatorMap = {
