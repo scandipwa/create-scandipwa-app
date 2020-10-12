@@ -7,4 +7,4 @@ async function prepareFileSystem() {
     await execAsync(`mkdir -p ${ cacheFolder }`);
 }
 
-module.exports = () => prepareFileSystem();
+module.exports = prepareFileSystem;

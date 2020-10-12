@@ -2,6 +2,8 @@ const packageExists = require('../util/package-exists');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const semver = require('semver');
 const os = require('os');
+const getAnswer = require('../util/get-user-answer');
+const { darwin } = require('./install-deps');
 
 const commonPackages = [
     'php',
@@ -56,12 +58,17 @@ const darwinValidator = async () => {
     try {
         await packageExists('brew');
     } catch (e) {
-        logger.error(
-            // TODO: add installation instructions
-            'Package brew is not installed!'
-        );
+        const installBrew = await getAnswer('Brew is not installed, do you want to install it?', 'yes')
+        if (installBrew === 'yes') {
+            await darwin.installBrew()
+        } else {
+            logger.error(
+                // TODO: add installation instructions
+                'Package brew is not installed!'
+            );
 
-        return false;
+            return false;
+        }
     }
 
     try {
@@ -84,7 +91,7 @@ const platformValidatorMap = {
 
 const validateOS = async () => {
     logger.logN('Checking packages');
-    const platform = (os.platform());
+    const platform = os.platform();
 
     const validator = platformValidatorMap[platform];
 
