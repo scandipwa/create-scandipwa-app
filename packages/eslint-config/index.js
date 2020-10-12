@@ -43,6 +43,8 @@ module.exports = {
         }
     }],
     rules: {
+        // allow only one non-default exports in the file
+        'import/prefer-default-export': 'off',
         // disable import extension (.js, index.js)
         'import/extensions': 'off',
         // Allow only files with proper postfix notations
