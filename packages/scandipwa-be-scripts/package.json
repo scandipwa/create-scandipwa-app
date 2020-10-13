@@ -7,6 +7,9 @@
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "^0.0.7",
         "get-port": "^5.1.1",
+        "inquirer": "^7.3.3",
+        "log-symbols": "^4.0.0",
+        "ora": "^5.1.0",
         "semver": "^7.3.2"
     },
     "publishConfig": {
