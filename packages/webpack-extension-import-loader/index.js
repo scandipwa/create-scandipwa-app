@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+// const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const isPluginFile = (entry) => /\.plugin\.js$/.test(entry);
 const isDirectory = (entry) => !!fs.lstatSync(entry).isDirectory();
@@ -70,7 +70,7 @@ module.exports = function injectImports(source) {
 
     const allExtensionImports = extensions.reduce(
         // eslint-disable-next-line consistent-return,  array-callback-return
-        (acc, { packagePath, packageName }) => {
+        (acc, { packagePath }) => {
             const pluginDirectory = path.join(
                 packagePath,
                 'src',
@@ -79,11 +79,11 @@ module.exports = function injectImports(source) {
 
             if (!fs.existsSync(pluginDirectory)) {
                 // Warn and skip plugin from resolution
-                logger.warn(
-                    `The plugin ${ logger.style.misc(packageName) } has no directory ${ logger.style.file('plugins') }`,
-                    'This directory is required for plugin mechanism to work.',
-                    'This extension will not participate in plugin resolution.'
-                );
+                // logger.warn(
+                //     `The plugin ${ logger.style.misc(packageName) } has no directory ${ logger.style.file('plugins') }`,
+                //     'This directory is required for plugin mechanism to work.',
+                //     'This extension will not participate in plugin resolution.'
+                // );
 
                 return acc;
             }
