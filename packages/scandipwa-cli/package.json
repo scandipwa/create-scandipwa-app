@@ -1,15 +1,15 @@
 {
     "name": "scandipwa-cli",
-    "version": "0.0.4",
+    "version": "0.0.5-alpha.0",
     "bin": {
         "scandipwa": "index.js"
     },
     "license": "OSL-3.0",
     "dependencies": {
         "@caporal/core": "^2.0.2",
-        "@scandipwa/csa-generator-extension": "^0.0.3",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.7",
-        "create-scandipwa-app": "^1.0.2",
+        "@scandipwa/csa-generator-extension": "^0.0.4-alpha.0",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.8-alpha.0",
+        "create-scandipwa-app": "^1.0.3-alpha.0",
         "semver": "^7.3.2"
     },
     "publishConfig": {
