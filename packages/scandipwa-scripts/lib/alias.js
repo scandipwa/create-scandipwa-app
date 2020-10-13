@@ -64,7 +64,7 @@ const preferenceAliases = extensions.reduce((acc, extension) => {
 
     return {
         ...acc,
-        [`${preference}/*`]: path.relative(process.cwd(), packagePath)
+        [`${preference}/*`]: [path.relative(process.cwd(), packagePath)]
     };
 }, {});
 
