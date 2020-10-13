@@ -25,6 +25,7 @@
         "ignorePatterns": [
             "packages/craco/**",
             "packages/scandipwa/**",
+            "packages/test/**",
             "packages/eslint-plugin-scandipwa-guidelines/**",
             "packages/scandipwa-vscode/**",
             "**/node_modules/**"
