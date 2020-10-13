@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
-    "version": "1.0.3-alpha.0",
+    "version": "1.0.3-alpha.1",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
