@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
-    "version": "1.0.3-alpha.3",
+    "version": "1.0.3-alpha.4",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
@@ -18,7 +18,7 @@
         "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.10.2",
         "@scandipwa/scandipwa-dev-utils": "^0.0.8-alpha.0",
         "@scandipwa/scandipwa-extensibility": "^0.0.2",
-        "@scandipwa/webpack-extension-import-loader": "^0.0.4-alpha.0",
+        "@scandipwa/webpack-extension-import-loader": "^0.0.4-alpha.1",
         "@scandipwa/webpack-fallback-plugin": "^1.0.2-alpha.1",
         "@scandipwa/webpack-i18n-plugin": "^0.0.8-alpha.0",
         "babel-plugin-module-resolver": "^4.0.0",
