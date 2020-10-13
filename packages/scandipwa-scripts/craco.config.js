@@ -116,6 +116,9 @@ module.exports = () => {
                 // Allow importing .style files without specifying the extension
                 webpackConfig.resolve.extensions.push('.scss');
 
+                // Allow importing .ts files without specifying the extension
+                webpackConfig.resolve.extensions.push('.ts');
+
                 // Allow linter only in project
                 webpackConfig.module.rules[1].include = sources[PROJECT];
 

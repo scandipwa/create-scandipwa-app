@@ -134,8 +134,14 @@ class FallbackPlugin {
             return fs.existsSync(`${ pathname }.scss`);
         }
 
-        // we do not know at this point if this is /index.js or .js => check both
-        return fs.existsSync(`${ pathname }.js`) || fs.existsSync(`${ pathname }/index.js`);
+        // we do not know at this point if this is:
+        // .ts, .jsx or /index.js, /index.ts => check all
+        return (
+            fs.existsSync(`${ pathname }.js`)
+            || fs.existsSync(`${ pathname }.ts`)
+            || fs.existsSync(`${ pathname }/index.js`)
+            || fs.existsSync(`${ pathname }/index.ts`)
+        );
     }
 
     /**
