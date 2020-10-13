@@ -1,5 +1,6 @@
 {
     "private": true,
+    "name": "create-scandipwa-app",
     "scripts": {
         "eslint": "eslint ./packages --cache --resolve-plugins-relative-to .",
         "bootstrap": "create-scandipwa-app packages/test && yarn",
