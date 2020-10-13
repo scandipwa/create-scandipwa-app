@@ -2293,30 +2293,6 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@scandipwa/framework@file:packages/test/packages/framework":
-  version "0.0.0"
-
-"@scandipwa/magento-graphql@file:packages/test/packages/magento-graphql":
-  version "0.0.0"
-
-"@scandipwa/redux@file:packages/test/packages/redux":
-  version "0.0.0"
-  dependencies:
-    react-redux "^7.2.0"
-
-"@scandipwa/router@file:packages/test/packages/router":
-  version "0.0.0"
-  dependencies:
-    history "^4.9.0"
-    react-router "^5.2.0"
-    react-router-dom "^5.2.0"
-
-"@scandipwa/url-rewrites-magento-graphql@file:packages/test/packages/url-rewrites-magento-graphql":
-  version "0.0.0"
-
-"@scandipwa/url-rewrites@file:packages/test/packages/url-rewrites":
-  version "0.0.0"
-
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
