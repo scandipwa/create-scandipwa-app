@@ -1,77 +1,30 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { execAsync, execAsyncWithCallback } = require('../util/exec-async');
 const ora = require('ora');
-
-const installPHP = async () => {
-    const output = ora('Checking PHP...')
-    try {
-        const phpBrewVersionOutput = await execAsync('phpbrew -v')
-
-        const phpBrewVersion = phpBrewVersionOutput.match(/phpbrew ([\d.]+)/i)[1]
-        output.succeed(`phpbrew version ${phpBrewVersion} installed!`)
-    } catch (e) {
-        if (/phpbrew: command not found/.test(e.message)) {
-            output.fail(`Package ${ logger.style.misc('phpbrew') } is not installed!.\nTo install, follow this instructions: https://github.com/phpbrew/phpbrew/wiki/Quick-Start`)
-
-            return false
-        }
+const {
+    php: {
+        requiredPHPVersion,
+        requiredPHPVersionRegex,
+        phpBinPath,
+        phpExtensions
     }
+} = require('../config')
 
-    const requiredPHPVersion = '7.3.22';
-
-    const requiredPHPVersionRegex = new RegExp(requiredPHPVersion)
-
+const checkPHPInGlobalCache = async () => {
     try {
-        const PHPBrewVersions = await execAsync('phpbrew list')
-
-        if (PHPBrewVersions.includes('Please install at least one PHP with your preferred version.')) {
-            output.info('No PHP installed.')
-        }
-
-
-        if (!requiredPHPVersionRegex.test(PHPBrewVersions)) {
-            output.start(`Compiling and building PHP ${requiredPHPVersion}. This operation can take some time...`)
-
-            try {
-                await execAsync('mkdir ~/.phpbrew')
-            } catch {}
-
-            try {
-                await execAsync(
-                    `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
-                    +bz2 +bcmath +ctype +curl +dom +filter +hash \
-                    +iconv +json +mbstring +openssl +xml +mysql \
-                    +pdo +soap +xmlrpc +xml +zip +fpm`
-                );
-            } catch (e) {
-                output.fail(e.message)
-
-                logger.error(
-                    'Unexpected error while installing the PHP.',
-                    'See ERROR log above.'
-                );
-
-                return false
-            }
-            output.succeed('PHP compiled successfully!')
-        }
+        await execAsync(`ls ${phpBinPath}`)
+        return true
     } catch (e) {
-        output.fail(e.message)
-
-        logger.error(
-            'Unexpected error while compiling and building PHP.',
-            'See ERROR log above.'
-        );
         return false
     }
-    try {
-        // const usedPHPVersion = await execAsync('phpbrew info | grep "PHP Version"')
+}
 
+const usePHPVersion = async ({ output }) => {
+    try {
         const usedPHPVersion = await execAsync('php -v | grep ^PHP')
         if (!requiredPHPVersionRegex.test(usedPHPVersion)) {
             // Sometimes a bug happens and it returns an error
-            await execAsync(`phpbrew use php-${requiredPHPVersion}`);
-            output.info(`Using php version ${requiredPHPVersion}`)
+            await execAsync(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion}`);
         }
     } catch (e) {
         output.fail(e.message)
@@ -84,15 +37,99 @@ const installPHP = async () => {
         return false
     }
 
-    output.start('Installing gd PHP extension')
-    await execAsyncWithCallback('phpbrew ext install gd', {
-        callback: logger.log
-    });
+    output.succeed(`Using php version ${requiredPHPVersion}`)
 
-    output.start('Installing intl PHP extension')
-    await execAsync('phpbrew ext install intl');
+    return true
+}
 
-    output.succeed('PHP installed!')
+const setupPHPExtensions = async ({ output }) => {
+    try {
+        const loadedPHPModules = await execAsync(`${phpBinPath} -m`)
+        // console.log(loadedPHPModules)
+        const missingPHPExtensions = phpExtensions.filter(ext => !loadedPHPModules.includes(ext))
+        if (missingPHPExtensions.length > 0) {
+            for (const extension of missingPHPExtensions) {
+                output.start(`Installing PHP extension ${extension}`)
+                await execAsync(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension}`)
+                output.succeed(`PHP extension ${extension} installed!`)
+            }
+        }
+    } catch (e) {
+        output.fail(e.message)
+
+        logger.error(
+            'Unexpected error while setting up PHP extensions.',
+            'See ERROR log above.'
+        );
+    }
+
+    output.succeed('PHP extensions are installed!')
+}
+
+const buildPHP = async ({ output }) => {
+    try {
+        await execAsyncWithCallback('phpbrew -v')
+    } catch (e) {
+        if (/phpbrew: command not found/.test(e.message)) {
+            output.fail(`Package ${ logger.style.misc('phpbrew') } is not installed!.\nTo install, follow this instructions: https://github.com/phpbrew/phpbrew/wiki/Quick-Start`)
+
+            return false
+        }
+    }
+
+    try {
+        const PHPBrewVersions = await execAsyncWithCallback('phpbrew list')
+
+        if (!requiredPHPVersionRegex.test(PHPBrewVersions)) {
+            output.start(`Compiling and building PHP-${requiredPHPVersion}...`)
+            await execAsyncWithCallback(
+                `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
+                +bz2 +bcmath +ctype +curl +dom +filter +hash \
+                +iconv +json +mbstring +openssl +xml +mysql \
+                +pdo +soap +xmlrpc +xml +zip +fpm`,
+                {
+                    callback: line => {
+                        if (line.includes('Building...')) {
+                            output.text = `Building PHP-${requiredPHPVersion}...`
+                        }
+                        if (line.includes('Installing...')) {
+                            output.text = `Installing PHP-v${requiredPHPVersion}...`
+                        }
+                    }
+                }
+            );
+        }
+        output.succeed('PHP compiled successfully!')
+    } catch (e) {
+        output.fail(e.message)()
+
+        logger.error(e)
+        logger.error(
+            'Unexpected error while compiling and building PHP.',
+            'See ERROR log above.'
+        );
+        return false
+    }
+    return true
+}
+
+const installPHP = async () => {
+    const output = ora('Checking PHP...').start()
+
+    const hasPHPInGlobalCache = await checkPHPInGlobalCache()
+
+    if (!hasPHPInGlobalCache) {
+        output.warn(`Required PHP version ${requiredPHPVersion} not found in cache, starting build...`)
+        output.info('This operation can take some time')
+        const buildPHPOk = await buildPHP({ output })
+        if (!buildPHPOk) {
+            return false
+        }
+    }
+    await usePHPVersion({ output })
+    await setupPHPExtensions({ output })
+
+    output.stop()
 
     return true
 };

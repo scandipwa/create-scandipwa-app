@@ -8,33 +8,28 @@ const execAsync = (command, options) =>
 })
 // capture = don't output stdout/stderr, return with promises response
 // echo = capture + output in the end
-const execAsyncWithCallback = (command, { capture = false, echo = false, callback = () => {} } = {}) => {
-    const rootCommand = command.split(' ').shift()
-    const commandArgs = command.split(' ').slice(1)
+const execAsyncWithCallback = (command, { callback = () => {} } = {}) => {
     const childProcess = spawn(
-        rootCommand,
-        commandArgs,
+        'bash',
+        ['-c', command],
         {
-            stdio: capture ? 'pipe' : 'inherit'
+            stdio: 'pipe',
         }
     );
     return new Promise((resolve, reject) => {
         let stdout = '';
-        if (capture) {
-            childProcess.stdout.on('data', (data) => {
-                stdout += data;
-                callback(data)
-            });
-            childProcess.stderr.on('data', (data) => {
-                stdout += data;
-                callback(data)
-            });
-        }
+        childProcess.stdout.on('data', (data) => {
+            stdout += data;
+            callback(data.toString())
+        });
+        childProcess.stderr.on('data', (data) => {
+            stdout += data;
+            callback(data.toString())
+        });
         childProcess.on('error', function (error) {
             reject(error);
         });
         childProcess.on('close', function (code) {
-            if (capture && echo) console.log(stdout);
             if (code > 0) {
                 reject(stdout);
             } else {

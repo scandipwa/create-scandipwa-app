@@ -12,7 +12,7 @@ module.exports = async () => {
     const dockerVersionOutput = await execAsync('docker -v')
     if (/Docker version/.test(dockerVersionOutput)) {
         const dockerVersion = dockerVersionOutput.match(/Docker version ([\d.]+)/)[1]
-        output.succeed(`Docker version ${dockerVersion} installed!`)
+        output.succeed(`Using docker version ${dockerVersion}`)
         return true
     }
 

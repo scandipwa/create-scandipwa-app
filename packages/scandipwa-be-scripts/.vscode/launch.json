@@ -5,12 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Attach to Node",
+            "protocol": "auto",
+            "request": "attach",
+            "type": "node",
+            "localRoot": "${workspaceFolder}"
+        },
+        {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "name": "Launch Node",
+            "skipFiles": ["<node_internals>/**"],
             "program": "${workspaceFolder}/index.js"
         }
     ]
