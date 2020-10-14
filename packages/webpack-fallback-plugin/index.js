@@ -94,23 +94,19 @@ class FallbackPlugin {
      * @memberof FallbackPlugin
      */
     getRelativePathname(pathname) {
-        const relativeSourcePathname = pathname.split('src/')[1];
+        const isSrc = /\/src\//.test(pathname);
+        const prefix = isSrc ? 'src' : 'public';
+        const relativePathname =pathname.split(`${prefix}/`)[1];
         const extension = this.getBelongingExtension(pathname);
 
         if (extension) {
             // If this is extension, the path to override files can be located
             // in src/<EXTENSION NAME>/component/etc -> use it
-            return `src/${ extension }/${ relativeSourcePathname }`;
+            return path.join(prefix, extension, relativePathname);
         }
 
-        if (relativeSourcePathname) {
-            return `src/${ relativeSourcePathname}`;
-        }
-
-        const relativePublicPathname = pathname.split('public/')[1];
-
-        if (relativePublicPathname) {
-            return `pubic/${ relativePublicPathname }`;
+        if (relativePathname) {
+            return path.join(prefix, relativePathname);
         }
 
         return '';
