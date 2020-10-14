@@ -30,6 +30,8 @@
 - Implement PHP-based application serving (to work with M2)
 - Fix port is allocated issue (app does not self-restart)
 
+> **IMPORTANT**: add notice for not enabled, but used extensions
+
 ## Publish instructions
 
 - Run `yarn compile:lockfile`, commit result
