@@ -32,6 +32,8 @@
 
 > **IMPORTANT**: add notice for not enabled, but used extensions
 
+- Implement custom logger (after compile)
+
 ## Publish instructions
 
 - Run `yarn compile:lockfile`, commit result
