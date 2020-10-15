@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
-    "version": "1.0.3-alpha.4",
+    "version": "1.0.3-alpha.5",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
@@ -19,7 +19,7 @@
         "@scandipwa/scandipwa-dev-utils": "^0.0.8-alpha.0",
         "@scandipwa/scandipwa-extensibility": "^0.0.2",
         "@scandipwa/webpack-extension-import-loader": "^0.0.4-alpha.1",
-        "@scandipwa/webpack-fallback-plugin": "^1.0.2-alpha.1",
+        "@scandipwa/webpack-fallback-plugin": "^1.0.2-alpha.2",
         "@scandipwa/webpack-i18n-plugin": "^0.0.8-alpha.0",
         "babel-plugin-module-resolver": "^4.0.0",
         "babel-plugin-transform-rebem-jsx": "^0.3.3",
