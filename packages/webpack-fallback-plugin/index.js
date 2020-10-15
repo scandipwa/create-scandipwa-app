@@ -96,7 +96,7 @@ class FallbackPlugin {
     getRelativePathname(pathname) {
         const isSrc = /\/src\//.test(pathname);
         const prefix = isSrc ? 'src' : 'public';
-        const relativePathname =pathname.split(`${prefix}/`)[1];
+        const relativePathname = pathname.split(`${prefix}/`)[1];
         const extension = this.getBelongingExtension(pathname);
 
         if (extension) {

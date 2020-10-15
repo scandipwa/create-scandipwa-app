@@ -70,6 +70,7 @@ module.exports = () => {
                 [
                     'module-resolver', {
                         root: 'src',
+                        loglevel: 'silent',
                         alias
                     }
                 ]
