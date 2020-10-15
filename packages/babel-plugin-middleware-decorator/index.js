@@ -2,6 +2,20 @@
 // TODO: comment
 // TODO: add examples of transformations
 
+const path = require('path');
+const { getParentThemePaths } = require('@scandipwa/scandipwa-dev-utils/parent-theme');
+const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
+
+const allowedPaths = [
+    ...getParentThemePaths(),
+    process.cwd(),
+    ...extensions.map(({ packagePath }) => packagePath)
+].reduce((acc, pathname) => [
+    ...acc,
+    path.join(pathname, 'src'),
+    path.join(pathname, 'public')
+], []);
+
 const namespaceExtractor = /@namespace +(?<namespace>[^ ]+)/;
 
 const extractNamespaceFromComments = (comments = []) => comments.reduce(
@@ -57,11 +71,29 @@ const addSuperToConstructor = (path, types) => {
     constructor.get('body').unshiftContainer('body', superCall);
 };
 
+const isMustProcessNamespace = (state) => {
+    const { filename } = state.file.opts;
+
+    for (let i = 0; i < allowedPaths.length; i++) {
+        const allowedPath = allowedPaths[i];
+
+        if (filename.includes(allowedPath)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 module.exports = ({ types, parse }) => ({
     name: 'middleware-decorators',
     visitor: {
         // Transform leading comments of anonymous arrow functions
-        ArrowFunctionExpression: (path) => {
+        ArrowFunctionExpression: (path, state) => {
+            if (!isMustProcessNamespace(state)) {
+                return;
+            }
+
             const namespace = getNamespaceFromPath(path);
             if (!namespace) {
                 return;
@@ -75,7 +107,11 @@ module.exports = ({ types, parse }) => ({
             );
         },
 
-        VariableDeclaration: (path) => {
+        VariableDeclaration: (path, state) => {
+            if (!isMustProcessNamespace(state)) {
+                return;
+            }
+
             const namespace = getNamespaceFromPath(path);
             if (!namespace) {
                 return;
@@ -92,7 +128,11 @@ module.exports = ({ types, parse }) => ({
             );
         },
 
-        FunctionDeclaration: (path) => {
+        FunctionDeclaration: (path, state) => {
+            if (!isMustProcessNamespace(state)) {
+                return;
+            }
+
             const namespace = getNamespaceFromPath(path);
             if (!namespace) {
                 return;
@@ -120,7 +160,11 @@ module.exports = ({ types, parse }) => ({
             path.replaceWith(declaration);
         },
 
-        ClassDeclaration: (path) => {
+        ClassDeclaration: (path, state) => {
+            if (!isMustProcessNamespace(state)) {
+                return;
+            }
+
             const namespace = getNamespaceFromPath(path);
 
             if (!namespace) {
