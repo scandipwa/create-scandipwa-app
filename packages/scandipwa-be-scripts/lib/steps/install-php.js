@@ -19,29 +19,6 @@ const checkPHPInGlobalCache = async () => {
     }
 }
 
-const usePHPVersion = async ({ output }) => {
-    try {
-        const usedPHPVersion = await execAsync('php -v | grep ^PHP')
-        if (!requiredPHPVersionRegex.test(usedPHPVersion)) {
-            // Sometimes a bug happens and it returns an error
-            await execAsync(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion}`);
-        }
-    } catch (e) {
-        output.fail(e.message)
-
-        logger.error(
-            'Unexpected error while switching to required PHP.',
-            'See ERROR log above.'
-        );
-
-        return false
-    }
-
-    output.succeed(`Using php version ${requiredPHPVersion}`)
-
-    return true
-}
-
 const setupPHPExtensions = async ({ output }) => {
     try {
         const loadedPHPModules = await execAsync(`${phpBinPath} -m`)
@@ -101,7 +78,7 @@ const buildPHP = async ({ output }) => {
         }
         output.succeed('PHP compiled successfully!')
     } catch (e) {
-        output.fail(e.message)()
+        output.fail(e.message)
 
         logger.error(e)
         logger.error(
@@ -126,7 +103,7 @@ const installPHP = async () => {
             return false
         }
     }
-    await usePHPVersion({ output })
+
     await setupPHPExtensions({ output })
 
     output.stop()

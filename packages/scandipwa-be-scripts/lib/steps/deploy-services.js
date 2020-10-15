@@ -1,9 +1,9 @@
-const path = require('path');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const ora = require('ora');
 const getPorts = require('../util/get-ports')
 const { execAsync } = require('../util/exec-async');
-const { docker } = require('../config')
+const { docker, dirName } = require('../config');
+const getRunningContainers = require('../util/get-running-containers');
 
 const dockerRun = (options) => {
     const {
@@ -13,7 +13,8 @@ const dockerRun = (options) => {
         env = {},
         image,
         restart,
-        network
+        network,
+        name
     } = options;
 
     const restartArg = restart && `--restart ${ restart }`;
@@ -22,12 +23,12 @@ const dockerRun = (options) => {
     const portsArgs = ports.map((port) => `-p ${ port }`).join(' ');
     const mountsArgs = mounts.map((mount) => `--mount ${ mount }`).join(' ');
     const envArgs = Object.entries(env).map(([key, value]) => `--env ${ key }=${ value }`).join(' ');
+    const nameArg = name && `--name ${name}`
 
-    return execAsync(['docker', 'run', '-d', networkArg, restartArg, exposeArgs, portsArgs, mountsArgs, envArgs, image].filter(Boolean).join(' '));
+    return execAsync(['docker', 'run', '-d', nameArg, networkArg, restartArg, exposeArgs, portsArgs, mountsArgs, envArgs, image].filter(Boolean).join(' '));
 };
 
 const deployDockerNetwork = async ({ output }) => {
-    // const output = ora('Deploying network...').start()
     try {
         const networkList = await execAsync('docker network ls')
 
@@ -55,7 +56,7 @@ const deployDockerVolumes = async ({ output }) => {
     try {
         const volumeList = await execAsync('docker volume ls')
 
-        const missingVolumes = docker.volumeList.filter(volume => !volumeList.includes(volume))
+        const missingVolumes = docker.volumeList.filter(volume => !volumeList.includes(`${dirName}_${volume}`))
         if (missingVolumes.length > 0) {
             const isPlural = missingVolumes.length > 1
             output.warn(`Volume${isPlural ? 's' : ''} ${missingVolumes.join(', ')} ${isPlural ? 'are' : 'is'} missing. Creating them...`)
@@ -77,37 +78,48 @@ const deployDockerVolumes = async ({ output }) => {
     return true
 }
 
-const deployDockerContainers = async ({ output }) => {
+const deployDockerContainers = async ({ output, ports }) => {
     output.start('Running docker containers');
 
-    const ports = await getPorts();
+    try {
+        const containerList = await getRunningContainers()
+
+        const missingContainers = docker.containerList
+            .filter(container => !containerList.includes(container().name))
+
+        if (missingContainers.length > 0) {
+            const isPlural = missingContainers.length > 1
+            if (missingContainers.length === containerList.length) {
+                output.warn(`Container${isPlural ? 's' : ''} ${missingContainers.map(container => container().name).join(', ')} ${isPlural ? 'are' : 'is'} missing. Restarting project...`)
+
+                const containersToStop = docker.containerList
+                    .filter(container => !missingContainers.includes(container().name))
+                    .map(container => container().name)
+
+                await execAsync(`docker container stop ${containersToStop.join(' ')}`)
+            } else {
+                output.start('No containers running, deploying them...')
+            }
+        } else {
+            output.succeed('Containers already running!')
+            return true
+        }
+    } catch (e) {
+        output.fail('Docker stop containers error');
+
+        logger.log(e)
+
+        logger.error('Failed to stop containers. See ERROR log above');
+        return false
+    }
 
     try {
         await Promise.all([
             Promise.all(
                 [
                 // Varnish+Nginx
-                dockerRun({
-                    expose: [80],
-                    mount: [`type=bind,source=${ path.join(process.cwd(), 'node_modules', '.cache', 'nginx') },target=/etc/nginx/conf.d/`],
-                    restart: 'unless-stopped',
-                    // TODO: use connect instead
-                    // network: 'custom-network',
-                    image: 'nginx:1.18.0'
-                }),
-                dockerRun({
-                    expose: [80],
-                    ports: [`${ports.appPort}:80`],
-                    mount: [
-                        `type=bind,
-                        source=${ path.join(process.cwd(), 'node_modules', '.cache', 'varnish', 'default.vcl') },
-                        target=/etc/varnish/default.vcl`
-                    ],
-                    restart: 'unless-stopped',
-                    // TODO: use connect instead
-                    // network: 'custom-network',
-                    image: 'scandipwa/varnish:latest'
-                }),
+                dockerRun(docker.container.nginx()),
+                dockerRun(docker.container.varnish({ port: ports.app })),
                 // Alias - just allows to use different name for service in network,
                 // while link links the container to another one (not sure if by name or not)
                 // TODO: I think they should run after image creation,
@@ -116,43 +128,11 @@ const deployDockerContainers = async ({ output }) => {
                 ]
             ),
             // Redis
-            dockerRun({
-                ports: [`${ports.redisPort}`],
-                mount: ['source=redis-data,target=/data'],
-                // TODO: use connect instead
-                // network: 'custom-network',
-                image: 'redis:alpine'
-            }),
+            dockerRun(docker.container.redis({ port: ports.redis })),
             // MySQL
-            dockerRun({
-                expose: ['3306'],
-                ports: [`${ports.mysqlPort}:3306`],
-                mount: ['source=mysql-data,target=/var/lib/mysql'],
-                env: {
-                    MYSQL_PORT: 3306,
-                    MYSQL_ROOT_PASSWORD: 'scandipwa',
-                    MYSQL_USER: 'magento',
-                    MYSQL_PASSWORD: 'magento',
-                    MYSQL_DATABASE: 'magento'
-                },
-                // TODO: use connect instead
-                // network: 'custom-network',
-                image: 'mysql:5.7'
-            }),
+            dockerRun(docker.container.mysql({ port: ports.mysql })),
             // Elasticsearch
-            dockerRun({
-                ports: [`${ports.ESPort}:9200`],
-                mount: ['source=elasticsearch-data,target=/usr/share/elasticsearch/data'],
-                env: {
-                    'bootstrap.memory_lock': true,
-                    'xpack.security.enabled': false,
-                    'discovery.type': 'single-node',
-                    ES_JAVA_OPTS: '"-Xms512m -Xmx512m"'
-                },
-                // TODO: use connect instead
-                // network: 'custom-network',
-                image: 'docker.elastic.co/elasticsearch/elasticsearch:7.6.2'
-            })
+            dockerRun(docker.container.elasticsearch({ port: ports.elasticsearch }))
         ]);
     } catch (e) {
         output.fail('Docker deploy containers error');

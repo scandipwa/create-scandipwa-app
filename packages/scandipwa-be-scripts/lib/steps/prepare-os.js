@@ -1,7 +1,7 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const semver = require('semver');
 const os = require('os');
-const installDeps = require('./install-deps');
+const installBrew = require('./install-brew');
 const installDocker = require('./install-docker');
 const installPHP = require('./install-php');
 
@@ -25,7 +25,7 @@ const validateOS = async () => {
             return false;
         }
 
-        const homeBrewOk = await installDeps.darwin.installBrew()
+        const homeBrewOk = await installBrew()
         if (!homeBrewOk) {
             process.exit(1)
         }

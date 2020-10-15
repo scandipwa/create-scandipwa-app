@@ -3,11 +3,11 @@ const getPort = require('get-port');
 
 // Map of default ports (key:value)
 const defaultPorts = {
-    appPort: 80,
-    fpmPort: 9000,
-    mysqlPort: 3306,
-    redisPort: 6379,
-    ESPort: 9200
+    app: 80,
+    fpm: 9000,
+    mysql: 3306,
+    redis: 6379,
+    elasticsearch: 9200
 };
 
 const getPorts = async () => {
