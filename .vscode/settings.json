@@ -8,5 +8,8 @@
         "REBEM",
         "Scandiweb",
         "scandipwa"
-    ]
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }

@@ -1,11 +1,15 @@
+/* eslint-disable max-len */
 const { exec, spawn } = require('child_process');
 
-const execAsync = (command, options) =>
-  new Promise((resolve, reject) => {
-    exec(command, options, (err, stdout) =>
-      err ? reject(err) : resolve(stdout)
-    )
-})
+/**
+ * Execute bash command
+ * @param {String} command Bash command
+ * @param {Object} options Child process exec options ([docs](https://nodejs.org/dist/latest-v14.x/docs/api/child_process.html#child_process_child_process_exec_command_options_callback))
+ * @returns {Promise<String>}
+ */
+const execAsync = (command, options) => new Promise((resolve, reject) => {
+    exec(command, options, (err, stdout) => (err ? reject(err) : resolve(stdout)));
+});
 // capture = don't output stdout/stderr, return with promises response
 // echo = capture + output in the end
 const execAsyncWithCallback = (command, { callback = () => {} } = {}) => {
@@ -13,23 +17,24 @@ const execAsyncWithCallback = (command, { callback = () => {} } = {}) => {
         'bash',
         ['-c', command],
         {
-            stdio: 'pipe',
+            stdio: 'pipe'
         }
     );
+
     return new Promise((resolve, reject) => {
         let stdout = '';
         childProcess.stdout.on('data', (data) => {
             stdout += data;
-            callback(data.toString())
+            callback(data.toString());
         });
         childProcess.stderr.on('data', (data) => {
             stdout += data;
-            callback(data.toString())
+            callback(data.toString());
         });
-        childProcess.on('error', function (error) {
+        childProcess.on('error', (error) => {
             reject(error);
         });
-        childProcess.on('close', function (code) {
+        childProcess.on('close', (code) => {
             if (code > 0) {
                 reject(stdout);
             } else {
@@ -40,14 +45,14 @@ const execAsyncWithCallback = (command, { callback = () => {} } = {}) => {
 };
 
 const execAsyncBool = async (command, options) => {
-    const result = await execAsync(command, options)
+    const result = await execAsync(command, options);
     if (result.toString().trim() === '1') {
-        throw new Error('')
+        throw new Error('');
     }
-}
+};
 
 module.exports = {
     execAsync,
     execAsyncBool,
     execAsyncWithCallback
-}
+};

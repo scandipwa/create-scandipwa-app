@@ -5,7 +5,7 @@ const installBrew = require('./install-brew');
 const installDocker = require('./install-docker');
 const installPHP = require('./install-php');
 
-const supportedPlatforms = ['darwin', 'linux']
+const supportedPlatforms = ['darwin', 'linux'];
 
 const validateOS = async () => {
     if (!supportedPlatforms.includes(os.platform())) {
@@ -25,24 +25,25 @@ const validateOS = async () => {
             return false;
         }
 
-        const homeBrewOk = await installBrew()
+        const homeBrewOk = await installBrew();
         if (!homeBrewOk) {
-            process.exit(1)
+            process.exit(1);
         }
     }
 
-    const phpOk = await installPHP()
+    const phpOk = await installPHP();
 
     if (!phpOk) {
-        process.exit(1)
+        process.exit(1);
     }
 
     const dockerOk = await installDocker();
 
     if (!dockerOk) {
-        process.exit(1)
+        process.exit(1);
     }
 
+    return true;
 };
 
 module.exports = validateOS;

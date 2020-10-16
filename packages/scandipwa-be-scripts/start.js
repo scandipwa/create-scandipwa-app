@@ -3,7 +3,7 @@ const prepareOS = require('./lib/steps/prepare-os');
 const deployServices = require('./lib/steps/deploy-services');
 const getPorts = require('./lib/util/get-ports');
 
-async function bootstrap() {
+const start = async () => {
     // make sure deps are installed
     await prepareOS();
 
@@ -13,10 +13,10 @@ async function bootstrap() {
     await prepareFileSystem(ports);
 
     // startup docker services
-    await deployServices(ports)
+    await deployServices(ports);
 
     // startup app
     // await deployMagento()
-}
+};
 
-bootstrap()
+module.exports = start;
