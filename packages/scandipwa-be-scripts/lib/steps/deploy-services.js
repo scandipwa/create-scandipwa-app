@@ -1,6 +1,5 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const ora = require('ora');
-const getPorts = require('../util/get-ports')
 const { execAsync } = require('../util/exec-async');
 const { docker, dirName } = require('../config');
 const getRunningContainers = require('../util/get-running-containers');
@@ -28,6 +27,14 @@ const dockerRun = (options) => {
     return execAsync(['docker', 'run', '-d', nameArg, networkArg, restartArg, exposeArgs, portsArgs, mountsArgs, envArgs, image].filter(Boolean).join(' '));
 };
 
+const dockerStart = ({ name } = {}) => {
+    return execAsync(['docker', 'container', 'start', name].join(' '))
+}
+
+const dockerStop = ({ name } = {}) => {
+    return execAsync(['docker', 'container', 'stop', name].join(' '))
+}
+
 const deployDockerNetwork = async ({ output }) => {
     try {
         const networkList = await execAsync('docker network ls')
@@ -54,9 +61,10 @@ const deployDockerNetwork = async ({ output }) => {
 
 const deployDockerVolumes = async ({ output }) => {
     try {
-        const volumeList = await execAsync('docker volume ls')
+        const volumeList = await execAsync('docker volume ls -q')
 
-        const missingVolumes = docker.volumeList.filter(volume => !volumeList.includes(`${dirName}_${volume}`))
+        const missingVolumes = docker.volumeList
+            .filter(volume => !volumeList.includes(volume))
         if (missingVolumes.length > 0) {
             const isPlural = missingVolumes.length > 1
             output.warn(`Volume${isPlural ? 's' : ''} ${missingVolumes.join(', ')} ${isPlural ? 'are' : 'is'} missing. Creating them...`)
@@ -85,20 +93,30 @@ const deployDockerContainers = async ({ output, ports }) => {
         const containerList = await getRunningContainers()
 
         const missingContainers = docker.containerList
-            .filter(container => !containerList.includes(container().name))
+            .filter(container => !containerList.some(list => list.includes(container().name)))
 
         if (missingContainers.length > 0) {
             const isPlural = missingContainers.length > 1
             if (missingContainers.length === containerList.length) {
-                output.warn(`Container${isPlural ? 's' : ''} ${missingContainers.map(container => container().name).join(', ')} ${isPlural ? 'are' : 'is'} missing. Restarting project...`)
+                output.warn(`Container${isPlural ? 's' : ''} ${missingContainers.map(container => container().name).join(', ')} ${isPlural ? 'are' : 'is'} missing. Restarting them...`)
 
                 const containersToStop = docker.containerList
                     .filter(container => !missingContainers.includes(container().name))
                     .map(container => container().name)
 
-                await execAsync(`docker container stop ${containersToStop.join(' ')}`)
-            } else {
-                output.start('No containers running, deploying them...')
+                try {
+                    await dockerStop({ name: containersToStop.join(' ') })
+                    await dockerStart({ name: docker.containerList.map(container => container().name ).join(' ') })
+
+                    return true
+                } catch (e) {
+                    output.fail('Docker containers restart error');
+
+                    logger.log(e)
+
+                    logger.error('Failed to restart containers. See ERROR log above');
+                    return false
+                }
             }
         } else {
             output.succeed('Containers already running!')
@@ -113,26 +131,63 @@ const deployDockerContainers = async ({ output, ports }) => {
         return false
     }
 
+    output.start('No containers running, deploying them...')
+
     try {
+        const allContainerList = await execAsync('docker container ls -a')
+
+        const existingContainers = docker.containerList
+            .filter(container => allContainerList.includes(container().name))
+            .map(container => container().name)
+
+        if (existingContainers.length > 0) {
+            output.text = 'Starting containers...'
+            if (existingContainers.length === docker.containerList.length) {
+                await dockerStart({ name: existingContainers.join(' ') })
+                output.succeed('Containers started up!')
+                return true
+            }
+
+            // only some containers are present
+            const containersToRun = docker.containerList
+                .filter(container => !allContainerList.includes(container().name))
+
+            await Promise.all(containersToRun.map(container => dockerRun(container({ ports }))))
+
+            output.succeed('Containers started up!')
+            return true
+        }
+    } catch (e) {
+        output.fail('Docker start containers error');
+
+        logger.log(e)
+
+        logger.error('Failed to start containers. See ERROR log above');
+        return false}
+
+    try {
+
+        await dockerRun(docker.container.nginx())
+        await dockerRun(docker.container.varnish({ ports }))
         await Promise.all([
-            Promise.all(
-                [
+            // Promise.all(
+            //     [
                 // Varnish+Nginx
-                dockerRun(docker.container.nginx()),
-                dockerRun(docker.container.varnish({ port: ports.app })),
+            //     dockerRun(docker.container.nginx()),
+            //     dockerRun(docker.container.varnish({ port: ports.app })),
                 // Alias - just allows to use different name for service in network,
                 // while link links the container to another one (not sure if by name or not)
                 // TODO: I think they should run after image creation,
                 // execAsync('docker network connect --alias nginx custom-network name_of_nginx_container'),
                 // execAsync('docker network connect --link nginx:nginx custom-network varnish')
-                ]
-            ),
+            //     ]
+            // ),
             // Redis
-            dockerRun(docker.container.redis({ port: ports.redis })),
+            dockerRun(docker.container.redis({ ports })),
             // MySQL
-            dockerRun(docker.container.mysql({ port: ports.mysql })),
+            dockerRun(docker.container.mysql({ ports })),
             // Elasticsearch
-            dockerRun(docker.container.elasticsearch({ port: ports.elasticsearch }))
+            dockerRun(docker.container.elasticsearch({ ports }))
         ]);
     } catch (e) {
         output.fail('Docker deploy containers error');

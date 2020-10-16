@@ -39,9 +39,9 @@ const dockerNginxContainer = () => ({
     name: `${dirName}_nginx`
 })
 
-const dockerVarnishContainer = ({ port = 0 } = {}) => ({
+const dockerVarnishContainer = ({ ports = {} } = {}) => ({
     expose: [80],
-    ports: [`${port}:80`],
+    ports: [`${ports.app || 0}:80`],
     mount: [`type=bind,source=${path.join(cachePath, 'varnish', 'default.vcl')},target=/etc/varnish/default.vcl`],
     restart: 'unless-stopped',
     // TODO: use connect instead
@@ -50,8 +50,8 @@ const dockerVarnishContainer = ({ port = 0 } = {}) => ({
     name: `${dirName}_varnish`
 })
 
-const dockerRedisContainer = ({ port = 0 } = {}) => ({
-    ports: [port],
+const dockerRedisContainer = ({ ports = {} } = {}) => ({
+    ports: [ports.redis],
     mount: [`source=${dockerRedisVolume},target=/data`],
     // TODO: use connect instead
     network:dockerNetworkName,
@@ -59,9 +59,9 @@ const dockerRedisContainer = ({ port = 0 } = {}) => ({
     name: `${dirName}_redis`
 })
 
-const dockerMysqlContainer = ({ port = 0 } = {}) => ({
+const dockerMysqlContainer = ({ ports = {} } = {}) => ({
     expose: ['3306'],
-    ports: [`${port}:3306`],
+    ports: [`${ports.mysql}:3306`],
     mount: [`source=${dockerMysqlVolume},target=/var/lib/mysql`],
     env: {
         MYSQL_PORT: 3306,
@@ -76,8 +76,8 @@ const dockerMysqlContainer = ({ port = 0 } = {}) => ({
     name: `${dirName}_mysql`
 })
 
-const dockerElasticsearchContainer = ({ port = 0 } = {}) => ({
-    ports: [`${port}:9200`],
+const dockerElasticsearchContainer = ({ ports = {} } = {}) => ({
+    ports: [`${ports.elasticsearch}:9200`],
     mount: [`source=${dockerElasticsearchVolume},target=/usr/share/elasticsearch/data`],
     env: {
         'bootstrap.memory_lock': true,

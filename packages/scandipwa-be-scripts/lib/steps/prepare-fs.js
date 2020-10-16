@@ -37,7 +37,7 @@ const createCacheFolder = async ({ output }) => {
 
 const checkNginxConfig = async () => {
     try {
-        await fs.promises.access(path.join(cachePath, 'nginx', 'magento.conf'), fs.constants.F_OK)
+        await fs.promises.access(path.join(cachePath, 'nginx', 'nginx.conf'), fs.constants.F_OK)
         return true
     } catch {
         return false
@@ -51,7 +51,7 @@ const createNginxConfig = async ({ output, ports }) => {
 
     try {
         await createDirSafe(path.join(cachePath, 'nginx'))
-        await fs.promises.writeFile(path.join(cachePath, 'nginx', 'magento.conf'), nginxConfig, { encoding: 'utf-8'})
+        await fs.promises.writeFile(path.join(cachePath, 'nginx', 'nginx.conf'), nginxConfig, { encoding: 'utf-8'})
         output.succeed('Nginx config created!')
         return true
     } catch (e) {
