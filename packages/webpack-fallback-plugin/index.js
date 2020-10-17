@@ -132,13 +132,16 @@ class FallbackPlugin {
             return fs.existsSync(`${ pathname }.scss`);
         }
 
+        // TODO: try require.resolve here
         // we do not know at this point if this is:
-        // .ts, .jsx or /index.js, /index.ts => check all
+        // .ts, .tsx, .jsx or /index.js, /index.ts, /index.tsx => check all
         return (
             fs.existsSync(`${ pathname }.js`)
             || fs.existsSync(`${ pathname }.ts`)
+            || fs.existsSync(`${ pathname }.tsx`)
             || fs.existsSync(`${ pathname }/index.js`)
             || fs.existsSync(`${ pathname }/index.ts`)
+            || fs.existsSync(`${ pathname }/index.tsx`)
         );
     }
 
