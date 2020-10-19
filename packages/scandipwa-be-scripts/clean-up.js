@@ -101,10 +101,10 @@ const cleanUp = async () => {
     }
 
     try {
-        const appFolderExists = await pathExists('app');
+        const appFolderExists = await pathExists('src');
         if (appFolderExists) {
             output.start('Removing app...');
-            await execAsync('rm -rf app');
+            await execAsync('rm -rf src');
         }
         output.succeed('App removed!');
     } catch (e) {

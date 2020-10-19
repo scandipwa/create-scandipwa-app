@@ -6,6 +6,7 @@ const ora = require('ora');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const createDirSafe = require('../util/create-dir-safe');
 const pathExists = require('../util/path-exists');
+const installMagento = require('./install-magento');
 
 const checkCacheFolder = async () => pathExists(cachePath);
 
@@ -67,18 +68,24 @@ async function prepareFileSystem(ports) {
         process.exit(1);
     }
 
-    const magentoConfigOk = await checkConfigPath({
-        configPathname: path.join(process.cwd(), 'app', 'etc', 'env.php'),
-        dirName: path.join(process.cwd(), 'app', 'etc'),
-        template: path.join(templatePath, 'magento-env.template.php'),
-        name: 'App',
-        output,
-        ports
-    });
+    const magentoOk = await installMagento();
 
-    if (!magentoConfigOk) {
+    if (!magentoOk) {
         process.exit(1);
     }
+
+    // const magentoConfigOk = await checkConfigPath({
+    //     configPathname: path.join(process.cwd(), 'src', 'app', 'etc', 'env.php'),
+    //     dirName: path.join(process.cwd(), 'src', 'app', 'etc'),
+    //     template: path.join(templatePath, 'magento-env.template.php'),
+    //     name: 'App',
+    //     output,
+    //     ports
+    // });
+
+    // if (!magentoConfigOk) {
+    //     process.exit(1);
+    // }
 
     const phpConfigOk = await checkConfigPath({
         configPathname: path.join(cachePath, 'php', 'php.ini'),

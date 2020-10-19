@@ -4,6 +4,7 @@ const os = require('os');
 const installBrew = require('./install-brew');
 const installDocker = require('./install-docker');
 const installPHP = require('./install-php');
+const installComposer = require('./install-composer');
 
 const supportedPlatforms = ['darwin', 'linux'];
 
@@ -34,6 +35,12 @@ const validateOS = async () => {
     const phpOk = await installPHP();
 
     if (!phpOk) {
+        process.exit(1);
+    }
+
+    const phpComposerOk = await installComposer();
+
+    if (!phpComposerOk) {
         process.exit(1);
     }
 

@@ -131,7 +131,7 @@ const requiredPHPVersion = '7.3.22';
 const requiredPHPVersionRegex = new RegExp(requiredPHPVersion);
 
 // php bin path
-const phpBinPath = `~/.phpbrew/php/php-${requiredPHPVersion}/bin/php`;
+const phpBinPath = `$HOME/.phpbrew/php/php-${requiredPHPVersion}/bin/php`;
 
 // php extensions
 const phpExtensions = ['gd', 'intl'];
@@ -158,5 +158,10 @@ module.exports = {
         requiredPHPVersionRegex,
         phpBinPath,
         phpExtensions
+    },
+    composer: {
+        composerDirPath: path.join(cachePath, 'composer'),
+        composerBinPath: path.join(cachePath, 'composer', 'composer.phar'),
+        composerComposerSetupPath: path.join(cachePath, 'composer-setup.php')
     }
 };

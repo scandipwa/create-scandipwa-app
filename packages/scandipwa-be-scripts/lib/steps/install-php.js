@@ -108,7 +108,7 @@ const installPHP = async () => {
             return false;
         }
     } else {
-        output.succeed(`Using PHP version ${requiredPHPVersion}!`);
+        output.succeed(`Using PHP version ${requiredPHPVersion}`);
     }
 
     await setupPHPExtensions({ output });
