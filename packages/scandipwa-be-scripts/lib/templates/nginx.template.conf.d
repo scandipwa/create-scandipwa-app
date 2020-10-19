@@ -5,7 +5,7 @@ real_ip_recursive on;
 
 upstream fastcgi_backend {
   # use tcp connection
-  server app:<%= it.port %>;
+  server app:<%= it.ports.fpm %>;
 }
 
 server {

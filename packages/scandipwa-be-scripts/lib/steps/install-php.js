@@ -33,6 +33,8 @@ const setupPHPExtensions = async ({ output }) => {
                 await execAsync(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension}`);
                 output.succeed(`PHP extension ${extension} installed!`);
             }
+
+            output.succeed('PHP extensions are installed!');
         }
     } catch (e) {
         output.fail(e.message);
@@ -42,8 +44,6 @@ const setupPHPExtensions = async ({ output }) => {
             'See ERROR log above.'
         );
     }
-
-    output.succeed('PHP extensions are installed!');
 };
 
 const buildPHP = async ({ output }) => {
