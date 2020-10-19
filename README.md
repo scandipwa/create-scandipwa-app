@@ -33,6 +33,8 @@
 > **IMPORTANT**: add notice for not enabled, but used extensions
 
 - Implement custom logger (after compile)
+- Add support for TypeScript in ESLint
+- Move eslint dependencies to the plugin module
 
 ## Publish instructions
 

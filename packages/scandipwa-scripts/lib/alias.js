@@ -99,6 +99,7 @@ const { parentThemeAliases } = Object.entries(aliasMap).reduceRight(
 const jsConfig = {
     compilerOptions: {
         baseUrl: './',
+        jsx: 'react',
         paths: {
             ...parentThemeAliases,
             ...preferenceAliases
