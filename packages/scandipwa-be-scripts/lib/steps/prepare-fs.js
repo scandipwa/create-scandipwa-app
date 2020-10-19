@@ -14,78 +14,34 @@ const createCacheFolder = async ({ output }) => {
     output.succeed('Cache folder created!');
 };
 
-const checkMagentoConfig = async () => pathExists(path.join(process.cwd(), 'app', 'etc', 'env.php'));
+const checkConfigPath = async ({
+    configPathname, dirName, template, ports, name, output
+}) => {
+    const pathOk = await pathExists(configPathname);
 
-const createMagentoConfig = async ({ output, ports }) => {
-    await createDirSafe(path.join(process.cwd(), 'app', 'etc'));
-    const magentoEnvTemplate = await fs.promises.readFile(path.join(templatePath, 'magento-env.template.php'), 'utf-8');
+    if (pathOk) {
+        output.succeed(`${name} config already created`);
+        return true;
+    }
+    output.warn(`${name} config not found, creating...`);
+    const configTemplate = await fs.promises.readFile(template, 'utf-8');
 
-    const magentoEnvConfig = await eta.render(magentoEnvTemplate, { ports, date: new Date().toUTCString() });
+    const compliedConfig = await eta.render(configTemplate, { ports, date: new Date().toUTCString() });
 
     try {
-        await fs.promises.writeFile(path.join(process.cwd(), 'app', 'etc', 'env.php'), magentoEnvConfig, { encoding: 'utf-8' });
-        output.succeed('Magento config created!');
+        await createDirSafe(dirName);
+        await fs.promises.writeFile(configPathname, compliedConfig, { encoding: 'utf-8' });
+        output.succeed(`${name} config created`);
         return true;
     } catch (e) {
-        output.fail('create magento config error');
+        output.fail(`create ${name} config error`);
 
         logger.log(e);
 
-        logger.error('Failed to create magento configuration file. See ERROR log above');
+        logger.error(`Failed to create ${name} configuration file. See ERROR log above`);
         return false;
     }
 };
-
-const checkNginxConfig = async () => pathExists(path.join(cachePath, 'nginx', 'conf.d', 'default.conf'));
-
-const createNginxConfig = async ({ output, ports }) => {
-    const nginxTemplate = await fs.promises.readFile(path.join(templatePath, 'nginx.template.conf.d'), 'utf-8');
-
-    const nginxConfig = await eta.render(nginxTemplate, { port: ports.fpm });
-
-    try {
-        await createDirSafe(path.join(cachePath, 'nginx', 'conf.d'));
-        await fs.promises.writeFile(path.join(cachePath, 'nginx', 'conf.d', 'default.conf'), nginxConfig, { encoding: 'utf-8' });
-        output.succeed('Nginx config created!');
-        return true;
-    } catch (e) {
-        output.fail('create nginx config error');
-
-        logger.log(e);
-
-        logger.error('Failed to create nginx configuration file. See ERROR log above');
-        return false;
-    }
-};
-
-// const checkVarnishConfig = async () => {
-//     try {
-//         await fs.promises.access(path.join(cachePath, 'varnish', 'default.vcl'), fs.constants.F_OK);
-//         return true;
-//     } catch {
-//         return false;
-//     }
-// };
-
-// const createVarnishConfig = async ({ output, ports }) => {
-//     const varnishTemplate = await fs.promises.readFile(path.join(process.cwd(), 'lib', 'templates', 'varnish-config.template'), 'utf-8');
-
-//     const varnishConfig = await eta.render(varnishTemplate, { port: ports.fpm, nginxServiceName: docker.container.nginx().name });
-
-//     try {
-//         await createDirSafe(path.join(cachePath, 'varnish'));
-//         await fs.promises.writeFile(path.join(cachePath, 'varnish', 'default.vcl'), varnishConfig, { encoding: 'utf-8' });
-//         output.succeed('Varnish config created!');
-//         return true;
-//     } catch (e) {
-//         output.fail('create varnish config error');
-
-//         logger.log(e);
-
-//         logger.error('Failed to create varnish configuration file. See ERROR log above');
-//         return false;
-//     }
-// };
 
 async function prepareFileSystem(ports) {
     const output = ora('Checking filesystem...').start();
@@ -95,46 +51,47 @@ async function prepareFileSystem(ports) {
     if (!cacheFolderOk) {
         await createCacheFolder({ output });
     } else {
-        output.succeed('Cache folder already created.');
+        output.succeed('Cache folder already created');
     }
 
-    const nginxConfigOk = await checkNginxConfig();
+    const nginxConfigOk = await checkConfigPath({
+        configPathname: path.join(cachePath, 'nginx', 'conf.d', 'default.conf'),
+        dirName: path.join(cachePath, 'nginx', 'conf.d'),
+        template: path.join(templatePath, 'nginx.template.conf.d'),
+        name: 'Nginx',
+        output,
+        ports
+    });
 
     if (!nginxConfigOk) {
-        output.warn('Nginx config not found, creating...');
-
-        const createNginxConfigOk = await createNginxConfig({ output, ports });
-
-        if (!createNginxConfigOk) {
-            process.exit(1);
-        }
+        process.exit(1);
     }
 
-    const magentoConfigOk = await checkMagentoConfig();
+    const magentoConfigOk = await checkConfigPath({
+        configPathname: path.join(process.cwd(), 'app', 'etc', 'env.php'),
+        dirName: path.join(process.cwd(), 'app', 'etc'),
+        template: path.join(templatePath, 'magento-env.template.php'),
+        name: 'App',
+        output,
+        ports
+    });
 
     if (!magentoConfigOk) {
-        output.warn('App folder not found, creating...');
-
-        const createAppFolderOk = await createMagentoConfig({ output, ports });
-
-        if (!createAppFolderOk) {
-            process.exit(1);
-        }
+        process.exit(1);
     }
 
-    // const varnishConfigOk = await checkVarnishConfig()
+    const phpConfigOk = await checkConfigPath({
+        configPathname: path.join(cachePath, 'php', 'php.ini'),
+        dirName: path.join(cachePath, 'php'),
+        template: path.join(templatePath, 'php.template.ini'),
+        name: 'PHP',
+        output,
+        ports
+    });
 
-    // if (!varnishConfigOk) {
-    //     output.warn('Varnish config not found, creating...')
-
-    //     const createVarnishConfigOk = await createVarnishConfig({ output, ports })
-
-    //     if (!createVarnishConfigOk) {
-    //         process.exit(1)
-    //     }
-    // }
-
-    // Copy template files
+    if (!phpConfigOk) {
+        process.exit(1);
+    }
 }
 
 module.exports = prepareFileSystem;
