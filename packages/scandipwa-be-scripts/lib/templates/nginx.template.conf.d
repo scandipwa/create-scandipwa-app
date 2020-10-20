@@ -5,7 +5,7 @@ real_ip_recursive on;
 
 upstream fastcgi_backend {
   # use tcp connection
-  server app:<%= it.ports.fpm %>;
+  server host.docker.internal:<%= it.ports.fpm %>;
 }
 
 server {
