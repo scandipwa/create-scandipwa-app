@@ -5,6 +5,7 @@ const path = require('path');
 const { sources, PROJECT } = require('./sources');
 const { getParentThemeAliases } = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 
 const aliasPostfixMap = {
     Style: './src/style/',
@@ -46,13 +47,34 @@ const alias = Object.entries(aliasMap).reduce(
     (acc, [, values]) => ({ ...acc, ...values }), {}
 );
 
+// Generate aliases for preference first
+const preferenceAliases = extensions.reduce((acc, extension) => {
+    const { packageJson, packagePath } = extension;
+
+    // Take provide field, check if pathname is not available in provisioned names
+    const {
+        scandipwa: {
+            preference = ''
+        } = {}
+    } = packageJson;
+
+    if (!preference) {
+        return acc;
+    }
+
+    return {
+        ...acc,
+        [`${preference}/*`]: [path.relative(process.cwd(), packagePath)]
+    };
+}, {});
+
 /**
  * These aliases are used in JSConfig by VSCode
  *
  * NOTE: the reduce right is used, so child themes, contain alises
  * to their child parent themes
  */
-const { jsConfigAlises } = Object.entries(aliasMap).reduceRight(
+const { parentThemeAliases } = Object.entries(aliasMap).reduceRight(
     (acc, [, aliasPathMap]) => {
         Object.entries(aliasPathMap).forEach(
             ([alias, pathname], i) => {
@@ -61,7 +83,7 @@ const { jsConfigAlises } = Object.entries(aliasMap).reduceRight(
                     `${path.relative(process.cwd(), pathname)}/*`
                 );
 
-                acc.jsConfigAlises[`${ alias }/*`] = Array.from(acc.aliasStack[i]);
+                acc.parentThemeAliases[`${ alias }/*`] = Array.from(acc.aliasStack[i]);
             }
         );
 
@@ -69,7 +91,7 @@ const { jsConfigAlises } = Object.entries(aliasMap).reduceRight(
     },
     {
         aliasStack: Array.from(Object.keys(aliasPostfixMap), () => ([])),
-        jsConfigAlises: {}
+        parentThemeAliases: {}
     }
 );
 
@@ -77,7 +99,11 @@ const { jsConfigAlises } = Object.entries(aliasMap).reduceRight(
 const jsConfig = {
     compilerOptions: {
         baseUrl: './',
-        paths: jsConfigAlises
+        jsx: 'react',
+        paths: {
+            ...parentThemeAliases,
+            ...preferenceAliases
+        }
     }
 };
 

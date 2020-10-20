@@ -94,23 +94,21 @@ class FallbackPlugin {
      * @memberof FallbackPlugin
      */
     getRelativePathname(pathname) {
-        const relativeSourcePathname = pathname.split('src/')[1];
+        const isSrc = /\/src\//.test(pathname);
+        const prefix = isSrc ? 'src' : 'public';
+
+        // take the first occurrence of the prefix and get the path after it
+        const relativePathname = pathname.split(`${prefix}/`).slice(1).join(`${prefix}/`);
         const extension = this.getBelongingExtension(pathname);
 
         if (extension) {
             // If this is extension, the path to override files can be located
             // in src/<EXTENSION NAME>/component/etc -> use it
-            return `src/${ extension }/${ relativeSourcePathname }`;
+            return path.join(prefix, extension, relativePathname);
         }
 
-        if (relativeSourcePathname) {
-            return `src/${ relativeSourcePathname}`;
-        }
-
-        const relativePublicPathname = pathname.split('public/')[1];
-
-        if (relativePublicPathname) {
-            return `pubic/${ relativePublicPathname }`;
+        if (relativePathname) {
+            return path.join(prefix, relativePathname);
         }
 
         return '';
@@ -134,8 +132,17 @@ class FallbackPlugin {
             return fs.existsSync(`${ pathname }.scss`);
         }
 
-        // we do not know at this point if this is /index.js or .js => check both
-        return fs.existsSync(`${ pathname }.js`) || fs.existsSync(`${ pathname }/index.js`);
+        // TODO: try require.resolve here
+        // we do not know at this point if this is:
+        // .ts, .tsx, .jsx or /index.js, /index.ts, /index.tsx => check all
+        return (
+            fs.existsSync(`${ pathname }.js`)
+            || fs.existsSync(`${ pathname }.ts`)
+            || fs.existsSync(`${ pathname }.tsx`)
+            || fs.existsSync(`${ pathname }/index.js`)
+            || fs.existsSync(`${ pathname }/index.ts`)
+            || fs.existsSync(`${ pathname }/index.tsx`)
+        );
     }
 
     /**
@@ -301,21 +308,32 @@ class FallbackPlugin {
                 }
             }
 
-            const { packagePath } = getExtensionProvisionedPath(requestToRelativePathname);
+            const {
+                packagePath,
+                relativePath,
+                absolutePath
+            } = getExtensionProvisionedPath(requestToRelativePathname);
 
             if (packagePath) {
+                if (!this.fileExists(absolutePath)) {
+                    callback();
+                    return;
+                }
+
                 // check if the pathname is available in provisioned paths of extensions
                 resolver.doResolve(
                     resolver.hooks.resolve,
                     {
                         ...request,
                         path: packagePath,
-                        request: `./${ requestToRelativePathname}`
+                        request: `./${ relativePath }`
                     },
                     'Resolving with fallback!',
                     resolveContext,
                     callback
                 );
+
+                return;
             }
 
             callback();

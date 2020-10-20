@@ -63,12 +63,14 @@ module.exports = () => {
                 'transform-rebem-jsx',
                 // Enable 3.x middleware decorators
                 '@scandipwa/babel-plugin-middleware-decorator',
-                // Required for extension mechnaism to work
+                // Required for extension mechanism to work
                 '@babel/plugin-transform-arrow-functions',
+                '@babel/plugin-transform-async-to-generator',
                 // Resolve imports like from 'Component/...'
                 [
                     'module-resolver', {
                         root: 'src',
+                        loglevel: 'silent',
                         alias
                     }
                 ]
@@ -114,6 +116,10 @@ module.exports = () => {
 
                 // Allow importing .style files without specifying the extension
                 webpackConfig.resolve.extensions.push('.scss');
+
+                // Allow importing .ts and .tsx files without specifying the extension
+                webpackConfig.resolve.extensions.push('.ts');
+                webpackConfig.resolve.extensions.push('.tsx');
 
                 // Allow linter only in project
                 webpackConfig.module.rules[1].include = sources[PROJECT];
