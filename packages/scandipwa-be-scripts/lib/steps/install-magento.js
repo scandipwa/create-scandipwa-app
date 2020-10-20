@@ -1,19 +1,39 @@
 /* eslint-disable no-param-reassign */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const ora = require('ora');
+const path = require('path');
 const {
     php: { phpBinPath },
     composer: { composerBinPath }
 } = require('../config');
-const { execAsync } = require('../util/exec-async');
+const { execAsyncWithCallback } = require('../util/exec-async');
+const pathExists = require('../util/path-exists');
 
-const checkMagentoProject = async () => false; // pathExists(path.join(process.cwd(), 'app', 'etc', 'env.php'));
+const checkMagentoProject = async () => pathExists(path.join(process.cwd(), 'app'));
 
 const installApp = async ({ output }) => {
     try {
         output.start('Creating Magento project...');
         // eslint-disable-next-line max-len
-        await execAsync(`${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition src`);
+        await execAsyncWithCallback(
+            `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition app`,
+            {
+                callback: (line) => {
+                    // logger.log(line);
+                    if (line.includes('Updating dependencies')) {
+                        output.text = 'Updating dependencies...';
+                    }
+                    if (/ - Installing (\S+) \((\S+)\)/ig.test(line)) {
+                        const match = line.match(/ - installing (\S+) \((\S+)\)/ig)
+                            .map((dep) => dep.match(/ - installing (\S+) \((\S+)\)/i).slice(1));
+
+                        // console.log(match);
+                        output.text = `Installing ${match.flat().join(' ')}`;
+                    }
+                }
+                // logOutput: true
+            }
+        );
         output.succeed('Project installed!');
         return true;
     } catch (e) {

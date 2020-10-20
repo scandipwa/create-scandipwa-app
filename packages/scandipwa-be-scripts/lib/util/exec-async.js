@@ -12,7 +12,7 @@ const execAsync = (command, options) => new Promise((resolve, reject) => {
 });
 // capture = don't output stdout/stderr, return with promises response
 // echo = capture + output in the end
-const execAsyncWithCallback = (command, { callback = () => {} } = {}) => {
+const execAsyncWithCallback = (command, { callback = () => {}, logOutput = false } = {}) => {
     const childProcess = spawn(
         'bash',
         ['-c', command],
@@ -23,14 +23,15 @@ const execAsyncWithCallback = (command, { callback = () => {} } = {}) => {
 
     return new Promise((resolve, reject) => {
         let stdout = '';
-        childProcess.stdout.on('data', (data) => {
+        function addLine(data) {
             stdout += data;
             callback(data.toString());
-        });
-        childProcess.stderr.on('data', (data) => {
-            stdout += data;
-            callback(data.toString());
-        });
+            if (logOutput) {
+                process.stdout.write(`${data.toString() }\n`, 'utf-8');
+            }
+        }
+        childProcess.stdout.on('data', addLine);
+        childProcess.stderr.on('data', addLine);
         childProcess.on('error', (error) => {
             reject(error);
         });

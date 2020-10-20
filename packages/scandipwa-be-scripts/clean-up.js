@@ -1,6 +1,7 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const ora = require('ora');
 const { docker } = require('./lib/config');
+const { stopPhpFpm } = require('./lib/steps/manage-php-fpm');
 const { execAsync } = require('./lib/util/exec-async');
 const getRunningContainers = require('./lib/util/get-running-containers');
 const pathExists = require('./lib/util/path-exists');
@@ -80,6 +81,8 @@ const cleanUp = async () => {
         return false;
     }
 
+    await stopPhpFpm({ output });
+
     try {
         const cacheExists = await pathExists('node_modules/.create-scandipwa-app-cache');
         if (cacheExists) {
@@ -101,10 +104,10 @@ const cleanUp = async () => {
     }
 
     try {
-        const appFolderExists = await pathExists('src');
+        const appFolderExists = await pathExists('app');
         if (appFolderExists) {
             output.start('Removing app...');
-            await execAsync('rm -rf src');
+            await execAsync('rm -rf app');
         }
         output.succeed('App removed!');
     } catch (e) {

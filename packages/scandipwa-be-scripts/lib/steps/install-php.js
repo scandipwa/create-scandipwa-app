@@ -4,14 +4,18 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { execAsync, execAsyncWithCallback } = require('../util/exec-async');
 const ora = require('ora');
+const path = require('path');
 const {
     php: {
         requiredPHPVersion,
         requiredPHPVersionRegex,
         phpBinPath,
         phpExtensions
-    }
+    },
+    templatePath,
+    php
 } = require('../config');
+const checkConfigPath = require('../util/check-config');
 
 const checkPHPInGlobalCache = async () => {
     try {
@@ -69,6 +73,9 @@ const buildPHP = async ({ output }) => {
                 +pdo +soap +xmlrpc +xml +zip +fpm`,
                 {
                     callback: (line) => {
+                        if (line.includes('Configuring')) {
+                            output.text = `Configuring PHP-${requiredPHPVersion}...`;
+                        }
                         if (line.includes('Building...')) {
                             output.text = `Building PHP-${requiredPHPVersion}...`;
                         }
@@ -89,6 +96,18 @@ const buildPHP = async ({ output }) => {
             'See ERROR log above.'
         );
 
+        return false;
+    }
+
+    const phpConfigOk = await checkConfigPath({
+        configPathname: php.phpIniPath,
+        template: path.join(templatePath, 'php.template.ini'),
+        name: 'PHP',
+        output,
+        overwrite: true
+    });
+
+    if (!phpConfigOk) {
         return false;
     }
 

@@ -147,7 +147,7 @@ const deployDockerContainers = async ({ output, ports }) => {
     }
 
     try {
-        await dockerRun(docker.container.nginx());
+        await dockerRun(docker.container.nginx({ ports }));
         // await dockerRun(docker.container.varnish({ ports }))
         await Promise.all([
             // Promise.all(

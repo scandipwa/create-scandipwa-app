@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 
 const dirName = path.parse(process.cwd()).name;
 const cacheName = '.create-scandipwa-app-cache';
@@ -52,8 +53,9 @@ const dockerVolumeList = [
 
 // docker container
 // const dockerContainerList = ['nginx', 'varnish', 'redis', 'mysql', 'elasticsearch'].map(c => `${dirName}_${c}`)
-const dockerNginxContainer = () => ({
+const dockerNginxContainer = ({ ports = {} } = {}) => ({
     expose: [80],
+    ports: [`${ports.app}:80`],
     mountVolumes: [`${dockerNginxVolume.name}:/etc/nginx/conf.d`],
     restart: 'unless-stopped',
     // TODO: use connect instead
@@ -130,16 +132,26 @@ const dockerContainerList = [
 const requiredPHPVersion = '7.3.22';
 const requiredPHPVersionRegex = new RegExp(requiredPHPVersion);
 
-// php bin path
-const phpBinPath = `$HOME/.phpbrew/php/php-${requiredPHPVersion}/bin/php`;
+const phpVersionDir = path.join(os.homedir(), '.phpbrew', 'php', `php-${requiredPHPVersion}`);
 
+// php bin path
+const phpBinPath = path.join(phpVersionDir, 'bin', 'php');
+
+const phpIniPath = path.resolve(phpVersionDir, 'etc', 'php.ini');
+
+const phpFpmBinPath = path.resolve(phpVersionDir, 'sbin', 'php-fpm');
+
+const phpFpmConfPath = path.resolve(cachePath, 'php-fpm.conf');
 // php extensions
-const phpExtensions = ['gd', 'intl'];
+const phpExtensions = ['gd', 'intl', 'sockets'];
+
+const pidFilePath = path.join(cachePath, 'php-fpm.pid');
 
 module.exports = {
     dirName,
     cachePath,
     templatePath,
+    pidFilePath,
     docker: {
         serviceName: dockerServiceName,
         networkName: dockerNetworkName,
@@ -157,7 +169,10 @@ module.exports = {
         requiredPHPVersion,
         requiredPHPVersionRegex,
         phpBinPath,
-        phpExtensions
+        phpExtensions,
+        phpFpmBinPath,
+        phpIniPath,
+        phpFpmConfPath
     },
     composer: {
         composerDirPath: path.join(cachePath, 'composer'),
