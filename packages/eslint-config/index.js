@@ -41,6 +41,13 @@ module.exports = {
             '@scandipwa/scandipwa-guidelines/use-namespace': 'off',
             '@scandipwa/scandipwa-guidelines/export-level-one': 'off'
         }
+    }, {
+        files: ['*.ts', '*.tsx'],
+        parser: '@typescript-eslint/parser',
+        extends: ['plugin:@typescript-eslint/recommended'],
+        rules: {
+            '@scandipwa/scandipwa-guidelines/use-namespace': 'off'
+        }
     }],
     rules: {
         // allow only one non-default exports in the file
