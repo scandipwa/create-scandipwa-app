@@ -23,7 +23,8 @@ const dockerRun = (options) => {
         image,
         restart,
         network,
-        name
+        name,
+        entrypoint
     } = options;
 
     const restartArg = restart && `--restart ${ restart }`;
@@ -34,6 +35,7 @@ const dockerRun = (options) => {
     const mountVolumesArgs = mountVolumes.map((mount) => `-v ${mount}`).join(' ');
     const envArgs = Object.entries(env).map(([key, value]) => `--env ${ key }=${ value }`).join(' ');
     const nameArg = name && `--name ${name}`;
+    const entrypointArg = entrypoint && `--entrypoint "${entrypoint}"`;
 
     const dockerCommand = [
         'docker',
@@ -47,8 +49,11 @@ const dockerRun = (options) => {
         mountsArgs,
         mountVolumesArgs,
         envArgs,
+        entrypointArg,
         image
     ].filter(Boolean).join(' ');
+
+    console.log(dockerCommand);
 
     return execAsync(dockerCommand);
 };

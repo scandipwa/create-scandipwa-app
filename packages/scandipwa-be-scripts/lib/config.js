@@ -57,9 +57,10 @@ const dockerNginxContainer = ({ ports = {} } = {}) => ({
     expose: [80],
     ports: [`${ports.app}:80`],
     mountVolumes: [`${dockerNginxVolume.name}:/etc/nginx/conf.d`],
-    restart: 'unless-stopped',
+    restart: 'on-failure:5',
     // TODO: use connect instead
     network: dockerNetworkName,
+    entrypoint: '/bin/sh -c ip -4 route list match 0/0 | awk \'{print $$3\\" host.docker.internal\\"}\' >> /etc/hosts',
     image: 'nginx:1.18.0',
     name: `${dirName}_nginx`
 });
