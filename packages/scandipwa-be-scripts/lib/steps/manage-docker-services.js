@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const ora = require('ora');
-const { execAsync } = require('../util/exec-async');
+const { execAsync } = require('../util/exec-async-command');
 const { docker } = require('../config');
 const getRunningContainers = require('../util/get-running-containers');
 const dockerVolumeCreate = require('../util/docker-volume-create');
@@ -276,8 +276,6 @@ const stopServices = async ({ output } = {}) => {
 
     await dockerRemoveContainers({ output });
 
-    await dockerRemoveVolumes({ output });
-
     return true;
 };
 
@@ -294,7 +292,6 @@ const startServices = async (ports) => {
 
     if (!volumesOk) {
         await dockerStopContainers({ output });
-        await dockerRemoveVolumes({ output });
         process.exit(1);
     }
 
@@ -303,7 +300,6 @@ const startServices = async (ports) => {
     if (!containersOk) {
         await dockerStopContainers({ output });
         await dockerRemoveContainers({ output });
-        await dockerRemoveVolumes({ output });
         process.exit(1);
     }
 };

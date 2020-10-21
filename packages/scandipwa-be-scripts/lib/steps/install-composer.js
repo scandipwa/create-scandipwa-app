@@ -10,7 +10,7 @@ const {
     }
 } = require('../config');
 const createDirSafe = require('../util/create-dir-safe');
-const { execAsync } = require('../util/exec-async');
+const { execAsync } = require('../util/exec-async-command');
 const pathExists = require('../util/path-exists');
 
 const checkComposerInCache = async () => pathExists(composerBinPath);

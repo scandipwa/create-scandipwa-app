@@ -6,7 +6,7 @@ const {
     php: { phpBinPath },
     composer: { composerBinPath }
 } = require('../config');
-const { execAsyncWithCallback } = require('../util/exec-async');
+const { execAsyncWithCallback } = require('../util/exec-async-command');
 const pathExists = require('../util/path-exists');
 
 const checkMagentoProject = async () => pathExists(path.join(process.cwd(), 'app'));

@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { execAsync, execAsyncWithCallback } = require('../util/exec-async');
+const { execAsync, execAsyncWithCallback } = require('../util/exec-async-command');
 const ora = require('ora');
 const path = require('path');
 const {

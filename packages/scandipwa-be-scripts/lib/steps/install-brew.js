@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { execAsync } = require('../util/exec-async');
+const { execAsync } = require('../util/exec-async-command');
 const inquirer = require('inquirer');
 const ora = require('ora');
 

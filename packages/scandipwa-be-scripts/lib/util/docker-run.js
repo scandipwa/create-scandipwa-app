@@ -1,4 +1,4 @@
-const { execAsync } = require('./exec-async');
+const { execAsync } = require('./exec-async-command');
 
 /**
  * Run docker run command

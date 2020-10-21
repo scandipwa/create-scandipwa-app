@@ -1,4 +1,4 @@
-const { execAsync } = require('../util/exec-async');
+const { execAsync } = require('../util/exec-async-command');
 const os = require('os');
 const ora = require('ora');
 

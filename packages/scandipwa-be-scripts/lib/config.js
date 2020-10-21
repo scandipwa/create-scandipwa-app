@@ -8,6 +8,10 @@ const appPath = path.join(process.cwd(), 'app');
 const cachePath = path.join(process.cwd(), 'node_modules', cacheName);
 const templatePath = path.join(__dirname, 'templates');
 
+// magento
+
+const magentoBinPath = path.join(appPath, 'bin', 'magento');
+
 // docker
 
 const dockerServiceName = `create-scandipwa-app-${dirName}`;
@@ -204,6 +208,9 @@ module.exports = {
         phpFpmBinPath,
         phpIniPath,
         phpFpmConfPath
+    },
+    magento: {
+        magentoBinPath
     },
     composer: {
         composerDirPath: path.join(cachePath, 'composer'),

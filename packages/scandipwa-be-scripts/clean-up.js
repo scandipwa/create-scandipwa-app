@@ -3,7 +3,7 @@ const ora = require('ora');
 const { appPath, cachePath } = require('./lib/config');
 const { stopServices } = require('./lib/steps/manage-docker-services');
 const { stopPhpFpm } = require('./lib/steps/manage-php-fpm');
-const { execAsync } = require('./lib/util/exec-async');
+const { execAsync } = require('./lib/util/exec-async-command');
 const pathExists = require('./lib/util/path-exists');
 
 const cleanUp = async () => {
