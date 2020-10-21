@@ -4,6 +4,7 @@ const os = require('os');
 const dirName = path.parse(process.cwd()).name;
 const cacheName = '.create-scandipwa-app-cache';
 
+const appPath = path.join(process.cwd(), 'app');
 const cachePath = path.join(process.cwd(), 'node_modules', cacheName);
 const templatePath = path.join(__dirname, 'templates');
 
@@ -18,12 +19,15 @@ const dockerNetworkName = `${dirName}_network`;
 const dockerMysqlVolume = {
     name: `${dirName}_mysql-data`
 };
+
 const dockerRedisVolume = {
     name: `${dirName}_redis-data`
 };
+
 const dockerElasticsearchVolume = {
     name: `${dirName}_elasticsearch-data`
 };
+
 const dockerNginxVolume = {
     name: `${dirName}_nginx-data`,
     // driver: 'local',
@@ -33,6 +37,7 @@ const dockerNginxVolume = {
         'o=bind'
     ]
 };
+
 const dockerVarnishVolume = {
     name: `${dirName}_varnish-data`,
     // driver: 'local',
@@ -43,12 +48,32 @@ const dockerVarnishVolume = {
     ]
 };
 
+const dockerAppPubVolume = {
+    name: `${dirName}_pub-data`,
+    opts: [
+        'type=nfs',
+        `device=${path.join(appPath, 'pub')}`,
+        'o=bind'
+    ]
+};
+
+const dockerAppSetupVolume = {
+    name: `${dirName}_setup-data`,
+    opts: [
+        'type=nfs',
+        `device=${path.join(appPath, 'setup')}`,
+        'o=bind'
+    ]
+};
+
 const dockerVolumeList = [
     dockerMysqlVolume,
     dockerRedisVolume,
     dockerElasticsearchVolume,
     dockerNginxVolume,
-    dockerVarnishVolume
+    dockerVarnishVolume,
+    dockerAppPubVolume,
+    dockerAppSetupVolume
 ];
 
 // docker container
@@ -56,11 +81,15 @@ const dockerVolumeList = [
 const dockerNginxContainer = ({ ports = {} } = {}) => ({
     expose: [80],
     ports: [`${ports.app}:80`],
-    mountVolumes: [`${dockerNginxVolume.name}:/etc/nginx/conf.d`],
+    mountVolumes: [
+        `${dockerNginxVolume.name}:/etc/nginx/conf.d`,
+        `${dockerAppPubVolume.name}:${path.join(appPath, 'pub')}`,
+        `${dockerAppSetupVolume.name}:${path.join(appPath, 'setup')}`
+    ],
     restart: 'on-failure:5',
     // TODO: use connect instead
-    network: dockerNetworkName,
-    entrypoint: '/bin/sh -c ip -4 route list match 0/0 | awk \'{print $$3\\" host.docker.internal\\"}\' >> /etc/hosts',
+    network: 'host',
+    // entrypoint: '/bin/sh -c ip -4 route list match 0/0 | awk \'{print $$3\\" host.docker.internal\\"}\' >> /etc/hosts',
     image: 'nginx:1.18.0',
     name: `${dirName}_nginx`
 });
@@ -149,6 +178,7 @@ const phpExtensions = ['gd', 'intl', 'sockets'];
 const pidFilePath = path.join(cachePath, 'php-fpm.pid');
 
 module.exports = {
+    appPath,
     dirName,
     cachePath,
     templatePath,

@@ -53,7 +53,7 @@ const dockerRun = (options) => {
         image
     ].filter(Boolean).join(' ');
 
-    console.log(dockerCommand);
+    // console.log(dockerCommand);
 
     return execAsync(dockerCommand);
 };

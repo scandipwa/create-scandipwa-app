@@ -6,7 +6,7 @@ const fs = require('fs');
 const ora = require('ora');
 
 const checkConfigPath = async ({
-    configPathname, dirName, template, ports = {}, name, output, overwrite
+    configPathname, dirName, template, ports = {}, name, output, overwrite, templateArgs = {}
 }) => {
     // eslint-disable-next-line no-param-reassign
     output = output || ora();
@@ -16,10 +16,14 @@ const checkConfigPath = async ({
         output.succeed(`${name} config already created`);
         return true;
     }
-    output.warn(`${name} config not found, creating...`);
+    if (overwrite) {
+        output.info(`Recreating ${name} config...`);
+    } else {
+        output.warn(`${name} config not found, creating...`);
+    }
     const configTemplate = await fs.promises.readFile(template, 'utf-8');
 
-    const compliedConfig = await eta.render(configTemplate, { ports, date: new Date().toUTCString() });
+    const compliedConfig = await eta.render(configTemplate, { ports, date: new Date().toUTCString(), ...templateArgs });
 
     try {
         if (dirName) {

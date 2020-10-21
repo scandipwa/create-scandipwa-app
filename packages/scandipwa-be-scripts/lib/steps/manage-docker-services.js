@@ -184,7 +184,104 @@ const deployDockerContainers = async ({ output, ports }) => {
     return true;
 };
 
-const deployServices = async (ports) => {
+const dockerStopContainers = async ({ output }) => {
+    try {
+        const runningContainers = await getRunningContainers();
+
+        if (runningContainers.length > 0) {
+            output.start('Stopping docker containers...');
+            await execAsync(`docker container stop ${runningContainers.map((c) => c().name).join(' ')}`);
+            output.succeed('Docker containers stopped!');
+        } else {
+            output.warn('No containers running!');
+        }
+
+        return true;
+    } catch (e) {
+        output.fail(e.message);
+
+        logger.error(e);
+
+        logger.error(
+            'Unexpected error while stopping docker containers.',
+            'See ERROR log above.'
+        );
+
+        return false;
+    }
+};
+
+const dockerRemoveContainers = async ({ output }) => {
+    try {
+        const containerList = await execAsync('docker container ls -a');
+
+        const containersToRemove = docker.containerList.filter((container) => containerList.includes(container().name));
+
+        if (containersToRemove.length > 0) {
+            output.start('Removing docker containers...');
+            await execAsync(`docker container rm ${containersToRemove.map((c) => c().name).join(' ')}`);
+            output.succeed('Docker containers removed!');
+        } else {
+            output.warn('No containers to remove');
+        }
+
+        return true;
+    } catch (e) {
+        output.fail(e.message);
+
+        logger.error(e);
+
+        logger.error(
+            'Unexpected error while removing docker containers.',
+            'See ERROR log above.'
+        );
+
+        return false;
+    }
+};
+
+const dockerRemoveVolumes = async ({ output }) => {
+    try {
+        const volumeList = await execAsync('docker volume ls -q');
+
+        const volumesToRemove = docker.volumeList.filter((volume) => volumeList.includes(volume.name));
+
+        if (volumesToRemove.length > 0) {
+            output.start('Removing volumes...');
+            await execAsync(`docker volume rm ${volumesToRemove.map(({ name }) => name).join(' ')}`);
+            output.succeed('Volumes removed!');
+        } else {
+            output.warn('No volumes to remove');
+        }
+
+        return true;
+    } catch (e) {
+        output.fail(e.message);
+
+        logger.error(e);
+
+        logger.error(
+            'Unexpected error while removing docker volumes.',
+            'See ERROR log above.'
+        );
+
+        return false;
+    }
+};
+
+const stopServices = async ({ output } = {}) => {
+    output = output || ora('Stopping docker services...').start();
+
+    await dockerStopContainers({ output });
+
+    await dockerRemoveContainers({ output });
+
+    await dockerRemoveVolumes({ output });
+
+    return true;
+};
+
+const startServices = async (ports) => {
     const output = ora('Deploying docker services...').start();
 
     const networkOk = await deployDockerNetwork({ output });
@@ -196,14 +293,22 @@ const deployServices = async (ports) => {
     const volumesOk = await deployDockerVolumes({ output });
 
     if (!volumesOk) {
+        await dockerStopContainers({ output });
+        await dockerRemoveVolumes({ output });
         process.exit(1);
     }
 
     const containersOk = await deployDockerContainers({ output, ports });
 
     if (!containersOk) {
+        await dockerStopContainers({ output });
+        await dockerRemoveContainers({ output });
+        await dockerRemoveVolumes({ output });
         process.exit(1);
     }
 };
 
-module.exports = deployServices;
+module.exports = {
+    startServices,
+    stopServices
+};

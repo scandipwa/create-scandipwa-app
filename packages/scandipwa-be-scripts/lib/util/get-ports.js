@@ -1,8 +1,8 @@
 const getPort = require('get-port');
-const path = require('path');
-const { cachePath } = require('../config');
-const pathExists = require('./path-exists');
-const fs = require('fs');
+// const path = require('path');
+// const { cachePath } = require('../config');
+// const pathExists = require('./path-exists');
+// const fs = require('fs');
 
 // Map of default ports (key:value)
 const defaultPorts = {
@@ -14,11 +14,11 @@ const defaultPorts = {
 };
 
 const getPorts = async () => {
-    const portConfigExists = await pathExists(path.join(cachePath, 'port-config.json'));
+    // const portConfigExists = await pathExists(path.join(cachePath, 'port-config.json'));
 
-    if (portConfigExists) {
-        return JSON.parse(await fs.promises.readFile(path.join(cachePath, 'port-config.json'), 'utf8'));
-    }
+    // if (portConfigExists) {
+    //     return JSON.parse(await fs.promises.readFile(path.join(cachePath, 'port-config.json'), 'utf8'));
+    // }
     const availablePorts = Object.fromEntries(await Promise.all(
         Object.entries(defaultPorts).map(async ([name, port]) => {
             const availablePort = await getPort({ port });

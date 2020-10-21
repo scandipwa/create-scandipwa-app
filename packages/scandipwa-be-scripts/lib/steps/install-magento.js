@@ -16,22 +16,20 @@ const installApp = async ({ output }) => {
         output.start('Creating Magento project...');
         // eslint-disable-next-line max-len
         await execAsyncWithCallback(
-            `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition app`,
+            `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition src`,
             {
                 callback: (line) => {
-                    // logger.log(line);
                     if (line.includes('Updating dependencies')) {
                         output.text = 'Updating dependencies...';
                     }
+                    // This needs to show user magento installation progress in console
                     if (/ - Installing (\S+) \((\S+)\)/ig.test(line)) {
                         const match = line.match(/ - installing (\S+) \((\S+)\)/ig)
                             .map((dep) => dep.match(/ - installing (\S+) \((\S+)\)/i).slice(1));
 
-                        // console.log(match);
                         output.text = `Installing ${match.flat().join(' ')}`;
                     }
                 }
-                // logOutput: true
             }
         );
         output.succeed('Project installed!');

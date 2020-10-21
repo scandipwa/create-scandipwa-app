@@ -1,5 +1,7 @@
 const path = require('path');
-const { cachePath, templatePath, php } = require('../config');
+const {
+    cachePath, templatePath, php, appPath
+} = require('../config');
 const ora = require('ora');
 const createDirSafe = require('../util/create-dir-safe');
 const pathExists = require('../util/path-exists');
@@ -8,9 +10,8 @@ const checkConfigPath = require('../util/check-config');
 
 const checkCacheFolder = async () => pathExists(cachePath);
 
-const createCacheFolder = async ({ output }) => {
+const createCacheFolder = async () => {
     await createDirSafe(cachePath);
-    output.succeed('Cache folder created!');
 };
 
 async function prepareFileSystem(ports) {
@@ -19,18 +20,36 @@ async function prepareFileSystem(ports) {
     const cacheFolderOk = await checkCacheFolder();
 
     if (!cacheFolderOk) {
-        await createCacheFolder({ output });
+        await createCacheFolder();
+        output.succeed('Cache folder created!');
     } else {
         output.succeed('Cache folder already created');
+    }
+
+    const portConfigOk = await checkConfigPath({
+        configPathname: path.join(cachePath, 'port-config.json'),
+        template: path.join(templatePath, 'port-config.template.json'),
+        name: 'port config',
+        output,
+        ports,
+        overwrite: true
+    });
+
+    if (!portConfigOk) {
+        process.exit(1);
     }
 
     const nginxConfigOk = await checkConfigPath({
         configPathname: path.join(cachePath, 'nginx', 'conf.d', 'default.conf'),
         dirName: path.join(cachePath, 'nginx', 'conf.d'),
-        template: path.join(templatePath, 'nginx.template.conf.d'),
+        template: path.join(templatePath, 'nginx.template.conf'),
         name: 'Nginx',
         output,
-        ports
+        ports,
+        overwrite: true,
+        templateArgs: {
+            mageRoot: appPath
+        }
     });
 
     if (!nginxConfigOk) {
@@ -42,7 +61,8 @@ async function prepareFileSystem(ports) {
         template: path.join(templatePath, 'php-fpm.template.conf'),
         name: 'php-fpm',
         output,
-        ports
+        ports,
+        overwrite: true
     });
 
     if (!phpFpmConfigOk) {

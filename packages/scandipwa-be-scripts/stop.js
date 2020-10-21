@@ -1,9 +1,6 @@
-/* eslint-disable consistent-return */
-const { execAsync } = require('./lib/util/exec-async');
 const ora = require('ora');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const getRunningContainers = require('./lib/util/get-running-containers');
 const { stopPhpFpm } = require('./lib/steps/manage-php-fpm');
+const { stopServices } = require('./lib/steps/manage-docker-services');
 
 const stop = async () => {
     const output = ora();
@@ -14,26 +11,9 @@ const stop = async () => {
         return false;
     }
 
-    const runningContainers = await getRunningContainers();
-    if (runningContainers.length === 0) {
-        output.warn('No running containers found. Terminating process...');
+    await stopServices({ output });
 
-        return true;
-    }
-
-    try {
-        output.start('Stopping containers...');
-        await execAsync(`docker container stop ${runningContainers.map((container) => container().name).join(' ')}`);
-        output.succeed('Containers stopped successfully!');
-    } catch (e) {
-        output.fail(e.message);
-
-        logger.error(e);
-        logger.error(
-            'Unexpected error while stopping docker containers',
-            'See ERROR log above.'
-        );
-    }
+    return true;
 };
 
 module.exports = stop;
