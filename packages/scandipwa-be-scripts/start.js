@@ -5,6 +5,7 @@ const { startServices, stopServices } = require('./lib/steps/manage-docker-servi
 const { getAvailablePorts } = require('./lib/util/get-ports');
 const { startPhpFpm, stopPhpFpm } = require('./lib/steps/manage-php-fpm');
 const openBrowser = require('./lib/util/open-browser');
+const setupMagento = require('./lib/steps/setup-magento');
 
 let started = false;
 const start = async () => {
@@ -20,6 +21,8 @@ const start = async () => {
 
     // startup docker services
     await startServices(ports);
+
+    await setupMagento();
 
     started = true;
 

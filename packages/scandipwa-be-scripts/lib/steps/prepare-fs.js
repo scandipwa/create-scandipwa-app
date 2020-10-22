@@ -7,6 +7,7 @@ const createDirSafe = require('../util/create-dir-safe');
 const pathExists = require('../util/path-exists');
 const installMagento = require('./install-magento');
 const checkConfigPath = require('../util/check-config');
+const createApplicationConfig = require('./create-application-config');
 
 const checkCacheFolder = async () => pathExists(cachePath);
 
@@ -24,6 +25,12 @@ async function prepareFileSystem(ports) {
         output.succeed('Cache folder created!');
     } else {
         output.succeed('Cache folder already created');
+    }
+
+    const appConfigOk = await createApplicationConfig({ output });
+
+    if (!appConfigOk) {
+        process.exit(1);
     }
 
     const portConfigOk = await checkConfigPath({

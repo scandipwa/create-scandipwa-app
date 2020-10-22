@@ -50,7 +50,7 @@ const deployDockerVolumes = async ({ output }) => {
             await Promise.all([
                 missingVolumes.map((volume) => dockerVolumeCreate(volume))
             ]);
-            output.succeed('Volumes created!');
+            output.succeed('Volumes created');
         } else {
             output.succeed('Volumes already created');
         }
@@ -99,7 +99,7 @@ const deployDockerContainers = async ({ output, ports }) => {
                 }
             }
         } else {
-            output.succeed('Containers already running!');
+            output.succeed('Containers already running');
             return true;
         }
     } catch (e) {
@@ -134,7 +134,7 @@ const deployDockerContainers = async ({ output, ports }) => {
 
             await Promise.all(containersToRun.map((container) => dockerRun(container({ ports }))));
 
-            output.succeed('Containers started up!');
+            output.succeed('Containers started');
             return true;
         }
     } catch (e) {
@@ -180,7 +180,7 @@ const deployDockerContainers = async ({ output, ports }) => {
         return false;
     }
 
-    output.succeed('Containers deployed successfully!');
+    output.succeed('Containers deployed');
     return true;
 };
 
@@ -191,9 +191,9 @@ const dockerStopContainers = async ({ output }) => {
         if (runningContainers.length > 0) {
             output.start('Stopping docker containers...');
             await execAsync(`docker container stop ${runningContainers.map((c) => c().name).join(' ')}`);
-            output.succeed('Docker containers stopped!');
+            output.succeed('Docker containers stopped');
         } else {
-            output.warn('No containers running!');
+            output.warn('No containers running');
         }
 
         return true;
@@ -220,7 +220,7 @@ const dockerRemoveContainers = async ({ output }) => {
         if (containersToRemove.length > 0) {
             output.start('Removing docker containers...');
             await execAsync(`docker container rm ${containersToRemove.map((c) => c().name).join(' ')}`);
-            output.succeed('Docker containers removed!');
+            output.succeed('Docker containers removed');
         } else {
             output.warn('No containers to remove');
         }

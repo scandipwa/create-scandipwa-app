@@ -112,7 +112,7 @@ const dockerNginxContainer = ({ ports = {} } = {}) => ({
 // });
 
 const dockerRedisContainer = ({ ports = {} } = {}) => ({
-    ports: [ports.redis],
+    ports: [`127.0.0.1:${ports.redis}:6379`],
     mounts: [`source=${dockerRedisVolume.name},target=/data`],
     // TODO: use connect instead
     network: dockerNetworkName,
@@ -121,8 +121,8 @@ const dockerRedisContainer = ({ ports = {} } = {}) => ({
 });
 
 const dockerMysqlContainer = ({ ports = {} } = {}) => ({
-    expose: ['3306'],
-    ports: [`${ports.mysql}:3306`],
+    expose: [3306],
+    ports: [`127.0.0.1:${ports.mysql}:3306`],
     mounts: [`source=${dockerMysqlVolume.name},target=/var/lib/mysql`],
     env: {
         MYSQL_PORT: 3306,

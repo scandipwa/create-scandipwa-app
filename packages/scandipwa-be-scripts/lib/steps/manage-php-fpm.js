@@ -5,6 +5,7 @@ const { execAsync } = require('../util/exec-async-command');
 const getProcessId = require('../util/get-process-id');
 
 const stopPhpFpm = async ({ output } = {}) => {
+    output = output || ora();
     try {
         const processId = await getProcessId();
         if (processId) {
@@ -33,8 +34,8 @@ const stopPhpFpm = async ({ output } = {}) => {
     return true;
 };
 
-const startPhpFpm = async () => {
-    const output = ora();
+const startPhpFpm = async ({ output } = {}) => {
+    output = output || ora();
     await stopPhpFpm({ output });
     output.start('Starting php-fpm...');
     try {
