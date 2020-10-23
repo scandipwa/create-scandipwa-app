@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
-    "version": "1.0.3-alpha.7",
+    "version": "1.0.3-alpha.8",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
@@ -14,7 +14,7 @@
         "@babel/plugin-transform-async-to-generator": "^7.10.4",
         "@scandipwa/babel-plugin-middleware-decorator": "^0.0.3-alpha.0",
         "@scandipwa/craco": "^0.0.1",
-        "@scandipwa/eslint-config": "^0.0.3-alpha.0",
+        "@scandipwa/eslint-config": "^0.0.3-alpha.1",
         "@scandipwa/scandipwa-dev-utils": "^0.0.8-alpha.0",
         "@scandipwa/scandipwa-extensibility": "^0.0.2",
         "@scandipwa/webpack-extension-import-loader": "^0.0.4-alpha.1",
