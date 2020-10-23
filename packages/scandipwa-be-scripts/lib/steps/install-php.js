@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { execAsync, execAsyncWithCallback } = require('../util/exec-async-command');
+const { execAsync, execAsyncSpawn } = require('../util/exec-async-command');
 const ora = require('ora');
 const path = require('path');
 const {
@@ -52,7 +52,7 @@ const setupPHPExtensions = async ({ output }) => {
 
 const buildPHP = async ({ output }) => {
     try {
-        await execAsyncWithCallback('phpbrew -v');
+        await execAsyncSpawn('phpbrew -v');
     } catch (e) {
         if (/phpbrew: command not found/.test(e.message)) {
             output.fail(`Package ${ logger.style.misc('phpbrew') } is not installed!.\nTo install, follow this instructions: https://github.com/phpbrew/phpbrew/wiki/Quick-Start`);
@@ -62,11 +62,11 @@ const buildPHP = async ({ output }) => {
     }
 
     try {
-        const PHPBrewVersions = await execAsyncWithCallback('phpbrew list');
+        const PHPBrewVersions = await execAsyncSpawn('phpbrew list');
 
         if (!requiredPHPVersionRegex.test(PHPBrewVersions)) {
             output.start(`Compiling and building PHP-${requiredPHPVersion}...`);
-            await execAsyncWithCallback(
+            await execAsyncSpawn(
                 `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
                 +bz2 +bcmath +ctype +curl +dom +filter +hash \
                 +iconv +json +mbstring +openssl +xml +mysql \

@@ -1,5 +1,7 @@
-const { execAsync } = require('../util/exec-async-command');
-const { php: { phpBinPath }, magento: { magentoBinPath }, docker } = require('../config');
+const { execAsyncSpawn, execAsync } = require('../util/exec-async-command');
+const {
+    php: { phpBinPath }, magento: { magentoBinPath }, docker, appVersion
+} = require('../config');
 const ora = require('ora');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { getCachedPorts } = require('../util/get-ports');
@@ -8,11 +10,21 @@ const { defaultConfig, getApplicationConfig } = require('../util/application-con
 /**
  * Execute magento command
  * @param {String} command magento command
+ * @param {Object} options
  */
-const runMagentoCommand = async (command) => execAsync(`${phpBinPath} ${magentoBinPath} ${command}`);
+const runMagentoCommand = async (command, options) => execAsyncSpawn(`${phpBinPath} ${magentoBinPath} ${command}`, options);
+
+const runMagentoCommandSafe = async (command) => {
+    try {
+        const result = await runMagentoCommand(command);
+        return result;
+    } catch (e) {
+        return e;
+    }
+};
 
 const magentoFlushConfig = async ({ output }) => {
-    output.start('Flushing Magento redis cache...');
+    output.info('Flushing Magento redis cache...');
     const { name: redisName } = docker.container.redis();
     const cmd = `docker exec -t ${redisName} redis-cli -h ${redisName} -n 0 flushdb`;
     const result = await execAsync(cmd);
@@ -28,9 +40,8 @@ const magentoFlushConfig = async ({ output }) => {
     throw new Error(result);
 };
 
-const magentoDatabaseConfig = async ({ output, config }) => {
-    const ports = await getCachedPorts();
-    output.start('Setting magento database credentials');
+const magentoDatabaseConfig = async ({ output, config, ports }) => {
+    output.info('Setting magento database credentials');
 
     const { env } = docker.container.mysql();
 
@@ -53,25 +64,39 @@ const magentoDatabaseConfig = async ({ output, config }) => {
     // output.succeed('Redis setup!');
 };
 
-const magentoDatabaseMigration = async ({ output, config }) => {
+const magentoDatabaseMigration = async ({ output, config, ports }) => {
     /**
      *  Check if magento already installed or not, ignoring exit statuses of eval, since it's magento subprocess
      */
-    const magentoStatus = await runMagentoCommand('setup:db:status');
+    const magentoStatus = await runMagentoCommandSafe('setup:db:status');
 
     /**
      * We cannot rely on Magento Code, as these are update codes, not install codes. Therefore check the output for
      * the specific message!
      */
 
+    const elasticsearchConfig = `
+     --search-engine elasticsearch7 \
+     --elasticsearch-host localhost \
+     --elasticsearch-port ${ports.elasticsearch}
+     `;
+
     let magentoDBStatus = '0';
     if (magentoStatus.includes('Magento application is not installed')) {
+        output.info('Magento application is not installed, setting up...');
         await runMagentoCommand(`setup:install \
         --admin-firstname ${config.magento.first_name} \
         --admin-lastname ${config.magento.last_name} \
         --admin-email ${config.magento.email} \
         --admin-user ${config.magento.username} \
-        --admin-password ${config.magento.password}`);
+        --admin-password ${config.magento.password} ${appVersion.includes('2.4') ? elasticsearchConfig : ''}`, {
+            callback: (response) => {
+                response.split('\n').forEach((line) => {
+                    output.info(line);
+                });
+            }
+        });
+        output.succeed('Magento application setup');
     } else {
         magentoDBStatus = await runMagentoCommand('setup:db:status');
         output.info(`DB Status: ${magentoDBStatus}`);
@@ -173,6 +198,7 @@ const setupMagento = async () => {
     const output = ora('Setting up magento...').start();
 
     const appConfig = await getApplicationConfig();
+    const ports = await getCachedPorts();
 
     if (!appConfig) {
         output.warn('Application config not found');
@@ -183,7 +209,7 @@ const setupMagento = async () => {
     for (const step of magentoSetupSteps) {
         try {
         // eslint-disable-next-line no-await-in-loop
-            await step({ output, config: appConfig });
+            await step({ output, config: appConfig, ports });
         } catch (e) {
             output.fail(e.message);
             logger.error(e);

@@ -10,14 +10,14 @@ const { exec, spawn } = require('child_process');
 const execAsync = (command, options) => new Promise((resolve, reject) => {
     exec(command, options, (err, stdout) => (err ? reject(err) : resolve(stdout)));
 });
-// capture = don't output stdout/stderr, return with promises response
-// echo = capture + output in the end
-const execAsyncWithCallback = (command, { callback = () => {}, logOutput = false } = {}) => {
+
+const execAsyncSpawn = (command, { callback = () => {}, logOutput = false, cwd } = {}) => {
     const childProcess = spawn(
         'bash',
         ['-c', command],
         {
-            stdio: 'pipe'
+            stdio: 'pipe',
+            cwd
         }
     );
 
@@ -55,5 +55,5 @@ const execAsyncBool = async (command, options) => {
 module.exports = {
     execAsync,
     execAsyncBool,
-    execAsyncWithCallback
+    execAsyncSpawn
 };

@@ -1,10 +1,12 @@
 const path = require('path');
 const os = require('os');
 
+const appVersion = '2.3.5';
+
 const dirName = path.parse(process.cwd()).name;
 const cacheName = '.create-scandipwa-app-cache';
 
-const appPath = path.join(process.cwd(), 'app');
+const appPath = path.join(process.cwd(), 'src');
 const cachePath = path.join(process.cwd(), 'node_modules', cacheName);
 const templatePath = path.join(__dirname, 'templates');
 
@@ -132,13 +134,14 @@ const dockerMysqlContainer = ({ ports = {} } = {}) => ({
         MYSQL_DATABASE: 'magento'
     },
     // TODO: use connect instead
-    network: dockerNetworkName,
+    // network: dockerNetworkName,
+    network: 'host',
     image: 'mysql:5.7',
     name: `${dirName}_mysql`
 });
 
 const dockerElasticsearchContainer = ({ ports = {} } = {}) => ({
-    ports: [`${ports.elasticsearch}:9200`],
+    ports: [`127.0.0.1:${ports.elasticsearch}:9200`],
     mounts: [`source=${dockerElasticsearchVolume.name},target=/usr/share/elasticsearch/data`],
     env: {
         'bootstrap.memory_lock': true,
@@ -177,12 +180,13 @@ const phpFpmBinPath = path.resolve(phpVersionDir, 'sbin', 'php-fpm');
 
 const phpFpmConfPath = path.resolve(cachePath, 'php-fpm.conf');
 // php extensions
-const phpExtensions = ['gd', 'intl', 'sockets'];
+const phpExtensions = ['gd', 'intl', 'sockets', 'SimpleXML'];
 
 const pidFilePath = path.join(cachePath, 'php-fpm.pid');
 
 module.exports = {
     appPath,
+    appVersion,
     dirName,
     cachePath,
     templatePath,
