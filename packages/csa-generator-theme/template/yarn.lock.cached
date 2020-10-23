@@ -1419,10 +1419,10 @@
     lodash "^4.17.15"
     webpack-merge "^4.2.2"
 
-"@scandipwa/eslint-config@^0.0.3-alpha.2":
-  version "0.0.3-alpha.2"
-  resolved "https://registry.yarnpkg.com/@scandipwa/eslint-config/-/eslint-config-0.0.3-alpha.2.tgz#3808da5b2fdb9132cd43c690b4c0790cd09ec98f"
-  integrity sha512-YJ9BMNJS7sgtVJcWLUS0W0w51Ip9ie5+YeclM6EoIPnOlEZDoHymej86m29TIVYpo30jApQXGzc3U8qUFobf/w==
+"@scandipwa/eslint-config@^0.0.3-alpha.3":
+  version "0.0.3-alpha.3"
+  resolved "https://registry.yarnpkg.com/@scandipwa/eslint-config/-/eslint-config-0.0.3-alpha.3.tgz#634e2d215ecb28c2f64738d0382722a6ddad5551"
+  integrity sha512-s931NCv/eLgMMryX67ydVXpRKesrztCD7scMol8M9Wmkpcrl42g9iDu14U5jgtdzSOq2Nc5hJh+9o8ediYRBjQ==
 
 "@scandipwa/scandipwa-dev-utils@^0.0.8-alpha.0":
   version "0.0.8-alpha.0"
