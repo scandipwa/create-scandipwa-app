@@ -19,14 +19,15 @@ const installComposerInCache = async ({ output }) => {
     await createDirSafe(composerDirPath);
     try {
         output.start('Downloading composer...');
-        await execAsync(`${phpBinPath} -r "copy('https://getcomposer.org/installer', '${composerComposerSetupPath}');"`);
-        output.text = 'Checking installer integrity...';
-        // eslint-disable-next-line max-len
-        await execAsync(`${phpBinPath} -r "if (hash_file('sha384', '${composerComposerSetupPath}') === 'c31c1e292ad7be5f49291169c0ac8f683499edddcfd4e42232982d0fd193004208a58ff6f353fde0012d35fdd72bc394') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('${composerComposerSetupPath}'); } echo PHP_EOL;"`);
-        output.text = 'Installing composer...';
-        await execAsync(`${phpBinPath} ${composerComposerSetupPath} --install-dir=${composerDirPath}`);
-        output.text = 'Removing installer...';
-        await execAsync(`rm ${composerComposerSetupPath}`);
+        // install latest 1.x version
+        await execAsync(`${phpBinPath} -r "copy('https://getcomposer.org/composer-1.phar', '${composerBinPath}');"`);
+        // output.text = 'Checking installer integrity...';
+        // // eslint-disable-next-line max-len
+        // await execAsync(`${phpBinPath} -r "if (hash_file('sha384', '${composerComposerSetupPath}') === 'c31c1e292ad7be5f49291169c0ac8f683499edddcfd4e42232982d0fd193004208a58ff6f353fde0012d35fdd72bc394') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('${composerComposerSetupPath}'); } echo PHP_EOL;"`);
+        // output.text = 'Installing composer...';
+        // await execAsync(`${phpBinPath} ${composerComposerSetupPath} --install-dir=${composerDirPath}`);
+        // output.text = 'Removing installer...';
+        // await execAsync(`rm ${composerComposerSetupPath}`);
 
         const composerVersionOutput = await execAsync(`${phpBinPath} ${composerBinPath} --version --no-ansi`);
         const composerVersion = composerVersionOutput.match(/Composer version ([\d.]+)/i)[1];
@@ -47,7 +48,7 @@ const installComposerInCache = async ({ output }) => {
 };
 
 const installComposer = async () => {
-    const output = ora('Checking Composer...').start();
+    const output = ora('Checking Composer...').info();
 
     const hasComposerInCache = await checkComposerInCache();
 
