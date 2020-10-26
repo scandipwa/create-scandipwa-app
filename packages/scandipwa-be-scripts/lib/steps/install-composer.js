@@ -5,7 +5,6 @@ const {
     php: { phpBinPath },
     composer: {
         composerBinPath,
-        composerComposerSetupPath,
         composerDirPath
     }
 } = require('../config');
@@ -14,6 +13,19 @@ const { execAsync } = require('../util/exec-async-command');
 const pathExists = require('../util/path-exists');
 
 const checkComposerInCache = async () => pathExists(composerBinPath);
+
+const checkComposerAuth = async () => {
+    try {
+        const composeAuthVariable = await execAsync('echo $COMPOSER_AUTH');
+        if (JSON.parse(composeAuthVariable)['http-basic']) {
+            return true;
+        }
+        throw new Error('COMPOSER_AUTH env variable is corrupted');
+    } catch (e) {
+        logger.error(e);
+        return false;
+    }
+};
 
 const installComposerInCache = async ({ output }) => {
     await createDirSafe(composerDirPath);
@@ -49,6 +61,8 @@ const installComposerInCache = async ({ output }) => {
 
 const installComposer = async () => {
     const output = ora('Checking Composer...').info();
+
+    await checkComposerAuth();
 
     const hasComposerInCache = await checkComposerInCache();
 
