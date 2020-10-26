@@ -14,9 +14,9 @@ const { defaultConfig, getApplicationConfig } = require('../util/application-con
  */
 const runMagentoCommand = async (command, options) => execAsyncSpawn(`${phpBinPath} ${magentoBinPath} ${command}`, options);
 
-const runMagentoCommandSafe = async (command) => {
+const runMagentoCommandSafe = async (command, options) => {
     try {
-        const result = await runMagentoCommand(command);
+        const result = await runMagentoCommand(command, options);
         return result;
     } catch (e) {
         return e;
@@ -98,21 +98,22 @@ const magentoDatabaseMigration = async ({ output, config, ports }) => {
         });
         output.succeed('Magento application setup');
     } else {
-        magentoDBStatus = await runMagentoCommand('setup:db:status');
+        const { code } = await runMagentoCommandSafe('setup:db:status', { withCode: true });
+        magentoDBStatus = code;
         output.info(`DB Status: ${magentoDBStatus}`);
     }
 
     switch (magentoDBStatus) {
-    case '1': {
+    case 1: {
         output.fail('Cannot upgrade: manual action is required!');
         break;
     }
-    case '2': {
+    case 2: {
         output.info('Upgrading magento');
         await runMagentoCommand('setup:upgrade');
         break;
     }
-    case '0': {
+    case 0: {
         output.info('No upgrade/install is needed');
         break;
     }
@@ -122,16 +123,30 @@ const magentoDatabaseMigration = async ({ output, config, ports }) => {
     }
 };
 
-const magentoRedisConfig = async ({ output }) => {
+const magentoRedisConfig = async ({ output, ports }) => {
     output.info('Setting redis as config cache');
 
-    await runMagentoCommand('setup:config:set --cache-backend=redis --cache-backend-redis-server=redis --cache-backend-redis-db=0 -n');
+    // eslint-disable-next-line quotes
+    await runMagentoCommand(`setup:config:set \
+        --cache-backend=redis \
+        --cache-backend-redis-server=127.0.0.1 \
+        --cache-backend-redis-port=${ports.redis} \
+        --cache-backend-redis-db=0 \
+        -n`);
 
     output.info('Setting redis as session storage');
 
     // Redis for sessions
-    // eslint-disable-next-line max-len
-    await runMagentoCommand('setup:config:set --session-save=redis --session-save-redis-host=redis --session-save-redis-log-level=3 --session-save-redis-max-concurrency=30 --session-save-redis-db=1 --session-save-redis-disable-locking=1 -n');
+    // eslint-disable-next-line quotes
+    await runMagentoCommand(`setup:config:set \
+        --session-save=redis \
+        --session-save-redis-host=127.0.0.1 \
+        --session-save-redis-port=${ports.redis} \
+        --session-save-redis-log-level=3 \
+        --session-save-redis-max-concurrency=30 \
+        --session-save-redis-db=1 \
+        --session-save-redis-disable-locking=1 \
+        -n`);
 
     // Elasticsearch5 as a search engine
     output.info('Setting Elasticsearch7 as a search engine');
@@ -144,7 +159,7 @@ const magentoRedisConfig = async ({ output }) => {
 };
 
 const createAdminUser = async ({ output, config }) => {
-    output.info('Checking user $MAGENTO_USER');
+    output.info(`Checking user ${config.magento.user}`);
     const userStatus = await runMagentoCommand(`admin:user:unlock ${config.magento.user}`);
     if (userStatus.includes('Couldn\'t find the user account')) {
         await runMagentoCommand(`admin:user:create \

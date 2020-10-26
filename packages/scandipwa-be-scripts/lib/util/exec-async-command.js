@@ -11,7 +11,9 @@ const execAsync = (command, options) => new Promise((resolve, reject) => {
     exec(command, options, (err, stdout) => (err ? reject(err) : resolve(stdout)));
 });
 
-const execAsyncSpawn = (command, { callback = () => {}, logOutput = false, cwd } = {}) => {
+const execAsyncSpawn = (command, {
+    callback = () => {}, logOutput = false, cwd, withCode = false
+} = {}) => {
     const childProcess = spawn(
         'bash',
         ['-c', command],
@@ -37,9 +39,9 @@ const execAsyncSpawn = (command, { callback = () => {}, logOutput = false, cwd }
         });
         childProcess.on('close', (code) => {
             if (code > 0) {
-                reject(stdout);
+                reject(withCode ? { code, result: stdout } : stdout);
             } else {
-                resolve(stdout);
+                resolve(withCode ? { code, result: stdout } : stdout);
             }
         });
     });

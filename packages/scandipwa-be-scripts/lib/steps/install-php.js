@@ -35,7 +35,8 @@ const setupPHPExtensions = async ({ output }) => {
             for (const extension of missingPHPExtensions) {
                 output.start(`Installing PHP extension ${extension.name}...${extension.options ? ` with options "${extension.options}"` : ''}`);
                 // eslint-disable-next-line max-len
-                await execAsync(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension.name}${extension.options ? ` -- ${extension.options}` : ''}`);
+                await execAsyncSpawn(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension.name}${extension.options ? ` -- ${extension.options}` : ''}`,
+                    { callback: (line) => line.split('\n').forEach((l) => output.info(l)) });
                 output.succeed(`PHP extension ${extension.name} installed!`);
             }
 
@@ -45,6 +46,8 @@ const setupPHPExtensions = async ({ output }) => {
         return true;
     } catch (e) {
         output.fail(e.message);
+
+        logger.error(e);
 
         logger.error(
             'Unexpected error while setting up PHP extensions.',
