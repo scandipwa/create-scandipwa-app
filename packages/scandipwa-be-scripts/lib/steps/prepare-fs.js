@@ -76,18 +76,18 @@ async function prepareFileSystem(ports) {
         process.exit(1);
     }
 
-    const composerConfigOk = await checkConfigPath({
-        dirName: appPath,
-        configPathname: path.join(appPath, 'composer.json'),
-        template: path.join(templatePath, 'composer.template.json'),
-        name: 'composer',
-        output,
-        ports
-    });
+    // const composerConfigOk = await checkConfigPath({
+    //     dirName: appPath,
+    //     configPathname: path.join(appPath, 'composer.json'),
+    //     template: path.join(templatePath, 'composer.template.json'),
+    //     name: 'composer',
+    //     output,
+    //     ports
+    // });
 
-    if (!composerConfigOk) {
-        process.exit(1);
-    }
+    // if (!composerConfigOk) {
+    //     process.exit(1);
+    // }
 
     const magentoOk = await installMagento();
 

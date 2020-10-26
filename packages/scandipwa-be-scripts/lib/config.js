@@ -1,7 +1,7 @@
 const path = require('path');
 const os = require('os');
 
-const appVersion = '2.3.5';
+const appVersion = '2.4.1';
 
 const dirName = path.parse(process.cwd()).name;
 const cacheName = '.create-scandipwa-app-cache';
@@ -180,7 +180,12 @@ const phpFpmBinPath = path.resolve(phpVersionDir, 'sbin', 'php-fpm');
 
 const phpFpmConfPath = path.resolve(cachePath, 'php-fpm.conf');
 // php extensions
-const phpExtensions = ['gd', 'intl', 'sockets', 'SimpleXML'];
+const phpExtensions = [
+    { name: 'gd', options: '--with-jpeg-dir=/usr --with-png-dir=/usr' },
+    { name: 'intl' },
+    { name: 'sockets' },
+    { name: 'SimpleXML' }
+];
 
 const pidFilePath = path.join(cachePath, 'php-fpm.pid');
 

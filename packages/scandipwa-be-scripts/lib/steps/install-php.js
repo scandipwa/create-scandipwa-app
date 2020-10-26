@@ -30,16 +30,19 @@ const setupPHPExtensions = async ({ output }) => {
     try {
         const loadedPHPModules = await execAsync(`${phpBinPath} -m`);
         // console.log(loadedPHPModules)
-        const missingPHPExtensions = phpExtensions.filter((ext) => !loadedPHPModules.includes(ext));
+        const missingPHPExtensions = phpExtensions.filter((ext) => !loadedPHPModules.includes(ext.name));
         if (missingPHPExtensions.length > 0) {
             for (const extension of missingPHPExtensions) {
-                output.start(`Installing PHP extension ${extension}`);
-                await execAsync(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension}`);
-                output.succeed(`PHP extension ${extension} installed!`);
+                output.start(`Installing PHP extension ${extension.name}...${extension.options ? ` with options "${extension.options}"` : ''}`);
+                // eslint-disable-next-line max-len
+                await execAsync(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension.name}${extension.options ? ` -- ${extension.options}` : ''}`);
+                output.succeed(`PHP extension ${extension.name} installed!`);
             }
 
             output.succeed('PHP extensions are installed!');
         }
+
+        return true;
     } catch (e) {
         output.fail(e.message);
 
@@ -47,6 +50,8 @@ const setupPHPExtensions = async ({ output }) => {
             'Unexpected error while setting up PHP extensions.',
             'See ERROR log above.'
         );
+
+        return false;
     }
 };
 
@@ -130,7 +135,12 @@ const installPHP = async () => {
         output.succeed(`Using PHP version ${requiredPHPVersion}`);
     }
 
-    await setupPHPExtensions({ output });
+    const extensionsOK = await setupPHPExtensions({ output });
+
+    if (!extensionsOK) {
+        output.stop();
+        return false;
+    }
 
     output.stop();
 

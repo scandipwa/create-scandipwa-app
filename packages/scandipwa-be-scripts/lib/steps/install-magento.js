@@ -4,34 +4,22 @@ const ora = require('ora');
 const {
     php: { phpBinPath },
     composer: { composerBinPath },
-    magento: { magentoBinPath },
+    appVersion,
     appPath
 } = require('../config');
 const { execAsyncSpawn } = require('../util/exec-async-command');
+const pathExists = require('../util/path-exists');
+
+const checkMagentoApp = async () => pathExists(appPath);
 
 const installApp = async ({ output }) => {
     try {
         output.info('Creating Magento project...');
-        // eslint-disable-next-line max-len
         await execAsyncSpawn(
-            // `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition=${appVersion}src`,
-            `${phpBinPath} ${composerBinPath} install --ansi --no-interaction --no-dev --verbose --prefer-dist --ignore-platform-reqs`,
+            // eslint-disable-next-line max-len
+            `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition=${appVersion} src`,
             {
-                callback: (line) => {
-                    line.split('\n').forEach((l) => output.info(l));
-                    // output.info(line);
-                    // if (line.includes('Updating dependencies')) {
-                    //     output.text = 'Updating dependencies...';
-                    // }
-                    // // This needs to show user magento installation progress in console
-                    // if (/ - Installing (\S+) \((\S+)\)/ig.test(line)) {
-                    //     const match = line.match(/ - installing (\S+) \((\S+)\)/ig)
-                    //         .map((dep) => dep.match(/ - installing (\S+) \((\S+)\)/i).slice(1));
-
-                    //     output.info(`Installing ${match.flat().join(' ')}`);
-                    // }
-                },
-                cwd: appPath
+                callback: (line) => line.split('\n').forEach((l) => output.info(l))
             }
         );
         output.succeed('Project installed!');
@@ -47,39 +35,21 @@ const installApp = async ({ output }) => {
         return false;
     }
 
-    try {
-        await execAsyncSpawn(
-            `${phpBinPath} ${magentoBinPath} module:enable --all`,
-            { cwd: appPath, callback: (line) => line.split('\n').forEach((l) => output.info(l)) }
-        );
-    } catch (e) {
-        logger.error(e);
-        return false;
-    }
-
-    try {
-        await execAsyncSpawn(
-            `${phpBinPath} ${magentoBinPath} setup:di:compile`,
-            { cwd: appPath, callback: (line) => line.split('\n').forEach((l) => output.info(l)) }
-        );
-    } catch (e) {
-        logger.error(e);
-        return false;
-    }
+    return true;
 };
 
 const installMagento = async () => {
     const output = ora().info('Checking Composer...');
 
-    // const hasMagentoApp = await checkMagentoProject();
+    const hasMagentoApp = await checkMagentoApp();
 
-    // if (!hasMagentoApp) {
-    output.warn('Magento application not found, creating...');
-    const installAppOk = await installApp({ output });
-    if (!installAppOk) {
-        return false;
+    if (!hasMagentoApp) {
+        output.warn('Magento application not found, creating...');
+        const installAppOk = await installApp({ output });
+        if (!installAppOk) {
+            return false;
+        }
     }
-    // }
 
     output.stop();
 
