@@ -46,7 +46,13 @@ module.exports = {
         parser: '@typescript-eslint/parser',
         extends: ['plugin:@typescript-eslint/recommended'],
         rules: {
-            '@scandipwa/scandipwa-guidelines/use-namespace': 'off'
+            // Resolve problems with false-positive unused-vars
+            '@typescript-eslint/no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars-experimental': 'error',
+            // Disable "React" was used... issue see more in:https://stackoverflow.com/questions/63818415/react-was-used-before-it-was-defined
+            '@typescript-eslint/no-use-before-define': 'off',
+            // Allow empty functions, i.e. in defaultProps
+            '@typescript-eslint/no-empty-function': 'off'
         }
     }],
     rules: {
@@ -222,30 +228,31 @@ module.exports = {
                 allowBind: false
             }
         ],
-        'react/forbid-prop-types': [
-            2,
-            {
-                forbid: [
-                    'className'
-                ]
-            }
-        ],
-        'react/forbid-component-props': [
-            2,
-            {
-                forbid: [
-                    'className'
-                ]
-            }
-        ],
-        'react/forbid-dom-props': [
-            2,
-            {
-                forbid: [
-                    'className'
-                ]
-            }
-        ],
+        // // Prevent people from using className (prefer block, elem,)
+        // 'react/forbid-prop-types': [
+        //     2,
+        //     {
+        //         forbid: [
+        //             'className'
+        //         ]
+        //     }
+        // ],
+        // 'react/forbid-component-props': [
+        //     2,
+        //     {
+        //         forbid: [
+        //             'className'
+        //         ]
+        //     }
+        // ],
+        // 'react/forbid-dom-props': [
+        //     2,
+        //     {
+        //         forbid: [
+        //             'className'
+        //         ]
+        //     }
+        // ],
         'react/no-deprecated': 2,
         'babel/semi': 1,
         'new-cap': [

@@ -4,6 +4,20 @@
  */
 'use strict';
 
+const hasNamespace = (node, context) => {
+	const nodeToProcess = node.parent.type === 'ExportNamedDeclaration'
+		? node.parent
+		: node;
+    
+    const leadingComments = context.getSourceCode().getCommentsBefore(nodeToProcess);
+
+    const namespaceComment = leadingComments.find(
+		({ value }) => value.match(/@namespace/)
+	);
+
+	return !!namespaceComment;
+};
+
 module.exports = {
     meta: {
         docs: {
@@ -17,10 +31,7 @@ module.exports = {
 
     create: (context) => ({
         MethodDefinition(node) {
-            if (
-                node.key.name === 'constructor' &&
-                node.parent.parent.superClass.name.match(/^Extensible\w+/)
-            ) {
+            if (node.key.name === 'constructor' && hasNamespace(node.parent.parent, context)) {
                 context.report({
                     node,
                     message: 'Declaring `constructor` on classes is prohibited! Use `__construct` with same semantics instead.',
@@ -35,10 +46,12 @@ module.exports = {
                             }
                         );
 
-                        const fixes = [fixer.replaceText(node.key, '__construct')];
+                        const fixes = [fixer.replaceText(node.key, '__construct')]
                         if (superNode) {
-                            fixes.push(fixer.replaceText(superNode, 'super.__construct();'))
-                        }
+							fixes.push(fixer.replaceText(superNode, `super.__construct(${
+								superNode.expression.arguments.map(arg => arg.name).join(', ')
+							});`))
+						}
 
                         return fixes;
                     }

@@ -3,6 +3,7 @@
  * @author Jegors Batovs
  */
 
+const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
 
 const types = {
@@ -19,12 +20,12 @@ const types = {
     ].join(' > '),
 
     isExportedClass: node => node.type === 'ClassDeclaration'
-    && node.parent.type === 'ExportNamedDeclaration',
+        && node.parent.type === 'ExportNamedDeclaration',
 
     isExportedArrowFunction: node => node.type === 'ArrowFunctionExpression'
-    && node.parent.type === 'VariableDeclarator'
-    && node.parent.parent.type === 'VariableDeclaration'
-    && node.parent.parent.parent.type === 'ExportNamedDeclaration',
+        && node.parent.type === 'VariableDeclarator'
+        && node.parent.parent.type === 'VariableDeclaration'
+        && node.parent.parent.parent.type === 'ExportNamedDeclaration',
 
     PromiseHandlerArrowFunction: [
         "CallExpression[callee.type='MemberExpression']".concat(
@@ -39,14 +40,14 @@ const types = {
 
         return (
             node.type === 'ArrowFunctionExpression'
-        && parent.type === 'CallExpression'
-        && parent.callee.type === 'MemberExpression'
-        && promiseHandlerNames.includes(parent.callee.property.name)
+            && parent.type === 'CallExpression'
+            && parent.callee.type === 'MemberExpression'
+            && promiseHandlerNames.includes(parent.callee.property.name)
         );
     },
 
     isHandleableArrowFunction: node => types.isExportedArrowFunction(node)
-      || types.isPromiseHandlerArrowFunction(node),
+        || types.isPromiseHandlerArrowFunction(node),
 
     detectType: node => {
         if (types.isPromiseHandlerArrowFunction(node)) return 'promise handler arrow function';
@@ -69,91 +70,30 @@ const getProperParentNode = (node) => {
     return {};
 };
 
-const getNamespaceForNode = (node) => {
+const getNamespaceForNode = (node, context) => {
     const getNamespaceFromComments = (comments = []) => comments.find(
         comment => comment.value.includes('@namespace')
     );
 
     return getNamespaceFromComments(
-        getProperParentNode(node).leadingComments
+        context.getSourceCode().getCommentsBefore(getProperParentNode(node))
     );
 }
 
+const toCamelCase = (string) => (
+    string.replace(/['\u2019]/g, '').reduce((result, word, index) => {
+      word = word.toLowerCase()
+      return result + (index ? upperFirst(word) : word)
+    }, '')
+);
+
 const generateNamespace = (node, context) => {
-    const capitalise = word => word.charAt(0).toUpperCase() + word.slice(1);
-    const generateBaseNamespace = () => {
-        const splitReverseFilePath = context.getFilename().split('/').reverse();
-        const postfix = capitalise(splitReverseFilePath[0].split('.')[1]);
-
-        const generatePluginPart = () => {
-            const pluginRootIndex = context.getFilename().indexOf('/src/scandipwa/');
-            if (pluginRootIndex === -1) {
-                return '';
-            }
-
-            return context.getFilename()
-                .slice(0, pluginRootIndex)
-                .split('/')
-                .reverse()
-                .slice(0, 2)
-                .reverse()
-                .join('/')
-                .concat('/');
-        }
-
-        return generatePluginPart().concat(
-            splitReverseFilePath.slice(1).reduce(
-                (acc, cur, _, array) => {
-                    if (cur === 'app' || cur === 'sw') {
-                        // Mutate the initial array to break cycle
-                        array.splice(1);
-                        return acc;
-                    }
-
-                    return [capitalise(cur), acc].filter(Boolean).join('/');
-                },
-                ['JS', 'QUERY'].includes(postfix.toUpperCase()) ? '' : postfix
-            )
-        );
-    };
-
-    const toCamelCase = (...args) => {
-        const decapitalise = word => word.charAt(0).toLowerCase() + word.slice(1);
-
-        return args.slice(1).reduce(
-            (acc, cur) => {
-              acc = acc.concat(capitalise(cur));
-
-              return acc;
-            },
-            decapitalise(args[0])
-        )
-    };
-
-    if (node.type === 'ClassDeclaration') {
-        return generateBaseNamespace();
-    }
-
-    let stack = [];
-    const collect = (node, namespaceContainer) => {
-        if (node.type === 'CallExpression') {
-            if (node.callee.type === 'MemberExpression') {
-                stack.push(node.callee.property.name);
-                collect(node.callee.object);
-            } else if (node.callee.type === 'Identifier') {
-                stack.push(node.callee.name);
-            }
-        }
-    }
-
-    if (node.parent.type === 'VariableDeclarator') {
-        stack.push(node.parent.id.name)
-    } else if (node.type === 'ClassDeclaration') {
-        stack.push(node.id.name);
-    } else {
-        collect(node.parent);
-    }
-    return [generateBaseNamespace(), toCamelCase(...stack.reverse())].join('/');
+    const filename = context.getFilename();
+    const splitted = filename.split('src');
+    const [toFile] = path.normalize(splitted.splice(-1));
+    const toPackage = path.normalize(splitted.join('src/'));
+    const { name: packageName } = getPackageJson(toPackage);
+    
 }
 
 const isPlugin = (node) => {
@@ -179,7 +119,7 @@ module.exports = {
             types.PromiseHandlerArrowFunction,
             types.ExportedArrowFunction
         ].join(',')](node) {
-            const namespace = getNamespaceForNode(node);
+            const namespace = getNamespaceForNode(node, context);
 
             if (!namespace && !isPlugin(node)) {
                 context.report({
