@@ -4,7 +4,7 @@
     "main": "./index.js",
     "license": "OSL-3.0",
     "bin": {
-        "scandipwa-be-scripts": "./index.js"
+        "scandipwa-be-scripts": "./bin/be-scripts.js"
     },
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "^0.0.7",
