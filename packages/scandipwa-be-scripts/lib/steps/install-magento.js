@@ -5,13 +5,9 @@ const {
     php: { phpBinPath },
     composer: { composerBinPath },
     magento: { magentoBinPath },
-    appPath,
-    appVersion
+    appPath
 } = require('../config');
 const { execAsyncSpawn } = require('../util/exec-async-command');
-const pathExists = require('../util/path-exists');
-
-const checkMagentoProject = async () => pathExists(appPath);
 
 const installApp = async ({ output }) => {
     try {
@@ -53,7 +49,7 @@ const installApp = async ({ output }) => {
 
     try {
         await execAsyncSpawn(
-            `${phpBinPath} ${magentoBinPath} setup:di:compile`,
+            `${phpBinPath} ${magentoBinPath} module:enable --all`,
             { cwd: appPath, callback: (line) => line.split('\n').forEach((l) => output.info(l)) }
         );
     } catch (e) {
@@ -63,11 +59,9 @@ const installApp = async ({ output }) => {
 
     try {
         await execAsyncSpawn(
-            `${phpBinPath} ${magentoBinPath} scandipwa:theme:bootstrap Scandiweb/pwa -n || true`,
+            `${phpBinPath} ${magentoBinPath} setup:di:compile`,
             { cwd: appPath, callback: (line) => line.split('\n').forEach((l) => output.info(l)) }
         );
-
-        return true;
     } catch (e) {
         logger.error(e);
         return false;
@@ -75,12 +69,12 @@ const installApp = async ({ output }) => {
 };
 
 const installMagento = async () => {
-    const output = ora('Checking Composer...').start();
+    const output = ora().info('Checking Composer...');
 
     // const hasMagentoApp = await checkMagentoProject();
 
     // if (!hasMagentoApp) {
-    output.warn('Magento application not found, installing...');
+    output.warn('Magento application not found, creating...');
     const installAppOk = await installApp({ output });
     if (!installAppOk) {
         return false;

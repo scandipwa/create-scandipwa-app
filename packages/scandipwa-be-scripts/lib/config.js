@@ -218,7 +218,6 @@ module.exports = {
     },
     composer: {
         composerDirPath: path.join(cachePath, 'composer'),
-        composerBinPath: path.join(cachePath, 'composer', 'composer.phar'),
-        composerComposerSetupPath: path.join(cachePath, 'composer-setup.php')
+        composerBinPath: path.join(cachePath, 'composer', 'composer.phar')
     }
 };
