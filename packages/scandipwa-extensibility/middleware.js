@@ -1,7 +1,7 @@
-const generateGetHandler = require('./lib/handlers/generateGetHandler');
-const generateApplyHandler = require('./lib/handlers/generateApplyHandler');
-const generateConstructHandler = require('./lib/handlers/generateConstructHandler');
-const applyClassWrappers = require('./lib/middlewarers/generateMiddlewaredClass');
+import generateApplyHandler from './lib/handlers/generateApplyHandler';
+import generateConstructHandler from './lib/handlers/generateConstructHandler';
+import generateGetHandler from './lib/handlers/generateGetHandler';
+import applyClassWrappers from './lib/middlewarers/generateMiddlewaredClass';
 
 const addNamespaceToMiddlewarable = (Middlewarable, namespace) => {
     // Retrieve already existing namespaces
@@ -49,4 +49,4 @@ function middleware(Middlewarable, namespace) {
     return applyClassWrappers(proxy);
 }
 
-module.exports = middleware;
+export default middleware;

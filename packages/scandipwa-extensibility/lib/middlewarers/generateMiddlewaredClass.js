@@ -1,5 +1,5 @@
-const getWrapperFromPlugin = require('../helpers/getWrapperFromPlugin');
-const getPluginsForClass = require('../helpers/getPluginsForClass');
+import getPluginsForClass from '../helpers/getPluginsForClass';
+import getWrapperFromPlugin from '../helpers/getWrapperFromPlugin';
 
 /**
  * Provide an opportunity to wrap proxy with additional functions.
@@ -7,7 +7,7 @@ const getPluginsForClass = require('../helpers/getPluginsForClass');
  * @param {Array} sortedPlugins
  * @param Context origContext
  */
-module.exports = (proxy) => {
+export default (proxy) => {
     const { __namespaces__ } = proxy.prototype;
     const namespacePluginsClass = getPluginsForClass(__namespaces__);
 

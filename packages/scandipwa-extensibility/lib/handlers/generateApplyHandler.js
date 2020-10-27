@@ -1,7 +1,7 @@
-const generateMiddlewaredFunction = require('../middlewarers/generateMiddlewaredFunction');
-const getPluginsForMember = require('../helpers/getPluginsForMember');
+import getPluginsForMember from '../helpers/getPluginsForMember';
+import generateMiddlewaredFunction from '../middlewarers/generateMiddlewaredFunction';
 
-module.exports = (namespace) => (origFunction, thisArg, originalArgs) => {
+export default (namespace) => (origFunction, thisArg, originalArgs) => {
     // Get plugins for the function
     const memberPluginsApply = getPluginsForMember(namespace, 'function');
 

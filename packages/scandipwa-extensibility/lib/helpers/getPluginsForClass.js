@@ -4,7 +4,7 @@
  * These plugins cannot be inherited
  * @param {String[]} namespaces
  */
-module.exports = (namespaces) => {
+export default (namespaces) => {
     // The last pushed into the namespaces array namespace
     // Is an actual, not an inherited one.
     const outerNamespace = namespaces[namespaces.length - 1];

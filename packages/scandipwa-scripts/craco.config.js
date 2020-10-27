@@ -81,8 +81,8 @@ module.exports = () => {
                 // In development mode, provide simple translations and React
                 new webpack.ProvidePlugin({
                     React: 'react',
-                    middleware: require.resolve('@scandipwa/scandipwa-extensibility/middleware'),
-                    Extensible: require.resolve('@scandipwa/scandipwa-extensibility/Extensible')
+                    middleware: [require.resolve('@scandipwa/scandipwa-extensibility/middleware'), 'default'],
+                    Extensible: [require.resolve('@scandipwa/scandipwa-extensibility/Extensible'), 'default']
                 }),
 
                 // Provide BEM specific variables

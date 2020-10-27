@@ -1,4 +1,4 @@
-const getWrapperFromPlugin = require('../helpers/getWrapperFromPlugin');
+import getWrapperFromPlugin from '../helpers/getWrapperFromPlugin';
 
 /**
  * Middlewaring given original member
@@ -6,7 +6,7 @@ const getWrapperFromPlugin = require('../helpers/getWrapperFromPlugin');
  * @param {Array} sortedPlugins
  * @param Context origContext
  */
-module.exports = (origMember = () => {}, sortedPlugins, origContext) => (...args) => {
+export default (origMember = () => {}, sortedPlugins, origContext) => (...args) => {
     const newMember = sortedPlugins.reduce(
         (acc, plugin) => () => {
             const wrapper = getWrapperFromPlugin(plugin, origMember.name);

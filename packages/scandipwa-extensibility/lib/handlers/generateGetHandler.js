@@ -1,11 +1,11 @@
-const generateMiddlewaredFunction = require('../middlewarers/generateMiddlewaredFunction');
-const getPluginsForMember = require('../helpers/getPluginsForMember');
+import getPluginsForMember from '../helpers/getPluginsForMember';
+import generateMiddlewaredFunction from '../middlewarers/generateMiddlewaredFunction';
 
 /**
  * @param {string} targetType class | instance
  * @param {string} namespaces
  */
-module.exports = (targetType, namespaces) => (target, memberName, proxy) => {
+export default (targetType, namespaces) => (target, memberName, proxy) => {
     // Get the original member
     const origMember = Reflect.get(target, memberName, proxy);
 

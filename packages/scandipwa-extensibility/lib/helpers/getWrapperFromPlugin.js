@@ -4,7 +4,7 @@
  * @param {Object} plugin
  * @param {String} memberName
  */
-module.exports = (plugin, memberName) => {
+export default (plugin, memberName) => {
     const { implementation } = plugin;
 
     if (typeof plugin === 'function') {

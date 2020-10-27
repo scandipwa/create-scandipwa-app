@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-const generateGetHandler = require('./lib/handlers/generateGetHandler');
+import generateGetHandler from './lib/handlers/generateGetHandler';
 
 // Key for processable classes to determine whether they are already extensible
 const extensible = Symbol('Extensible');
@@ -11,7 +11,7 @@ const generated = [];
 // eslint-disable-next-line @scandipwa/scandipwa-guidelines/derived-class-names
 class EmptyBase {}
 
-module.exports = (BaseClass = EmptyBase) => {
+export default (BaseClass = EmptyBase) => {
     // NOTE! Base class is original class which class extends
 
     // Handle already extensible classes

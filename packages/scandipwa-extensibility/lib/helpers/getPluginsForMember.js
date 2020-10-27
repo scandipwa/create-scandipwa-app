@@ -5,7 +5,7 @@
  * @param {String} targetSpecifier
  * @param {String} memberName
  */
-module.exports = (namespaces, targetSpecifier, memberName) => namespaces.reduce(
+export default (namespaces, targetSpecifier, memberName) => namespaces.reduce(
     (acc, namespace) => {
         // Handle no member name: return all plugins for the provided section
         if (!memberName) {

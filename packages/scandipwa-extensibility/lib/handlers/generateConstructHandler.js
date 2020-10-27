@@ -1,7 +1,7 @@
-const getWrapperFromPlugin = require('../helpers/getWrapperFromPlugin');
-const getPluginsForMember = require('../helpers/getPluginsForMember');
+import getPluginsForMember from '../helpers/getPluginsForMember';
+import getWrapperFromPlugin from '../helpers/getWrapperFromPlugin';
 
-module.exports = (namespaces) => (TargetClass, args, newTarget) => {
+export default (namespaces) => (TargetClass, args, newTarget) => {
     // Get an instance
     const instance = Reflect.construct(TargetClass, args, newTarget);
 
