@@ -80,20 +80,14 @@ const getNamespaceForNode = (node, context) => {
     );
 }
 
-const toCamelCase = (string) => (
-    string.replace(/['\u2019]/g, '').reduce((result, word, index) => {
-      word = word.toLowerCase()
-      return result + (index ? upperFirst(word) : word)
-    }, '')
-);
-
 const generateNamespace = (node, context) => {
     const filename = context.getFilename();
     const splitted = filename.split('src');
     const [toFile] = path.normalize(splitted.splice(-1));
     const toPackage = path.normalize(splitted.join('src/'));
     const { name: packageName } = getPackageJson(toPackage);
-    
+    // TODO: transform the packageName to first namespace part
+    // TODO: transform the toFile and node location to second namespace part
 }
 
 const isPlugin = (node) => {
