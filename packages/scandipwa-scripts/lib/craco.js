@@ -4,14 +4,14 @@ const debounce = require('debounce');
 const chokidar = require('chokidar');
 const kill = require('tree-kill');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
+const { before } = require('./build-plugins');
 
 const args = process.argv.slice(2);
 
 module.exports = (script) => {
-    const isProd = script === 'build';
-    const isMagento = args.indexOf('--magento') !== -1;
+    before.forEach((beforeRun) => beforeRun(script));
 
+    const isProd = script === 'build';
     const localeArgIndex = args.indexOf('--locale');
     const locale = localeArgIndex === -1 ? 'en_US' : args[localeArgIndex + 1];
 
@@ -25,14 +25,6 @@ module.exports = (script) => {
         );
 
         process.exit(1);
-    }
-
-    if (isMagento) {
-        logger.note(
-            'Building as a Magento theme!',
-            `The ${ logger.style.file('public/index.html') } file content will not be taken into account!`,
-            `Using content of ${ logger.style.file('public/index.php') } instead!`
-        );
     }
 
     const TIMEOUT_BETWEEN_KILL_TRIGGERS = 500;
@@ -65,16 +57,17 @@ module.exports = (script) => {
                 stdio: ['inherit', 'inherit', 'inherit'],
                 env: {
                     ...process.env,
-                    BROWSER: isRestarted ? 'none' : '',
+                    // after restart do not launch new browser, and by default
+                    // start new session based on env variable value
+                    BROWSER: isRestarted ? 'none' : (process.env.BROWSER || ''),
                     FORCE_COLOR: true,
-                    PWA_BUILD_MODE: isMagento ? 'magento' : 'storefront',
                     PWA_LOCALE: locale,
                     ...(isProd ? { GENERATE_SOURCEMAP: false } : {})
                 }
             }
         );
 
-        // TODO: can we auto-comnnect hot-reload back?
+        // TODO: can we auto-connect hot-reload back?
         // TODO: remove production build reference to React
 
         child.on('error', (e) => {
@@ -96,10 +89,6 @@ module.exports = (script) => {
             kill(child.pid, 'SIGTERM');
         }
     });
-
-    if (!isValidComposer()) {
-        process.exit();
-    }
 
     spawnUndead();
 

@@ -6,10 +6,14 @@ const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackHardDiskPlugin = require('html-webpack-harddisk-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { cracoPlugins } = require('./lib/build-plugins');
+const {
+    getLoader,
+    getLoaders,
+    loaderByName
+} = require('@scandipwa/craco');
 
 const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
@@ -19,17 +23,10 @@ const { sources, PROJECT } = require('./lib/sources');
 const alias = require('./lib/alias');
 const when = require('./lib/when');
 
-// The variable is passed automatically, use --magento flag
-const isMagento = process.env.PWA_BUILD_MODE === 'magento';
-
-// The when handler (useful when returning)
-const whenMagento = (th, fh) => when(isMagento, th, fh);
-
 module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss', sources);
     const appIndexJs = FallbackPlugin.getFallbackPathname('./src/index.js', sources);
     const appHtml = FallbackPlugin.getFallbackPathname('./public/index.html', sources);
-    const appPHP = FallbackPlugin.getFallbackPathname('./public/index.php', sources);
 
     // TODO: check SWorker
 
@@ -38,15 +35,11 @@ module.exports = () => {
             // Simply fallback to core, this why it's here
             appIndexJs,
 
-            // For Magento, use magento/Magento_Theme folder as dist
-            appBuild: path.join(process.cwd(), ...whenMagento(
-                ['magento', 'Magento_Theme', 'web'],
-                ['build']
-            )),
+            // Assume we are store-front, build into build
+            appBuild: path.join(process.cwd(), 'build'),
 
-            // For Magento use PHP template (defined in /public/index.php)
-            // otherwise use normal HTML (defined in /public/index.html)
-            appHtml: whenMagento(appPHP, appHtml)
+            // Assume store-front use normal HTML (defined in /public/index.html)
+            appHtml
         },
         eslint: {
             mode: ESLINT_MODES.extends,
@@ -96,13 +89,6 @@ module.exports = () => {
                 // Show progress bar when building
                 new ProgressBarPlugin(),
 
-                // TODO: implement PHP-based approach for development as Magento theme.
-                // See more: https://medium.com/@agent_hunt/how-to-use-index-php-as-the-index-file-with-create-react-app-ff760c910a6a
-                // In case it is Magento - we would like to see customization,
-                // meta and other things directly from Magento 2 => require
-                // disk write for PHP to work with.
-                ...whenMagento([new HtmlWebpackHardDiskPlugin()], []),
-
                 new I18nPlugin({ locale: process.env.PWA_LOCALE })
             ],
             configure: (webpackConfig) => {
@@ -121,16 +107,25 @@ module.exports = () => {
                 webpackConfig.resolve.extensions.push('.ts');
                 webpackConfig.resolve.extensions.push('.tsx');
 
-                // Allow linter only in project
-                webpackConfig.module.rules[1].include = sources[PROJECT];
+                // Take the ESLint loader, change it's include directory to match only project
+                // TODO: in CRA 4.0.0 the eslint-loader was migrated to webpack-eslint-loader
+                const { isFound: isESLintLoaderFound, match: eslintLoader } = getLoader(webpackConfig, loaderByName('eslint-loader'));
 
-                // Allow everything to processed by babel
-                webpackConfig.module.rules[2].oneOf[1].include = undefined;
+                if (isESLintLoaderFound) {
+                    // Allow linter only in project
+                    eslintLoader.loader.include = sources[PROJECT];
+                }
 
-                // Replace .html exclude to .php (otherwise php will compile into /media as file)
-                webpackConfig.module.rules[2].oneOf[
-                    webpackConfig.module.rules[2].oneOf.length - 1
-                ].exclude[1] = whenMagento(/\.php$/, /\.html$/);
+                // Get all babel loaders, make sure they do process not just the src folder
+                const { hasAny: hasAnyBabelLoaders, matches: babelLoaders } = getLoaders(webpackConfig, loaderByName('babel-loader'));
+
+                if (hasAnyBabelLoaders) {
+                    babelLoaders.forEach(({ loader }) => {
+                        // Allow everything to be processed by babel
+                        // TODO: compose a list of known location, process only those
+                        loader.include = undefined;
+                    });
+                }
 
                 // Inject extension import loader
                 webpackConfig.module.rules.push({
@@ -145,33 +140,35 @@ module.exports = () => {
                 webpackConfig.optimization.minimizer[0].options.extractComments = whenDev(() => true, false);
 
                 // Modify plugins if needed
-                webpackConfig.plugins.reduce((acc, plugin) => {
-                    if (plugin instanceof HtmlWebpackPlugin) {
-                        // If this is a Magento setup, change output names
-                        plugin.options.filename = whenMagento('../templates/root.phtml', 'index.html');
-                    } else if (plugin instanceof WorkboxWebpackPlugin.GenerateSW) {
+                webpackConfig.plugins.forEach((plugin) => {
+                    if (plugin instanceof WorkboxWebpackPlugin.GenerateSW) {
                         // Patch navigate fallback originally references hard-coded index.html
                         plugin.config.navigateFallback = '/';
                     } else if (plugin instanceof MiniCssExtractPlugin) {
                         // Patch mini-css-extract-plugin issue of "Conflicting Order"
                         plugin.options.ignoreOrder = true;
                     }
-
-                    return [...acc, plugin];
-                }, []);
+                });
 
                 return webpackConfig;
             }
         },
-        // if there is no abstract style, do not inject it
-        plugins: when(fs.existsSync(abstractStyle), [
-            {
-                // Allow using SCSS mix-ins in any file
-                plugin: sassResourcesLoader,
-                options: {
-                    resources: abstractStyle
-                }
-            }
-        ], [])
+        plugins: [
+            ...when(
+                // if there is no abstract style, do not inject it
+                fs.existsSync(abstractStyle),
+                [
+                    {
+                        // Allow using SCSS mix-ins in any file
+                        plugin: sassResourcesLoader,
+                        options: {
+                            resources: abstractStyle
+                        }
+                    }
+                ],
+                []
+            ),
+            ...cracoPlugins
+        ]
     };
 };

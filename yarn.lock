@@ -2313,6 +2313,9 @@
   dependencies:
     "@types/node" ">= 8"
 
+"@scandipwa/magento-theme@file:packages/test/packages/magento-theme":
+  version "0.0.0"
+
 "@scandipwa/test@file:packages/test/packages/test":
   version "0.0.0"
 
