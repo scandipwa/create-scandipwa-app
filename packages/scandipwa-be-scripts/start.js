@@ -6,6 +6,7 @@ const { getAvailablePorts } = require('./lib/util/get-ports');
 const { startPhpFpm, stopPhpFpm } = require('./lib/steps/manage-php-fpm');
 const openBrowser = require('./lib/util/open-browser');
 const setupMagento = require('./lib/steps/setup-magento');
+const ora = require('ora');
 
 let started = false;
 const start = async () => {
@@ -27,8 +28,8 @@ const start = async () => {
     started = true;
 
     await openBrowser(`http://localhost:${ports.app}`);
-    // startup app
-    // await deployMagento()
+
+    ora().info(`Application started up on http://localhost:${ports.app}`);
 };
 
 exitHook(async (callback) => {

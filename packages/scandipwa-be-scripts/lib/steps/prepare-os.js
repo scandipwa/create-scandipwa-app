@@ -8,6 +8,8 @@ const installComposer = require('./install-composer');
 
 const supportedPlatforms = ['darwin', 'linux'];
 
+// TODO add check for freetype2 and lib32-freetype2 packages in system.
+
 const validateOS = async () => {
     if (!supportedPlatforms.includes(os.platform())) {
         logger.error('Sorry, we don\'t currently support your OS.');

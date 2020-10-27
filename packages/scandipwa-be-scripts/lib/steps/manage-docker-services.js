@@ -9,9 +9,17 @@ const dockerVolumeCreate = require('../util/docker-volume-create');
 const dockerRun = require('../util/docker-run');
 const savePortsConfig = require('../util/save-ports');
 
-const dockerStart = ({ name } = {}) => execAsync(['docker', 'container', 'start', name].join(' '));
+/**
+ * Stop docker containers
+ * @param {Array<String>} containers container names
+ */
+const dockerContainerStop = (containers) => execAsync(`docker container stop ${containers.join(' ')}`);
 
-const dockerStop = ({ name } = {}) => execAsync(['docker', 'container', 'stop', name].join(' '));
+/**
+ * Remove docker containers
+ * @param {Array<String>} containers container names
+ */
+const dockerContainerRemove = (containers) => execAsync(`docker container rm ${containers.join(' ')}`);
 
 const deployDockerNetwork = async ({ output }) => {
     try {
@@ -85,12 +93,10 @@ const deployDockerContainers = async ({ output, ports }) => {
                     .map((container) => container().name);
 
                 try {
-                    await dockerStop({ name: containersToStop.join(' ') });
-                    await dockerStart({ name: docker.containerList.map((container) => container().name).join(' ') });
-
-                    return true;
+                    await dockerContainerStop(containersToStop);
+                    await dockerContainerRemove(containersToStop);
                 } catch (e) {
-                    output.fail('Docker containers restart error');
+                    output.fail('Docker containers stop error');
 
                     logger.log(e);
 
@@ -117,13 +123,17 @@ const deployDockerContainers = async ({ output, ports }) => {
         const allContainerList = await execAsync('docker container ls -a');
 
         const existingContainers = docker.containerList
-            .filter((container) => allContainerList.includes(container().name))
-            .map((container) => container().name);
+            .filter((container) => allContainerList.includes(container().name));
 
         if (existingContainers.length > 0) {
             output.text = 'Starting containers...';
             if (existingContainers.length === docker.containerList.length) {
-                await dockerStart({ name: existingContainers.join(' ') });
+                // eslint-disable-next-line no-restricted-syntax
+                for (const container of existingContainers) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await dockerRun(container);
+                }
+                await dockerRun();
                 output.succeed('Containers started up!');
                 return true;
             }
@@ -304,7 +314,13 @@ const startServices = async (ports) => {
     }
 };
 
+const removeServices = async ({ output }) => {
+    await stopServices({ output });
+    await dockerRemoveVolumes({ output });
+};
+
 module.exports = {
     startServices,
-    stopServices
+    stopServices,
+    removeServices
 };

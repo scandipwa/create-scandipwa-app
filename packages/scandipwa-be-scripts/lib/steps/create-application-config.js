@@ -85,6 +85,8 @@ const createApplicationConfig = async ({ output }) => {
             });
         } else if (config_type === 'default') {
             await saveApplicationConfig(defaultConfig);
+            output.info('Using default config');
+            output.info(JSON.stringify(defaultConfig, null, 2));
         } else {
             output.warn('Ok, good luck');
             return false;

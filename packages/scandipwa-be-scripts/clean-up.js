@@ -1,14 +1,15 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const ora = require('ora');
 const { appPath, cachePath } = require('./lib/config');
-const { stopServices } = require('./lib/steps/manage-docker-services');
+const { removeServices } = require('./lib/steps/manage-docker-services');
 const { stopPhpFpm } = require('./lib/steps/manage-php-fpm');
 const { execAsync } = require('./lib/util/exec-async-command');
 const pathExists = require('./lib/util/path-exists');
+const { runMagentoCommandSafe } = require('./lib/util/run-magento');
 
 const cleanUp = async () => {
     const output = ora('Stopping docker services...').start();
-    await stopServices({ output });
+    await removeServices({ output });
 
     await stopPhpFpm({ output });
 
@@ -35,10 +36,21 @@ const cleanUp = async () => {
     try {
         const appFolderExists = await pathExists(appPath);
         if (appFolderExists) {
-            output.start('Removing magento...');
-            await execAsync(`rm -rf ${appPath}`);
+            const appInstalled = await runMagentoCommandSafe('setup:db:status');
+
+            if (appInstalled.includes('the Magento application is not installed')) {
+                output.info('Magento is not installed');
+            } else {
+                await runMagentoCommandSafe('setup:uninstall');
+                output.succeed('Magento application uninstalled');
+            }
+
+            if (process.argv.includes('--force')) {
+                output.warn('Removing application directory');
+                await execAsync(`rm -rf ${appPath}`);
+                output.succeed('Directory removed');
+            }
         }
-        output.succeed('Magento removed!');
     } catch (e) {
         output.fail(e.message);
 

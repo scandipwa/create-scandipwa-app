@@ -1,30 +1,15 @@
-const { execAsyncSpawn, execAsync } = require('../util/exec-async-command');
+const { execAsync } = require('../util/exec-async-command');
 const {
-    php: { phpBinPath }, magento: { magentoBinPath }, docker, appVersion
+    docker, appVersion
 } = require('../config');
 const ora = require('ora');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { getCachedPorts } = require('../util/get-ports');
 const { defaultConfig, getApplicationConfig } = require('../util/application-config');
-
-/**
- * Execute magento command
- * @param {String} command magento command
- * @param {Object} options
- */
-const runMagentoCommand = async (command, options) => execAsyncSpawn(`${phpBinPath} ${magentoBinPath} ${command}`, options);
-
-const runMagentoCommandSafe = async (command, options) => {
-    try {
-        const result = await runMagentoCommand(command, options);
-        return result;
-    } catch (e) {
-        return e;
-    }
-};
+const { runMagentoCommand, runMagentoCommandSafe } = require('../util/run-magento');
 
 const magentoFlushConfig = async ({ output }) => {
-    output.info('Flushing Magento redis cache...');
+    output.start('Flushing Magento redis cache...');
     const { name: redisName } = docker.container.redis();
     const cmd = `docker exec -t ${redisName} redis-cli -h ${redisName} -n 0 flushdb`;
     const result = await execAsync(cmd);
@@ -41,7 +26,7 @@ const magentoFlushConfig = async ({ output }) => {
 };
 
 const magentoDatabaseConfig = async ({ output, config, ports }) => {
-    output.info('Setting magento database credentials');
+    output.start('Setting magento database credentials');
 
     const { env } = docker.container.mysql();
 
@@ -53,15 +38,6 @@ const magentoDatabaseConfig = async ({ output, config, ports }) => {
     --backend-frontname ${config.magento.adminuri} \
     -n`);
     output.succeed('Magento database credentials are set!');
-
-    // output.start('Setting redis for persisted query(PWA)');
-    // await runMagentoCommand(`setup:config:set \
-    // --pq-host=redis \
-    // --pq-port=${ports.redis} \
-    // --pq-database=5 \
-    // --pq-scheme=tcp \
-    // -n`);
-    // output.succeed('Redis setup!');
 };
 
 const magentoDatabaseMigration = async ({ output, config, ports }) => {
@@ -83,12 +59,12 @@ const magentoDatabaseMigration = async ({ output, config, ports }) => {
 
     let magentoDBStatus = '0';
     if (magentoStatus.includes('Magento application is not installed')) {
-        output.info('Magento application is not installed, setting up...');
+        output.start('Magento application is not installed, setting up...');
         await runMagentoCommand(`setup:install \
         --admin-firstname ${config.magento.first_name} \
         --admin-lastname ${config.magento.last_name} \
         --admin-email ${config.magento.email} \
-        --admin-user ${config.magento.username} \
+        --admin-user ${config.magento.user} \
         --admin-password ${config.magento.password} ${appVersion.includes('2.4') ? elasticsearchConfig : ''}`, {
             callback: (response) => {
                 response.split('\n').forEach((line) => {
@@ -109,8 +85,8 @@ const magentoDatabaseMigration = async ({ output, config, ports }) => {
         break;
     }
     case 2: {
-        output.info('Upgrading magento');
-        await runMagentoCommand('setup:upgrade');
+        output.start('Upgrading magento');
+        await runMagentoCommandSafe('setup:upgrade');
         break;
     }
     case 0: {
@@ -124,7 +100,7 @@ const magentoDatabaseMigration = async ({ output, config, ports }) => {
 };
 
 const magentoRedisConfig = async ({ output, ports }) => {
-    output.info('Setting redis as config cache');
+    output.start('Setting redis as config cache');
 
     // eslint-disable-next-line quotes
     await runMagentoCommand(`setup:config:set \
@@ -134,7 +110,7 @@ const magentoRedisConfig = async ({ output, ports }) => {
         --cache-backend-redis-db=0 \
         -n`);
 
-    output.info('Setting redis as session storage');
+    output.text = 'Setting redis as session storage';
 
     // Redis for sessions
     // eslint-disable-next-line quotes
@@ -149,27 +125,27 @@ const magentoRedisConfig = async ({ output, ports }) => {
         -n`);
 
     // Elasticsearch5 as a search engine
-    output.info('Setting Elasticsearch7 as a search engine');
+    output.text = 'Setting Elasticsearch7 as a search engine';
     await runMagentoCommand('config:set catalog/search/engine elasticsearch7');
 
     // elasticsearch container as a host name
-    output.info('Setting elasticsearch as a host name for Elasticsearch5');
+    output.text = 'Setting elasticsearch as a host name for Elasticsearch5';
     await runMagentoCommand('config:set catalog/search/elasticsearch7_server_hostname elasticsearch');
     await runMagentoCommand('cache:enable');
 };
 
 const createAdminUser = async ({ output, config }) => {
-    output.info(`Checking user ${config.magento.user}`);
+    output.start(`Checking user ${config.magento.user}`);
     const userStatus = await runMagentoCommand(`admin:user:unlock ${config.magento.user}`);
     if (userStatus.includes('Couldn\'t find the user account')) {
         await runMagentoCommand(`admin:user:create \
         --admin-firstname ${config.magento.first_name} \
         --admin-lastname ${config.magento.last_name} \
         --admin-email ${config.magento.email} \
-        --admin-user ${config.magento.username} \
+        --admin-user ${config.magento.user} \
         --admin-password ${config.magento.password}`);
 
-        output.info(`User ${config.magento.username} created`);
+        output.succeed(`User ${config.magento.user} created`);
     }
 };
 
@@ -177,29 +153,46 @@ const magentoSetMode = async ({ output, config }) => {
     // Set Magento mode
 
     if (defaultConfig.magento.mode) {
-        output.info('Switching magento mode');
+        output.start('Switching magento mode');
         await runMagentoCommand(`deploy:mode:set ${config.magento.mode} --skip-compilation`);
     }
 };
 
 const magentoCompile = async ({ output }) => {
     if (defaultConfig.magento.mode === 'production') {
-        output.info('Generating DI and assets');
+        output.start('Generating DI and assets');
         await runMagentoCommand('setup:di:compile');
         await runMagentoCommand('setup:static-content:deploy');
     }
 };
 
+const magentoSetBaseurl = async ({ output, ports }) => {
+    output.start(`Setting baseurl to http://localhost:${ports.app}`);
+    await runMagentoCommandSafe(`setup:store-config:set --base-url="http://localhost:${ports.app}"`);
+
+    output.text = `SEtting secure baseurl to https://localhost:${ports.app}`;
+    await runMagentoCommandSafe(`setup:store-config:set --base-secure-url="https://localhost:${ports.app}"`);
+    await runMagentoCommand('setup:store-config:set --use-secure 1');
+    await runMagentoCommand('setup:store-config:set --use-secure-admin 1');
+};
+
 const magentoPostDeploy = async ({ output }) => {
-    output.info('Flushing caches');
+    output.text = 'Flushing caches';
     await runMagentoCommand('cache:flush');
 
-    output.info('Disabling maintenance mode');
+    output.text = 'Disabling maintenance mode';
     await runMagentoCommand('maintenance:disable');
     await runMagentoCommand('info:adminuri');
 };
 
+const magentoDisable2FA = async ({ output }) => {
+    output.text = 'Disabling 2fa for admin.';
+    await runMagentoCommandSafe('module:disable Magento_TwoFactorAuth');
+    await runMagentoCommandSafe('cache:flush');
+};
+
 const magentoSetupSteps = [
+    magentoDisable2FA,
     magentoFlushConfig,
     magentoDatabaseConfig,
     magentoDatabaseMigration,
@@ -207,11 +200,12 @@ const magentoSetupSteps = [
     createAdminUser,
     magentoSetMode,
     magentoCompile,
+    magentoSetBaseurl,
     magentoPostDeploy
 ];
 
 const setupMagento = async () => {
-    const output = ora().info('Setting up magento...');
+    const output = ora('Setting up magento...').start();
 
     const appConfig = await getApplicationConfig();
     const ports = await getCachedPorts();
@@ -234,6 +228,7 @@ const setupMagento = async () => {
             process.exit(1);
         }
     }
+    output.stop();
 };
 
 module.exports = setupMagento;

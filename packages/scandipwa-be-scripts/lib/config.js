@@ -181,7 +181,10 @@ const phpFpmBinPath = path.resolve(phpVersionDir, 'sbin', 'php-fpm');
 const phpFpmConfPath = path.resolve(cachePath, 'php-fpm.conf');
 // php extensions
 const phpExtensions = [
-    { name: 'gd', options: '--with-jpeg-dir=/usr/lib64/ --with-png-dir=/usr/lib64/ --with-freetype-dir=/usr/lib64/ --with-config-file-path=/etc' },
+    {
+        name: 'gd',
+        options: '--with-gd=/usr --with-jpeg-dir=/usr/ --with-png-dir=/usr --with-freetype-dir=/usr'
+    },
     { name: 'intl' },
     { name: 'sockets' },
     { name: 'SimpleXML' }

@@ -36,7 +36,19 @@ const setupPHPExtensions = async ({ output }) => {
                 output.start(`Installing PHP extension ${extension.name}...${extension.options ? ` with options "${extension.options}"` : ''}`);
                 // eslint-disable-next-line max-len
                 await execAsyncSpawn(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension.name}${extension.options ? ` -- ${extension.options}` : ''}`,
-                    { callback: (line) => line.split('\n').forEach((l) => output.info(l)) });
+                    {
+                        callback: (line) => {
+                            if (line.includes('Configuring')) {
+                                output.text = `Configuring PHP extension ${extension.name}...`;
+                            }
+                            if (line.includes('Building')) {
+                                output.text = `Building PHP extension ${extension.name}...`;
+                            }
+                            if (line.includes('Running make install')) {
+                                output.text = `Installing PHP extension ${extension.name}...`;
+                            }
+                        }
+                    });
                 output.succeed(`PHP extension ${extension.name} installed!`);
             }
 
@@ -76,9 +88,9 @@ const buildPHP = async ({ output }) => {
             output.start(`Compiling and building PHP-${requiredPHPVersion}...`);
             await execAsyncSpawn(
                 `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
-                +bz2 +bcmath +ctype +curl +dom +filter +hash \
+                +bz2 +bcmath +ctype +curl +intl +sockets +dom +filter +hash \
                 +iconv +json +mbstring +openssl +xml +mysql \
-                +pdo +soap +xmlrpc +xml +zip +fpm`,
+                +pdo +soap +xmlrpc +xml +zip +fpm +gd -- --with-freetype-dir=/usr/include/freetype2`,
                 {
                     callback: (line) => {
                         if (line.includes('Configuring')) {
@@ -88,7 +100,7 @@ const buildPHP = async ({ output }) => {
                             output.text = `Building PHP-${requiredPHPVersion}...`;
                         }
                         if (line.includes('Installing...')) {
-                            output.text = `Installing PHP-v${requiredPHPVersion}...`;
+                            output.text = `Installing PHP-${requiredPHPVersion}...`;
                         }
                     }
                 }
