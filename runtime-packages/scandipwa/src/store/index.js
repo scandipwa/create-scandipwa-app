@@ -17,6 +17,7 @@ import {
 import BreadcrumbsReducer from 'Store/Breadcrumbs/Breadcrumbs.reducer';
 import CartReducer from 'Store/Cart/Cart.reducer';
 import CategoryReducer from 'Store/Category/Category.reducer';
+import CheckoutReducer from 'Store/Checkout/Checkout.reducer';
 import ConfigReducer from 'Store/Config/Config.reducer';
 import LinkedProductsReducer from 'Store/LinkedProducts/LinkedProducts.reducer';
 import MetaReducer from 'Store/Meta/Meta.reducer';
@@ -56,7 +57,8 @@ export const getStaticReducers = () => ({
     UrlRewritesReducer,
     ConfigReducer,
     MetaReducer,
-    LinkedProductsReducer
+    LinkedProductsReducer,
+    CheckoutReducer
 });
 
 export function createReducer(asyncReducers) {
@@ -76,7 +78,10 @@ export const store = createStore(
     })
 );
 
-// Configure the store
+/**
+ * Configure the store
+ * @namespace Store/Index/configureStore
+ * */
 export default function configureStore() {
     // Add a dictionary to keep track of the registered async reducers
     store.asyncReducers = {};

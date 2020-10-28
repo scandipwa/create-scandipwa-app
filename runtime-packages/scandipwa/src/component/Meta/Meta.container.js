@@ -24,7 +24,9 @@ export const mapStateToProps = (state) => ({
     title_suffix: state.MetaReducer.title_suffix,
     description: state.MetaReducer.description,
     keywords: state.MetaReducer.keywords,
-    title: state.MetaReducer.title
+    title: state.MetaReducer.title,
+    robots: state.MetaReducer.robots,
+    status_code: state.MetaReducer.status_code
 });
 
 /** @namespace Component/Meta/Container */
@@ -38,7 +40,9 @@ export class MetaContainer extends PureComponent {
         title_suffix: PropTypes.string,
         description: PropTypes.string,
         keywords: PropTypes.string,
-        title: PropTypes.string
+        title: PropTypes.string,
+        robots: PropTypes.string,
+        status_code: PropTypes.string
     };
 
     static defaultProps = {
@@ -50,7 +54,9 @@ export class MetaContainer extends PureComponent {
         title_suffix: '',
         description: '',
         keywords: '',
-        title: ''
+        title: '',
+        robots: '',
+        status_code: ''
     };
 
     containerProps = () => ({
@@ -83,11 +89,25 @@ export class MetaContainer extends PureComponent {
         return keywords || default_keywords;
     }
 
+    _getRobots() {
+        const { robots } = this.props;
+
+        return robots;
+    }
+
+    _getStatusCode() {
+        const { status_code } = this.props;
+
+        return status_code;
+    }
+
     _getMetadata() {
         const meta = {
             title: this._getTitle(),
             description: this._getDescription(),
-            keywords: this._getKeywords()
+            keywords: this._getKeywords(),
+            robots: this._getRobots(),
+            'render:status_code': this._getStatusCode()
         };
 
         return this._generateMetaFromMetadata(meta);

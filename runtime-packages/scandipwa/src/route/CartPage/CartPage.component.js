@@ -21,7 +21,7 @@ import Link from 'Component/Link';
 import ProductLinks from 'Component/ProductLinks';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
 import { TotalsType } from 'Type/MiniCart';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { formatPrice } from 'Util/Price';
 
 import './CartPage.style';
 
@@ -29,7 +29,12 @@ import './CartPage.style';
 export class CartPage extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        onCheckoutButtonClick: PropTypes.func.isRequired
+        onCheckoutButtonClick: PropTypes.func.isRequired,
+        hasOutOfStockProductsInCart: PropTypes.bool
+    };
+
+    static defaultProps = {
+        hasOutOfStockProductsInCart: false
     };
 
     renderCartItems() {
@@ -80,7 +85,7 @@ export class CartPage extends PureComponent {
 
     renderPriceLine(price) {
         const { totals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+        return formatPrice(price, quote_currency_code);
     }
 
     renderTotalDetails(isMobile = false) {
@@ -110,32 +115,47 @@ export class CartPage extends PureComponent {
     renderTotal() {
         const {
             totals: {
-                subtotal_incl_tax = 0
+                subtotal_with_discount,
+                tax_amount
             }
         } = this.props;
 
         return (
             <dl block="CartPage" elem="Total" aria-label="Complete order total">
                 <dt>{ __('Order total:') }</dt>
-                <dd>{ this.renderPriceLine(subtotal_incl_tax) }</dd>
+                <dd>{ this.renderPriceLine(subtotal_with_discount + tax_amount) }</dd>
             </dl>
         );
     }
 
-    renderButtons() {
-        const { onCheckoutButtonClick } = this.props;
+    renderSecureCheckoutButton() {
+        const { onCheckoutButtonClick, hasOutOfStockProductsInCart } = this.props;
+
+        if (hasOutOfStockProductsInCart) {
+            return (
+                <div block="CartPage" elem="OutOfStockProductsWarning">
+                    { __('Remove out of stock products from cart') }
+                </div>
+            );
+        }
 
         return (
+            <button
+              block="CartPage"
+              elem="CheckoutButton"
+              mix={ { block: 'Button' } }
+              onClick={ onCheckoutButtonClick }
+            >
+                <span />
+                { __('Secure checkout') }
+            </button>
+        );
+    }
+
+    renderButtons() {
+        return (
             <div block="CartPage" elem="CheckoutButtons">
-                <button
-                  block="CartPage"
-                  elem="CheckoutButton"
-                  mix={ { block: 'Button' } }
-                  onClick={ onCheckoutButtonClick }
-                >
-                    <span />
-                    { __('Secure checkout') }
-                </button>
+                { this.renderSecureCheckoutButton() }
                 <Link
                   block="CartPage"
                   elem="ContinueShopping"
@@ -149,8 +169,11 @@ export class CartPage extends PureComponent {
 
     renderTotals() {
         return (
-            /** Id is required to measure the element`s height in ExpandableContent.component.js */
-            <article id="CartPageSummary" block="CartPage" elem="Summary">
+            <article
+              block="CartPage"
+              elem="Summary"
+              mix={ { block: 'FixedElement', elem: 'Bottom' } }
+            >
                 <h4 block="CartPage" elem="SummaryHeading">{ __('Summary') }</h4>
                 { this.renderTotalDetails() }
                 { this.renderTotal() }
@@ -162,19 +185,31 @@ export class CartPage extends PureComponent {
     renderDiscount() {
         const {
             totals: {
+                applied_rule_ids,
                 coupon_code,
                 discount_amount = 0
             }
         } = this.props;
 
-        if (!coupon_code) {
+        if (!applied_rule_ids) {
             return null;
+        }
+
+        if (!coupon_code) {
+            return (
+                <>
+                    <dt>
+                        { __('Discount: ') }
+                    </dt>
+                    <dd>{ `-${this.renderPriceLine(Math.abs(discount_amount))}` }</dd>
+                </>
+            );
         }
 
         return (
             <>
                 <dt>
-                    { __('Coupon ') }
+                    { __('Discount/Coupon ') }
                     <strong block="CartPage" elem="DiscountCoupon">{ coupon_code.toUpperCase() }</strong>
                 </dt>
                 <dd>{ `-${this.renderPriceLine(Math.abs(discount_amount))}` }</dd>

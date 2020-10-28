@@ -17,9 +17,10 @@ import CmsBlock from 'Component/CmsBlock';
 import { CART_OVERLAY } from 'Component/Header/Header.config';
 import Link from 'Component/Link';
 import Overlay from 'Component/Overlay';
+import { OVERLAY_PLACEHOLDER } from 'Component/PopupSuspense/PopupSuspense.config';
 import { DeviceType } from 'Type/Device';
 import { TotalsType } from 'Type/MiniCart';
-import { formatCurrency } from 'Util/Price';
+import { formatPrice } from 'Util/Price';
 
 import './CartOverlay.style';
 
@@ -32,20 +33,26 @@ export class CartOverlay extends PureComponent {
         isEditing: PropTypes.bool.isRequired,
         handleCheckoutClick: PropTypes.func.isRequired,
         currencyCode: PropTypes.string.isRequired,
-        showOverlay: PropTypes.func.isRequired
+        showOverlay: PropTypes.func.isRequired,
+        activeOverlay: PropTypes.string.isRequired,
+        hasOutOfStockProductsInCart: PropTypes.bool
+    };
+
+    static defaultProps = {
+        hasOutOfStockProductsInCart: false
     };
 
     componentDidMount() {
-        const { showOverlay, device } = this.props;
+        const { showOverlay, device, activeOverlay } = this.props;
 
-        if (!device.isMobile) {
+        if (!device.isMobile && activeOverlay === OVERLAY_PLACEHOLDER) {
             showOverlay(CART_OVERLAY);
         }
     }
 
     renderPriceLine(price) {
         const { currencyCode } = this.props;
-        return `${parseFloat(price).toFixed(2)}${formatCurrency(currencyCode)}`;
+        return formatPrice(price, currencyCode);
     }
 
     renderCartItems() {
@@ -106,10 +113,30 @@ export class CartOverlay extends PureComponent {
     }
 
     renderDiscount() {
-        const { totals: { coupon_code, discount_amount = 0 } } = this.props;
+        const {
+            totals: {
+                applied_rule_ids,
+                discount_amount,
+                coupon_code
+            }
+        } = this.props;
+
+        if (!applied_rule_ids) {
+            return null;
+        }
 
         if (!coupon_code) {
-            return null;
+            return (
+                <dl
+                  block="CartOverlay"
+                  elem="Discount"
+                >
+                    <dt>
+                        { __('Discount: ') }
+                    </dt>
+                    <dd>{ `-${this.renderPriceLine(Math.abs(discount_amount))}` }</dd>
+                </dl>
+            );
         }
 
         return (
@@ -118,7 +145,7 @@ export class CartOverlay extends PureComponent {
               elem="Discount"
             >
                 <dt>
-                    { __('Coupon ') }
+                    { __('Discount/Coupon ') }
                     <strong block="CartOverlay" elem="DiscountCoupon">{ coupon_code.toUpperCase() }</strong>
                 </dt>
                 <dd>{ `-${this.renderPriceLine(Math.abs(discount_amount))}` }</dd>
@@ -126,16 +153,31 @@ export class CartOverlay extends PureComponent {
         );
     }
 
-    renderActions() {
-        const { totals: { items }, handleCheckoutClick } = this.props;
+    renderSecureCheckoutButton() {
+        const { totals: { items }, handleCheckoutClick, hasOutOfStockProductsInCart } = this.props;
 
-        const options = !items || items.length < 1
+        const options = !items || items.length < 1 || hasOutOfStockProductsInCart
             ? {
                 onClick: (e) => e.preventDefault(),
                 disabled: true
             }
             : {};
 
+        return (
+            <button
+              block="CartOverlay"
+              elem="CheckoutButton"
+              mix={ { block: 'Button' } }
+              onClick={ handleCheckoutClick }
+              { ...options }
+            >
+                <span />
+                { __('Secure checkout') }
+            </button>
+        );
+    }
+
+    renderActions() {
         return (
             <div block="CartOverlay" elem="Actions">
                 <Link
@@ -146,16 +188,7 @@ export class CartOverlay extends PureComponent {
                 >
                     { __('View cart') }
                 </Link>
-                <button
-                  block="CartOverlay"
-                  elem="CheckoutButton"
-                  mix={ { block: 'Button' } }
-                  onClick={ handleCheckoutClick }
-                  { ...options }
-                >
-                    <span />
-                    { __('Secure checkout') }
-                </button>
+                { this.renderSecureCheckoutButton() }
             </div>
         );
     }
@@ -177,6 +210,20 @@ export class CartOverlay extends PureComponent {
         );
     }
 
+    renderOutOfStockProductsWarning() {
+        const { hasOutOfStockProductsInCart } = this.props;
+
+        if (!hasOutOfStockProductsInCart) {
+            return null;
+        }
+
+        return (
+            <div block="CartOverlay" elem="OutOfStockProductsWarning">
+                { __('Remove out of stock products from cart') }
+            </div>
+        );
+    }
+
     render() {
         const { changeHeaderState } = this.props;
 
@@ -191,6 +238,7 @@ export class CartOverlay extends PureComponent {
                 { this.renderDiscount() }
                 { this.renderTax() }
                 { this.renderTotals() }
+                { this.renderOutOfStockProductsWarning() }
                 { this.renderActions() }
             </Overlay>
         );

@@ -44,9 +44,11 @@ export const mapStateToProps = (state) => ({
     default_title: state.ConfigReducer.default_title,
     title_prefix: state.ConfigReducer.title_prefix,
     title_suffix: state.ConfigReducer.title_suffix,
+    meta_title: state.MetaReducer.title,
     device: state.ConfigReducer.device,
     isOffline: state.OfflineReducer.isOffline,
-    isBigOffline: state.OfflineReducer.isBig
+    isBigOffline: state.OfflineReducer.isBig,
+    status_code: state.MetaReducer.status_code
 });
 
 /** @namespace Component/Router/Container/mapDispatchToProps */
@@ -79,7 +81,9 @@ export class RouterContainer extends PureComponent {
         title_prefix: PropTypes.string,
         title_suffix: PropTypes.string,
         isLoading: PropTypes.bool,
-        isBigOffline: PropTypes.bool
+        isBigOffline: PropTypes.bool,
+        meta_title: PropTypes.string,
+        status_code: PropTypes.string
     };
 
     static defaultProps = {
@@ -90,7 +94,9 @@ export class RouterContainer extends PureComponent {
         title_prefix: '',
         title_suffix: '',
         isLoading: true,
-        isBigOffline: false
+        isBigOffline: false,
+        meta_title: '',
+        status_code: ''
     };
 
     __construct(props) {
@@ -115,18 +121,21 @@ export class RouterContainer extends PureComponent {
                 default_keywords,
                 default_title,
                 title_prefix,
-                title_suffix
+                title_suffix,
+                meta_title,
+                status_code
             } = this.props;
 
             updateMeta({
                 default_title,
-                title: default_title,
+                title: meta_title || default_title,
                 default_description,
                 description: default_description,
                 default_keywords,
                 keywords: default_keywords,
                 title_prefix,
-                title_suffix
+                title_suffix,
+                status_code
             });
         }
     }
@@ -140,8 +149,7 @@ export class RouterContainer extends PureComponent {
         if (isUsingClientHints) {
             const { platform, model } = await isMobileClientHints.getDeviceData();
             updateConfigDevice({
-                isMobile: navigator.userAgentData.mobile,
-                isTablet: isMobile.tablet(model),
+                isMobile: isMobile.any(),
                 android: isMobile.android(platform),
                 ios: isMobile.iOS(platform),
                 blackberry: isMobile.blackBerry(model),
@@ -151,7 +159,6 @@ export class RouterContainer extends PureComponent {
         } else {
             updateConfigDevice({
                 isMobile: isMobile.any(),
-                isTablet: isMobile.tablet(),
                 android: isMobile.android(),
                 ios: isMobile.iOS(),
                 blackberry: isMobile.blackBerry(),
