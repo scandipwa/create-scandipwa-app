@@ -6,7 +6,9 @@
  * @param {string} namespace
  */
 module.exports = (fixer, node, context, namespace) => {
-    const { leadingComments = [] } = node;
+	const sourceCode = context.getSourceCode();
+	const leadingComments = sourceCode.getLeadingComments(node);
+
     if (leadingComments.find(comment => comment.value.includes('@namespace'))) {
         return null;
     }
