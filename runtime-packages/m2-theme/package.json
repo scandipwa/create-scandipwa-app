@@ -1,0 +1,30 @@
+{
+    "name": "@scandipwa/m2-theme",
+    "version": "0.0.0",
+    "license": "proprietary",
+    "dependencies": {
+        "@scandipwa/webpack-fallback-plugin": "^1.0.2-alpha.4",
+        "@scandipwa/scandipwa-scripts": "^1.0.3-alpha.11",
+        "@scandipwa/craco": "^0.0.1",
+        "html-webpack-harddisk-plugin": "^1.0.2"
+    },
+    "peerDependencies": {
+        "@scandipwa/scandipwa-scripts": "^1.0.3-alpha.11",
+        "@scandipwa/craco": "^0.0.1"
+    },
+    "scandipwa": {
+        "type": "extension",
+        "provide": [
+            "public/index.php"
+        ],
+        "build": {
+            "before": "build/before.js",
+            "cracoPlugins": [
+                "build/craco.js"
+            ]
+        }
+    },
+    "eslintConfig": {
+        "extends": "@scandipwa"
+    }
+}

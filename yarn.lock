@@ -2313,10 +2313,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@scandipwa/magento-theme@file:packages/test/packages/magento-theme":
+"@scandipwa/test-extension@file:runtime-packages/test/packages/test-extension":
   version "0.0.0"
 
-"@scandipwa/test@file:packages/test/packages/test":
+"@scandipwa/test@file:build-packages/test/packages/test":
   version "0.0.0"
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":

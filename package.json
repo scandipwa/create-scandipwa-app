@@ -2,9 +2,8 @@
     "private": true,
     "name": "create-scandipwa-app",
     "scripts": {
-        "eslint": "eslint ./packages --resolve-plugins-relative-to . --ext .js,.ts,.tsx",
-        "eslint:app": "eslint ./scandipwa/packages --resolve-plugins-relative-to . --ext .js,.ts,.tsx --ignore-pattern **/node_modules/**",
-        "bootstrap": "create-scandipwa-app packages/test && yarn",
+        "eslint": "eslint ./build-packages ./runtime-packages --resolve-plugins-relative-to . --cache --ext .js,.ts,.tsx",
+        "bootstrap": "create-scandipwa-app runtime-packages/test && yarn",
         "postinstall": "lerna bootstrap",
         "clean": "lerna clean --yes",
         "compile:lockfile": "node tasks/compile-lockfile.js"
@@ -23,42 +22,16 @@
     "eslintConfig": {
         "extends": "@scandipwa",
         "ignorePatterns": [
-            "packages/craco/**",
-            "packages/scandipwa/**",
-            "packages/test/**",
-            "packages/eslint-plugin-scandipwa-guidelines/**",
-            "packages/scandipwa-vscode/**",
+            "build-packages/craco/**",
+            "runtime-packages/scandipwa/**",
+            "build-packages/test/**",
+            "build-packages/eslint-plugin-scandipwa-guidelines/**",
+            "build-packages/scandipwa-vscode/**",
             "**/node_modules/**"
-        ],
-        "overrides": [
-            {
-                "files": ["packages/**/*"],
-                "rules": {
-                    "@scandipwa/scandipwa-guidelines/only-one-class": "off",
-                    "@scandipwa/scandipwa-guidelines/derived-class-names": "off",
-                    "@scandipwa/scandipwa-guidelines/use-namespace": "off",
-                    "@scandipwa/scandipwa-guidelines/export-level-one": "off",
-                    "@scandipwa/scandipwa-guidelines/use-named-export": "off",
-                    "@scandipwa/scandipwa-guidelines/create-config-files": "off",
-                    "@scandipwa/scandipwa-guidelines/use-magic-construct": "off",
-                    "no-magic-numbers": "off",
-                    "max-lines": "off",
-                    "import/no-dynamic-require": "off",
-                    "fp/no-let": "off",
-                    "global-require": "off",
-                    "max-len": [
-                        "error",
-                        {
-                            "code": 150,
-                            "ignorePattern": "logger."
-                        }
-                    ]
-                }
-            }
         ]
     },
     "workspaces": [
-        "packages/*",
-        "scandipwa/packages/*"
+        "build-packages/*",
+        "runtime-packages/*"
     ]
 }

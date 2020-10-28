@@ -28,6 +28,30 @@ module.exports = {
         'fp'
     ],
     overrides: [{
+        // Ignore the ScandiPWA specific rule for build-related files
+        files: ['build*/**/*'],
+        rules: {
+            '@scandipwa/scandipwa-guidelines/only-one-class': 'off',
+            '@scandipwa/scandipwa-guidelines/derived-class-names': 'off',
+            '@scandipwa/scandipwa-guidelines/use-namespace': 'off',
+            '@scandipwa/scandipwa-guidelines/export-level-one': 'off',
+            '@scandipwa/scandipwa-guidelines/use-named-export': 'off',
+            '@scandipwa/scandipwa-guidelines/create-config-files': 'off',
+            '@scandipwa/scandipwa-guidelines/use-magic-construct': 'off',
+            'no-magic-numbers': 'off',
+            'max-lines': 'off',
+            'import/no-dynamic-require': 'off',
+            'fp/no-let': 'off',
+            'global-require': 'off',
+            'max-len': [
+                'error',
+                {
+                    code: 150,
+                    ignorePattern: 'logger.'
+                }
+            ]
+        }
+    }, {
         files: ['*.config.js'],
         rules: {
             '@scandipwa/scandipwa-guidelines/use-named-export': 'off',
