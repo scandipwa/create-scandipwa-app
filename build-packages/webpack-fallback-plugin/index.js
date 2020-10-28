@@ -94,11 +94,11 @@ class FallbackPlugin {
      * @memberof FallbackPlugin
      */
     getRelativePathname(pathname) {
-        const isSrc = /\/src\//.test(pathname);
+        const isSrc = new RegExp(`${path.sep}src${path.sep}`).test(pathname);
         const prefix = isSrc ? 'src' : 'public';
 
         // take the first occurrence of the prefix and get the path after it
-        const relativePathname = pathname.split(`${prefix}/`).slice(1).join(`${prefix}/`);
+        const relativePathname = pathname.split(`${prefix}${path.sep}`).slice(1).join(`${prefix}${path.sep}`);
         const extension = this.getBelongingExtension(pathname);
 
         if (extension) {
@@ -297,7 +297,7 @@ class FallbackPlugin {
                         {
                             ...request,
                             path: sources[source],
-                            request: `./${ requestToRelativePathname}`
+                            request: `.${path.sep}${ requestToRelativePathname}`
                         },
                         'Resolving with fallback!',
                         resolveContext,
@@ -326,7 +326,7 @@ class FallbackPlugin {
                     {
                         ...request,
                         path: packagePath,
-                        request: `./${ relativePath }`
+                        request: `.${path.sep}${ relativePath }`
                     },
                     'Resolving with fallback!',
                     resolveContext,

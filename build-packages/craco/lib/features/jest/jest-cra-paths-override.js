@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require('path');
 const { getAppSrcName } = require("../../cra");
+
 function overrideJestAppSrcPath(cracoConfig, jestConfig, context) {
     const { paths, oldPaths } = context;
     const appSrcName = getAppSrcName(paths.appSrc);
@@ -9,11 +10,11 @@ function overrideJestAppSrcPath(cracoConfig, jestConfig, context) {
         const { roots = [], collectCoverageFrom, testMatch } = jestConfig;
         const pathArr = paths.testsSetup.split(path.sep)
         const setupTestsFile = fs.existsSync(paths.testsSetup)
-            ? `<rootDir>/${appSrcName}/${pathArr[pathArr.length-1]}`
+            ? path.join('<rootDir>', appSrcName, pathArr[pathArr.length-1])
             : undefined;
 
-        const srcDirExp = new RegExp(`<rootDir>/${oldAppSrcName}`);
-        const replaceSrc = `<rootDir>/${appSrcName}`;
+        const srcDirExp = new RegExp(path.join('<rootDir>', oldAppSrcName));
+        const replaceSrc = path.join('<rootDir>', appSrcName);
 
         jestConfig.roots = roots.map(item => {
             return item.replace(srcDirExp, replaceSrc)

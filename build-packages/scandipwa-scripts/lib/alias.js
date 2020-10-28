@@ -8,13 +8,13 @@ const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 
 const aliasPostfixMap = {
-    Style: './src/style/',
-    Component: './src/component/',
-    Route: './src/route/',
-    Store: './src/store/',
-    Util: './src/util/',
-    Query: './src/query/',
-    Type: './src/type/'
+    Style: `.${path.sep}${path.join('src', 'style')}`,
+    Component: `.${path.sep}${path.join('src', 'component')}`,
+    Route: `.${path.sep}${path.join('src', 'route')}`,
+    Store: `.${path.sep}${path.join('src', 'store')}`,
+    Util: `.${path.sep}${path.join('src', 'util')}`,
+    Query: `.${path.sep}${path.join('src', 'query')}`,
+    Type: `.${path.sep}${path.join('src', 'type')}`
 };
 
 const sourcePrefixMap = {
@@ -71,7 +71,7 @@ const preferenceAliases = extensions.reduce((acc, extension) => {
 /**
  * These aliases are used in JSConfig by VSCode
  *
- * NOTE: the reduce right is used, so child themes, contain alises
+ * NOTE: the reduce right is used, so child themes, contain aliases
  * to their child parent themes
  */
 const { parentThemeAliases } = Object.entries(aliasMap).reduceRight(
@@ -98,7 +98,7 @@ const { parentThemeAliases } = Object.entries(aliasMap).reduceRight(
 // TODO: generate jsconfig.js for VSCode suggestions
 const jsConfig = {
     compilerOptions: {
-        baseUrl: './',
+        baseUrl: `.${path.sep}`,
         jsx: 'react',
         paths: {
             ...parentThemeAliases,
