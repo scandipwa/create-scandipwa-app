@@ -128,7 +128,7 @@ class FallbackPlugin {
         }
 
         // all ".style" and "style/" must end with ".scss"
-        if (/\.style|style\//.test(pathname)) {
+        if ((new RegExp(`\\.style|style${path.sep}`)).test(pathname)) {
             return fs.existsSync(`${ pathname }.scss`);
         }
 
@@ -139,9 +139,9 @@ class FallbackPlugin {
             fs.existsSync(`${ pathname }.js`)
             || fs.existsSync(`${ pathname }.ts`)
             || fs.existsSync(`${ pathname }.tsx`)
-            || fs.existsSync(`${ pathname }/index.js`)
-            || fs.existsSync(`${ pathname }/index.ts`)
-            || fs.existsSync(`${ pathname }/index.tsx`)
+            || fs.existsSync(`${ pathname }${path.sep}index.js`)
+            || fs.existsSync(`${ pathname }${path.sep}index.ts`)
+            || fs.existsSync(`${ pathname }${path.sep}index.tsx`)
         );
     }
 

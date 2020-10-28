@@ -123,7 +123,7 @@ module.exports = () => {
 
                 // Inject extension import loader
                 webpackConfig.module.rules.push({
-                    test: /util\/Extensions\/index\.js/,
+                    test: new RegExp(path.join('util', 'Extensions', 'index.js')),
                     loader: '@scandipwa/webpack-extension-import-loader'
                 });
 

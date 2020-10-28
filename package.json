@@ -2,7 +2,7 @@
     "private": true,
     "name": "create-scandipwa-app",
     "scripts": {
-        "eslint": "eslint ./build-packages ./runtime-packages --resolve-plugins-relative-to . --cache --ext .js,.ts,.tsx",
+        "eslint": "eslint ./build-packages ./runtime-packages --resolve-plugins-relative-to . --cache --no-error-on-unmatched-pattern --ext .js,.ts,.tsx",
         "bootstrap": "create-scandipwa-app runtime-packages/test && yarn",
         "postinstall": "lerna bootstrap",
         "clean": "lerna clean --yes",
