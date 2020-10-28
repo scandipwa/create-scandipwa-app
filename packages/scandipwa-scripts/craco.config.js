@@ -8,18 +8,18 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { cracoPlugins } = require('./lib/build-plugins');
+const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
+const I18nPlugin = require('@scandipwa/webpack-i18n-plugin');
+
 const {
-    getLoader,
+    ESLINT_MODES,
+    whenDev,
     getLoaders,
     loaderByName
 } = require('@scandipwa/craco');
 
-const { ESLINT_MODES, whenDev } = require('@scandipwa/craco');
-const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
-const I18nPlugin = require('@scandipwa/webpack-i18n-plugin');
-
-const { sources, PROJECT } = require('./lib/sources');
+const { cracoPlugins } = require('./lib/build-plugins');
+const { sources } = require('./lib/sources');
 const alias = require('./lib/alias');
 const when = require('./lib/when');
 
@@ -107,17 +107,11 @@ module.exports = () => {
                 webpackConfig.resolve.extensions.push('.ts');
                 webpackConfig.resolve.extensions.push('.tsx');
 
-                // Take the ESLint loader, change it's include directory to match only project
-                // TODO: in CRA 4.0.0 the eslint-loader was migrated to webpack-eslint-loader
-                const { isFound: isESLintLoaderFound, match: eslintLoader } = getLoader(webpackConfig, loaderByName('eslint-loader'));
-
-                if (isESLintLoaderFound) {
-                    // Allow linter only in project
-                    eslintLoader.loader.include = sources[PROJECT];
-                }
-
                 // Get all babel loaders, make sure they do process not just the src folder
-                const { hasAny: hasAnyBabelLoaders, matches: babelLoaders } = getLoaders(webpackConfig, loaderByName('babel-loader'));
+                const {
+                    hasFoundAny: hasAnyBabelLoaders,
+                    matches: babelLoaders
+                } = getLoaders(webpackConfig, loaderByName('babel-loader'));
 
                 if (hasAnyBabelLoaders) {
                     babelLoaders.forEach(({ loader }) => {

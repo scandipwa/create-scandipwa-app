@@ -31,10 +31,15 @@ const {
         try {
             nextBefore.push(require(pathname));
         } catch (e) {
-            logger.warn(
+            logger.logN(e);
+
+            logger.error(
                 `Failed to load extension\`s ${ logger.style.misc(name) } before-build script.`,
-                `Looked for ${ logger.style.file(pathname) } file.`
+                `Looked in ${ logger.style.file(pathname) } file.`,
+                'See detailed error log above.'
             );
+
+            process.exit();
         }
     }
 
@@ -44,10 +49,15 @@ const {
         try {
             nextCracoPlugins.push(require(pathname));
         } catch (e) {
-            logger.warn(
+            logger.logN(e);
+
+            logger.error(
                 `Failed to load extension\`s ${ logger.style.misc(name) } craco-plugins script.`,
-                `Looked for ${ logger.style.file(pathname) } file.`
+                `Looked in ${ logger.style.file(pathname) } file.`,
+                'See detailed error log above.'
             );
+
+            process.exit();
         }
     }
 
@@ -59,8 +69,6 @@ const {
     before: [],
     cracoPlugins: []
 });
-
-console.log(before, cracoPlugins);
 
 module.exports = {
     before,
