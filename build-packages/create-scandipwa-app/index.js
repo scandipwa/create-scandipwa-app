@@ -19,7 +19,7 @@ program
             template
         }
     }) => {
-        const pathArr = name.split('/');
+        const pathArr = name.split(path.sep);
         const orgPathArray = pathArr.slice(-2);
         const isOrg = orgPathArray[0].startsWith('@');
 

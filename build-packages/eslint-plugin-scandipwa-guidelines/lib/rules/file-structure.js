@@ -3,6 +3,8 @@
  * @author Jegors Batovs
  */
 
+const path = require('path');
+
 /* eslint-disable max-len */
 /* eslint-disable no-magic-numbers */
 function checkFileName(exploded) {
@@ -109,7 +111,7 @@ module.exports = {
             if (filePath.indexOf('pwa/src/app') !== -1 || filePath.indexOf('base-theme/src/app') !== -1) {
                 const pathKey = filePath.indexOf('pwa/src/app') !== -1 ? 'pwa/src/app' : 'base-theme/src/app';
                 const relativeToApp = filePath.slice(filePath.indexOf(pathKey) + pathKey.length + 1);
-                const exploded = relativeToApp.split('/');
+                const exploded = relativeToApp.split(path.sep);
 
                 if (!([
                     'component', 'query', 'route', 'store', 'style', 'type', 'util', 'index.js'

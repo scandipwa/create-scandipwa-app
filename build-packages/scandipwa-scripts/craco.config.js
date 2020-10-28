@@ -137,7 +137,7 @@ module.exports = () => {
                 webpackConfig.plugins.forEach((plugin) => {
                     if (plugin instanceof WorkboxWebpackPlugin.GenerateSW) {
                         // Patch navigate fallback originally references hard-coded index.html
-                        plugin.config.navigateFallback = '/';
+                        plugin.config.navigateFallback = path.sep;
                     } else if (plugin instanceof MiniCssExtractPlugin) {
                         // Patch mini-css-extract-plugin issue of "Conflicting Order"
                         plugin.options.ignoreOrder = true;

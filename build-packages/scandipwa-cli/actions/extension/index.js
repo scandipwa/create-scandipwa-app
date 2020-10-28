@@ -34,7 +34,7 @@ module.exports = (program) => {
 
             const distPath = path.join(
                 'packages',
-                name.split('/').pop()
+                name.split(path.sep).pop()
             );
 
             // Validate if command is run in the theme

@@ -3,6 +3,8 @@
  * @author Alfreds Genkins
  */
 
+const path = require('path');
+
 module.exports = {
     meta: {
         docs: {
@@ -15,7 +17,7 @@ module.exports = {
     create: (context) => ({
         MethodDefinition(node) {
             const filePath = context.getFilename();
-            const exploded = filePath.split('/');
+            const exploded = filePath.split(path.sep);
             const [, postfix] = exploded[exploded.length - 1].split('.');
 
             if (postfix !== 'component') {

@@ -2,6 +2,7 @@
  * @fileoverview Create a configuration file for your component in favor to declaring configuration right inside of it.
  * @author Jegors Batovs
  */
+const path = require('path');
 
 const extractDeclaration = (declarationOrExport) => {
     if (declarationOrExport.type.includes('Export')) {
@@ -33,7 +34,7 @@ module.exports = {
     create: (context) => ({
         Program(node) {
             const filePath = context.getFilename();
-            const exploded = filePath.split('/');
+            const exploded = filePath.split(path.sep);
             const [fileName, postfix] = exploded[exploded.length - 1].split('.');
 
             /**
