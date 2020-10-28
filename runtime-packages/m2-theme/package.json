@@ -1,7 +1,6 @@
 {
     "name": "@scandipwa/m2-theme",
     "version": "0.0.0",
-    "license": "proprietary",
     "dependencies": {
         "@scandipwa/webpack-fallback-plugin": "^1.0.2-alpha.4",
         "@scandipwa/scandipwa-scripts": "^1.0.3-alpha.11",
@@ -24,6 +23,7 @@
             ]
         }
     },
+    "license": "OSL-3.0",
     "eslintConfig": {
         "extends": "@scandipwa"
     }
