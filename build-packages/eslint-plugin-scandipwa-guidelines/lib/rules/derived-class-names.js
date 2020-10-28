@@ -2,6 +2,7 @@
  * @fileoverview Class name must match the name of the file it is declared in.
  * @author Jegors Batovs
  */
+const path = require('path');
 
 const capitalize = (word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -20,7 +21,7 @@ module.exports = {
     create: context => ({
         ClassDeclaration(node) {
             const filePath = context.getFilename();
-            const exploded = filePath.split('/');
+            const exploded = filePath.split(path.sep);
             const [filename, postfix] = exploded[exploded.length - 1].split('.');
 
             if (filename === 'index' || postfix.length <= 3) {
