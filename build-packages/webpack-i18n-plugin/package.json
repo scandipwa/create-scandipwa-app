@@ -1,5 +1,6 @@
 {
     "name": "@scandipwa/webpack-i18n-plugin",
+    "description": "Webpack internationalization plugin used used by CSA.",
     "version": "0.0.8",
     "main": "index.js",
     "license": "OSL-3.0",

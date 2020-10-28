@@ -1,5 +1,6 @@
 {
     "name": "@scandipwa/webpack-fallback-plugin",
+    "description": "Webpack fallback plugin used by CSA.",
     "version": "1.1.0",
     "main": "index.js",
     "license": "OSL-3.0",

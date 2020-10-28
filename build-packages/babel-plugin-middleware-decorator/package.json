@@ -1,5 +1,6 @@
 {
     "name": "@scandipwa/babel-plugin-middleware-decorator",
+    "description": "Babel middleware decorator plugin used by CSA.",
     "version": "0.1.0",
     "main": "index.js",
     "license": "OSL-3.0",

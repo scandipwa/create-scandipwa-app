@@ -1,5 +1,6 @@
 {
     "name": "@scandipwa/craco",
+    "description": "Craco fork used by CSA.",
     "engines": {
         "node": ">=6"
     },

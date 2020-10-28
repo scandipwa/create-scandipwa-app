@@ -1,5 +1,6 @@
 {
     "name": "create-scandipwa-app",
+    "description": "Global command used by CSA.",
     "version": "1.0.3",
     "main": "./index.js",
     "bin": "./index.js",

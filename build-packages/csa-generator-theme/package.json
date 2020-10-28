@@ -1,5 +1,6 @@
 {
     "name": "@scandipwa/csa-generator-theme",
+    "description": "Theme template used by CSA.",
     "version": "0.0.4",
     "main": "index.js",
     "license": "OSL-3.0",

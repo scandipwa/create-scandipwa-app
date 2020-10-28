@@ -1,6 +1,7 @@
 {
     "name": "@scandipwa/scandipwa",
-    "version": "3.1.5",
+    "description": "ScandiPWA source code used by CSA.",
+    "version": "1.0.1",
     "dependencies": {
         "braintree-web-drop-in": "^1.23.0",
         "history": "^4.9.0",
