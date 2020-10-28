@@ -9,9 +9,9 @@
 	"license": "SEE LICENSE IN LICENSE",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/scandipwa/scandipwa-development-toolkit.git"
+		"url": "https://github.com/scandipwa/base-theme"
 	},
-	"homepage": "https://github.com/scandipwa/scandipwa-development-toolkit",
+	"homepage": "https://github.com/scandipwa/base-theme",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
