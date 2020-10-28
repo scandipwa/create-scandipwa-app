@@ -1,15 +1,12 @@
 {
     "name": "@scandipwa/m2-theme",
     "version": "0.0.1",
+    "license": "OSL-3.0",
     "dependencies": {
         "@scandipwa/craco": "^0.0.2",
         "@scandipwa/scandipwa-scripts": "^2.0.0",
         "@scandipwa/webpack-fallback-plugin": "^1.1.0",
         "html-webpack-harddisk-plugin": "^1.0.2"
-    },
-    "peerDependencies": {
-        "@scandipwa/craco": "^0.0.1",
-        "@scandipwa/scandipwa-scripts": "^1.0.3-alpha.11"
     },
     "scandipwa": {
         "type": "extension",
@@ -23,7 +20,9 @@
             ]
         }
     },
-    "license": "OSL-3.0",
+    "publishConfig": {
+        "access": "public"
+    },
     "eslintConfig": {
         "extends": "@scandipwa"
     }

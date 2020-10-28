@@ -2,7 +2,7 @@
     "name": "<%= name %>",
     "version": "0.0.0",
     "license": "proprietary",
-    "peerDependencies": {
+    "dependencies": {
         "@scandipwa/scandipwa": "<%= scandipwaVersion %>"
     },
     "scandipwa": {
