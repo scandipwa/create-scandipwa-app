@@ -5,6 +5,7 @@
 
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
+const path = require('path');
 
 const types = {
     ExportedClass: [
@@ -80,14 +81,83 @@ const getNamespaceForNode = (node, context) => {
     );
 }
 
+const collectFunctionNamespace = (node, stack) => {
+    if (node.type === 'CallExpression') {
+        if (node.callee.type === 'MemberExpression') {
+            stack.push(node.callee.property.name);
+            collectFunctionNamespace(node.callee.object, stack);
+        } else if (node.callee.type === 'Identifier') {
+            stack.push(node.callee.name);
+        }
+    }
+}
+
+const getNodeNamespace = (node) => {
+    const stack = [];
+
+    if (node.parent.type === 'VariableDeclarator') {
+        stack.push(node.parent.id.name)
+    } else if (node.type === 'ClassDeclaration') {
+        stack.push(node.id.name);
+    } else {
+        collectFunctionNamespace(node.parent, stack);
+    }
+
+    return stack.reverse().join('/');
+}
+
+const prepareFilePath = (pathname) => {
+    const {
+        name: filename,
+        dir
+    } = path.parse(pathname);
+
+    const [name, postfix] = filename.split('.');
+    
+    if (!postfix) {
+        // TODO: check this, I think it can be removed
+        // if file has no post-fix
+        return path.join(dir, name);
+    }
+
+    return path.join(dir, name, postfix);
+}
+
+const preparePackageName = (packageName) => {
+    const [org, name] = packageName.split('/');
+
+    if (org === '@scandipwa') {
+        // Legacy support
+        if (name === 'scandipwa') {
+            return '';
+        }
+
+        return name;
+    }
+
+    return path.join(org.slice(1), name);
+};
+
 const generateNamespace = (node, context) => {
     const filename = context.getFilename();
     const splitted = filename.split('src');
-    const [toFile] = path.normalize(splitted.splice(-1));
+    const toFile = splitted.splice(-1)[0];
     const toPackage = path.normalize(splitted.join('src/'));
     const { name: packageName } = getPackageJson(toPackage);
-    // TODO: transform the packageName to first namespace part
-    // TODO: transform the toFile and node location to second namespace part
+
+    const pathname = path.join(
+        // remove @ from organization, support @scandipwa legacy namespaces
+        preparePackageName(packageName),
+        // trim post-fixes if they are not present
+        prepareFilePath(toFile)
+    ).replace(
+        // Convert to pascal-case, and trim "-"
+        /\b[a-z](?=[a-z]{2})/g,
+        (letter) => letter.toUpperCase()
+    ).replace('-', '');
+
+    // do not transform code to uppercase / lowercase it should be written alright
+    return path.join(pathname, getNodeNamespace(node));
 }
 
 const isPlugin = (node) => {
