@@ -8,7 +8,7 @@ const hasNamespace = (node, context) => {
 	const nodeToProcess = node.parent.type === 'ExportNamedDeclaration'
 		? node.parent
 		: node;
-    
+
     const leadingComments = context.getSourceCode().getCommentsBefore(nodeToProcess);
 
     const namespaceComment = leadingComments.find(
