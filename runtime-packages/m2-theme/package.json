@@ -18,9 +18,9 @@
             "public/index.php"
         ],
         "build": {
-            "before": "build/before.js",
+            "before": "build-config/before.js",
             "cracoPlugins": [
-                "build/craco.js"
+                "build-config/craco.js"
             ]
         }
     },
