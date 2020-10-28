@@ -3,7 +3,7 @@ import { PureComponent } from 'react';
 
 import './Placeholder.style';
 
-class Placeholder extends PureComponent {
+export class Placeholder extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types
     };

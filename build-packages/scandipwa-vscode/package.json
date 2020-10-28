@@ -1,8 +1,9 @@
 {
 	"private": true,
-	"name": "scandipwa-development-toolkit",
+	"version": "1.0.0",
+	"name": "scandipwa-development-toolkit-csa",
 	"publisher": "ScandiPWA",
-	"displayName": "ScandiPWA development toolkit",
+	"displayName": "ScandiPWA development toolkit for CSA",
 	"description": "ScandiPWA VSCode development tools",
 	"icon": "icon.png",
 	"license": "SEE LICENSE IN LICENSE",
