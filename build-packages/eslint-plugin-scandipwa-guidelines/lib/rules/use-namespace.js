@@ -3,9 +3,9 @@
  * @author Jegors Batovs
  */
 
+const path = require('path');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
-const path = require('path');
 
 const types = {
     ExportedClass: [
@@ -29,9 +29,15 @@ const types = {
         && node.parent.parent.parent.type === 'ExportNamedDeclaration',
 
     PromiseHandlerArrowFunction: [
-        "CallExpression[callee.type='MemberExpression']".concat(
-            ":matches([callee.property.name='then'], [callee.property.name='catch'])"
-        ),
+        [
+          "CallExpression",
+          "[callee.type='MemberExpression']",
+          "[callee.object.name!=/.+Dispatcher/]",
+          ":matches(",
+          	"[callee.property.name='then'], ",
+          	"[callee.property.name='catch']",
+          ")",
+        ].join(''),
         'ArrowFunctionExpression'
     ].join(' > '),
 
@@ -41,9 +47,10 @@ const types = {
 
         return (
             node.type === 'ArrowFunctionExpression'
-            && parent.type === 'CallExpression'
-            && parent.callee.type === 'MemberExpression'
-            && promiseHandlerNames.includes(parent.callee.property.name)
+			&& parent.type === 'CallExpression'
+			&& parent.callee.type === 'MemberExpression'
+			&& !(parent.callee.object.name || "").endsWith('Dispatcher')
+			&& promiseHandlerNames.includes(parent.callee.property.name)
         );
     },
 
@@ -71,15 +78,15 @@ const getProperParentNode = (node) => {
     return {};
 };
 
-const getNamespaceForNode = (node, context) => {
+const getNamespaceCommentForNode = (node, sourceCode) => {
     const getNamespaceFromComments = (comments = []) => comments.find(
         comment => comment.value.includes('@namespace')
     );
 
     return getNamespaceFromComments(
-        context.getSourceCode().getCommentsBefore(getProperParentNode(node))
+        sourceCode.getCommentsBefore(getProperParentNode(node))
     );
-}
+};
 
 const collectFunctionNamespace = (node, stack) => {
     if (node.type === 'CallExpression') {
@@ -103,7 +110,7 @@ const getNodeNamespace = (node) => {
         collectFunctionNamespace(node.parent, stack);
     }
 
-    return stack.reverse().join('/');
+    return stack.reverse().join(path.sep);
 }
 
 const prepareFilePath = (pathname) => {
@@ -112,19 +119,18 @@ const prepareFilePath = (pathname) => {
         dir
     } = path.parse(pathname);
 
-    const [name, postfix] = filename.split('.');
-    
-    if (!postfix) {
-        // TODO: check this, I think it can be removed
-        // if file has no post-fix
-        return path.join(dir, name);
-    }
+	const [name, postfix = ''] = filename.split('.');
 
-    return path.join(dir, name, postfix);
+    return path.join(
+		dir,
+		// If dir name === file name without postfix => do not repeat it
+		new RegExp(`${path.sep}${name}$`).test(dir) ? '' : name,
+		postfix
+	);
 }
 
 const preparePackageName = (packageName) => {
-    const [org, name] = packageName.split('/');
+    const [org, name] = packageName.split(path.sep);
 
     if (org === '@scandipwa') {
         // Legacy support
@@ -141,8 +147,8 @@ const preparePackageName = (packageName) => {
 const generateNamespace = (node, context) => {
     const filename = context.getFilename();
     const splitted = filename.split('src');
-    const toFile = splitted.splice(-1)[0];
-    const toPackage = path.normalize(splitted.join('src/'));
+    const toFile = splitted.pop();
+    const toPackage = path.normalize(splitted.join('src'));
     const { name: packageName } = getPackageJson(toPackage);
 
     const pathname = path.join(
@@ -154,18 +160,21 @@ const generateNamespace = (node, context) => {
         // Convert to pascal-case, and trim "-"
         /\b[a-z](?=[a-z]{2})/g,
         (letter) => letter.toUpperCase()
-    ).replace('-', '');
+	).replace('-', '');
 
     // do not transform code to uppercase / lowercase it should be written alright
     return path.join(pathname, getNodeNamespace(node));
 }
 
-const isPlugin = (node) => {
-    return node &&
-        node.id &&
-        node.id.name &&
-        node.id.name.match(/[P|p]lugin/);
-}
+const extractNamespaceFromComment = ({ value: comment = '' }) => {
+	const {
+		groups: {
+			namespace
+		} = {}
+	} = comment.match(/@namespace +(?<namespace>[^ ]+)/) || {};
+
+	return namespace;
+};
 
 module.exports = {
     meta: {
@@ -183,18 +192,39 @@ module.exports = {
             types.PromiseHandlerArrowFunction,
             types.ExportedArrowFunction
         ].join(',')](node) {
-            const namespace = getNamespaceForNode(node, context);
+			const namespaceComment = getNamespaceCommentForNode(node, context.getSourceCode());
 
-            if (!namespace && !isPlugin(node)) {
+			const namespace = extractNamespaceFromComment(namespaceComment);
+			const generatedNamespace = generateNamespace(node, context);
+
+            if (!namespaceComment) {
                 context.report({
                     node,
                     message: `Provide namespace for ${types.detectType(node)} by using @namespace magic comment`,
-                    fix: fixer => {
-                        const newNamespace = generateNamespace(node, context);
-                        return [fixNamespaceLack(fixer, getProperParentNode(node), context, newNamespace)].filter(value => value)
-                    }
+                    fix: fixer => fixNamespaceLack(
+						fixer,
+						getProperParentNode(node),
+						context,
+						generatedNamespace
+					) || []
                 });
-            }
+			} else if (generatedNamespace !== namespaceComment) {
+				context.report({
+                    node,
+                    message: `Namespace for this node is not valid! Consider changing it to ${generatedNamespace}`,
+                    fix: fixer => {
+						const newNamespaceCommentContent = namespaceComment.value.replace(namespace, generatedNamespace);
+						const newNamespaceComment = namespaceComment.type === 'Block'
+							? `/*${newNamespaceCommentContent}*/`
+							: `// ${newNamespaceCommentContent}`;
+
+						return fixer.replaceText(
+							namespaceComment,
+							newNamespaceComment
+						)
+					}
+                });
+			}
         }
     })
 };
