@@ -9,7 +9,7 @@
 
 1. Run `yarn`, wait until it completes installing dependencies
 2. Bootstrap project: `yarn bootstrap`
-3. Enter folder with `cd packages/test` and run `yarn start`
+3. Enter folder with `cd runtime-packages/test` and run `yarn start`
 
 ## Magento-like build
 
