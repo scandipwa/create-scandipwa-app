@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/eslint-config",
-    "version": "0.0.3-alpha.4",
+    "version": "0.1.0",
     "description": "",
     "main": "index.js",
     "license": "OSL-3.0",
@@ -8,7 +8,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^1.10.2",
+        "@scandipwa/eslint-plugin-scandipwa-guidelines": "^2.0.0",
         "@typescript-eslint/eslint-plugin": "^4.5.0",
         "@typescript-eslint/parser": "^4.5.0",
         "babel-eslint": "^10.1.0",

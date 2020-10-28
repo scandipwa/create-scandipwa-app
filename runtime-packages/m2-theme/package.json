@@ -1,15 +1,15 @@
 {
     "name": "@scandipwa/m2-theme",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "dependencies": {
-        "@scandipwa/webpack-fallback-plugin": "^1.0.2-alpha.4",
-        "@scandipwa/scandipwa-scripts": "^1.0.3-alpha.11",
-        "@scandipwa/craco": "^0.0.1",
+        "@scandipwa/craco": "^0.0.2",
+        "@scandipwa/scandipwa-scripts": "^2.0.0",
+        "@scandipwa/webpack-fallback-plugin": "^1.1.0",
         "html-webpack-harddisk-plugin": "^1.0.2"
     },
     "peerDependencies": {
-        "@scandipwa/scandipwa-scripts": "^1.0.3-alpha.11",
-        "@scandipwa/craco": "^0.0.1"
+        "@scandipwa/craco": "^0.0.1",
+        "@scandipwa/scandipwa-scripts": "^1.0.3-alpha.11"
     },
     "scandipwa": {
         "type": "extension",

@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/scandipwa",
-    "version": "1.0.0",
+    "version": "3.1.5",
     "dependencies": {
         "braintree-web-drop-in": "^1.23.0",
         "history": "^4.9.0",

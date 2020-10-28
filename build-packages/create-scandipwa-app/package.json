@@ -1,13 +1,13 @@
 {
     "name": "create-scandipwa-app",
-    "version": "1.0.3-alpha.3",
+    "version": "1.0.3",
     "main": "./index.js",
     "bin": "./index.js",
     "license": "OSL-3.0",
     "dependencies": {
         "@caporal/core": "^2.0.2",
-        "@scandipwa/csa-generator-theme": "^0.0.4-alpha.3",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.8-alpha.0",
+        "@scandipwa/csa-generator-theme": "^0.0.4",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.8",
         "mem-fs": "^1.2.0",
         "mem-fs-editor": "^7.0.1",
         "semver": "^7.3.2"
