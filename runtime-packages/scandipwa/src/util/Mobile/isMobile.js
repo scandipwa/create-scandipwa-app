@@ -16,16 +16,13 @@ export const isMobile = {
     iOS: (agent = navigator.userAgent) => /iphone|ipod/i.test(agent),
     opera: (agent = navigator.userAgent) => /opera mini/i.test(agent),
     windows: (agent = navigator.userAgent) => /iemobile/i.test(agent),
-    // eslint-disable-next-line max-len
-    any: () => (isMobile.android() || isMobile.blackBerry() || isMobile.iOS() || isMobile.opera() || isMobile.windows()),
-    // eslint-disable-next-line max-len
-    tablet: (agent = navigator.userAgent) => /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/i.test(agent),
+    // iPad uses 810 so we need to handle that.
+    any: () => window.matchMedia('(max-width: 810px)').matches,
     standaloneMode: () => window.matchMedia('(display-mode: standalone)').matches
 };
 
 // https://medium.com/@galmeiri/get-ready-for-chrome-user-agent-string-phase-out-c6840da1c31e
 export const isMobileClientHints = {
-    any: () => navigator.userAgentData.mobile,
     getDeviceData: () => navigator.userAgentData.getHighEntropyValues(['platform', 'model'])
 };
 

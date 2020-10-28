@@ -372,7 +372,7 @@ export class Header extends NavigationAbstract {
         } = this.props;
 
         // on mobile hide button if not in checkout
-        if ((device.isMobile || device.isTablet) && !isCheckout) {
+        if (device.isMobile && !isCheckout) {
             return null;
         }
 
@@ -472,7 +472,7 @@ export class Header extends NavigationAbstract {
             device
         } = this.props;
 
-        if ((device.isMobile || device.isTablet) || isCheckout) {
+        if (device.isMobile || isCheckout) {
             return null;
         }
 
@@ -614,8 +614,12 @@ export class Header extends NavigationAbstract {
         } = this.props;
 
         return (
-            <>
-                <header block="Header" mods={ { name, isHiddenOnMobile, isCheckout } }>
+            <section block="Header" elem="Wrapper">
+                <header
+                  block="Header"
+                  mods={ { name, isHiddenOnMobile, isCheckout } }
+                  mix={ { block: 'FixedElement', elem: 'Top' } }
+                >
                     { this.renderTopMenu() }
                     <nav block="Header" elem="Nav">
                         { this.renderNavigationState() }
@@ -623,7 +627,7 @@ export class Header extends NavigationAbstract {
                     { this.renderMenu() }
                 </header>
                 <OfflineNotice />
-            </>
+            </section>
         );
     }
 }
