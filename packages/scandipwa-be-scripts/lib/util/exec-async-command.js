@@ -38,10 +38,14 @@ const execAsyncSpawn = (command, {
             reject(error);
         });
         childProcess.on('close', (code) => {
+            if (withCode) {
+                resolve({ code, result: stdout });
+                return;
+            }
             if (code > 0) {
-                reject(withCode ? { code, result: stdout } : stdout);
+                reject(stdout);
             } else {
-                resolve(withCode ? { code, result: stdout } : stdout);
+                resolve(stdout);
             }
         });
     });

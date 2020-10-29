@@ -7,7 +7,7 @@ const { execAsync } = require('./lib/util/exec-async-command');
 const pathExists = require('./lib/util/path-exists');
 const { runMagentoCommandSafe } = require('./lib/util/run-magento');
 
-const cleanUp = async () => {
+const cleanUp = async ({ force = false } = {}) => {
     const output = ora('Stopping docker services...').start();
     await removeServices({ output });
 
@@ -45,7 +45,7 @@ const cleanUp = async () => {
                 output.succeed('Magento application uninstalled');
             }
 
-            if (process.argv.includes('--force')) {
+            if (force) {
                 output.warn('Removing application directory');
                 await execAsync(`rm -rf ${appPath}`);
                 output.succeed('Directory removed');

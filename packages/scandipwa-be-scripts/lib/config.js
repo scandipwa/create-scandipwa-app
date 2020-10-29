@@ -8,7 +8,7 @@ const cacheName = '.create-scandipwa-app-cache';
 
 const appPath = path.join(process.cwd(), 'src');
 const cachePath = path.join(process.cwd(), 'node_modules', cacheName);
-const templatePath = path.join(__dirname, 'templates');
+const templatePath = path.join(__dirname, '..', 'template');
 
 // magento
 

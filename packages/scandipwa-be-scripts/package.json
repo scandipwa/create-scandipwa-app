@@ -7,8 +7,9 @@
         "scandipwa-be-scripts": "./bin/be-scripts.js"
     },
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "^0.0.7",
-        "args": "^5.0.1",
+        "@caporal/core": "^2.0.2",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.9",
+        "create-scandipwa-app": "^1.0.4",
         "async-exit-hook": "^2.0.1",
         "eta": "^1.11.0",
         "get-port": "^5.1.1",

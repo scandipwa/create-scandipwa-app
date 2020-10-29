@@ -10,6 +10,16 @@ const ora = require('ora');
 
 let started = false;
 const start = async () => {
+    exitHook(async (callback) => {
+        if (started) {
+            callback();
+            return;
+        }
+        await stopServices();
+        await stopPhpFpm();
+        callback();
+    });
+
     // make sure deps are installed
     await prepareOS();
 
@@ -31,15 +41,5 @@ const start = async () => {
 
     ora().info(`Application started up on http://localhost:${ports.app}`);
 };
-
-exitHook(async (callback) => {
-    if (started) {
-        callback();
-        return;
-    }
-    await stopServices();
-    await stopPhpFpm();
-    callback();
-});
 
 module.exports = start;
