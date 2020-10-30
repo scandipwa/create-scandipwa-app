@@ -131,9 +131,8 @@ const deployDockerContainers = async ({ output, ports }) => {
                 // eslint-disable-next-line no-restricted-syntax
                 for (const container of existingContainers) {
                     // eslint-disable-next-line no-await-in-loop
-                    await dockerRun(container);
+                    await dockerRun(container({ ports }));
                 }
-                await dockerRun();
                 output.succeed('Containers started up!');
                 return true;
             }
