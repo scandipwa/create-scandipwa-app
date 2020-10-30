@@ -37,9 +37,11 @@ const start = async () => {
 
     started = true;
 
-    await openBrowser(`http://localhost:${ports.app}`);
+    openBrowser(`http://localhost:${ports.app}`);
 
     ora().info(`Application started up on http://localhost:${ports.app}`);
+
+    process.exit(0);
 };
 
 module.exports = start;
