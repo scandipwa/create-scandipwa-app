@@ -9,7 +9,7 @@
         "cleanup": "scandipwa-be-scripts cleanup"
     },
     "peerDependencies": {
-        "@scandipwa/scandipwa-be-scripts": "<% scandipwaBeScriptsVersion %>"
+        "@scandipwa/scandipwa-be-scripts": "<%= scandipwaBeScriptsVersion %>"
     },
     "eslintConfig": {
         "extends": "@scandipwa"
