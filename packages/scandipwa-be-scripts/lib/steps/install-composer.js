@@ -22,7 +22,7 @@ const checkComposerAuth = async () => {
         }
         throw new Error('COMPOSER_AUTH env variable is corrupted');
     } catch (e) {
-        logger.error(e);
+        logger.error('COMPOSER_AUTH variable not found');
         return false;
     }
 };
@@ -55,7 +55,11 @@ const installComposerInCache = async ({ output }) => {
 const installComposer = async () => {
     const output = ora('Checking Composer...').info();
 
-    await checkComposerAuth();
+    const isComposerAuthOk = await checkComposerAuth();
+
+    if (!isComposerAuthOk) {
+        return false;
+    }
 
     const hasComposerInCache = await checkComposerInCache();
 
