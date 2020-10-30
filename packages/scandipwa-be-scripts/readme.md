@@ -35,10 +35,9 @@ apt-get install \
     pkg-config
 ```
 
-### CentsOS
+### CentsOS / Fedora
 ```sh
 yum install openssl-devel \
-    libssl-dev \
     libjpeg-turbo-devel \
     libpng-devel \
     gd-devel \
