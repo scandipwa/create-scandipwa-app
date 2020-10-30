@@ -88,9 +88,11 @@ const buildPHP = async ({ output }) => {
             output.start(`Compiling and building PHP-${requiredPHPVersion}...`);
             await execAsyncSpawn(
                 `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
-                +bz2 +bcmath +ctype +curl +intl +sockets +dom +filter +hash \
-                +iconv +json +mbstring +openssl +xml +mysql \
-                +pdo +soap +xmlrpc +xml +zip +fpm +gd -- --with-freetype-dir=/usr/include/freetype2`,
+                +bz2 +bcmath +ctype +curl -intl +dom +filter +hash \
+                +iconv +json +mbstring +openssl=/usr +xml +mysql \
+                +pdo +soap +xmlrpc +xml +zip +fpm +gd \
+                -- --with-freetype-dir=/usr/include/freetype2 --with-openssl=/usr/ \
+                --with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/ --with-libdir=lib64`,
                 {
                     callback: (line) => {
                         if (line.includes('Configuring')) {

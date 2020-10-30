@@ -183,9 +183,10 @@ const phpFpmConfPath = path.resolve(cachePath, 'php-fpm.conf');
 const phpExtensions = [
     {
         name: 'gd',
-        options: '--with-gd=/usr --with-jpeg-dir=/usr/ --with-png-dir=/usr --with-freetype-dir=/usr'
+        options: '--with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/ --with-freetype-dir=/usr/'
     },
     { name: 'intl' },
+    { name: 'openssl' },
     { name: 'sockets' },
     { name: 'SimpleXML' }
 ];
