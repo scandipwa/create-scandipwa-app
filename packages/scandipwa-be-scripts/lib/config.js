@@ -85,7 +85,6 @@ const dockerVolumeList = [
 // docker container
 // const dockerContainerList = ['nginx', 'varnish', 'redis', 'mysql', 'elasticsearch'].map(c => `${dirName}_${c}`)
 const dockerNginxContainer = ({ ports = {} } = {}) => ({
-    expose: [80],
     ports: [`${ports.app}:80`],
     mountVolumes: [
         `${dockerNginxVolume.name}:/etc/nginx/conf.d`,
@@ -123,7 +122,6 @@ const dockerRedisContainer = ({ ports = {} } = {}) => ({
 });
 
 const dockerMysqlContainer = ({ ports = {} } = {}) => ({
-    expose: [3306],
     ports: [`127.0.0.1:${ports.mysql}:3306`],
     mounts: [`source=${dockerMysqlVolume.name},target=/var/lib/mysql`],
     env: {
