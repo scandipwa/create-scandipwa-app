@@ -15,6 +15,7 @@ const {
     templatePath,
     php
 } = require('../config');
+const osPlatform = require('../util/os-platform');
 const checkConfigPath = require('../util/check-config');
 
 const checkPHPInGlobalCache = async () => {
@@ -81,6 +82,8 @@ const buildPHP = async ({ output }) => {
         }
     }
 
+    const os = await osPlatform();
+
     try {
         const PHPBrewVersions = await execAsyncSpawn('phpbrew list');
 
@@ -89,10 +92,10 @@ const buildPHP = async ({ output }) => {
             await execAsyncSpawn(
                 `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
                 +bz2 +bcmath +ctype +curl -intl +dom +filter +hash \
-                +iconv +json +mbstring +openssl=/usr +xml +mysql \
+                +iconv +json +mbstring +openssl +xml +mysql \
                 +pdo +soap +xmlrpc +xml +zip +fpm +gd \
                 -- --with-freetype-dir=/usr/include/freetype2 --with-openssl=/usr/ \
-                --with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/ --with-libdir=lib64`,
+                --with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/ ${os.dist.includes('Manjaro') ? '--with-libdir=lib64' : ''}`,
                 {
                     callback: (line) => {
                         if (line.includes('Configuring')) {

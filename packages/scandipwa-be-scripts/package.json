@@ -9,10 +9,11 @@
     "dependencies": {
         "@caporal/core": "^2.0.2",
         "@scandipwa/scandipwa-dev-utils": "^0.0.9",
-        "create-scandipwa-app": "^1.0.4",
         "async-exit-hook": "^2.0.1",
+        "create-scandipwa-app": "^1.0.4",
         "eta": "^1.11.0",
         "get-port": "^5.1.1",
+        "getos": "^3.2.1",
         "inquirer": "^7.3.3",
         "log-symbols": "^4.0.0",
         "ora": "^5.1.0",
