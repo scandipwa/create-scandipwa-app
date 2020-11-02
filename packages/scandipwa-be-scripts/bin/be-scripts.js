@@ -101,5 +101,5 @@ program
     .action(actionWrapper(({ options }) => commands.cleanup(options)));
 
 program.run().then(() => {
-    program.exit(0);
+    process.exit(0);
 });
