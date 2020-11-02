@@ -6,7 +6,6 @@ const { getAvailablePorts } = require('./lib/util/get-ports');
 const { startPhpFpm, stopPhpFpm } = require('./lib/steps/manage-php-fpm');
 const openBrowser = require('./lib/util/open-browser');
 const setupMagento = require('./lib/steps/setup-magento');
-const ora = require('ora');
 
 const start = async () => {
     let started = false;

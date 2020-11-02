@@ -1,11 +1,8 @@
-const ora = require('ora');
 const { stopPhpFpm } = require('./lib/steps/manage-php-fpm');
 const { stopServices } = require('./lib/steps/manage-docker-services');
 
 const stop = async () => {
-    const output = ora();
-
-    const stopPhpFpmOk = await stopPhpFpm({ output });
+    const stopPhpFpmOk = await stopPhpFpm();
 
     if (!stopPhpFpmOk) {
         return false;

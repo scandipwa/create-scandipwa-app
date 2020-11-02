@@ -15,7 +15,7 @@ const commands = {
 
 const oraInstance = ora();
 
-global.verbosity = 0;
+global.verbosity = 1;
 
 global.output = {
     ...oraInstance,

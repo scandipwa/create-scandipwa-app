@@ -3,13 +3,10 @@ const createDirSafe = require('./create-dir-safe');
 const pathExists = require('./path-exists');
 const eta = require('eta');
 const fs = require('fs');
-const ora = require('ora');
 
 const checkConfigPath = async ({
-    configPathname, dirName, template, ports = {}, name, output, overwrite, templateArgs = {}
+    configPathname, dirName, template, ports = {}, name, overwrite, templateArgs = {}
 }) => {
-    // eslint-disable-next-line no-param-reassign
-    output = output || ora();
     const pathOk = await pathExists(configPathname);
 
     if (pathOk && !overwrite) {
@@ -19,12 +16,10 @@ const checkConfigPath = async ({
 
         return true;
     }
-    if (verbose) {
-        if (overwrite) {
-            output.info(`Recreating ${name} config...`);
-        } else {
-            output.warn(`${name} config not found, creating...`);
-        }
+    if (overwrite) {
+        output.info(`Recreating ${name} config...`);
+    } else {
+        output.warn(`${name} config not found, creating...`);
     }
     const configTemplate = await fs.promises.readFile(template, 'utf-8');
 
@@ -35,9 +30,7 @@ const checkConfigPath = async ({
             await createDirSafe(dirName);
         }
         await fs.promises.writeFile(configPathname, compliedConfig, { encoding: 'utf-8' });
-        if (verbose) {
-            output.succeed(`${name} config created`);
-        }
+        output.succeed(`${name} config created`);
 
         return true;
     } catch (e) {

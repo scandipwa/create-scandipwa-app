@@ -34,7 +34,7 @@ const stopPhpFpm = async () => {
 };
 
 const startPhpFpm = async () => {
-    await stopPhpFpm({ output });
+    await stopPhpFpm();
     output.start('Starting php-fpm...');
     try {
         await execAsync(`${php.phpFpmBinPath} --php-ini ${php.phpIniPath} --fpm-config ${php.phpFpmConfPath} --pid ${pidFilePath} "$@"`);
