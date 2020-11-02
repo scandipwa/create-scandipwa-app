@@ -16,8 +16,8 @@
         "getos": "^3.2.1",
         "inquirer": "^7.3.3",
         "log-symbols": "^4.0.0",
-        "ora": "^5.1.0",
-        "semver": "^7.3.2"
+        "macos-version": "^5.2.0",
+        "ora": "^5.1.0"
     },
     "scripts": {
         "start": "node start",
