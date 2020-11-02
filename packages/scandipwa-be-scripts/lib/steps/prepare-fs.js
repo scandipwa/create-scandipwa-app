@@ -2,7 +2,6 @@ const path = require('path');
 const {
     cachePath, templatePath, php, appPath
 } = require('../config');
-const ora = require('ora');
 const createDirSafe = require('../util/create-dir-safe');
 const pathExists = require('../util/path-exists');
 const installMagento = require('./install-magento');
@@ -16,7 +15,7 @@ const createCacheFolder = async () => {
 };
 
 async function prepareFileSystem(ports) {
-    const output = ora('Checking filesystem...').start();
+    output.start('Checking filesystem...');
     // Make sure cache folder is present
     const cacheFolderOk = await checkCacheFolder();
 
@@ -27,7 +26,7 @@ async function prepareFileSystem(ports) {
         output.succeed('Cache folder already created');
     }
 
-    const appConfigOk = await createApplicationConfig({ output });
+    const appConfigOk = await createApplicationConfig();
 
     if (!appConfigOk) {
         process.exit(1);
@@ -37,7 +36,6 @@ async function prepareFileSystem(ports) {
         configPathname: path.join(cachePath, 'port-config.json'),
         template: path.join(templatePath, 'port-config.template.json'),
         name: 'port config',
-        output,
         ports,
         overwrite: true
     });
@@ -51,7 +49,6 @@ async function prepareFileSystem(ports) {
         dirName: path.join(cachePath, 'nginx', 'conf.d'),
         template: path.join(templatePath, 'nginx.template.conf'),
         name: 'Nginx',
-        output,
         ports,
         overwrite: true,
         templateArgs: {
@@ -67,7 +64,6 @@ async function prepareFileSystem(ports) {
         configPathname: php.phpFpmConfPath,
         template: path.join(templatePath, 'php-fpm.template.conf'),
         name: 'php-fpm',
-        output,
         ports,
         overwrite: true
     });

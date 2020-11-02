@@ -3,7 +3,6 @@
 /* eslint-disable no-await-in-loop */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { execAsync, execAsyncSpawn } = require('../util/exec-async-command');
-const ora = require('ora');
 const path = require('path');
 const {
     php: {
@@ -27,7 +26,7 @@ const checkPHPInGlobalCache = async () => {
     }
 };
 
-const setupPHPExtensions = async ({ output }) => {
+const setupPHPExtensions = async () => {
     try {
         const loadedPHPModules = await execAsync(`${phpBinPath} -m`);
         // console.log(loadedPHPModules)
@@ -71,7 +70,7 @@ const setupPHPExtensions = async ({ output }) => {
     }
 };
 
-const buildPHP = async ({ output }) => {
+const buildPHP = async () => {
     try {
         await execAsyncSpawn('phpbrew -v');
     } catch (e) {
@@ -98,14 +97,16 @@ const buildPHP = async ({ output }) => {
                 --with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/ ${os.dist.includes('Manjaro') ? '--with-libdir=lib64' : ''}`,
                 {
                     callback: (line) => {
-                        if (line.includes('Configuring')) {
-                            output.text = `Configuring PHP-${requiredPHPVersion}...`;
-                        }
-                        if (line.includes('Building...')) {
-                            output.text = `Building PHP-${requiredPHPVersion}...`;
-                        }
-                        if (line.includes('Installing...')) {
-                            output.text = `Installing PHP-${requiredPHPVersion}...`;
+                        if (verbose) {
+                            if (line.includes('Configuring')) {
+                                output.text = `Configuring PHP-${requiredPHPVersion}...`;
+                            }
+                            if (line.includes('Building...')) {
+                                output.text = `Building PHP-${requiredPHPVersion}...`;
+                            }
+                            if (line.includes('Installing...')) {
+                                output.text = `Installing PHP-${requiredPHPVersion}...`;
+                            }
                         }
                     }
                 }
@@ -128,7 +129,6 @@ const buildPHP = async ({ output }) => {
         configPathname: php.phpIniPath,
         template: path.join(templatePath, 'php.template.ini'),
         name: 'PHP',
-        output,
         overwrite: true
     });
 
@@ -140,14 +140,14 @@ const buildPHP = async ({ output }) => {
 };
 
 const installPHP = async () => {
-    const output = ora('Checking PHP...').start();
+    output.start('Checking PHP...');
 
     const hasPHPInGlobalCache = await checkPHPInGlobalCache();
 
     if (!hasPHPInGlobalCache) {
         output.warn(`Required PHP version ${requiredPHPVersion} not found in cache, starting build...`);
         output.info('This operation can take some time');
-        const buildPHPOk = await buildPHP({ output });
+        const buildPHPOk = await buildPHP();
         if (!buildPHPOk) {
             return false;
         }
@@ -155,14 +155,11 @@ const installPHP = async () => {
         output.succeed(`Using PHP version ${requiredPHPVersion}`);
     }
 
-    const extensionsOK = await setupPHPExtensions({ output });
+    const extensionsOK = await setupPHPExtensions();
 
     if (!extensionsOK) {
-        output.stop();
         return false;
     }
-
-    output.stop();
 
     return true;
 };

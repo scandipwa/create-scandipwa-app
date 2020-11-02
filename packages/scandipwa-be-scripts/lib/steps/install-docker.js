@@ -1,12 +1,11 @@
 const { execAsync } = require('../util/exec-async-command');
 const os = require('os');
-const ora = require('ora');
 
 const dockerInstallDarwinUrl = 'https://docs.docker.com/docker-for-mac/install/';
 const dockerInstallLinuxUrl = 'https://docs.docker.com/engine/install/';
 
 module.exports = async () => {
-    const output = ora('Checking docker install...').start();
+    output.start('Checking docker install...');
     const dockerVersionOutput = await execAsync('docker -v');
     if (/Docker version/.test(dockerVersionOutput)) {
         const dockerVersion = dockerVersionOutput.match(/Docker version ([\d.]+)/)[1];

@@ -2,10 +2,9 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { execAsync } = require('../util/exec-async-command');
 const inquirer = require('inquirer');
-const ora = require('ora');
 
 const installBrew = async () => {
-    const output = ora('Checking HomeBrew...').start();
+    output.start('Checking HomeBrew...');
     const homeBrewVersion = await execAsync('brew -v');
 
     if (/Homebrew \d+\.\d+\.\d+/.test(homeBrewVersion)) {

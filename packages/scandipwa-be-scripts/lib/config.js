@@ -44,15 +44,15 @@ const dockerNginxVolume = {
     ]
 };
 
-const dockerVarnishVolume = {
-    name: `${dirName}_varnish-data`,
-    // driver: 'local',
-    opts: [
-        'type=nfs',
-        `device=${cachePath}/varnish`,
-        'o=bind'
-    ]
-};
+// const dockerVarnishVolume = {
+//     name: `${dirName}_varnish-data`,
+//     // driver: 'local',
+//     opts: [
+//         'type=nfs',
+//         `device=${cachePath}/varnish`,
+//         'o=bind'
+//     ]
+// };
 
 const dockerAppPubVolume = {
     name: `${dirName}_pub-data`,
@@ -77,13 +77,12 @@ const dockerVolumeList = [
     dockerRedisVolume,
     dockerElasticsearchVolume,
     dockerNginxVolume,
-    dockerVarnishVolume,
+    // dockerVarnishVolume,
     dockerAppPubVolume,
     dockerAppSetupVolume
 ];
 
 // docker container
-// const dockerContainerList = ['nginx', 'varnish', 'redis', 'mysql', 'elasticsearch'].map(c => `${dirName}_${c}`)
 const dockerNginxContainer = ({ ports = {} } = {}) => ({
     ports: [`${ports.app}:80`],
     mountVolumes: [
@@ -94,12 +93,9 @@ const dockerNginxContainer = ({ ports = {} } = {}) => ({
     restart: 'on-failure:5',
     // TODO: use connect instead
     network: 'host',
-    // entrypoint: '/bin/sh -c ip -4 route list match 0/0 | awk \'{print $$3\\" host.docker.internal\\"}\' >> /etc/hosts',
     image: 'nginx:1.18.0',
     name: `${dirName}_nginx`
 });
-
-// console.log(path.join(cachePath, 'varnish', 'default.vcl'))
 
 // const dockerVarnishContainer = ({ ports = {} } = {}) => ({
 //     expose: [80],
@@ -131,8 +127,6 @@ const dockerMysqlContainer = ({ ports = {} } = {}) => ({
         MYSQL_PASSWORD: 'magento',
         MYSQL_DATABASE: 'magento'
     },
-    // TODO: use connect instead
-    // network: dockerNetworkName,
     network: 'host',
     image: 'mysql:5.7',
     name: `${dirName}_mysql`
@@ -147,7 +141,6 @@ const dockerElasticsearchContainer = ({ ports = {} } = {}) => ({
         'discovery.type': 'single-node',
         ES_JAVA_OPTS: '"-Xms512m -Xmx512m"'
     },
-    // TODO: use connect instead
     network: dockerNetworkName,
     image: 'docker.elastic.co/elasticsearch/elasticsearch:7.6.2',
     name: `${dirName}_elasticsearch`

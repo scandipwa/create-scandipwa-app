@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const ora = require('ora');
 const { execAsync } = require('../util/exec-async-command');
 const { docker } = require('../config');
 const getRunningContainers = require('../util/get-running-containers');
@@ -21,7 +20,7 @@ const dockerContainerStop = (containers) => execAsync(`docker container stop ${c
  */
 const dockerContainerRemove = (containers) => execAsync(`docker container rm ${containers.join(' ')}`);
 
-const deployDockerNetwork = async ({ output }) => {
+const deployDockerNetwork = async () => {
     try {
         const networkList = await execAsync('docker network ls');
 
@@ -45,7 +44,7 @@ const deployDockerNetwork = async ({ output }) => {
     }
 };
 
-const deployDockerVolumes = async ({ output }) => {
+const deployDockerVolumes = async () => {
     try {
         const volumeList = await execAsync('docker volume ls -q');
 
@@ -74,7 +73,7 @@ const deployDockerVolumes = async ({ output }) => {
     return true;
 };
 
-const deployDockerContainers = async ({ output, ports }) => {
+const deployDockerContainers = async ({ ports }) => {
     output.start('Running docker containers');
 
     try {
@@ -128,11 +127,7 @@ const deployDockerContainers = async ({ output, ports }) => {
         if (existingContainers.length > 0) {
             output.text = 'Starting containers...';
             if (existingContainers.length === docker.containerList.length) {
-                // eslint-disable-next-line no-restricted-syntax
-                for (const container of existingContainers) {
-                    // eslint-disable-next-line no-await-in-loop
-                    await dockerRun(container({ ports }));
-                }
+                await Promise.all(existingContainers.map((container) => dockerRun(container({ ports }))));
                 output.succeed('Containers started up!');
                 return true;
             }
@@ -156,28 +151,7 @@ const deployDockerContainers = async ({ output, ports }) => {
     }
 
     try {
-        await dockerRun(docker.container.nginx({ ports }));
-        // await dockerRun(docker.container.varnish({ ports }))
-        await Promise.all([
-            // Promise.all(
-            //     [
-            // Varnish+Nginx
-            //     dockerRun(docker.container.nginx()),
-            //     dockerRun(docker.container.varnish({ port: ports.app })),
-            // Alias - just allows to use different name for service in network,
-            // while link links the container to another one (not sure if by name or not)
-            // TODO: I think they should run after image creation,
-            // execAsync('docker network connect --alias nginx custom-network name_of_nginx_container'),
-            // execAsync('docker network connect --link nginx:nginx custom-network varnish')
-            //     ]
-            // ),
-            // Redis
-            dockerRun(docker.container.redis({ ports })),
-            // MySQL
-            dockerRun(docker.container.mysql({ ports })),
-            // Elasticsearch
-            dockerRun(docker.container.elasticsearch({ ports }))
-        ]);
+        await Promise.all(docker.containerList.map((container) => dockerRun(container({ ports }))));
 
         await savePortsConfig({ ports });
     } catch (e) {
@@ -193,13 +167,13 @@ const deployDockerContainers = async ({ output, ports }) => {
     return true;
 };
 
-const dockerStopContainers = async ({ output }) => {
+const dockerStopContainers = async () => {
     try {
         const runningContainers = await getRunningContainers();
 
         if (runningContainers.length > 0) {
             output.start('Stopping docker containers...');
-            await execAsync(`docker container stop ${runningContainers.map((c) => c().name).join(' ')}`);
+            await dockerContainerStop(runningContainers.map((c) => c().name));
             output.succeed('Docker containers stopped');
         } else {
             output.warn('No containers running');
@@ -220,7 +194,7 @@ const dockerStopContainers = async ({ output }) => {
     }
 };
 
-const dockerRemoveContainers = async ({ output }) => {
+const dockerRemoveContainers = async () => {
     try {
         const containerList = await execAsync('docker container ls -a');
 
@@ -228,7 +202,7 @@ const dockerRemoveContainers = async ({ output }) => {
 
         if (containersToRemove.length > 0) {
             output.start('Removing docker containers...');
-            await execAsync(`docker container rm ${containersToRemove.map((c) => c().name).join(' ')}`);
+            await dockerContainerRemove(containersToRemove.map((c) => c().name));
             output.succeed('Docker containers removed');
         } else {
             output.warn('No containers to remove');
@@ -249,7 +223,7 @@ const dockerRemoveContainers = async ({ output }) => {
     }
 };
 
-const dockerRemoveVolumes = async ({ output }) => {
+const dockerRemoveVolumes = async () => {
     try {
         const volumeList = await execAsync('docker volume ls -q');
 
@@ -278,44 +252,44 @@ const dockerRemoveVolumes = async ({ output }) => {
     }
 };
 
-const stopServices = async ({ output } = {}) => {
-    output = output || ora('Stopping docker services...').start();
+const stopServices = async () => {
+    output.start('Stopping docker services...');
 
-    await dockerStopContainers({ output });
+    await dockerStopContainers();
 
-    await dockerRemoveContainers({ output });
+    await dockerRemoveContainers();
 
     return true;
 };
 
 const startServices = async (ports) => {
-    const output = ora('Deploying docker services...').start();
+    output.start('Deploying docker services...');
 
-    const networkOk = await deployDockerNetwork({ output });
+    const networkOk = await deployDockerNetwork();
 
     if (!networkOk) {
         process.exit(1);
     }
 
-    const volumesOk = await deployDockerVolumes({ output });
+    const volumesOk = await deployDockerVolumes();
 
     if (!volumesOk) {
-        await dockerStopContainers({ output });
+        await dockerStopContainers();
         process.exit(1);
     }
 
-    const containersOk = await deployDockerContainers({ output, ports });
+    const containersOk = await deployDockerContainers({ ports });
 
     if (!containersOk) {
-        await dockerStopContainers({ output });
-        await dockerRemoveContainers({ output });
+        await dockerStopContainers();
+        await dockerRemoveContainers();
         process.exit(1);
     }
 };
 
-const removeServices = async ({ output }) => {
-    await stopServices({ output });
-    await dockerRemoveVolumes({ output });
+const removeServices = async () => {
+    await stopServices();
+    await dockerRemoveVolumes();
 };
 
 module.exports = {

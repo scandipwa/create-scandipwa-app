@@ -1,9 +1,7 @@
 const inquirer = require('inquirer');
-const ora = require('ora');
 const { getApplicationConfig, defaultConfig, saveApplicationConfig } = require('../util/application-config');
 
-const createApplicationConfig = async ({ output }) => {
-    output = output || ora();
+const createApplicationConfig = async () => {
     const currentConfig = await getApplicationConfig();
 
     if (!currentConfig) {

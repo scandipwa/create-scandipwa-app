@@ -4,9 +4,7 @@ const { php, pidFilePath } = require('../config');
 const { execAsync } = require('../util/exec-async-command');
 const getProcessId = require('../util/get-process-id');
 
-const stopPhpFpm = async ({ output } = {}) => {
-    // eslint-disable-next-line no-param-reassign
-    output = output || ora();
+const stopPhpFpm = async () => {
     try {
         const processId = await getProcessId();
         if (processId) {
@@ -35,9 +33,7 @@ const stopPhpFpm = async ({ output } = {}) => {
     return true;
 };
 
-const startPhpFpm = async ({ output } = {}) => {
-    // eslint-disable-next-line no-param-reassign
-    output = output || ora();
+const startPhpFpm = async () => {
     await stopPhpFpm({ output });
     output.start('Starting php-fpm...');
     try {

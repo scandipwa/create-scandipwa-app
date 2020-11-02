@@ -3,6 +3,7 @@
 const path = require('path');
 const { program } = require('@caporal/core');
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
+const ora = require('ora');
 
 const commands = {
     start: require('../start'),
@@ -12,7 +13,49 @@ const commands = {
     init: require('../init')
 };
 
+const oraInstance = ora();
+
+global.verbosity = 0;
+
+global.output = {
+    ...oraInstance,
+    start(text, verbosityLevel = 3) {
+        if (verbosity <= verbosityLevel) {
+            return oraInstance.start(text);
+        }
+
+        return oraInstance;
+    },
+    info(text, verbosityLevel = 3) {
+        if (verbosity <= verbosityLevel) {
+            return oraInstance.info(text);
+        }
+
+        return oraInstance;
+    },
+    warn(text, verbosityLevel = 3) {
+        if (verbosity <= verbosityLevel) {
+            return oraInstance.warn(text);
+        }
+
+        return oraInstance;
+    },
+    succeed(text, verbosityLevel = 3) {
+        if (verbosity <= verbosityLevel) {
+            return oraInstance.succeed(text);
+        }
+
+        return oraInstance;
+    }
+};
+
+const actionWrapper = (action) => (ctx) => {
+    global.verbose = Number.parseInt(ctx.options.verbose, 2) || 1;
+    return action(ctx);
+};
+
 program
+    .name('Create Magento App')
     .argument('<app name>', 'Magento application name to create')
     .action(({ args }) => {
         const pathArr = (args.appName || '').split('/');
@@ -42,14 +85,21 @@ program
 
         return commands.init(options);
     })
+    .option('--verbose', 'Set verbose level, default 1', {
+        global: true,
+        validator: program.NUMBER,
+        default: 1
+    })
     .command('start', 'Start Magento with all services')
-    .action(() => commands.start())
+    .action(actionWrapper(({ options }) => commands.start(options)))
     .command('stop', 'Stop Magento and services')
-    .action(() => commands.stop())
+    .action(actionWrapper(({ options }) => commands.stop(options)))
     .command('restart', 'Restart Magento and services')
-    .action(() => commands.restart())
+    .action(actionWrapper(({ options }) => commands.restart(options)))
     .command('cleanup', 'Cleanup project, uninstall Magento')
     .option('-f, --force', '[with cleanup] additionally removes Magento folder.')
-    .action(({ options }) => commands.cleanup(options));
+    .action(actionWrapper(({ options }) => commands.cleanup(options)));
 
-program.run();
+program.run().then(() => {
+    program.exit(0);
+});

@@ -8,8 +8,8 @@ const openBrowser = require('./lib/util/open-browser');
 const setupMagento = require('./lib/steps/setup-magento');
 const ora = require('ora');
 
-let started = false;
 const start = async () => {
+    let started = false;
     exitHook(async (callback) => {
         if (started) {
             callback();
@@ -39,9 +39,9 @@ const start = async () => {
 
     openBrowser(`http://localhost:${ports.app}`);
 
-    ora().info(`Application started up on http://localhost:${ports.app}`);
+    output.info(`Application started up on http://localhost:${ports.app}`, 1);
 
-    process.exit(0);
+    return true;
 };
 
 module.exports = start;

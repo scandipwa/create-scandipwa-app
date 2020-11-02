@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const ora = require('ora');
 const {
     php: { phpBinPath },
     composer: {
@@ -27,7 +26,7 @@ const checkComposerAuth = async () => {
     }
 };
 
-const installComposerInCache = async ({ output }) => {
+const installComposerInCache = async () => {
     await createDirSafe(composerDirPath);
     try {
         output.start('Downloading composer...');
@@ -53,7 +52,7 @@ const installComposerInCache = async ({ output }) => {
 };
 
 const installComposer = async () => {
-    const output = ora('Checking Composer...').info();
+    output.start('Checking Composer...');
 
     const isComposerAuthOk = await checkComposerAuth();
 
@@ -65,7 +64,7 @@ const installComposer = async () => {
 
     if (!hasComposerInCache) {
         output.warn('PHP Composer not found locally, installing...');
-        const installComposerOk = await installComposerInCache({ output });
+        const installComposerOk = await installComposerInCache();
         if (!installComposerOk) {
             return false;
         }
@@ -75,8 +74,6 @@ const installComposer = async () => {
 
         output.succeed(`Using composer version ${composerVersion}`);
     }
-
-    output.stop();
 
     return true;
 };

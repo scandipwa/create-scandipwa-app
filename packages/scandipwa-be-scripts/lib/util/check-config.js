@@ -13,13 +13,18 @@ const checkConfigPath = async ({
     const pathOk = await pathExists(configPathname);
 
     if (pathOk && !overwrite) {
-        output.succeed(`${name} config already created`);
+        if (overwrite) {
+            output.succeed(`${name} config already created`);
+        }
+
         return true;
     }
-    if (overwrite) {
-        output.info(`Recreating ${name} config...`);
-    } else {
-        output.warn(`${name} config not found, creating...`);
+    if (verbose) {
+        if (overwrite) {
+            output.info(`Recreating ${name} config...`);
+        } else {
+            output.warn(`${name} config not found, creating...`);
+        }
     }
     const configTemplate = await fs.promises.readFile(template, 'utf-8');
 
@@ -30,7 +35,10 @@ const checkConfigPath = async ({
             await createDirSafe(dirName);
         }
         await fs.promises.writeFile(configPathname, compliedConfig, { encoding: 'utf-8' });
-        output.succeed(`${name} config created`);
+        if (verbose) {
+            output.succeed(`${name} config created`);
+        }
+
         return true;
     } catch (e) {
         output.fail(`create ${name} config error`);

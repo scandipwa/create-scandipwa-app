@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const ora = require('ora');
 const {
     php: { phpBinPath },
     composer: { composerBinPath },
@@ -12,7 +11,7 @@ const pathExists = require('../util/path-exists');
 
 const checkMagentoApp = async () => pathExists(appPath);
 
-const installApp = async ({ output }) => {
+const installApp = async () => {
     try {
         output.info('Creating Magento project...');
         await execAsyncSpawn(
@@ -39,19 +38,17 @@ const installApp = async ({ output }) => {
 };
 
 const installMagento = async () => {
-    const output = ora().info('Checking Composer...');
+    output.info('Checking Composer...');
 
     const hasMagentoApp = await checkMagentoApp();
 
     if (!hasMagentoApp) {
         output.warn('Magento application not found, creating...');
-        const installAppOk = await installApp({ output });
+        const installAppOk = await installApp();
         if (!installAppOk) {
             return false;
         }
     }
-
-    output.stop();
 
     return true;
 };

@@ -11,7 +11,7 @@ const stop = async () => {
         return false;
     }
 
-    await stopServices({ output });
+    await stopServices();
 
     return true;
 };
