@@ -4,6 +4,11 @@ const path = require('path');
 const { program } = require('@caporal/core');
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
 const ora = require('ora');
+const exitHook = require('async-exit-hook');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+
+const { stopServices } = require('../lib/steps/manage-docker-services');
+const { stopPhpFpm } = require('../lib/steps/manage-php-fpm');
 
 const commands = {
     start: require('../start'),
@@ -12,6 +17,8 @@ const commands = {
     restart: require('../restart'),
     init: require('../init')
 };
+
+let done = false;
 
 const oraInstance = ora();
 
@@ -46,12 +53,22 @@ global.output = {
         }
 
         return oraInstance;
+    },
+    fail(text, verbosityLevel = 3) {
+        if (verbosity <= verbosityLevel) {
+            return oraInstance.fail(text);
+        }
+
+        return oraInstance;
     }
 };
 
-const actionWrapper = (action) => (ctx) => {
+const actionWrapper = (action) => async (ctx) => {
     global.verbose = Number.parseInt(ctx.options.verbose, 2) || 1;
-    return action(ctx);
+
+    await action(ctx);
+
+    done = true;
 };
 
 program
@@ -100,6 +117,28 @@ program
     .option('-f, --force', '[with cleanup] additionally removes Magento folder.')
     .action(actionWrapper(({ options }) => commands.cleanup(options)));
 
-program.run().then(() => {
-    process.exit(0);
+const stopProgram = async () => {
+    await stopServices();
+    await stopPhpFpm();
+};
+
+exitHook(async (callback) => {
+    if (done) {
+        callback();
+        return;
+    }
+    stopProgram();
 });
+
+const main = async () => {
+    try {
+        await program.run();
+        process.exit(0);
+    } catch (e) {
+        logger.error(e);
+        await stopProgram();
+        process.exit(1);
+    }
+};
+
+main();
