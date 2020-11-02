@@ -1,6 +1,6 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const semver = require('semver');
 const os = require('os');
+const macosVersion = require('macos-version');
 const installBrew = require('./install-brew');
 const installDocker = require('./install-docker');
 const installPHP = require('./install-php');
@@ -16,9 +16,9 @@ const validateOS = async () => {
         process.exit();
     }
 
-    if (os.platform() === 'darwin') {
+    if (macosVersion.isMacOS) {
         const minimumVersion = '10.5';
-        if (!semver.gt(os.release(), minimumVersion)) {
+        if (macosVersion.assertGreaterThanOrEqualTo(minimumVersion)) {
             // check if the version is above 10.5
             logger.error(
                 'Please update your system!',

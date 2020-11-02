@@ -88,25 +88,29 @@ const buildPHP = async () => {
 
         if (!requiredPHPVersionRegex.test(PHPBrewVersions)) {
             output.start(`Compiling and building PHP-${requiredPHPVersion}...`);
+            let phpBuildCommand = `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
+            +bz2 +bcmath +ctype +curl -intl +dom +filter +hash \
+            +iconv +json +mbstring +openssl +xml +mysql \
+            +pdo +soap +xmlrpc +xml +zip +fpm +gd \
+            -- --with-freetype-dir=/usr/include/freetype2 --with-openssl=/usr/ \
+            --with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/`;
+
+            if (os.os === 'linux' && os.dist.includes('Manjaro')) {
+                phpBuildCommand += ' --with-libdir=lib64';
+            }
+
             await execAsyncSpawn(
-                `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
-                +bz2 +bcmath +ctype +curl -intl +dom +filter +hash \
-                +iconv +json +mbstring +openssl +xml +mysql \
-                +pdo +soap +xmlrpc +xml +zip +fpm +gd \
-                -- --with-freetype-dir=/usr/include/freetype2 --with-openssl=/usr/ \
-                --with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/ ${os.dist.includes('Manjaro') ? '--with-libdir=lib64' : ''}`,
+                phpBuildCommand,
                 {
                     callback: (line) => {
-                        if (verbose) {
-                            if (line.includes('Configuring')) {
-                                output.text = `Configuring PHP-${requiredPHPVersion}...`;
-                            }
-                            if (line.includes('Building...')) {
-                                output.text = `Building PHP-${requiredPHPVersion}...`;
-                            }
-                            if (line.includes('Installing...')) {
-                                output.text = `Installing PHP-${requiredPHPVersion}...`;
-                            }
+                        if (line.includes('Configuring')) {
+                            output.text = `Configuring PHP-${requiredPHPVersion}...`;
+                        }
+                        if (line.includes('Building...')) {
+                            output.text = `Building PHP-${requiredPHPVersion}...`;
+                        }
+                        if (line.includes('Installing...')) {
+                            output.text = `Installing PHP-${requiredPHPVersion}...`;
                         }
                     }
                 }

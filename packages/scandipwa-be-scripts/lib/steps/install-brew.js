@@ -2,16 +2,17 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { execAsync } = require('../util/exec-async-command');
 const inquirer = require('inquirer');
+const { execAsyncSpawn } = require('../util/exec-async-command');
 
 const installBrew = async () => {
     output.start('Checking HomeBrew...');
-    const homeBrewVersion = await execAsync('brew -v');
+    const { result: homeBrewVersion } = await execAsyncSpawn('brew -v', { withCode: true });
 
     if (/Homebrew \d+\.\d+\.\d+/.test(homeBrewVersion)) {
         output.succeed('Homebrew installed!');
-        return;
+        return true;
     }
-    output.fail(`Package ${logger.style.misc('homebrew')} is not installed`);
+    output.warn(`Package ${logger.style.misc('homebrew')} is not installed`);
 
     const answer = await inquirer.prompt([
         {
