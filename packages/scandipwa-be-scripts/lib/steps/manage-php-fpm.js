@@ -1,5 +1,4 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const ora = require('ora');
 const { php, pidFilePath } = require('../config');
 const { execAsync } = require('../util/exec-async-command');
 const getProcessId = require('../util/get-process-id');

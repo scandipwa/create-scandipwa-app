@@ -9,9 +9,9 @@ const { runMagentoCommandSafe } = require('./lib/util/run-magento');
 
 const cleanUp = async ({ force = false } = {}) => {
     const output = ora('Stopping docker services...').start();
-    await removeServices({ output });
+    await removeServices();
 
-    await stopPhpFpm({ output });
+    await stopPhpFpm();
 
     try {
         const cacheExists = await pathExists(cachePath);
