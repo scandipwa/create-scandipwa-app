@@ -3,7 +3,9 @@
 ## Usage
 
 ```bash
-create-magento-app <folder name>
+> create-magento-app <folder name>
+> cd <folder name>
+> yarn/npm run start
 ```
 
 ## Requirements
