@@ -27,35 +27,35 @@ global.verbosity = 1;
 global.output = {
     ...oraInstance,
     start(text, verbosityLevel = 3) {
-        if (verbosity <= verbosityLevel) {
+        if (verbosity >= verbosityLevel) {
             return oraInstance.start(text);
         }
 
         return oraInstance;
     },
     info(text, verbosityLevel = 3) {
-        if (verbosity <= verbosityLevel) {
+        if (verbosity >= verbosityLevel) {
             return oraInstance.info(text);
         }
 
         return oraInstance;
     },
     warn(text, verbosityLevel = 3) {
-        if (verbosity <= verbosityLevel) {
+        if (verbosity >= verbosityLevel) {
             return oraInstance.warn(text);
         }
 
         return oraInstance;
     },
     succeed(text, verbosityLevel = 3) {
-        if (verbosity <= verbosityLevel) {
+        if (verbosity >= verbosityLevel) {
             return oraInstance.succeed(text);
         }
 
         return oraInstance;
     },
     fail(text, verbosityLevel = 3) {
-        if (verbosity <= verbosityLevel) {
+        if (verbosity >= verbosityLevel) {
             return oraInstance.fail(text);
         }
 
