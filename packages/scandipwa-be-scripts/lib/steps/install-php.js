@@ -88,7 +88,7 @@ const buildPHP = async () => {
 
         if (!requiredPHPVersionRegex.test(PHPBrewVersions)) {
             output.start(`Compiling and building PHP-${requiredPHPVersion}...`);
-            let phpBuildCommand = `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
+            let phpBuildCommandLinux = `phpbrew install -j $(nproc) ${ requiredPHPVersion } \
             +bz2 +bcmath +ctype +curl -intl +dom +filter +hash \
             +iconv +json +mbstring +openssl +xml +mysql \
             +pdo +soap +xmlrpc +xml +zip +fpm +gd \
@@ -96,11 +96,23 @@ const buildPHP = async () => {
             --with-gd=shared --with-jpeg-dir=/usr/ --with-png-dir=/usr/`;
 
             if (os.os === 'linux' && os.dist.includes('Manjaro')) {
-                phpBuildCommand += ' --with-libdir=lib64';
+                phpBuildCommandLinux += ' --with-libdir=lib64';
             }
 
+            const phpBuildCommandMac = `phpbrew install -j $(sysctl -n hw.ncpu) ${ requiredPHPVersion } \
+            +bz2="$(brew --prefix bzip2)" +bcmath +ctype +curl -intl +dom +filter +hash \
+            +iconv="$(brew --prefix libiconv)" +json +mbstring +openssl="$(brew --prefix openssl)" +xml +mysql \
+            +pdo +soap +xmlrpc +xml +zip +fpm +gd \
+            --  --with-gd=$(brew --prefix gd) \
+            --with-png-dir=$(brew --prefix libpng) \
+            --with-zlib-dir=$(brew --prefix zlib) \
+            --with-jpeg-dir=$(brew --prefix jpeg) \
+            --with-xpmlib-dir=$(brew --prefix libxpm) \
+            --with-freetype-dir=$(brew --prefix freetype) \
+            --with-iconv-dir=$(brew --prefix libiconv)`;
+
             await execAsyncSpawn(
-                phpBuildCommand,
+                os.os === 'linux' ? phpBuildCommandLinux : phpBuildCommandMac,
                 {
                     callback: (line) => {
                         if (line.includes('Configuring')) {

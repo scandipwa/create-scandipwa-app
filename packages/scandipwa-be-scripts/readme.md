@@ -13,6 +13,13 @@
 - [Docker](https://docs.docker.com/get-docker/) ^19
 - [phpbrew](https://github.com/phpbrew/phpbrew) ^1.25
 
+For Mac
+- MacOS 10.5 and newer
+- Xcode 11. You can find it [here](https://developer.apple.com/download/more/) ([Why 11?](https://github.com/Homebrew/homebrew-core/pull/61820#issuecomment-702787649))  
+- [Homebrew](https://brew.sh/)  
+
+## Dependencies
+
 ### Ubuntu
 
 ```sh
@@ -54,5 +61,21 @@ pamac install freetype2 \
     lib32-freetype2 \
     openssl
 ```
+
+### MacOS
+```sh
+brew install zlib \
+    bzip2 \
+    libiconv \
+    curl \
+    libpng \
+    gd \
+    freetype
+```
+Then you need to run this:
+```sh
+sudo xcode-select -switch /Applications/Xcode.app
+```
+
 Additional libraries:  
 - Installed PHP with json extension.  
