@@ -64,7 +64,7 @@ global.output = {
 };
 
 const actionWrapper = (action) => async (ctx) => {
-    global.verbose = Number.parseInt(ctx.options.verbose, 2) || 1;
+    global.verbosity = ctx.options.verbose || 1;
 
     await action(ctx);
 
@@ -84,7 +84,7 @@ program
             : pathArr[pathArr.length - 1];
 
         if (!isValidPackageName(packageName)) {
-            process.exit();
+            process.exit(1);
         }
 
         const pathToDist = isOrg
