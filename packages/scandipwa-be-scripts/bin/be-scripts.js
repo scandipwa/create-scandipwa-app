@@ -25,7 +25,12 @@ const oraInstance = ora();
 global.verbosity = 1;
 
 global.output = {
-    ...oraInstance,
+    stop() {
+        return oraInstance.stop();
+    },
+    set text(newText) {
+        oraInstance.text = newText;
+    },
     start(text, verbosityLevel = 3) {
         if (verbosity >= verbosityLevel) {
             return oraInstance.start(text);
