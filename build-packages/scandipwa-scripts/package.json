@@ -1,0 +1,40 @@
+{
+    "name": "@scandipwa/scandipwa-scripts",
+    "description": "Scripts and configuration used by CSA.",
+    "version": "2.0.1",
+    "bin": {
+        "scandipwa-scripts": "./bin/scandipwa-scripts.js"
+    },
+    "files": [
+        "bin",
+        "craco.config.js",
+        "/lib"
+    ],
+    "dependencies": {
+        "@babel/plugin-transform-arrow-functions": "^7.10.4",
+        "@babel/plugin-transform-async-to-generator": "^7.10.4",
+        "@scandipwa/babel-plugin-middleware-decorator": "^0.1.1",
+        "@scandipwa/craco": "^0.0.3",
+        "@scandipwa/eslint-config": "^0.1.1",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.9",
+        "@scandipwa/scandipwa-extensibility": "^1.0.1",
+        "@scandipwa/webpack-extension-import-loader": "^0.0.5",
+        "@scandipwa/webpack-fallback-plugin": "^1.1.1",
+        "@scandipwa/webpack-i18n-plugin": "^0.0.9",
+        "babel-plugin-module-resolver": "^4.0.0",
+        "babel-plugin-transform-rebem-jsx": "^0.3.3",
+        "chokidar": "^3.4.2",
+        "craco-sass-resources-loader": "^1.1.0",
+        "cross-spawn": "^7.0.0",
+        "debounce": "^1.2.0",
+        "node-sass": "^4.14.1",
+        "progress-bar-webpack-plugin": "^2.1.0",
+        "react-dev-utils": "^10.2.1",
+        "react-scripts": "3.4.1",
+        "tree-kill": "^1.2.2"
+    },
+    "license": "OSL-3.0",
+    "publishConfig": {
+        "access": "public"
+    }
+}

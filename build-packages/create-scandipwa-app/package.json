@@ -1,0 +1,19 @@
+{
+    "name": "create-scandipwa-app",
+    "description": "Global command used by CSA.",
+    "version": "1.0.4",
+    "main": "./index.js",
+    "bin": "./index.js",
+    "license": "OSL-3.0",
+    "dependencies": {
+        "@caporal/core": "^2.0.2",
+        "@scandipwa/csa-generator-theme": "^0.0.5",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.9",
+        "mem-fs": "^1.2.0",
+        "mem-fs-editor": "^7.0.1",
+        "semver": "^7.3.2"
+    },
+    "engines": {
+        "node": "^8.10.0 || ^10.13.0 || >=11.10.1"
+    }
+}

@@ -22,8 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-packages/test
-packages/test/**/*
+runtime-packages/test
+runtime-packages/test/**/*
 
 # build specifc files
 lerna-debug.log
