@@ -31,14 +31,10 @@ export const GUEST_QUOTE_ID = 'guest_quote_id';
  */
 export class CartDispatcher {
     updateInitialCartData(dispatch) {
-        const guestQuoteId = this._getGuestQuoteId();
-
         if (isSignedIn()) {
-            // This is logged in customer, no need for quote id
             this._syncCartWithBE(dispatch);
-        } else if (guestQuoteId) {
-            // This is guest
-            this._syncCartWithBE(dispatch, guestQuoteId);
+        } else {
+            this.createGuestEmptyCart(dispatch);
         }
     }
 
@@ -167,8 +163,8 @@ export class CartDispatcher {
                 ));
 
                 return this._updateCartData(cartData, dispatch);
-            } catch (e) {
-                dispatch(showNotification('error', e.message));
+            } catch ([{ message }]) {
+                dispatch(showNotification('error', message));
                 return Promise.reject();
             }
         }
