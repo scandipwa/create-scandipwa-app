@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in, fp/no-let, no-console, max-len, import/no-dynamic-require, global-require, fp/no-loops, no-restricted-syntax */
 const path = require('path');
 const semver = require('semver');
-const minVersion = require('./lib/min-version');
+// const minVersion = require('./lib/min-version');
 const logger = require('./logger');
 const { getPackageJson } = require('./package-json');
 
@@ -114,7 +114,7 @@ const isValidComposer = (pathname = process.cwd()) => {
 
         // This one is unstable and can not calculate value properly.
         // An issue to track: https://github.com/npm/node-semver/issues/340
-        const { raw: minVersionRaw } = minVersion(rangeRequested) || {};
+        const { raw: minVersionRaw } = semver.minVersion(rangeRequested) || {};
 
         // Validate if the version requested is possible to satisfy
         if (!minVersionRaw) {
