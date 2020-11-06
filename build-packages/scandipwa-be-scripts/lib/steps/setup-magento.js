@@ -84,7 +84,7 @@ const magentoDatabaseMigration = async ({ config, ports }) => {
     }
     case 2: {
         output.start('Upgrading magento');
-        await runMagentoCommandSafe('setup:upgrade');
+        await runMagentoCommandSafe('setup:upgrade', { callback: (line) => output.info(line) });
         break;
     }
     case 0: {
@@ -121,14 +121,13 @@ const magentoRedisConfig = async ({ ports }) => {
         --session-save-redis-db='1' \
         --session-save-redis-disable-locking='1' \
         -n`);
-
     // Elasticsearch5 as a search engine
     output.text = 'Setting Elasticsearch7 as a search engine';
     await runMagentoCommand('config:set catalog/search/engine elasticsearch7');
 
     // elasticsearch container as a host name
     output.text = 'Setting elasticsearch as a host name for Elasticsearch5';
-    await runMagentoCommand('config:set catalog/search/elasticsearch7_server_hostname elasticsearch');
+    await runMagentoCommand('config:set catalog/search/elasticsearch7_server_hostname localhost');
     await runMagentoCommand('cache:enable');
 };
 
@@ -190,7 +189,6 @@ const magentoDisable2FA = async () => {
 };
 
 const magentoSetupSteps = [
-    magentoDisable2FA,
     magentoFlushConfig,
     magentoDatabaseConfig,
     magentoDatabaseMigration,
@@ -199,7 +197,8 @@ const magentoSetupSteps = [
     magentoSetMode,
     magentoCompile,
     magentoSetBaseurl,
-    magentoPostDeploy
+    magentoPostDeploy,
+    magentoDisable2FA
 ];
 
 const setupMagento = async () => {
