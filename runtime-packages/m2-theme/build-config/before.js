@@ -15,7 +15,7 @@ module.exports = () => {
     // if (!isValidComposer()) {
     //     process.exit();
     // }
-
+    process.env.WDS_SOCKET_PORT = 3000;
     process.env.PWA_BUILD_MODE = 'magento';
     const { name: themeName } = require(path.join(process.cwd(), 'composer.json'));
     process.env.PUBLIC_URL = `/static/version${ Date.now() }/frontend/${ themeName }/${ process.env.PWA_LOCALE || 'en_US' }/Magento_Theme/`;

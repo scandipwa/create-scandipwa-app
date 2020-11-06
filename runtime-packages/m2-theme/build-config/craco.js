@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign, global-require */
 const path = require('path');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
-// const HtmlWebpackHardDiskPlugin = require('html-webpack-harddisk-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { sources } = require('@scandipwa/scandipwa-scripts/lib/sources');
 const { getLoader, loaderByName } = require('@scandipwa/craco');
@@ -53,7 +52,14 @@ module.exports = {
                 fileLoader.loader.exclude.push(/\.php$/);
             }
 
+            webpackConfig.output.path = path.join(process.cwd(), 'magento', 'Magento_Theme', 'web');
+
             return webpackConfig;
+        },
+        overrideDevServerConfig: ({ devServerConfig }) => {
+            devServerConfig.writeToDisk = true;
+
+            return devServerConfig;
         }
     }
 };
