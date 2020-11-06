@@ -108,6 +108,22 @@ const installTheme = async ({ themePath }) => {
         return false;
     }
 
+    output.info('Disabling full_page cache');
+
+    try {
+        await runMagentoCommand('cache:disable full_page', commandLogger);
+        output.succeed('Full page cache disabled!');
+    } catch (e) {
+        logger.error(e);
+
+        logger.error(
+            'Unexpected error while disabling full page cache.',
+            'See ERROR log above.'
+        );
+
+        return false;
+    }
+
     return true;
 };
 
