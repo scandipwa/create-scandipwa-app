@@ -1,5 +1,6 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
+const path = require('path');
+// const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
 
 module.exports = () => {
     logger.note(
@@ -8,9 +9,14 @@ module.exports = () => {
         `Using content of ${ logger.style.file('public/index.php') } instead!`
     );
 
-    if (!isValidComposer()) {
-        process.exit();
-    }
+    /**
+     * TODO fix composer deps version
+     */
+    // if (!isValidComposer()) {
+    //     process.exit();
+    // }
 
     process.env.PWA_BUILD_MODE = 'magento';
+    const { name: themeName } = require(path.join(process.cwd(), 'composer.json'));
+    process.env.PUBLIC_URL = `/static/version${ Date.now() }/frontend/${ themeName }/${ process.env.PWA_LOCALE || 'en_US' }/Magento_Theme/`;
 };
