@@ -15,7 +15,12 @@ const commands = {
     stop: require('../stop'),
     cleanup: require('../clean-up'),
     restart: require('../restart'),
-    init: require('../init')
+    init: require('../init'),
+    theme: require('../lib/manage-theme'),
+    run: {
+        magento: require('../lib/util/run-magento'),
+        composer: require('../lib/util/run-composer')
+    }
 };
 
 let done = false;
@@ -25,6 +30,9 @@ const oraInstance = ora();
 global.verbosity = 1;
 
 global.output = {
+    get isSpinning() {
+        return oraInstance.isSpinning;
+    },
     stop() {
         return oraInstance.stop();
     },
@@ -68,9 +76,11 @@ global.output = {
     }
 };
 
-const actionWrapper = (action) => async (ctx) => {
-    global.verbosity = ctx.options.verbose || 1;
-
+const actionWrapper = (action, { useExitHook = true, verboseLevel } = {}) => async (ctx) => {
+    global.verbosity = verboseLevel || ctx.options.verbose || 1;
+    if (!useExitHook) {
+        done = true;
+    }
     await action(ctx);
 
     done = true;
@@ -120,7 +130,31 @@ program
     .action(actionWrapper(({ options }) => commands.restart(options)))
     .command('cleanup', 'Cleanup project, uninstall Magento')
     .option('-f, --force', '[with cleanup] additionally removes Magento folder.')
-    .action(actionWrapper(({ options }) => commands.cleanup(options)));
+    .action(actionWrapper(({ options }) => commands.cleanup(options)))
+    .command('install-theme', 'Install ScandiPWA theme')
+    .argument('<theme path>', 'Theme path')
+    .action(actionWrapper(({ args }) => commands.theme.installTheme(args, { logOutput: true }), {
+        useExitHook: false,
+        verboseLevel: 10
+    }))
+    .command('composer', 'Run composer command')
+    .argument('[command...]', 'Composer command')
+    .action(actionWrapper((ctx) => {
+        output.info(`> composer ${ctx.args.command.join(' ')}`);
+        return commands.run.composer.runComposerCommand(ctx.args.command.join(' '), { logOutput: true });
+    }, {
+        useExitHook: false,
+        verboseLevel: 10
+    }))
+    .command('magento', 'Run magento command')
+    .argument('[command...]', 'Magento command')
+    .action(actionWrapper((ctx) => {
+        output.info(`> magento ${ctx.args.command.join(' ')}`);
+        return commands.run.magento.runMagentoCommand(ctx.args.command.join(' '), { logOutput: true });
+    }, {
+        useExitHook: false,
+        verboseLevel: 10
+    }));
 
 const stopProgram = async () => {
     await stopServices();

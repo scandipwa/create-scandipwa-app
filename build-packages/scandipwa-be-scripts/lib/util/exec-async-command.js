@@ -12,7 +12,10 @@ const execAsync = (command, options) => new Promise((resolve, reject) => {
 });
 
 const execAsyncSpawn = (command, {
-    callback = () => {}, logOutput = false, cwd, withCode = false
+    callback = () => {},
+    logOutput = false,
+    cwd,
+    withCode = false
 } = {}) => {
     const childProcess = spawn(
         'bash',
@@ -29,7 +32,9 @@ const execAsyncSpawn = (command, {
             stdout += data;
             callback(data.toString());
             if (logOutput) {
-                process.stdout.write(`${data.toString() }\n`, 'utf-8');
+                data.toString().split('\n').forEach((line) => {
+                    output.info(line);
+                });
             }
         }
         childProcess.stdout.on('data', addLine);
