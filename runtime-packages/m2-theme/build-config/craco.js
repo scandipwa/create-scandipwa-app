@@ -1,13 +1,12 @@
 /* eslint-disable no-param-reassign, global-require */
-export const path = require('path');
-export const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
-// const HtmlWebpackHardDiskPlugin = require('html-webpack-harddisk-plugin');
-export const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { sources } = require('@scandipwa/scandipwa-scripts/lib/sources');
 const { getLoader, loaderByName } = require('@scandipwa/craco');
 
 // The variable is passed automatically, use --magento flag
-export const isMagento = process.env.PWA_BUILD_MODE === 'magento';
+const isMagento = process.env.PWA_BUILD_MODE === 'magento';
 
 module.exports = {
     plugin: {
@@ -35,10 +34,15 @@ module.exports = {
             return cracoConfig;
         },
         overrideWebpackConfig: ({ webpackConfig }) => {
+            if (!isMagento) {
+                return webpackConfig;
+            }
+
             // For Magento setup, change output file name
             webpackConfig.plugins.forEach((plugin) => {
                 if (plugin instanceof HtmlWebpackPlugin) {
                     plugin.options.filename = '../templates/root.phtml';
+                    plugin.options.minify = false;
                 }
             });
 
@@ -52,7 +56,18 @@ module.exports = {
                 fileLoader.loader.exclude.push(/\.php$/);
             }
 
+            webpackConfig.output.path = path.join(process.cwd(), 'magento', 'Magento_Theme', 'web');
+
             return webpackConfig;
+        },
+        overrideDevServerConfig: ({ devServerConfig }) => {
+            if (!isMagento) {
+                return devServerConfig;
+            }
+
+            devServerConfig.writeToDisk = true;
+
+            return devServerConfig;
         }
     }
 };
