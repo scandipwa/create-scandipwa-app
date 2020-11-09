@@ -2,11 +2,8 @@ const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const path = require('path');
 const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
 
-module.exports = (script) => {
-    if (
-        script === 'start'
-        && process.env.PWA_WATCH_MODE === 'storefront'
-    ) {
+module.exports = () => {
+    if (process.env.PWA_WATCH_MODE === 'storefront') {
         // Allow to skip the Magento build if PWA_WATCH_MODE is set
         return;
     }
