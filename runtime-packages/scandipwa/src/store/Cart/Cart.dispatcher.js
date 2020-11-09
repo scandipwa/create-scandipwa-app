@@ -52,6 +52,10 @@ export class CartDispatcher {
         );
     }
 
+    resetGuestCart(dispatch) {
+        return this._updateCartData({}, dispatch);
+    }
+
     _createEmptyCart(dispatch) {
         return fetchMutation(CartQuery.getCreateEmptyCartMutation()).then(
             /** @namespace Store/Cart/Dispatcher/_createEmptyCartFetchMutationThen */
@@ -167,8 +171,8 @@ export class CartDispatcher {
                 ));
 
                 return this._updateCartData(cartData, dispatch);
-            } catch (e) {
-                dispatch(showNotification('error', e.message));
+            } catch ([{ message }]) {
+                dispatch(showNotification('error', message));
                 return Promise.reject();
             }
         }

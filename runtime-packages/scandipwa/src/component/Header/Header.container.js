@@ -21,7 +21,7 @@ import { changeNavigationState, goToPreviousNavigationState } from 'Store/Naviga
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { DeviceType } from 'Type/Device';
-import { isSignedIn } from 'Util/Auth';
+import { isSignedIn as isSignedInWithToken } from 'Util/Auth';
 import history from 'Util/History';
 import { appendWithStoreCode, setQueryParams } from 'Util/Url';
 
@@ -43,9 +43,12 @@ export const mapStateToProps = (state) => ({
     header_logo_src: state.ConfigReducer.header_logo_src,
     isOffline: state.OfflineReducer.isOffline,
     logo_alt: state.ConfigReducer.logo_alt,
+    logo_height: state.ConfigReducer.logo_height,
+    logo_width: state.ConfigReducer.logo_width,
     isLoading: state.ConfigReducer.isLoading,
     device: state.ConfigReducer.device,
-    activeOverlay: state.OverlayReducer.activeOverlay
+    activeOverlay: state.OverlayReducer.activeOverlay,
+    isSignedIn: state.MyAccountReducer.isSignedIn
 });
 
 /** @namespace Component/Header/Container/mapDispatchToProps */
@@ -68,7 +71,8 @@ export class HeaderContainer extends NavigationAbstractContainer {
         goToPreviousNavigationState: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         header_logo_src: PropTypes.string,
-        device: DeviceType.isRequired
+        device: DeviceType.isRequired,
+        isSignedIn: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -116,6 +120,8 @@ export class HeaderContainer extends NavigationAbstractContainer {
             cartTotals,
             header_logo_src,
             logo_alt,
+            logo_height,
+            logo_width,
             isLoading,
             device
         } = this.props;
@@ -140,6 +146,8 @@ export class HeaderContainer extends NavigationAbstractContainer {
             cartTotals,
             header_logo_src,
             logo_alt,
+            logo_height,
+            logo_width,
             isLoading,
             isClearEnabled,
             searchCriteria,
@@ -325,10 +333,14 @@ export class HeaderContainer extends NavigationAbstractContainer {
     onMyAccountButtonClick() {
         const {
             showOverlay,
-            setNavigationState
+            setNavigationState,
+            isSignedIn
         } = this.props;
 
-        if (isSignedIn()) {
+        if (isSignedIn && !isSignedInWithToken()) {
+            return;
+        }
+        if (isSignedInWithToken()) {
             history.push({ pathname: appendWithStoreCode('/my-account/dashboard') });
             return;
         }
@@ -448,7 +460,7 @@ export class HeaderContainer extends NavigationAbstractContainer {
 
     onOkButtonClick(e) {
         const {
-            navigationState: { onOkClick },
+            navigationState: { onOkClick, shouldNotGoToPrevState = false },
             goToPreviousNavigationState
         } = this.props;
 
@@ -456,7 +468,9 @@ export class HeaderContainer extends NavigationAbstractContainer {
             onOkClick(e);
         }
 
-        goToPreviousNavigationState();
+        if (!shouldNotGoToPrevState) {
+            goToPreviousNavigationState();
+        }
     }
 
     onCancelButtonClick() {

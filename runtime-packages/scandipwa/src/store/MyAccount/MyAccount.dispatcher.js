@@ -12,9 +12,11 @@
 import MyAccountQuery from 'Query/MyAccount.query';
 import {
     updateCustomerDetails,
+    updateCustomerIsAuthTokenExpired,
     updateCustomerPasswordForgotStatus,
     updateCustomerPasswordResetStatus,
-    updateCustomerSignInStatus
+    updateCustomerSignInStatus,
+    updateIsLoading
 } from 'Store/MyAccount/MyAccount.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { ORDERS } from 'Store/Order/Order.reducer';
@@ -65,9 +67,13 @@ export class MyAccountDispatcher {
         );
     }
 
-    logout(_, dispatch) {
+    logout(authTokenExpired = false, dispatch) {
+        if (authTokenExpired) {
+            dispatch(updateCustomerIsAuthTokenExpired(true));
+        } else {
+            deleteAuthorizationToken();
+        }
         dispatch(updateCustomerSignInStatus(false));
-        deleteAuthorizationToken();
         CartDispatcher.then(
             ({ default: dispatcher }) => {
                 dispatcher.createGuestEmptyCart(dispatch);
@@ -123,6 +129,7 @@ export class MyAccountDispatcher {
     createAccount(options = {}, dispatch) {
         const { customer: { email }, password } = options;
         const mutation = MyAccountQuery.getCreateAccountMutation(options);
+        dispatch(updateIsLoading(true));
 
         return fetchMutation(mutation).then(
             /** @namespace Store/MyAccount/Dispatcher/createAccountFetchMutationThen */
@@ -131,15 +138,18 @@ export class MyAccountDispatcher {
                 const { confirmation_required } = customer;
 
                 if (confirmation_required) {
+                    dispatch(updateIsLoading(false));
                     return 2;
                 }
 
                 return this.signIn({ email, password }, dispatch);
             },
+
             /** @namespace Store/MyAccount/Dispatcher/createAccountFetchMutationError */
             (error) => {
                 dispatch(showNotification('error', error[0].message));
                 Promise.reject();
+                dispatch(updateIsLoading(false));
 
                 return false;
             }
@@ -182,6 +192,7 @@ export class MyAccountDispatcher {
             WishlistDispatcher.then(
                 ({ default: dispatcher }) => dispatcher.updateInitialWishlistData(dispatch)
             );
+            dispatch(updateIsLoading(false));
 
             return true;
         } catch ([e]) {
