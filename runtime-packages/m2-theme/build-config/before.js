@@ -1,6 +1,6 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const path = require('path');
-const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
+// const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
 
 module.exports = () => {
     if (process.env.PWA_WATCH_MODE === 'storefront') {
@@ -14,9 +14,10 @@ module.exports = () => {
         `Using content of ${ logger.style.file('public/index.php') } instead!`
     );
 
-    if (!isValidComposer()) {
-        process.exit();
-    }
+    // TODO: implement
+    // if (!isValidComposer()) {
+    //     process.exit();
+    // }
 
     process.env.WDS_SOCKET_PORT = 3000;
     process.env.PWA_BUILD_MODE = 'magento';

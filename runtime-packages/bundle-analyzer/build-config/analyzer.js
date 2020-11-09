@@ -12,10 +12,11 @@ module.exports = {
 
             const HOST = process.env.HOST || '0.0.0.0';
             const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 5000;
+            const analyzerPort = await choosePort(HOST, DEFAULT_PORT);
 
             cracoConfig.webpack.plugins.push(new BundleAnalyzerPlugin({
                 analyzerHost: HOST,
-                analyzerPort: await choosePort(HOST, DEFAULT_PORT)
+                analyzerPort
             }));
 
             return cracoConfig;
