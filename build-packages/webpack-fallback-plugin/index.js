@@ -97,8 +97,8 @@ class FallbackPlugin {
         const isSrc = new RegExp(`${path.sep}src${path.sep}`).test(pathname);
         const prefix = isSrc ? 'src' : 'public';
 
-        // take the first occurrence of the prefix and get the path after it
-        const relativePathname = pathname.split(`${prefix}${path.sep}`).slice(1).join(`${prefix}${path.sep}`);
+        // take the last occurrence of the prefix and get the path after it
+        const relativePathname = pathname.split(`${prefix}${path.sep}`).slice(-1).join(`${prefix}${path.sep}`);
         const extension = this.getBelongingExtension(pathname);
 
         if (extension) {
