@@ -15,8 +15,18 @@ const createApp = async (options) => {
 
     const destination = path.join(process.cwd(), pathname);
 
+    let latestVersion = '0.0.0';
+
+    try {
+        latestVersion = await getLatestVersion('@scandipwa/scandipwa-be-scripts');
+    } catch (e) {
+        logger.warn(
+            `Package ${ logger.style.misc('@scandipwa/scandipwa-be-scripts') } is not yet published.`
+        );
+    }
+
     const templateOptions = {
-        scandipwaBeScriptsVersion: await getLatestVersion('@scandipwa/scandipwa-be-scripts'),
+        scandipwaBeScriptsVersion: latestVersion,
         name
     };
 
@@ -30,7 +40,7 @@ const createApp = async (options) => {
             destinationPath
         ) => {
             filesystem.copyTpl(
-                templatePath('package.template.json'),
+                templatePath('package.json'),
                 destinationPath('package.json'),
                 templateOptions
             );
@@ -47,15 +57,24 @@ const createApp = async (options) => {
 // eslint-disable-next-line consistent-return
 const init = async (options) => {
     let latest;
+
     try {
         latest = await getLatestVersion('create-magento-app');
     } catch (e) {
         try {
             latest = execSync('npm view create-magento-app version').toString().trim();
         } catch (e) {
-            return null;
+            logger.warn(
+                `Package ${ logger.style.misc('create-magento-app') } is not yet published.`
+            );
         }
     }
+
+    if (!latest) {
+        await createApp(options);
+        return;
+    }
+
     const packageJson = require('./package.json');
 
     if (latest && semver.lt(packageJson.version, latest)) {

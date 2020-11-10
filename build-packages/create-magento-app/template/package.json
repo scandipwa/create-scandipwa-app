@@ -1,6 +1,6 @@
 {
     "name": "<%= name %>",
-    "version": "0.0.",
+    "version": "0.0.1",
     "license": "proprietary",
     "scripts": {
         "start": "scandipwa-be-scripts start",

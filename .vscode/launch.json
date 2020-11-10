@@ -7,6 +7,30 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "CMA",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/create-magento-app/index.js",
+            "args": [
+                "runtime-packages/cma"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "CSA",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/create-scandipwa-app/index.js",
+            "args": [
+                "runtime-packages/csa"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Start",
             "skipFiles": [
                 "<node_internals>/**"

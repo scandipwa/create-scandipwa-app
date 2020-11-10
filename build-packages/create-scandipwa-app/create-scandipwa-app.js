@@ -33,33 +33,42 @@ const createApp = async (options) => {
     }
 };
 
-const init = (options) => {
-    getLatestVersion('create-scandipwa-app')
-        .catch(() => {
-            try {
-                return execSync('npm view create-scandipwa-app version').toString().trim();
-            } catch (e) {
-                return null;
-            }
-        })
-        .then((latest) => {
-            const packageJson = require('./package.json');
+const init = async (options) => {
+    let latest;
 
-            if (latest && semver.lt(packageJson.version, latest)) {
-                logger.error(
-                    `You are running ${logger.style.misc('create-scandipwa-app')} ${logger.style.misc(packageJson.version)}, which is behind the latest release ${logger.style.misc(latest)}.`,
-                    'We no longer support global installation of Create ScandiPWA App.'
-                );
+    try {
+        latest = await getLatestVersion('create-scandipwa-app');
+    } catch (e) {
+        try {
+            latest = execSync('npm view create-scandipwa-app version').toString().trim();
+        } catch (e) {
+            logger.warn(
+                `Package ${ logger.style.misc('create-scandipwa-app') } is not yet published.`
+            );
+        }
+    }
 
-                logger.log('Please remove any global installs with one of the following commands:');
-                logger.logT('npm uninstall -g create-scandipwa-app');
-                logger.logT('yarn global remove create-scandipwa-app');
+    if (!latest) {
+        await createApp(options);
+        return;
+    }
 
-                process.exit(1);
-            } else {
-                createApp(options);
-            }
-        });
+    const packageJson = require('./package.json');
+
+    if (semver.lt(packageJson.version, latest)) {
+        logger.error(
+            `You are running ${logger.style.misc('create-scandipwa-app')} ${logger.style.misc(packageJson.version)}, which is behind the latest release ${logger.style.misc(latest)}.`,
+            'We no longer support global installation of Create ScandiPWA App.'
+        );
+
+        logger.log('Please remove any global installs with one of the following commands:');
+        logger.logT('npm uninstall -g create-scandipwa-app');
+        logger.logT('yarn global remove create-scandipwa-app');
+
+        process.exit(1);
+    } else {
+        await createApp(options);
+    }
 };
 
 module.exports = init;

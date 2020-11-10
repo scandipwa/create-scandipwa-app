@@ -23,9 +23,9 @@ const greet = (
     );
 
     logger.note(
-        'To bundle your application as valid Magento 2 theme',
-        `use ${ logger.style.command(`${displayedCommand} build --magento`) } command!`,
-        `You Magento 2 theme name is "${ logger.style.misc(`scandipwa/${ name }`) }"`
+        'To bundle your application as the valid Magento 2 theme',
+        `install extension ${ logger.style.misc('@scandipwa/m2-theme') }!`,
+        `Your Magento 2 theme name is "${ logger.style.misc(`scandipwa/${ name }`) }"!`
     );
 
     logger.log('We suggest that you begin by typing:');

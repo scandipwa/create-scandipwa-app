@@ -4,12 +4,11 @@ const path = require('path');
 const { program } = require('@caporal/core');
 const init = require('./create-magento-app');
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 program
     .name('Create Magento App')
     .argument('<app name>', 'Magento App package name to create')
-    .action(({
+    .action(async ({
         args: {
             appName: name = ''
         }
@@ -39,8 +38,7 @@ program
             path: pathToDist
         };
 
-        return init(options);
+        await init(options);
     });
 
-program.run()
-    .catch(logger.log);
+program.run();

@@ -3,7 +3,8 @@
     "name": "create-scandipwa-app",
     "scripts": {
         "eslint": "eslint ./build-packages ./runtime-packages --resolve-plugins-relative-to . --cache --no-error-on-unmatched-pattern --ext .js,.ts,.tsx",
-        "bootstrap": "create-scandipwa-app runtime-packages/test && yarn",
+        "csa": "create-scandipwa-app runtime-packages/csa",
+        "cma": "create-magento-app runtime-packages/cma",
         "postinstall": "lerna bootstrap",
         "clean": "lerna clean --yes",
         "compile:lockfile": "node build-tasks/compile-lockfile.js"

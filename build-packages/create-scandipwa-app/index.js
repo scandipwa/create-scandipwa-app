@@ -9,9 +9,9 @@ program
     .argument('<app name>', 'ScandiPWA package name to create')
     .option('--template <type>', 'Template to use', {
         default: 'theme',
-        validator: ['theme', 'extension']
+        validator: ['theme']
     })
-    .action(({
+    .action(async ({
         args: {
             appName: name = ''
         },
@@ -45,7 +45,7 @@ program
             path: pathToDist
         };
 
-        init(options);
+        await init(options);
     });
 
 program.run();

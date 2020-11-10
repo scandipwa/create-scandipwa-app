@@ -8,33 +8,22 @@
 ## Development
 
 1. Run `yarn`, wait until it completes installing dependencies
-2. Bootstrap project: `yarn bootstrap`
-3. Enter folder with `cd runtime-packages/test` and run `yarn start`
+2. Bootstrap project: `yarn csa`
+3. Enter folder with `cd runtime-packages/csa` and run `yarn start`
 
 ## Magento-like build
 
 1. To build the Project in Magento mode, go to `cd package/test`
 2. Run build in Magento mode - `yarn build --magento`.
 
-## Supported features
-
-1. Setup ScandiPWA using generator
-2. Run in development with blazing-fast create-react-app based bootstrap
-3. Build into Magento theme with `--magento` command
-4. Validate `composer.json` to include package-requested dependencies
 
 ## Features TODO:
 
-- In Magento mode, generate PUBLIC_URL automatically from `theme.xml`
 - Deal with service-worker, find a way to change it
-- Implement PHP-based application serving (to work with M2)
-- Fix port is allocated issue (app does not self-restart)
 
 > **IMPORTANT**: add notice for not enabled, but used extensions
 
 - Implement custom logger (after compile)
-- Add support for TypeScript in ESLint
-- Move eslint dependencies to the plugin module
 
 ## Publish instructions
 
