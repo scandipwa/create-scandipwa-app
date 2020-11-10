@@ -87,7 +87,7 @@ const actionWrapper = (action, { useExitHook = true, verboseLevel } = {}) => asy
 };
 
 program
-    .name('Create Magento App')
+    .name('ScandiPWA BE Scripts')
     .argument('<app name>', 'Magento application name to create')
     .action(({ args }) => {
         const pathArr = (args.appName || '').split('/');
