@@ -44,7 +44,7 @@ try {
         path.join(
             __dirname,
             '..',
-            'packages',
+            'build-packages',
             'csa-generator-theme',
             'template',
             'yarn.lock.cached'

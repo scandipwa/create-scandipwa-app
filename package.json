@@ -6,7 +6,7 @@
         "bootstrap": "create-scandipwa-app runtime-packages/test && yarn",
         "postinstall": "lerna bootstrap",
         "clean": "lerna clean --yes",
-        "compile:lockfile": "node tasks/compile-lockfile.js"
+        "compile:lockfile": "node build-tasks/compile-lockfile.js"
     },
     "devDependencies": {
         "eslint": "^6.6.0",
