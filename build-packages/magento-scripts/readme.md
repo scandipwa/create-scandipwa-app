@@ -44,6 +44,32 @@ apt-get install \
     pkg-config
 ```
 
+### Mint Linux
+
+```
+apt-get install \
+    libjpeg-dev \
+    libjpeg8-dev \
+    libjpeg-turbo8-dev \
+    libpng-dev \
+    libicu-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libssl-dev \
+    build-essential \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxslt-dev \
+    php-cli \
+    php-bz2 \
+    pkg-config \
+    autoconf \
+    libcurl4-openssl-dev 
+```
+
 ### CentsOS / Fedora
 ```sh
 yum install openssl-devel \

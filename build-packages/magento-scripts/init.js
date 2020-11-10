@@ -9,7 +9,7 @@ const run = async ({
     path: pathname
 } = {}) => {
     const templateOptions = {
-        scandipwaBeScriptsVersion: '0.0.0', // await getLatestVersion('@scandipwa/scandipwa-be-scripts'),
+        scandipwaBeScriptsVersion: '0.0.0', // await getLatestVersion('@scandipwa/magento-scripts'),
         name
     };
 

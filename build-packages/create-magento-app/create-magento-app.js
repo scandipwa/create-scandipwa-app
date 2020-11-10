@@ -18,10 +18,10 @@ const createApp = async (options) => {
     let latestVersion = '0.0.0';
 
     try {
-        latestVersion = await getLatestVersion('@scandipwa/scandipwa-be-scripts');
+        latestVersion = await getLatestVersion('@scandipwa/magento-scripts');
     } catch (e) {
         logger.warn(
-            `Package ${ logger.style.misc('@scandipwa/scandipwa-be-scripts') } is not yet published.`
+            `Package ${ logger.style.misc('@scandipwa/magento-scripts') } is not yet published.`
         );
     }
 

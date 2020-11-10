@@ -1,10 +1,10 @@
 {
-    "name": "@scandipwa/scandipwa-be-scripts",
+    "name": "@scandipwa/magento-scripts",
     "version": "0.0.0",
     "main": "./index.js",
     "license": "OSL-3.0",
     "bin": {
-        "scandipwa-be-scripts": "./bin/be-scripts.js"
+        "magento-scripts": "./bin/be-scripts.js"
     },
     "dependencies": {
         "@caporal/core": "^2.0.2",
