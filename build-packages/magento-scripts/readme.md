@@ -8,6 +8,12 @@
 > yarn/npm run start
 ```
 
+To use commands such as `composer`, `magento` and `php` with correct version run command:
+```bash
+> yarn/npm cli
+```
+This will open bash with correct aliases to `php`, `magento` and `composer`.
+
 ## Requirements
 
 - [Docker](https://docs.docker.com/get-docker/) ^19

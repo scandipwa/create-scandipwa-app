@@ -20,7 +20,8 @@ const commands = {
     run: {
         magento: require('../lib/util/run-magento'),
         composer: require('../lib/util/run-composer')
-    }
+    },
+    cli: require('../magento-cli')
 };
 
 let done = false;
@@ -154,7 +155,11 @@ program
     }, {
         useExitHook: false,
         verboseLevel: 10
-    }));
+    }))
+    .command('cli', 'Run bash with local aliases to php, magento and composer')
+    .action(actionWrapper(() => {
+        commands.cli();
+    }, { useExitHook: false }));
 
 const stopProgram = async () => {
     await stopServices();
@@ -172,7 +177,6 @@ exitHook(async (callback) => {
 const main = async () => {
     try {
         await program.run();
-        process.exit(0);
     } catch (e) {
         logger.error(e);
         await stopProgram();
