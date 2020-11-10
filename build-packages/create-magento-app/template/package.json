@@ -8,7 +8,7 @@
         "restart": "magento-scripts restart",
         "cleanup": "magento-scripts cleanup"
     },
-    "peerDependencies": {
+    "dependencies": {
         "@scandipwa/magento-scripts": "<%= scandipwaBeScriptsVersion %>"
     },
     "eslintConfig": {
