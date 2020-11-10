@@ -4,6 +4,7 @@ const path = require('path');
 const { program } = require('@caporal/core');
 const init = require('./create-magento-app');
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 program
     .name('Create Magento App')
@@ -42,4 +43,4 @@ program
     });
 
 program.run()
-    .catch(console.log);
+    .catch(logger.log);
