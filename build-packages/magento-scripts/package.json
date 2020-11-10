@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/magento-scripts",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "main": "./index.js",
     "license": "OSL-3.0",
     "bin": {
@@ -8,9 +8,9 @@
     },
     "dependencies": {
         "@caporal/core": "^2.0.2",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.9",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.10",
         "async-exit-hook": "^2.0.1",
-        "create-scandipwa-app": "^1.0.4",
+        "create-scandipwa-app": "^1.0.6",
         "eta": "^1.11.0",
         "get-port": "^5.1.1",
         "getos": "^3.2.1",
