@@ -1,0 +1,17 @@
+{
+    "name": "<%= name %>",
+    "version": "0.0.",
+    "license": "proprietary",
+    "scripts": {
+        "start": "scandipwa-be-scripts start",
+        "stop": "scandipwa-be-scripts stop",
+        "restart": "scandipwa-be-scripts restart",
+        "cleanup": "scandipwa-be-scripts cleanup"
+    },
+    "peerDependencies": {
+        "@scandipwa/scandipwa-be-scripts": "<%= scandipwaBeScriptsVersion %>"
+    },
+    "eslintConfig": {
+        "extends": "@scandipwa"
+    }
+}
