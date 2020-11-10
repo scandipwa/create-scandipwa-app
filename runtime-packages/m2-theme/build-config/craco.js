@@ -10,18 +10,20 @@ const isMagento = process.env.PWA_BUILD_MODE === 'magento';
 
 module.exports = {
     plugin: {
-        overrideCracoConfig: ({
+        overrideCracoConfig: async ({
             cracoConfig
         }) => {
             if (!isMagento) {
                 return cracoConfig;
             }
 
+            const config = await cracoConfig;
+
             // For Magento, use magento/Magento_Theme folder as dist
-            cracoConfig.paths.appBuild = path.join(process.cwd(), 'magento', 'Magento_Theme', 'web');
+            config.paths.appBuild = path.join(process.cwd(), 'magento', 'Magento_Theme', 'web');
 
             // For Magento use PHP template (defined in /public/index.php)
-            cracoConfig.paths.appHtml = FallbackPlugin.getFallbackPathname('./public/index.php', sources);
+            config.paths.appHtml = FallbackPlugin.getFallbackPathname('./public/index.php', sources);
 
             // TODO: implement PHP-based approach for development as Magento theme.
             // See more: https://medium.com/@agent_hunt/how-to-use-index-php-as-the-index-file-with-create-react-app-ff760c910a6a
@@ -31,9 +33,13 @@ module.exports = {
             // cracoConfig.webpack.plugins.push(new HtmlWebpackHardDiskPlugin());
 
             // Always return the config object.
-            return cracoConfig;
+            return config;
         },
         overrideWebpackConfig: ({ webpackConfig }) => {
+            if (!isMagento) {
+                return webpackConfig;
+            }
+
             // For Magento setup, change output file name
             webpackConfig.plugins.forEach((plugin) => {
                 if (plugin instanceof HtmlWebpackPlugin) {
@@ -57,6 +63,10 @@ module.exports = {
             return webpackConfig;
         },
         overrideDevServerConfig: ({ devServerConfig }) => {
+            if (!isMagento) {
+                return devServerConfig;
+            }
+
             devServerConfig.writeToDisk = true;
 
             return devServerConfig;

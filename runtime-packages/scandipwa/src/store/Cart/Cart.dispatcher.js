@@ -48,6 +48,10 @@ export class CartDispatcher {
         );
     }
 
+    resetGuestCart(dispatch) {
+        return this._updateCartData({}, dispatch);
+    }
+
     _createEmptyCart(dispatch) {
         return fetchMutation(CartQuery.getCreateEmptyCartMutation()).then(
             /** @namespace Store/Cart/Dispatcher/_createEmptyCartFetchMutationThen */

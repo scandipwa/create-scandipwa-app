@@ -3,6 +3,11 @@ const path = require('path');
 // const { isValidComposer } = require('@scandipwa/scandipwa-dev-utils/composer');
 
 module.exports = () => {
+    if (process.env.PWA_WATCH_MODE === 'storefront') {
+        // Allow to skip the Magento build if PWA_WATCH_MODE is set
+        return;
+    }
+
     logger.note(
         'Building as a Magento theme!',
         `The ${ logger.style.file('public/index.html') } file content will not be taken into account!`,
