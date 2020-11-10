@@ -97,11 +97,8 @@ class FallbackPlugin {
         const isSrc = new RegExp(`${path.sep}src${path.sep}`).test(pathname);
         const prefix = isSrc ? 'src' : 'public';
 
-        // check amount of prefix occurrences in project path
-        const prefixAmountInPath = process.cwd().split(`${prefix}${path.sep}`).length;
-
-        // take the last occurrence of the prefix in the project absolute path and get the path after it
-        const relativePathname = pathname.split(`${prefix}${path.sep}`).slice(prefixAmountInPath).join(`${prefix}${path.sep}`);
+        // take the last occurrence of the prefix and get the path after it
+        const relativePathname = pathname.split(`${prefix}${path.sep}`).slice(-1).join(`${prefix}${path.sep}`);
         const extension = this.getBelongingExtension(pathname);
 
         if (extension) {
