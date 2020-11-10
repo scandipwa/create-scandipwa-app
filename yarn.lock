@@ -7640,13 +7640,6 @@ html-react-parser@^0.13.0:
     react-property "1.0.1"
     style-to-object "0.3.0"
 
-html-webpack-harddisk-plugin@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/html-webpack-harddisk-plugin/-/html-webpack-harddisk-plugin-1.0.2.tgz#75aa36fb7face505b3f1efd7bfb31c06c9f19459"
-  integrity sha512-s0F0qAxug9fgztJyWWa8cUlVvgbAD/+J9Dhg22REU637DV9RhrKt0EsFBOXkRuSuwSeYLUtyLcQYpARPBZe51g==
-  dependencies:
-    mkdirp "^0.5.1"
-
 html-webpack-plugin@4.0.0-beta.11:
   version "4.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-4.0.0-beta.11.tgz#3059a69144b5aecef97708196ca32f9e68677715"
