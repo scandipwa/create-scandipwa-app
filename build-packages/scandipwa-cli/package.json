@@ -7,11 +7,10 @@
     },
     "license": "OSL-3.0",
     "dependencies": {
-        "@caporal/core": "^2.0.2",
         "@scandipwa/csa-generator-extension": "^0.0.6",
         "@scandipwa/scandipwa-dev-utils": "^0.0.10",
-        "create-scandipwa-app": "^1.0.6",
-        "semver": "^7.3.2"
+        "semver": "^7.3.2",
+        "yargs": "^16.1.0"
     },
     "publishConfig": {
         "access": "public"

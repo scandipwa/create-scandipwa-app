@@ -1,6 +1,6 @@
 {
     "name": "<%= name %>",
-    "version": "0.0.1",
+    "private": true,
     "license": "proprietary",
     "scripts": {
         "start": "magento-scripts start",
@@ -8,6 +8,9 @@
         "restart": "magento-scripts restart",
         "cleanup": "magento-scripts cleanup",
         "cli": "magento-scripts cli"
+    },
+    "scandipwa": {
+        "type": "magento"
     },
     "dependencies": {
         "@scandipwa/magento-scripts": "<%= scandipwaBeScriptsVersion %>"

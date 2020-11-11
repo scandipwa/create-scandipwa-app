@@ -1,6 +1,7 @@
 const https = require('https');
+const spawn = require('cross-spawn');
 
-const getLatestVersion = (packageName) => new Promise((resolve, reject) => {
+const getLatestVersionFromRegistry = (packageName) => new Promise((resolve, reject) => {
     https
         .get(
             `https://registry.npmjs.org/-/package/${packageName}/dist-tags`,
@@ -22,5 +23,14 @@ const getLatestVersion = (packageName) => new Promise((resolve, reject) => {
             reject();
         });
 });
+
+const getLatestVersion = async (packageName) => {
+    try {
+        return getLatestVersionFromRegistry(packageName);
+    } catch (e) {
+        // we expect this to throw, so promise gets rejected
+        return spawn.sync('npm view create-magento-app version').toString().trim();
+    }
+};
 
 module.exports = getLatestVersion;

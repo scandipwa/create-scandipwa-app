@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { program } = require('@caporal/core');
+const yargs = require('yargs');
 const { version: currentVersion, name } = require('./package.json');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
@@ -21,8 +21,11 @@ const actions = [
         );
     }
 
-    // Initialize program actions
-    actions.forEach((action) => action(program));
+    yargs.scriptName('scandipwa');
 
-    program.run();
+    // Initialize program actions
+    actions.forEach((action) => action(yargs));
+
+    // eslint-disable-next-line no-unused-expressions
+    yargs.argv;
 })();
