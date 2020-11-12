@@ -11,28 +11,29 @@ const pathExists = require('../util/path-exists');
 
 const checkMagentoApp = async () => pathExists(appPath);
 
-const installApp = async () => {
-    try {
-        logger.log('Creating Magento project...');
-        await execAsyncSpawn(
-            // eslint-disable-next-line max-len
-            `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition=${appVersion} src`,
-            {
-                logOutput: true
-            }
-        );
-        logger.log('Project installed!');
-    } catch (e) {
-        logger.error(e);
-        logger.error(
-            'Unexpected error while installing Magento application.',
-            'See ERROR log above.'
-        );
+const installApp = async ({ output }) => {
+    // try {
+    output('Creating Magento project...');
+    await execAsyncSpawn(
+        // eslint-disable-next-line max-len
+        `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition=${appVersion} src`,
+        {
+            logOutput: true,
+            callback: output
+        }
+    );
+    output('Project installed!');
+    // } catch (e) {
+    //     logger.error(e);
+    //     logger.error(
+    //         'Unexpected error while installing Magento application.',
+    //         'See ERROR log above.'
+    //     );
 
-        return false;
-    }
+    //     return false;
+    // }
 
-    return true;
+    // return true;
 };
 
 const installMagento = async () => {
@@ -41,14 +42,14 @@ const installMagento = async () => {
     const hasMagentoApp = await checkMagentoApp();
 
     if (!hasMagentoApp) {
-        logger.warn('Magento application not found, creating...');
+        // logger.warn('Magento application not found, creating...');
         const installAppOk = await installApp();
         if (!installAppOk) {
-            return false;
+            throw new Error('application is not installed');
         }
     }
 
     return true;
 };
 
-module.exports = installMagento;
+module.exports = { installMagento, checkMagentoApp, installApp };

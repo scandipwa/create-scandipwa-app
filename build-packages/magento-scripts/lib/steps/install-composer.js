@@ -21,7 +21,7 @@ const checkComposerAuth = async () => {
         }
         throw new Error('COMPOSER_AUTH env variable is corrupted');
     } catch (e) {
-        logger.error('COMPOSER_AUTH variable not found');
+        logger.error(e);
         return false;
     }
 };
@@ -49,6 +49,12 @@ const installComposerInCache = async () => {
     }
 };
 
+const getComposerVersion = async () => {
+    const composerVersionOutput = await execAsync(`${phpBinPath} ${composerBinPath} --version --no-ansi`);
+    const composerVersion = composerVersionOutput.match(/Composer version ([\d.]+)/i)[1];
+    return composerVersion;
+};
+
 const installComposer = async () => {
     logger.log('Checking Composer...');
 
@@ -67,13 +73,17 @@ const installComposer = async () => {
             return false;
         }
     } else {
-        const composerVersionOutput = await execAsync(`${phpBinPath} ${composerBinPath} --version --no-ansi`);
-        const composerVersion = composerVersionOutput.match(/Composer version ([\d.]+)/i)[1];
-
+        const composerVersion = await getComposerVersion();
         logger.log(`Using composer version ${composerVersion}`);
     }
 
     return true;
 };
 
-module.exports = installComposer;
+module.exports = {
+    installComposer,
+    installComposerInCache,
+    checkComposerInCache,
+    checkComposerAuth,
+    getComposerVersion
+};

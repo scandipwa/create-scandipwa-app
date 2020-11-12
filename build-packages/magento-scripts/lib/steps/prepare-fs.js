@@ -4,38 +4,25 @@ const {
 } = require('../config');
 const createDirSafe = require('../util/create-dir-safe');
 const pathExists = require('../util/path-exists');
-const installMagento = require('./install-magento');
-const checkConfigPath = require('../util/check-config');
+const checkConfigPath = require('../util/set-config');
 const createApplicationConfig = require('./create-application-config');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const createCacheFolder = async () => createDirSafe(cachePath);
 
 const checkCacheFolder = async () => pathExists(cachePath);
 
-async function prepareFileSystem(ports) {
-    logger.log('Checking filesystem...');
-    // Make sure cache folder is present
-    const cacheFolderOk = await checkCacheFolder();
-
-    if (!cacheFolderOk) {
-        await createCacheFolder();
-        logger.log('Cache folder created!');
-    } else {
-        logger.log('Cache folder already created');
-    }
-
+async function prepareFileSystem(ctx) {
     const appConfigOk = await createApplicationConfig();
 
     if (!appConfigOk) {
-        process.exit(1);
+        throw new Error('app config is not found');
     }
 
     const portConfigOk = await checkConfigPath({
         configPathname: path.join(cachePath, 'port-config.json'),
         template: path.join(templatePath, 'port-config.template.json'),
         name: 'port config',
-        ports,
+        ports: ctx.ports,
         overwrite: true
     });
 
@@ -48,7 +35,7 @@ async function prepareFileSystem(ports) {
         dirName: path.join(cachePath, 'nginx', 'conf.d'),
         template: path.join(templatePath, 'nginx.template.conf'),
         name: 'Nginx',
-        ports,
+        ports: ctx.ports,
         overwrite: true,
         templateArgs: {
             mageRoot: appPath
@@ -56,19 +43,19 @@ async function prepareFileSystem(ports) {
     });
 
     if (!nginxConfigOk) {
-        process.exit(1);
+        throw new Error('nginx config not found');
     }
 
     const phpFpmConfigOk = await checkConfigPath({
         configPathname: php.phpFpmConfPath,
         template: path.join(templatePath, 'php-fpm.template.conf'),
         name: 'php-fpm',
-        ports,
+        ports: ctx.ports,
         overwrite: true
     });
 
     if (!phpFpmConfigOk) {
-        process.exit(1);
+        throw new Error('php-fpm config not found');
     }
 
     // const composerConfigOk = await checkConfigPath({
@@ -84,11 +71,11 @@ async function prepareFileSystem(ports) {
     //     process.exit(1);
     // }
 
-    const magentoOk = await installMagento();
+    // const magentoOk = await installMagento();
 
-    if (!magentoOk) {
-        process.exit(1);
-    }
+    // if (!magentoOk) {
+    //     process.exit(1);
+    // }
 }
 
-module.exports = prepareFileSystem;
+module.exports = { prepareFileSystem, createCacheFolder, checkCacheFolder };

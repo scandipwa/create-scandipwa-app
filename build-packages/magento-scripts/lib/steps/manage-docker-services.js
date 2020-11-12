@@ -18,12 +18,12 @@ const dockerContainerStop = (containers) => execAsync(`docker container stop ${c
  */
 const dockerContainerRemove = (containers) => execAsync(`docker container rm ${containers.join(' ')}`);
 
-const deployDockerNetwork = async () => {
+const deployDockerNetwork = async ({ output }) => {
     try {
         const networkList = await execAsync('docker network ls');
 
         if (networkList.includes(docker.networkName)) {
-            logger.log('Network already deployed');
+            output('Network already deployed');
             return true;
         }
 
@@ -285,5 +285,8 @@ const removeServices = async () => {
 module.exports = {
     startServices,
     stopServices,
-    removeServices
+    removeServices,
+    deployDockerNetwork,
+    deployDockerVolumes,
+    deployDockerContainers
 };

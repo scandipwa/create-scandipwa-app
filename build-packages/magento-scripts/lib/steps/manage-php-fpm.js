@@ -1,6 +1,6 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { php, pidFilePath } = require('../config');
-const { execAsync } = require('../util/exec-async-command');
+const { execAsync, execAsyncSpawn } = require('../util/exec-async-command');
 const getProcessId = require('../util/get-process-id');
 
 const stopPhpFpm = async () => {
@@ -31,13 +31,18 @@ const stopPhpFpm = async () => {
     return true;
 };
 
-const startPhpFpm = async () => {
+const startPhpFpm = async ({ output }) => {
     await stopPhpFpm();
-    logger.log('Starting php-fpm...');
+    output('Starting php-fpm...');
     try {
-        await execAsync(`${php.phpFpmBinPath} --php-ini ${php.phpIniPath} --fpm-config ${php.phpFpmConfPath} --pid ${pidFilePath} "$@"`);
+        await execAsyncSpawn(
+            `${php.phpFpmBinPath} --php-ini ${php.phpIniPath} --fpm-config ${php.phpFpmConfPath} --pid ${pidFilePath} "$@"`,
+            {
+                callback: output
+            }
+        );
 
-        logger.log('php-fpm started up!');
+        output('php-fpm started up!');
         return true;
     } catch (e) {
         logger.error(e);

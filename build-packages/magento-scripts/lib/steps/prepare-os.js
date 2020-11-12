@@ -1,7 +1,7 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const os = require('os');
 const macosVersion = require('macos-version');
-const installBrew = require('./install-brew');
+const { installBrew } = require('./install-brew');
 const installDocker = require('./install-docker');
 const installPHP = require('./install-php');
 const installComposer = require('./install-composer');

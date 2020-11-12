@@ -15,9 +15,9 @@ const {
     php
 } = require('../config');
 const osPlatform = require('../util/os-platform');
-const checkConfigPath = require('../util/check-config');
+const checkConfigPath = require('../util/set-config');
 
-const checkPHPInGlobalCache = async () => {
+const checkPHP = async () => {
     try {
         await execAsync(`ls ${phpBinPath}`);
         return true;
@@ -154,7 +154,7 @@ const buildPHP = async () => {
 const installPHP = async () => {
     logger.log('Checking PHP...');
 
-    const hasPHPInGlobalCache = await checkPHPInGlobalCache();
+    const hasPHPInGlobalCache = await checkPHP();
 
     if (!hasPHPInGlobalCache) {
         logger.warn(`Required PHP version ${requiredPHPVersion} not found in cache, starting build...`);
@@ -176,4 +176,6 @@ const installPHP = async () => {
     return true;
 };
 
-module.exports = installPHP;
+module.exports = {
+    installPHP, checkPHP, buildPHP, setupPHPExtensions
+};

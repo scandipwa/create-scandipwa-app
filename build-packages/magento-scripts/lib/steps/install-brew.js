@@ -4,16 +4,25 @@ const { execAsync } = require('../util/exec-async-command');
 const inquirer = require('inquirer');
 const { execAsyncSpawn } = require('../util/exec-async-command');
 
-const installBrew = async () => {
-    logger.log('Checking HomeBrew...');
+const checkBrew = async () => {
     const { result: homeBrewVersion } = await execAsyncSpawn('brew -v', { withCode: true });
 
     if (/Homebrew \d+\.\d+\.\d+/.test(homeBrewVersion)) {
+        return true;
+    }
+
+    return false;
+};
+
+const installBrew = async () => {
+    logger.log('Checking HomeBrew...');
+    const brewOk = await checkBrew();
+
+    if (brewOk) {
         logger.log('Homebrew installed!');
         return true;
     }
     logger.warn(`Package ${logger.style.misc('homebrew')} is not installed`);
-
     const answer = await inquirer.prompt([
         {
             type: 'expand',
@@ -48,4 +57,4 @@ const installBrew = async () => {
     return false;
 };
 
-module.exports = installBrew;
+module.exports = { installBrew, checkBrew };
