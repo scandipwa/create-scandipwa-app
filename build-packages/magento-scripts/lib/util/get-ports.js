@@ -1,9 +1,8 @@
 const getPort = require('get-port');
 const pathExists = require('./path-exists');
-const path = require('path');
-const { cachePath } = require('../config');
-// const pathExists = require('./path-exists');
+const { portConfigPath } = require('../config');
 const fs = require('fs');
+const savePortsConfig = require('./save-ports');
 
 // Map of default ports (key:value)
 const defaultPorts = {
@@ -19,12 +18,31 @@ const defaultPorts = {
  * @returns {Promise<{app: number, fpm: number, mysql: number, redis: number, elasticsearch: number}>}
  */
 const getAvailablePorts = async () => {
+    const portConfigExists = await pathExists(portConfigPath);
+
+    if (portConfigExists) {
+        const portConfig = JSON.parse(await fs.promises.readFile(portConfigPath, 'utf-8'));
+
+        const ports = Object.fromEntries(await Promise.all(
+            Object.entries(portConfig).map(async ([name, port]) => {
+                const availablePort = await getPort({ port });
+                return [name, availablePort];
+            })
+        ));
+
+        await savePortsConfig({ ports });
+
+        return ports;
+    }
+
     const availablePorts = Object.fromEntries(await Promise.all(
         Object.entries(defaultPorts).map(async ([name, port]) => {
             const availablePort = await getPort({ port });
             return [name, availablePort];
         })
     ));
+
+    await savePortsConfig({ ports: availablePorts });
 
     return availablePorts;
 };
@@ -34,10 +52,10 @@ const getAvailablePorts = async () => {
  * @returns {Promise<{app: number, fpm: number, mysql: number, redis: number, elasticsearch: number}>}
  */
 const getCachedPorts = async () => {
-    const portConfigExists = await pathExists(path.join(cachePath, 'port-config.json'));
+    const portConfigExists = await pathExists(portConfigPath);
 
     if (portConfigExists) {
-        return JSON.parse(await fs.promises.readFile(path.join(cachePath, 'port-config.json'), 'utf8'));
+        return JSON.parse(await fs.promises.readFile(portConfigPath, 'utf8'));
     }
 
     return null;

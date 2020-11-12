@@ -184,9 +184,12 @@ const phpExtensions = [
 
 const pidFilePath = path.join(cachePath, 'php-fpm.pid');
 
+const portConfigPath = path.join(cachePath, 'port-config.json');
+
 module.exports = {
     appPath,
     appVersion,
+    portConfigPath,
     dirName,
     cachePath,
     templatePath,
