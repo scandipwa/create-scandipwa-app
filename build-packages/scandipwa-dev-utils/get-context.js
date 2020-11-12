@@ -1,4 +1,3 @@
-/* eslint-disable no-continue */
 const path = require('path');
 
 const EXTENSION_TYPE = 'extension';

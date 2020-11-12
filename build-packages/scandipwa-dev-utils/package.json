@@ -17,6 +17,7 @@
         "logger.js",
         "create-filesystem.js",
         "install-deps.js",
+        "get-context.js",
         "/lib"
     ],
     "dependencies": {

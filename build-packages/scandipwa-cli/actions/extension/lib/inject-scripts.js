@@ -3,9 +3,9 @@ const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
-module.exports = () => {
-    const packagePath = path.join(process.cwd(), 'package.json');
-    const packageJson = getPackageJson(process.cwd());
+module.exports = (contextPathname) => {
+    const packagePath = path.join(contextPathname, 'package.json');
+    const packageJson = getPackageJson(contextPathname);
     const linkCommand = 'scandipwa-scripts link';
     const scripts = ['postinstall', 'postupdate'];
 

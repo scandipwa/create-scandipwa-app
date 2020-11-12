@@ -1,19 +1,13 @@
-const {
-    walkDirectoryUp,
-    contextTypes: {
-        THEME_TYPE
-    }
-} = require('../../lib/get-context');
-
 const path = require('path');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
 const generateExtension = require('@scandipwa/csa-generator-extension');
 const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
+const { walkDirectoryUp, contextTypes: { THEME_TYPE } } = require('@scandipwa/scandipwa-dev-utils/get-context');
+
 const enableExtension = require('./lib/enable-extension');
 const addDependency = require('./lib/add-dependency');
-
-// const inquirer = require('inquirer');
+const injectScripts = require('./lib/inject-scripts');
 
 const createExtension = async (argv) => {
     const {
@@ -68,6 +62,7 @@ const createExtension = async (argv) => {
 
     try {
         // add package as dependency and install sub-dependencies
+        await injectScripts(contextPathname);
         await addDependency(contextPathname, packageName, `file:${ relativePackagePath }`);
         await installDeps(contextPathname);
     } catch (e) {
@@ -143,8 +138,6 @@ module.exports = (yargs) => {
                 describe: 'Do not enable installed extension.'
             });
         }, createExtension);
-    }, (argv) => {
-        console.log('ext', argv);
     });
 };
 
