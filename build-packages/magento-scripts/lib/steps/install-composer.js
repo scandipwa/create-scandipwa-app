@@ -29,18 +29,16 @@ const checkComposerAuth = async () => {
 const installComposerInCache = async () => {
     await createDirSafe(composerDirPath);
     try {
-        output.start('Downloading composer...');
+        logger.log('Downloading composer...');
         // install latest 1.x version
         await execAsync(`${phpBinPath} -r "copy('https://getcomposer.org/composer-1.phar', '${composerBinPath}');"`);
 
         const composerVersionOutput = await execAsync(`${phpBinPath} ${composerBinPath} --version --no-ansi`);
         const composerVersion = composerVersionOutput.match(/Composer version ([\d.]+)/i)[1];
 
-        output.succeed(`Composer ${composerVersion} installed locally!`);
+        logger.log(`Composer ${composerVersion} installed locally!`);
         return true;
     } catch (e) {
-        output.fail(e.message);
-
         logger.error(e);
         logger.error(
             'Unexpected error while installing PHP Composer.',
@@ -52,7 +50,7 @@ const installComposerInCache = async () => {
 };
 
 const installComposer = async () => {
-    output.start('Checking Composer...');
+    logger.log('Checking Composer...');
 
     const isComposerAuthOk = await checkComposerAuth();
 
@@ -63,7 +61,7 @@ const installComposer = async () => {
     const hasComposerInCache = await checkComposerInCache();
 
     if (!hasComposerInCache) {
-        output.warn('PHP Composer not found locally, installing...');
+        logger.warn('PHP Composer not found locally, installing...');
         const installComposerOk = await installComposerInCache();
         if (!installComposerOk) {
             return false;
@@ -72,7 +70,7 @@ const installComposer = async () => {
         const composerVersionOutput = await execAsync(`${phpBinPath} ${composerBinPath} --version --no-ansi`);
         const composerVersion = composerVersionOutput.match(/Composer version ([\d.]+)/i)[1];
 
-        output.succeed(`Using composer version ${composerVersion}`);
+        logger.log(`Using composer version ${composerVersion}`);
     }
 
     return true;

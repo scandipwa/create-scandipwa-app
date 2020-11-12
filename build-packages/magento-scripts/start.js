@@ -5,6 +5,7 @@ const { getAvailablePorts } = require('./lib/util/get-ports');
 const { startPhpFpm } = require('./lib/steps/manage-php-fpm');
 const openBrowser = require('./lib/util/open-browser');
 const setupMagento = require('./lib/steps/setup-magento');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const start = async () => {
     // make sure deps are installed
@@ -24,7 +25,7 @@ const start = async () => {
 
     openBrowser(`http://localhost:${ports.app}`);
 
-    output.info(`Application started up on http://localhost:${ports.app}`, 1);
+    logger.log(`Application started up on http://localhost:${ports.app}`, 1);
 
     return true;
 };

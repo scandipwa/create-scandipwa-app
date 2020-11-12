@@ -3,7 +3,6 @@
 const path = require('path');
 const { program } = require('@caporal/core');
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
-const ora = require('ora');
 const exitHook = require('async-exit-hook');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
@@ -26,59 +25,10 @@ const commands = {
 
 let done = false;
 
-const oraInstance = ora();
+global.verbose = false;
 
-global.verbosity = 1;
-
-global.output = {
-    get isSpinning() {
-        return oraInstance.isSpinning;
-    },
-    stop() {
-        return oraInstance.stop();
-    },
-    set text(newText) {
-        oraInstance.text = newText;
-    },
-    start(text, verbosityLevel = 3) {
-        if (verbosity >= verbosityLevel) {
-            return oraInstance.start(text);
-        }
-
-        return oraInstance;
-    },
-    info(text, verbosityLevel = 3) {
-        if (verbosity >= verbosityLevel) {
-            return oraInstance.info(text);
-        }
-
-        return oraInstance;
-    },
-    warn(text, verbosityLevel = 3) {
-        if (verbosity >= verbosityLevel) {
-            return oraInstance.warn(text);
-        }
-
-        return oraInstance;
-    },
-    succeed(text, verbosityLevel = 3) {
-        if (verbosity >= verbosityLevel) {
-            return oraInstance.succeed(text);
-        }
-
-        return oraInstance;
-    },
-    fail(text, verbosityLevel = 3) {
-        if (verbosity >= verbosityLevel) {
-            return oraInstance.fail(text);
-        }
-
-        return oraInstance;
-    }
-};
-
-const actionWrapper = (action, { useExitHook = true, verboseLevel } = {}) => async (ctx) => {
-    global.verbosity = verboseLevel || ctx.options.verbose || 1;
+const actionWrapper = (action, { useExitHook = true, useVerbose } = {}) => async (ctx) => {
+    global.verbose = useVerbose || ctx.options.verbose || false;
     if (!useExitHook) {
         done = true;
     }
@@ -136,34 +86,36 @@ program
     .argument('<theme path>', 'Theme path')
     .action(actionWrapper(({ args }) => commands.theme.installTheme(args, { logOutput: true }), {
         useExitHook: false,
-        verboseLevel: 10
+        useVerbose: true
     }))
     .command('composer', 'Run composer command')
     .argument('[command...]', 'Composer command')
     .action(actionWrapper((ctx) => {
-        output.info(`> composer ${ctx.args.command.join(' ')}`);
+        logger.logN(`> composer ${ctx.args.command.join(' ')}`);
         return commands.run.composer.runComposerCommand(ctx.args.command.join(' '), { logOutput: true });
     }, {
         useExitHook: false,
-        verboseLevel: 10
+        useVerbose: true
     }))
     .command('magento', 'Run magento command')
     .argument('[command...]', 'Magento command')
     .action(actionWrapper((ctx) => {
-        output.info(`> magento ${ctx.args.command.join(' ')}`);
+        logger.logN(`> magento ${ctx.args.command.join(' ')}`);
         return commands.run.magento.runMagentoCommand(ctx.args.command.join(' '), { logOutput: true });
     }, {
         useExitHook: false,
-        verboseLevel: 10
+        useVerbose: true
     }))
     .command('cli', 'Run bash with local aliases to php, magento and composer')
-    .action(actionWrapper(() => {
-        commands.cli();
-    }, { useExitHook: false }));
+    .action(actionWrapper(() => commands.cli(), { useExitHook: false }));
 
+const exitProgram = () => {
+    process.exit(0);
+};
 const stopProgram = async () => {
     await stopServices();
     await stopPhpFpm();
+    exitProgram();
 };
 
 exitHook(async (callback) => {
@@ -177,6 +129,7 @@ exitHook(async (callback) => {
 const main = async () => {
     try {
         await program.run();
+        exitProgram();
     } catch (e) {
         logger.error(e);
         await stopProgram();

@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { exec, spawn } = require('child_process');
 
 /**
@@ -31,9 +32,9 @@ const execAsyncSpawn = (command, {
         function addLine(data) {
             stdout += data;
             callback(data.toString());
-            if (logOutput) {
-                data.toString().split('\n').forEach((line) => {
-                    output.info(line);
+            if (logOutput && verbose) {
+                data.toString().split('\n').filter(Boolean).forEach((line) => {
+                    logger.log(line);
                 });
             }
         }

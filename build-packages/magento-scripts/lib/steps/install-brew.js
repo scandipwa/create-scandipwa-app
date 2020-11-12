@@ -5,14 +5,14 @@ const inquirer = require('inquirer');
 const { execAsyncSpawn } = require('../util/exec-async-command');
 
 const installBrew = async () => {
-    output.start('Checking HomeBrew...');
+    logger.log('Checking HomeBrew...');
     const { result: homeBrewVersion } = await execAsyncSpawn('brew -v', { withCode: true });
 
     if (/Homebrew \d+\.\d+\.\d+/.test(homeBrewVersion)) {
-        output.succeed('Homebrew installed!');
+        logger.log('Homebrew installed!');
         return true;
     }
-    output.warn(`Package ${logger.style.misc('homebrew')} is not installed`);
+    logger.warn(`Package ${logger.style.misc('homebrew')} is not installed`);
 
     const answer = await inquirer.prompt([
         {
@@ -35,15 +35,15 @@ const installBrew = async () => {
     ]);
 
     if (answer['install homebrew'] === 'yes') {
-        output.start('Installing Homebrew...');
+        logger.log('Installing Homebrew...');
 
         await execAsync('/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"');
 
-        output.succeed('Homebrew installed!');
+        logger.log('Homebrew installed!');
 
         return true;
     }
-    output.fail('Aborting installation');
+    logger.error('Aborting installation');
 
     return false;
 };

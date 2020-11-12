@@ -7,18 +7,17 @@ const stopPhpFpm = async () => {
     try {
         const processId = await getProcessId();
         if (processId) {
-            output.start('Stopping php-fpm...');
+            logger.log('Stopping php-fpm...');
             await execAsync(`kill ${processId} && rm -f ${pidFilePath}`);
-            output.succeed('php-fpm stopped!');
+            logger.log('php-fpm stopped!');
         } else {
-            output.info('php-fpm is not running');
+            logger.warn('php-fpm is not running');
         }
     } catch (e) {
         if (e.message.includes('No such process')) {
             await execAsync(`rm -f ${pidFilePath}`);
             return true;
         }
-        output.fail(e.message);
 
         logger.error(e);
         logger.error(
@@ -34,15 +33,13 @@ const stopPhpFpm = async () => {
 
 const startPhpFpm = async () => {
     await stopPhpFpm();
-    output.start('Starting php-fpm...');
+    logger.log('Starting php-fpm...');
     try {
         await execAsync(`${php.phpFpmBinPath} --php-ini ${php.phpIniPath} --fpm-config ${php.phpFpmConfPath} --pid ${pidFilePath} "$@"`);
 
-        output.succeed('php-fpm started up!');
+        logger.log('php-fpm started up!');
         return true;
     } catch (e) {
-        output.fail(e.message);
-
         logger.error(e);
         logger.error(
             'Unexpected error while deploying php-fpm.',

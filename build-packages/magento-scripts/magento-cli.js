@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const path = require('path');
 const { spawn } = require('child_process');
 
@@ -14,6 +12,10 @@ const magentoCli = () => {
     });
 
     spawnChild();
+
+    return new Promise((_resolve) => {
+        // never resolve
+    });
 };
 
 module.exports = magentoCli;

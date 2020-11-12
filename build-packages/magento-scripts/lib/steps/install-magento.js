@@ -13,18 +13,16 @@ const checkMagentoApp = async () => pathExists(appPath);
 
 const installApp = async () => {
     try {
-        output.info('Creating Magento project...');
+        logger.log('Creating Magento project...');
         await execAsyncSpawn(
             // eslint-disable-next-line max-len
             `${phpBinPath} ${composerBinPath} create-project --repository=https://repo.magento.com/ magento/project-community-edition=${appVersion} src`,
             {
-                callback: (line) => line.split('\n').forEach((l) => output.info(l))
+                logOutput: true
             }
         );
-        output.succeed('Project installed!');
+        logger.log('Project installed!');
     } catch (e) {
-        output.fail(e.message);
-
         logger.error(e);
         logger.error(
             'Unexpected error while installing Magento application.',
@@ -38,12 +36,12 @@ const installApp = async () => {
 };
 
 const installMagento = async () => {
-    output.info('Checking Composer...');
+    logger.log('Checking Composer...');
 
     const hasMagentoApp = await checkMagentoApp();
 
     if (!hasMagentoApp) {
-        output.warn('Magento application not found, creating...');
+        logger.warn('Magento application not found, creating...');
         const installAppOk = await installApp();
         if (!installAppOk) {
             return false;

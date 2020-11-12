@@ -1,6 +1,5 @@
 {
     "globals": {
-        "verbosity":true,
-        "output":true
+        "verbose":true
     }
 }

@@ -7,23 +7,22 @@ const pathExists = require('../util/path-exists');
 const installMagento = require('./install-magento');
 const checkConfigPath = require('../util/check-config');
 const createApplicationConfig = require('./create-application-config');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+
+const createCacheFolder = async () => createDirSafe(cachePath);
 
 const checkCacheFolder = async () => pathExists(cachePath);
 
-const createCacheFolder = async () => {
-    await createDirSafe(cachePath);
-};
-
 async function prepareFileSystem(ports) {
-    output.start('Checking filesystem...');
+    logger.log('Checking filesystem...');
     // Make sure cache folder is present
     const cacheFolderOk = await checkCacheFolder();
 
     if (!cacheFolderOk) {
         await createCacheFolder();
-        output.succeed('Cache folder created!');
+        logger.log('Cache folder created!');
     } else {
-        output.succeed('Cache folder already created');
+        logger.log('Cache folder already created');
     }
 
     const appConfigOk = await createApplicationConfig();

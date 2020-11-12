@@ -5,21 +5,28 @@ const eta = require('eta');
 const fs = require('fs');
 
 const checkConfigPath = async ({
-    configPathname, dirName, template, ports = {}, name, overwrite, templateArgs = {}
+    configPathname,
+    dirName,
+    template,
+    ports = {},
+    name,
+    overwrite,
+    templateArgs = {}
 }) => {
     const pathOk = await pathExists(configPathname);
 
     if (pathOk && !overwrite) {
         if (overwrite) {
-            output.succeed(`${name} config already created`);
+            logger.log(`${name} config already created`);
         }
 
         return true;
     }
+
     if (overwrite) {
-        output.info(`Recreating ${name} config...`);
+        logger.log(`Recreating ${name} config...`);
     } else {
-        output.warn(`${name} config not found, creating...`);
+        logger.warn(`${name} config not found, creating...`);
     }
     const configTemplate = await fs.promises.readFile(template, 'utf-8');
 
@@ -30,11 +37,11 @@ const checkConfigPath = async ({
             await createDirSafe(dirName);
         }
         await fs.promises.writeFile(configPathname, compliedConfig, { encoding: 'utf-8' });
-        output.succeed(`${name} config created`);
+        logger.log(`${name} config created`);
 
         return true;
     } catch (e) {
-        output.fail(`create ${name} config error`);
+        logger.error(`create ${name} config error`);
 
         logger.log(e);
 

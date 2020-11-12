@@ -18,12 +18,8 @@ const getComposerData = async (composerPath) => {
     return composerData;
 };
 
-const commandLogger = {
-    callback: (l) => l.split('\n').forEach((line) => output.info(line))
-};
-
 const installTheme = async ({ themePath }) => {
-    output.info('Checking theme folder...');
+    logger.log('Checking theme folder...');
 
     const absoluteThemePath = path.join(process.cwd(), themePath);
 
@@ -31,16 +27,15 @@ const installTheme = async ({ themePath }) => {
 
     if (!composerData) {
         logger.error(`composer.json file not found in "${themePath}". Aborting installation...`);
-        output.stop();
 
         return false;
     }
-    output.succeed('Theme folder looks ok!');
+    logger.log('Theme folder looks ok!');
 
-    output.info('Setting symbolic link for theme in composer.');
+    logger.log('Setting symbolic link for theme in composer.');
     try {
-        await runComposerCommand(`config repo.scandipwa path ${absoluteThemePath}`, commandLogger);
-        output.succeed('Symbolic link for theme set!');
+        await runComposerCommand(`config repo.scandipwa path ${absoluteThemePath}`, { logOutput: true });
+        logger.log('Symbolic link for theme set!');
     } catch (e) {
         logger.error(e);
 
@@ -54,7 +49,7 @@ const installTheme = async ({ themePath }) => {
 
     const ports = await getCachedPorts();
 
-    output.info('Setting up redis...');
+    logger.log('Setting up redis...');
 
     try {
         /**
@@ -65,8 +60,8 @@ const installTheme = async ({ themePath }) => {
         --pq-port=${ports.redis} \
         --pq-database=5 \
         --pq-scheme=tcp \
-        -n`, commandLogger);
-        output.succeed('redis is set for persistent query!');
+        -n`, { logOutput: true });
+        logger.log('redis is set for persistent query!');
     } catch (e) {
         logger.error(e);
 
@@ -78,10 +73,10 @@ const installTheme = async ({ themePath }) => {
         return false;
     }
 
-    output.info('Installing theme...');
+    logger.log('Installing theme...');
     try {
-        await runComposerCommand(`require ${composerData.name}`, commandLogger);
-        output.succeed('Theme installed!');
+        await runComposerCommand(`require ${composerData.name}`, { logOutput: true });
+        logger.log('Theme installed!');
     } catch (e) {
         logger.error(e);
 
@@ -93,10 +88,10 @@ const installTheme = async ({ themePath }) => {
         return false;
     }
 
-    output.info('Upgrading magento...');
+    logger.log('Upgrading magento...');
     try {
-        await runMagentoCommand('setup:upgrade', commandLogger);
-        output.succeed('Magento upgraded!');
+        await runMagentoCommand('setup:upgrade', { logOutput: true });
+        logger.log('Magento upgraded!');
     } catch (e) {
         logger.error(e);
 
@@ -108,11 +103,11 @@ const installTheme = async ({ themePath }) => {
         return false;
     }
 
-    output.info('Disabling full_page cache');
+    logger.log('Disabling full_page cache');
 
     try {
-        await runMagentoCommand('cache:disable full_page', commandLogger);
-        output.succeed('Full page cache disabled!');
+        await runMagentoCommand('cache:disable full_page', { logOutput: true });
+        logger.log('Full page cache disabled!');
     } catch (e) {
         logger.error(e);
 

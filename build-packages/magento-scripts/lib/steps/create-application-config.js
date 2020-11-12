@@ -1,3 +1,4 @@
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const inquirer = require('inquirer');
 const { getApplicationConfig, defaultConfig, saveApplicationConfig } = require('../util/application-config');
 
@@ -5,7 +6,7 @@ const createApplicationConfig = async () => {
     const currentConfig = await getApplicationConfig();
 
     if (!currentConfig) {
-        output.warn('Application config no found, we need to create one.');
+        logger.warn('Application config no found, we need to create one.');
         const { config_type } = await inquirer.prompt([
             {
                 type: 'list',
@@ -83,14 +84,14 @@ const createApplicationConfig = async () => {
             });
         } else if (config_type === 'default') {
             await saveApplicationConfig(defaultConfig);
-            output.info('Using default config');
-            output.info(JSON.stringify(defaultConfig, null, 2));
+            logger.log('Using default config');
+            logger.log(JSON.stringify(defaultConfig, null, 2));
         } else {
-            output.warn('Ok, good luck');
+            logger.log('Ok, good luck');
             return false;
         }
 
-        output.succeed('Config created!');
+        logger.log('Config created!');
         return true;
     }
 

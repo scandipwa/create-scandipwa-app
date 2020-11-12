@@ -34,14 +34,16 @@ const waitForIt = async ({ host, port }) => {
             ]);
             connected = true;
         } catch {
-            if (verbosity >= 3) {
+            if (verbose) {
                 logger.log(`Waiting for ${host}:${port}...`);
             }
         }
     }
-    const endTime = Date.now();
 
-    output.info(`${host}:${port} is available after ${((endTime - startTime) / 1000).toFixed(0)} seconds`, 3);
+    if (verbose) {
+        const endTime = Date.now();
+        logger.log(`${host}:${port} is available after ${((endTime - startTime) / 1000).toFixed(0)} seconds`, 3);
+    }
 };
 
 module.exports = waitForIt;

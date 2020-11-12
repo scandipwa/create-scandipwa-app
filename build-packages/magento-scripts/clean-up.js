@@ -1,5 +1,4 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const ora = require('ora');
 const { appPath, cachePath } = require('./lib/config');
 const { removeServices } = require('./lib/steps/manage-docker-services');
 const { stopPhpFpm } = require('./lib/steps/manage-php-fpm');
@@ -8,7 +7,7 @@ const pathExists = require('./lib/util/path-exists');
 const { runMagentoCommandSafe } = require('./lib/util/run-magento');
 
 const cleanUp = async ({ force = false } = {}) => {
-    const output = ora('Stopping docker services...').start();
+    logger.log('Stopping docker services...');
     await removeServices();
 
     await stopPhpFpm();
@@ -16,13 +15,11 @@ const cleanUp = async ({ force = false } = {}) => {
     try {
         const cacheExists = await pathExists(cachePath);
         if (cacheExists) {
-            output.start('Cleaning cache...');
+            logger.log('Cleaning cache...');
             await execAsync(`rm -rf ${cachePath}`);
         }
-        output.succeed('Cache cleaned!');
+        logger.log('Cache cleaned!');
     } catch (e) {
-        output.fail(e.message);
-
         logger.error(e);
 
         logger.error(
@@ -39,21 +36,19 @@ const cleanUp = async ({ force = false } = {}) => {
             const appInstalled = await runMagentoCommandSafe('setup:db:status');
 
             if (appInstalled.includes('the Magento application is not installed')) {
-                output.info('Magento is not installed');
+                logger.log('Magento is not installed');
             } else {
                 await runMagentoCommandSafe('setup:uninstall');
-                output.succeed('Magento application uninstalled');
+                logger.log('Magento application uninstalled');
             }
 
             if (force) {
-                output.warn('Removing application directory');
+                logger.warn('Removing application directory');
                 await execAsync(`rm -rf ${appPath}`);
-                output.succeed('Directory removed');
+                logger.log('Directory removed');
             }
         }
     } catch (e) {
-        output.fail(e.message);
-
         logger.error(e);
 
         logger.error(
