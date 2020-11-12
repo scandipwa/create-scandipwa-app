@@ -1,12 +1,13 @@
 const shouldUseYarn = require('./should-use-yarn');
 const execCommandAsync = require('./exec-command');
 
-const installDeps = (pathname) => (
+const installDeps = (pathname) => {
+    const command = shouldUseYarn() ? 'yarnpkg' : 'npm';
+
     execCommandAsync(
-        shouldUseYarn() ? 'yarnpkg' : 'npm',
-        ['install'],
+        `${ command } install`,
         pathname
-    )
-);
+    );
+};
 
 module.exports = installDeps;

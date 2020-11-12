@@ -88,7 +88,8 @@ yargs.command(
                 alias: 't',
                 describe: 'Template to create ScandiPWA app from.',
                 type: 'string',
-                default: 'theme'
+                default: 'theme',
+                nargs: 1
             }
         );
     },
