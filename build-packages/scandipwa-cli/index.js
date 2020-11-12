@@ -7,7 +7,10 @@ const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const semver = require('semver');
 
 const actions = [
-    require('./actions/extension')
+    require('./actions/extension'),
+    require('./actions/magento'),
+    require('./actions/override'),
+    require('./actions/deploy')
 ];
 
 (async () => {
