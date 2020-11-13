@@ -8,21 +8,21 @@ const getDbStatus = async (isReturnLogs) => {
         return e;
     }
 };
-
-module.exports = async (ports) => {
+const migrateDatabase = async (ports) => {
     const dbStatus = await getDbStatus();
-
-    if (dbStatus.includes('Magento application is not installed')) {
-        installMagento(ports);
-    }
 
     switch (dbStatus) {
     case 1:
+        await installMagento(ports);
+        break;
+    case 2:
+        await runMagentoCommand('setup:upgrade');
+        break;
     case 0:
     default:
         // TODO: handle these statuses ?
         break;
-    case 2:
-        await runMagentoCommand('setup:upgrade');
     }
 };
+
+module.exports = migrateDatabase;
