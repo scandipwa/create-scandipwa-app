@@ -1,8 +1,41 @@
 const path = require('path');
-const createFilesystem = require('create-scandipwa-app/lib/filesystem');
+const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesystem');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
-const fileSystemCreator = require('./lib/filesystem');
-const greet = require('./lib/greet');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+
+const greet = (
+    name,
+    pathname
+) => {
+    // logger.clear();
+    const relativePathname = `./${pathname}`;
+    logger.logN(`Success! Created ScandiPWA extension "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
+};
+
+const fileSystemCreator = (templateOptions) => (
+    (
+        filesystem,
+        templatePath,
+        destinationPath
+    ) => {
+        filesystem.copyTpl(
+            templatePath('package.json'),
+            destinationPath('package.json'),
+            templateOptions
+        );
+
+        filesystem.copy(
+            templatePath('sample.gitignore'),
+            destinationPath('.gitignore')
+        );
+
+        filesystem.copy(
+            templatePath('src/**/*'),
+            destinationPath('src'),
+            { globOptions: { dot: true } }
+        );
+    }
+);
 
 const run = async (options) => {
     const {
@@ -15,11 +48,9 @@ const run = async (options) => {
         name
     };
 
-    const destination = path.join(process.cwd(), pathname);
-
     // create filesystem from template
     await createFilesystem(
-        destination,
+        pathname,
         path.join(__dirname, 'template'),
         fileSystemCreator(templateOptions)
     );

@@ -17,8 +17,8 @@ module.exports = async () => {
         const packagePath = path.join(packagesPath, folder);
         const { name } = getPackageJson(packagePath);
         const command = shouldUseYarn() ? 'yarn' : 'npm';
-        await execCommandAsync(command, ['link'], packagePath);
-        await execCommandAsync(command, ['link', name], process.cwd());
+        await execCommandAsync(`${ command } link`, packagePath);
+        await execCommandAsync(`${ command } link ${ name }`, process.cwd());
     });
 
     await Promise.all(linkPromises);

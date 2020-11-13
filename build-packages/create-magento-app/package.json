@@ -1,16 +1,14 @@
 {
     "name": "create-magento-app",
     "description": "Global command used by CMA.",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "./index.js",
     "bin": "./index.js",
     "license": "OSL-3.0",
     "dependencies": {
-        "@caporal/core": "^2.0.2",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.10",
-        "mem-fs": "^1.2.0",
-        "mem-fs-editor": "^7.0.1",
-        "semver": "^7.3.2"
+        "@scandipwa/scandipwa-dev-utils": "^0.0.11",
+        "semver": "^7.3.2",
+        "yargs": "^16.1.0"
     },
     "engines": {
         "node": "^8.10.0 || ^10.13.0 || >=11.10.1"

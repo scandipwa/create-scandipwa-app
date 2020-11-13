@@ -1,11 +1,104 @@
 const path = require('path');
-const installDeps = require('create-scandipwa-app/lib/install-deps');
-const createFilesystem = require('create-scandipwa-app/lib/filesystem');
+const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
+const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesystem');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
-const fileSystemCreator = require('./lib/filesystem');
-const greet = require('./lib/greet');
+const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const DEFAULT_PROXY = 'http://scandipwapmrev.indvp.com';
+
+const greet = (
+    name,
+    pathname
+) => {
+    const relativePathname = `./${pathname}`;
+    const displayedCommand = shouldUseYarn() ? 'yarn' : 'npm run';
+
+    logger.logN(`Success! Created ScandiPWA theme "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
+
+    logger.log('Inside that directory, you can run several commands:');
+    logger.logT(
+        logger.style.command(`${displayedCommand} start`),
+        logger.style.comment('Starts the development server')
+    );
+    logger.logT(
+        logger.style.command(`${displayedCommand} build`),
+        logger.style.comment('Bundles the app into static files for production')
+    );
+
+    logger.note(
+        'To bundle your application as the valid Magento 2 theme',
+        `install extension ${ logger.style.misc('@scandipwa/m2-theme') }!`,
+        `Your Magento 2 theme name is "${ logger.style.misc(`scandipwa/${ name }`) }"!`
+    );
+
+    logger.log('We suggest that you begin by typing:');
+    logger.logT(logger.style.command('cd'), relativePathname);
+    logger.logT(logger.style.command(`${displayedCommand} start`));
+
+    logger.log(); // add empty line
+    logger.logN('Happy coding! <3');
+};
+
+const fileSystemCreator = (templateOptions) => (
+    (
+        filesystem,
+        templatePath,
+        destinationPath
+    ) => {
+        filesystem.copyTpl(
+            templatePath('package.json'),
+            destinationPath('package.json'),
+            templateOptions
+        );
+
+        filesystem.copyTpl(
+            templatePath('yarn.lock.cached'),
+            destinationPath('yarn.lock'),
+            templateOptions
+        );
+
+        filesystem.copyTpl(
+            templatePath('composer.json'),
+            destinationPath('composer.json'),
+            templateOptions
+        );
+
+        filesystem.copy(
+            templatePath('sample.gitignore'),
+            destinationPath('.gitignore')
+        );
+
+        filesystem.copy(
+            templatePath('README.md'),
+            destinationPath('README.md')
+        );
+
+        filesystem.copyTpl(
+            templatePath('magento/**/*'),
+            destinationPath('magento'),
+            templateOptions
+        );
+
+        filesystem.copy(
+            templatePath('i18n/**/*'),
+            destinationPath('i18n'),
+            { globOptions: { dot: true } }
+        );
+
+        filesystem.copy(
+            templatePath('public/**/*'),
+            destinationPath('public'),
+            { globOptions: { dot: true } }
+        );
+
+        filesystem.copy(
+            templatePath('src/**/*'),
+            destinationPath('src'),
+            { globOptions: { dot: true } }
+        );
+    }
+);
 
 const run = async (options) => {
     const {
@@ -15,9 +108,28 @@ const run = async (options) => {
 
     const destination = path.join(process.cwd(), pathname);
 
+    let scandipwaVersion = '0.0.0';
+    let scandipwaScriptsVersion = '0.0.0';
+
+    try {
+        scandipwaVersion = await getLatestVersion('@scandipwa/scandipwa');
+    } catch (e) {
+        logger.warn(
+            `Package ${ logger.style.misc('@scandipwa/scandipwa') } is not yet published.`
+        );
+    }
+
+    try {
+        scandipwaScriptsVersion = await getLatestVersion('@scandipwa/scandipwa-scripts');
+    } catch (e) {
+        logger.warn(
+            `Package ${ logger.style.misc('@scandipwa/scandipwa-scripts') } is not yet published.`
+        );
+    }
+
     const templateOptions = {
-        scandipwaVersion: await getLatestVersion('@scandipwa/scandipwa'),
-        scandipwaScriptsVersion: await getLatestVersion('@scandipwa/scandipwa-scripts'),
+        scandipwaVersion,
+        scandipwaScriptsVersion,
         name,
         proxy: DEFAULT_PROXY
     };

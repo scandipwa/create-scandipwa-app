@@ -1,6 +1,6 @@
 {
     "name": "@scandipwa/magento-scripts",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "./index.js",
     "license": "OSL-3.0",
     "bin": {
@@ -8,9 +8,9 @@
     },
     "dependencies": {
         "@caporal/core": "^2.0.2",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.10",
+        "@scandipwa/scandipwa-dev-utils": "^0.0.11",
         "async-exit-hook": "^2.0.1",
-        "create-scandipwa-app": "^1.0.6",
+        "create-scandipwa-app": "^1.0.7",
         "eta": "^1.11.0",
         "listr2": "3.2.2",
         "enquirer": "2.3.6",
