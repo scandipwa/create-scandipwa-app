@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-const path = require('path');
 const { program } = require('@caporal/core');
-const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
 const exitHook = require('async-exit-hook');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
@@ -14,7 +12,6 @@ const commands = {
     stop: require('../stop'),
     cleanup: require('../clean-up'),
     restart: require('../restart'),
-    init: require('../init'),
     theme: require('../lib/manage-theme'),
     run: {
         magento: require('../lib/util/run-magento'),
@@ -39,35 +36,6 @@ const actionWrapper = (action, { useExitHook = true, useVerbose } = {}) => async
 
 program
     .name('ScandiPWA BE Scripts')
-    .argument('<app name>', 'Magento application name to create')
-    .action(({ args }) => {
-        const pathArr = (args.appName || '').split('/');
-        const orgPathArray = pathArr.slice(-2);
-        const isOrg = orgPathArray[0].startsWith('@');
-
-        const packageName = isOrg
-            ? path.join(...orgPathArray)
-            : pathArr[pathArr.length - 1];
-
-        if (!isValidPackageName(packageName)) {
-            process.exit(1);
-        }
-
-        const pathToDist = isOrg
-            ? path.join(...pathArr.slice(0, -2), orgPathArray[1])
-            : path.join(...pathArr);
-
-        const options = {
-            /**
-             * In case pathArr is something like ['projects', '@scandipwa', 'test']
-             * it should return '@scandipwa/test' as name as 'projects/test' as path.
-             */
-            name: packageName,
-            path: pathToDist
-        };
-
-        return commands.init(options);
-    })
     .option('--verbose', 'Set verbose level, default 1', {
         global: true,
         validator: program.NUMBER,
@@ -114,7 +82,7 @@ const exitProgram = () => {
 };
 const stopProgram = async () => {
     await stopServices();
-    await stopPhpFpm();
+    await stopPhpFpm({ output: logger.log });
     exitProgram();
 };
 

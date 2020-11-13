@@ -28,12 +28,10 @@ const deployDockerNetwork = async ({ output }) => {
         }
 
         await execAsync(`docker network create --driver=bridge ${docker.networkName}`);
-        logger.log('Network deployed!');
+        output('Network deployed!');
         return true;
     } catch (e) {
-        logger.error(e.message);
-
-        logger.error(
+        output(
             'Unexpected error while deploying docker network.',
             'See ERROR log above.'
         );
@@ -42,7 +40,7 @@ const deployDockerNetwork = async ({ output }) => {
     }
 };
 
-const deployDockerVolumes = async () => {
+const deployDockerVolumes = async ({ output }) => {
     try {
         const volumeList = await execAsync('docker volume ls -q');
 
@@ -51,29 +49,19 @@ const deployDockerVolumes = async () => {
 
         if (missingVolumes.length > 0) {
             const isPlural = missingVolumes.length > 1;
-            logger.warn(`Volume${isPlural ? 's' : ''} ${missingVolumes.map(({ name }) => name).join(', ')} ${isPlural ? 'are' : 'is'} missing. Creating them...`);
+            output(`Volume${isPlural ? 's' : ''} ${missingVolumes.map(({ name }) => name).join(', ')} ${isPlural ? 'are' : 'is'} missing. Creating them...`);
             await Promise.all([
                 missingVolumes.map((volume) => dockerVolumeCreate(volume))
             ]);
-            logger.log('Volumes created');
-        } else {
-            logger.log('Volumes already created');
         }
     } catch (e) {
-        logger.error('Docker deploy volumes error');
+        output('Failed to create volumes. See ERROR log above');
 
-        logger.log(e);
-
-        logger.error('Failed to create volumes. See ERROR log above');
-        return false;
+        throw e;
     }
-
-    return true;
 };
 
-const deployDockerContainers = async ({ ports }) => {
-    logger.log('Running docker containers');
-
+const deployDockerContainers = async ({ ports, output }) => {
     try {
         const runningContainers = await getRunningContainers();
 
@@ -83,7 +71,7 @@ const deployDockerContainers = async ({ ports }) => {
         if (missingContainers.length > 0) {
             const isPlural = missingContainers.length > 1;
             if (missingContainers.length === runningContainers.length) {
-                logger.warn(`Container${isPlural ? 's' : ''} ${missingContainers.map((container) => container().name).join(', ')} ${isPlural ? 'are' : 'is'} missing. Restarting them...`);
+                output(`Container${isPlural ? 's' : ''} ${missingContainers.map((container) => container().name).join(', ')} ${isPlural ? 'are' : 'is'} missing. Restarting them...`);
 
                 const containersToStop = docker.containerList
                     .filter((container) => !missingContainers.includes(container().name))
@@ -93,28 +81,19 @@ const deployDockerContainers = async ({ ports }) => {
                     await dockerContainerStop(containersToStop);
                     await dockerContainerRemove(containersToStop);
                 } catch (e) {
-                    logger.error('Docker containers stop error');
+                    output('Failed to restart containers. See ERROR log above');
 
-                    logger.log(e);
-
-                    logger.error('Failed to restart containers. See ERROR log above');
-                    return false;
+                    throw e;
                 }
             }
-        } else {
-            logger.log('Containers already running');
-            return true;
         }
     } catch (e) {
-        logger.error('Docker stop containers error');
+        output('Failed to stop containers. See ERROR log above');
 
-        logger.log(e);
-
-        logger.error('Failed to stop containers. See ERROR log above');
-        return false;
+        throw e;
     }
 
-    logger.log('No containers running, deploying them...');
+    output('No containers running, deploying them...');
 
     try {
         const allContainerList = await execAsync('docker container ls -a');
@@ -123,11 +102,11 @@ const deployDockerContainers = async ({ ports }) => {
             .filter((container) => allContainerList.includes(container().name));
 
         if (existingContainers.length > 0) {
-            logger.log('Starting containers...');
+            output('Starting containers...');
             if (existingContainers.length === docker.containerList.length) {
                 await Promise.all(existingContainers.map((container) => dockerRun(container({ ports }))));
-                logger.log('Containers started up!');
-                return true;
+                output('Containers started up!');
+                return;
             }
 
             // only some containers are present
@@ -136,118 +115,92 @@ const deployDockerContainers = async ({ ports }) => {
 
             await Promise.all(containersToRun.map((container) => dockerRun(container({ ports }))));
 
-            logger.log('Containers started');
-            return true;
+            output('Containers started');
         }
     } catch (e) {
-        logger.error('Docker start containers error');
+        output('Failed to start containers. See ERROR log above');
 
-        logger.log(e);
-
-        logger.error('Failed to start containers. See ERROR log above');
-        return false;
+        throw e;
     }
 
     try {
         await Promise.all(docker.containerList.map((container) => dockerRun(container({ ports }))));
     } catch (e) {
-        logger.error('Docker deploy containers error');
+        output('Failed to create containers. See ERROR log above');
 
-        logger.log(e);
-
-        logger.error('Failed to create containers. See ERROR log above');
-        return false;
+        throw e;
     }
 
-    logger.log('Containers deployed');
-    return true;
+    output('Containers deployed');
 };
 
-const dockerStopContainers = async () => {
+const dockerStopContainers = async ({ output }) => {
     try {
         const runningContainers = await getRunningContainers();
 
         if (runningContainers.length > 0) {
-            logger.log('Stopping docker containers...');
+            output('Stopping docker containers...');
             await dockerContainerStop(runningContainers.map((c) => c().name));
-            logger.log('Docker containers stopped');
-        } else {
-            logger.warn('No containers running');
+            output('Docker containers stopped');
         }
-
-        return true;
     } catch (e) {
-        logger.error(e);
-
-        logger.error(
+        output(
             'Unexpected error while stopping docker containers.',
             'See ERROR log above.'
         );
 
-        return false;
+        throw e;
     }
 };
 
-const dockerRemoveContainers = async () => {
+const dockerRemoveContainers = async ({ output }) => {
     try {
         const containerList = await execAsync('docker container ls -a');
 
         const containersToRemove = docker.containerList.filter((container) => containerList.includes(container().name));
 
         if (containersToRemove.length > 0) {
-            logger.log('Removing docker containers...');
+            output('Removing docker containers...');
             await dockerContainerRemove(containersToRemove.map((c) => c().name));
-            logger.log('Docker containers removed');
-        } else {
-            logger.warn('No containers to remove');
+            output('Docker containers removed');
         }
-
-        return true;
     } catch (e) {
-        logger.error(e);
-
-        logger.error(
+        output(
             'Unexpected error while removing docker containers.',
             'See ERROR log above.'
         );
 
-        return false;
+        throw e;
     }
 };
 
-const dockerRemoveVolumes = async () => {
+const dockerRemoveVolumes = async ({ output }) => {
     try {
         const volumeList = await execAsync('docker volume ls -q');
 
         const volumesToRemove = docker.volumeList.filter((volume) => volumeList.includes(volume.name));
 
         if (volumesToRemove.length > 0) {
-            logger.log('Removing volumes...');
+            output('Removing volumes...');
             await execAsync(`docker volume rm ${volumesToRemove.map(({ name }) => name).join(' ')}`);
-            logger.log('Volumes removed!');
-        } else {
-            logger.warn('No volumes to remove');
+            output('Volumes removed!');
         }
-
-        return true;
     } catch (e) {
-        logger.error(e);
-
-        logger.error(
+        output(
             'Unexpected error while removing docker volumes.',
             'See ERROR log above.'
         );
 
-        return false;
+        throw e;
     }
 };
 
 const stopServices = async () => {
     logger.log('Stopping docker services...');
 
-    await dockerStopContainers();
+    await dockerStopContainers({ output: logger.log });
 
-    await dockerRemoveContainers();
+    await dockerRemoveContainers({ output: logger.log });
 
     return true;
 };
@@ -288,5 +241,8 @@ module.exports = {
     removeServices,
     deployDockerNetwork,
     deployDockerVolumes,
-    deployDockerContainers
+    deployDockerContainers,
+    dockerStopContainers,
+    dockerRemoveContainers,
+    dockerRemoveVolumes
 };

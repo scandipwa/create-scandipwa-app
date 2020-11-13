@@ -1,16 +1,32 @@
-const { stopPhpFpm } = require('./lib/steps/manage-php-fpm');
-const { stopServices } = require('./lib/steps/manage-docker-services');
+const { Listr } = require('listr2');
+const { stopPhpFpmTask } = require('./tasks/php-fpm');
+const {
+    stopDockerContainersTask,
+    removeDockerContainersTask
+} = require('./tasks/docker');
 
 const stop = async () => {
-    const stopPhpFpmOk = await stopPhpFpm();
+    const tasks = new Listr([
+        stopPhpFpmTask,
+        {
+            title: 'Stopping Docker services',
+            task: async (ctx, task) => task.newListr([
+                stopDockerContainersTask,
+                removeDockerContainersTask
+            ], {
+                concurrent: false,
+                exitOnError: true
+            })
+        }
+    ], {
+        concurrent: false,
+        exitOnError: true,
+        rendererOptions: {
+            collapse: false
+        }
+    });
 
-    if (!stopPhpFpmOk) {
-        return false;
-    }
-
-    await stopServices();
-
-    return true;
+    await tasks.run();
 };
 
 module.exports = stop;

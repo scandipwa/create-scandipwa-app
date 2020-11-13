@@ -3,37 +3,27 @@
 /* eslint-disable no-await-in-loop */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { execAsync, execAsyncSpawn } = require('../util/exec-async-command');
-const path = require('path');
 const {
     php: {
         requiredPHPVersion,
         requiredPHPVersionRegex,
         phpBinPath,
         phpExtensions
-    },
-    templatePath,
-    php
+    }
 } = require('../config');
 const osPlatform = require('../util/os-platform');
-const checkConfigPath = require('../util/set-config');
+const pathExists = require('../util/path-exists');
 
-const checkPHP = async () => {
-    try {
-        await execAsync(`ls ${phpBinPath}`);
-        return true;
-    } catch (e) {
-        return false;
-    }
-};
+const checkPHP = async () => pathExists(phpBinPath);
 
-const setupPHPExtensions = async () => {
+const setupPHPExtensions = async ({ output }) => {
     try {
         const loadedPHPModules = await execAsync(`${phpBinPath} -m`);
         // console.log(loadedPHPModules)
         const missingPHPExtensions = phpExtensions.filter((ext) => !loadedPHPModules.includes(ext.name));
         if (missingPHPExtensions.length > 0) {
             for (const extension of missingPHPExtensions) {
-                logger.log(`Installing PHP extension ${extension.name}...${extension.options ? ` with options "${extension.options}"` : ''}`);
+                output(`Installing PHP extension ${extension.name}...${extension.options ? ` with options "${extension.options}"` : ''}`);
                 // eslint-disable-next-line max-len
                 await execAsyncSpawn(`source ~/.phpbrew/bashrc && phpbrew use ${requiredPHPVersion} && phpbrew ext install ${extension.name}${extension.options ? ` -- ${extension.options}` : ''}`,
                     {
@@ -49,33 +39,27 @@ const setupPHPExtensions = async () => {
                             }
                         }
                     });
-                logger.log(`PHP extension ${extension.name} installed!`);
+                output(`PHP extension ${extension.name} installed!`);
             }
 
-            logger.log('PHP extensions are installed!');
+            output('PHP extensions are installed!');
         }
-
-        return true;
     } catch (e) {
-        logger.error(e);
-
-        logger.error(
+        output(
             'Unexpected error while setting up PHP extensions.',
             'See ERROR log above.'
         );
 
-        return false;
+        throw e;
     }
 };
 
-const buildPHP = async () => {
+const buildPHP = async ({ output }) => {
     try {
         await execAsyncSpawn('phpbrew -v');
     } catch (e) {
         if (/phpbrew: command not found/.test(e.message)) {
-            logger.error(`Package ${ logger.style.misc('phpbrew') } is not installed!.\nTo install, follow this instructions: https://github.com/phpbrew/phpbrew/wiki/Quick-Start`);
-
-            return false;
+            throw new Error(`Package ${ logger.style.misc('phpbrew') } is not installed!.\nTo install, follow this instructions: https://github.com/phpbrew/phpbrew/wiki/Quick-Start`);
         }
     }
 
@@ -112,43 +96,18 @@ const buildPHP = async () => {
             await execAsyncSpawn(
                 os.os === 'linux' ? phpBuildCommandLinux : phpBuildCommandMac,
                 {
-                    callback: (line) => {
-                        if (line.includes('Configuring')) {
-                            logger.log(`Configuring PHP-${requiredPHPVersion}...`);
-                        }
-                        if (line.includes('Building...')) {
-                            logger.log(`Building PHP-${requiredPHPVersion}...`);
-                        }
-                        if (line.includes('Installing...')) {
-                            logger.log(`Installing PHP-${requiredPHPVersion}...`);
-                        }
-                    }
+                    callback: output
                 }
             );
         }
-        logger.log('PHP compiled successfully!');
     } catch (e) {
-        logger.error(e);
-        logger.error(
+        output(
             'Unexpected error while compiling and building PHP.',
             'See ERROR log above.'
         );
 
-        return false;
+        throw e;
     }
-
-    const phpConfigOk = await checkConfigPath({
-        configPathname: php.phpIniPath,
-        template: path.join(templatePath, 'php.template.ini'),
-        name: 'PHP',
-        overwrite: true
-    });
-
-    if (!phpConfigOk) {
-        return false;
-    }
-
-    return true;
 };
 
 const installPHP = async () => {

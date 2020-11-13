@@ -1,38 +1,32 @@
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { php, pidFilePath } = require('../config');
 const { execAsync, execAsyncSpawn } = require('../util/exec-async-command');
 const getProcessId = require('../util/get-process-id');
 
-const stopPhpFpm = async () => {
+const stopPhpFpm = async ({ output }) => {
     try {
         const processId = await getProcessId();
         if (processId) {
-            logger.log('Stopping php-fpm...');
+            output('Stopping php-fpm...');
             await execAsync(`kill ${processId} && rm -f ${pidFilePath}`);
-            logger.log('php-fpm stopped!');
-        } else {
-            logger.warn('php-fpm is not running');
+            output('php-fpm stopped!');
         }
     } catch (e) {
         if (e.message.includes('No such process')) {
             await execAsync(`rm -f ${pidFilePath}`);
-            return true;
+            return;
         }
 
-        logger.error(e);
-        logger.error(
+        output(
             'Unexpected error while stopping php-fpm.',
             'See ERROR log above.'
         );
 
-        return false;
+        throw e;
     }
-
-    return true;
 };
 
 const startPhpFpm = async ({ output }) => {
-    await stopPhpFpm();
+    await stopPhpFpm({ output });
     output('Starting php-fpm...');
     try {
         await execAsyncSpawn(
@@ -43,15 +37,13 @@ const startPhpFpm = async ({ output }) => {
         );
 
         output('php-fpm started up!');
-        return true;
     } catch (e) {
-        logger.error(e);
-        logger.error(
+        output(
             'Unexpected error while deploying php-fpm.',
             'See ERROR log above.'
         );
 
-        return false;
+        throw e;
     }
 };
 

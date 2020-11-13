@@ -1,4 +1,4 @@
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+// const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const net = require('net');
 
 const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout));
@@ -20,7 +20,9 @@ const connectToHostPort = ({ host, port }) => new Promise((resolve, reject) => {
     });
 });
 
-const waitForIt = async ({ host, port }) => {
+const waitForIt = async ({
+    name, host, port, output
+}) => {
     const startTime = Date.now();
     let connected = false;
     while (!connected) {
@@ -34,16 +36,12 @@ const waitForIt = async ({ host, port }) => {
             ]);
             connected = true;
         } catch {
-            if (verbose) {
-                logger.log(`Waiting for ${host}:${port}...`);
-            }
+            output(`Waiting for ${name} at ${host}:${port}...`);
         }
     }
 
-    if (verbose) {
-        const endTime = Date.now();
-        logger.log(`${host}:${port} is available after ${((endTime - startTime) / 1000).toFixed(0)} seconds`, 3);
-    }
+    const endTime = Date.now();
+    output(`${name} at ${host}:${port} is available after ${((endTime - startTime) / 1000).toFixed(0)} seconds`, 3);
 };
 
 module.exports = waitForIt;
