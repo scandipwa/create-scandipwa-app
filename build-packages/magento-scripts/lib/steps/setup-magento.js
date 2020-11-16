@@ -4,7 +4,7 @@ const { docker, appVersion } = require('../config');
 // const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { getCachedPorts } = require('../util/get-ports');
 const { defaultConfig, getApplicationConfig } = require('../util/application-config');
-const { runMagentoCommand, runMagentoCommandSafe } = require('../util/run-magento');
+const runMagentoCommand = require('../util/run-magento');
 const waitForIt = require('../util/wait-for-it');
 
 const magentoFlushConfig = async ({ output }) => {
@@ -32,7 +32,10 @@ const magentoDatabaseConfig = async ({ config, ports, output }) => {
     const { env } = docker.container.mysql();
 
     await waitForIt({
-        name: 'mysql', host: '127.0.0.1', port: ports.mysql, output
+        name: 'mysql',
+        host: '127.0.0.1',
+        port: ports.mysql,
+        output
     });
 
     await runMagentoCommand(`setup:config:set \
@@ -50,7 +53,7 @@ const magentoDatabaseMigration = async ({ config, ports, output }) => {
     /**
      *  Check if magento already installed or not, ignoring exit statuses of eval, since it's magento subprocess
      */
-    const magentoStatus = await runMagentoCommandSafe('setup:db:status');
+    const { result: magentoStatus } = await runMagentoCommand('setup:db:status');
 
     /**
      * We cannot rely on Magento Code, as these are update codes, not install codes. Therefore check the output for
@@ -77,7 +80,7 @@ const magentoDatabaseMigration = async ({ config, ports, output }) => {
 
         output('Magento application setup');
     } else {
-        const { code } = await runMagentoCommandSafe('setup:db:status', { withCode: true });
+        const { code } = await runMagentoCommand('setup:db:status');
         magentoDBStatus = code;
         output(`Magento DB status: ${magentoDBStatus}`);
     }
@@ -90,7 +93,7 @@ const magentoDatabaseMigration = async ({ config, ports, output }) => {
     }
     case 2: {
         output('Upgrading magento');
-        await runMagentoCommandSafe('setup:upgrade', { callback: output });
+        await runMagentoCommand('setup:upgrade', { callback: output });
         output('Magento upgraded!');
         break;
     }
@@ -140,7 +143,7 @@ const magentoRedisConfig = async ({ ports, output }) => {
 
 const createAdminUser = async ({ config, output }) => {
     output(`Checking user ${config.magento.user}`);
-    const userStatus = await runMagentoCommand(`admin:user:unlock ${config.magento.user}`);
+    const { result: userStatus } = await runMagentoCommand(`admin:user:unlock ${config.magento.user}`);
     if (userStatus.includes('Couldn\'t find the user account')) {
         await runMagentoCommand(`admin:user:create \
         --admin-firstname='${config.magento.first_name}' \
@@ -174,10 +177,10 @@ const magentoCompile = async ({ output }) => {
 
 const magentoSetBaseurl = async ({ ports, output }) => {
     output(`Setting baseurl to http://localhost:${ports.app}`);
-    await runMagentoCommandSafe(`setup:store-config:set --base-url="http://localhost:${ports.app}"`);
+    await runMagentoCommand(`setup:store-config:set --base-url="http://localhost:${ports.app}"`);
 
     output(`Setting secure baseurl to https://localhost:${ports.app}`);
-    await runMagentoCommandSafe(`setup:store-config:set --base-secure-url="https://localhost:${ports.app}"`);
+    await runMagentoCommand(`setup:store-config:set --base-secure-url="https://localhost:${ports.app}"`);
     await runMagentoCommand('setup:store-config:set --use-secure=1');
     await runMagentoCommand('setup:store-config:set --use-secure-admin=1');
 };
@@ -193,8 +196,8 @@ const magentoPostDeploy = async ({ output }) => {
 
 const magentoDisable2FA = async ({ output }) => {
     output('Disabling 2fa for admin.');
-    await runMagentoCommandSafe('module:disable Magento_TwoFactorAuth');
-    await runMagentoCommandSafe('cache:flush');
+    await runMagentoCommand('module:disable Magento_TwoFactorAuth');
+    await runMagentoCommand('cache:flush');
 };
 
 const magentoSetupSteps = [

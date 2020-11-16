@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const {
-    php: { phpBinPath },
-    composer: { composerBinPath },
-    appVersion
+    php,
+    composer,
+    magento
 } = require('../config');
 const { execAsyncSpawn } = require('../util/exec-async-command');
 
@@ -12,9 +12,9 @@ const checkMagentoApp = async () => false; // pathExists(path. appPath);
 const installApp = async ({ output }) => {
     output('Creating Magento project...');
     await execAsyncSpawn(
-        `${phpBinPath} ${composerBinPath} create-project \
+        `${php.binPath} ${composer.binPath} create-project \
         --repository=https://repo.magento.com/ \
-        magento/project-community-edition=${appVersion} \
+        magento/project-community-edition=${magento.version} \
         src`,
         {
             logOutput: true,
