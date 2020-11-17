@@ -5,6 +5,8 @@ const getPhpConfig = require('./php');
 const getComposerConfig = require('./composer');
 const getApplicationConfig = require('./application');
 
+const platforms = ['linux'];
+
 // TODO: ask for this version?
 const magentoVersion = '2.4.1';
 
@@ -33,5 +35,6 @@ module.exports = {
     magento,
     php,
     composer,
-    docker
+    docker,
+    platforms
 };

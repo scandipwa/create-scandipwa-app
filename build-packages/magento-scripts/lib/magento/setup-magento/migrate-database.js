@@ -1,31 +1,40 @@
+/* eslint-disable no-param-reassign */
 const runMagentoCommand = require('../../util/run-magento');
 const installMagento = require('./install-magento');
 
-const migrateDatabase = async (ports, output) => {
-    const { code } = await runMagentoCommand('setup:db:status', { throwNonZeroCode: false });
-
-    switch (code) {
-    case 0: {
-        output('No upgrade/install is needed');
-        break;
-    }
-    case 1: {
-        await installMagento(ports);
-        break;
-    }
-    case 2: {
-        output('Upgrading magento');
-        await runMagentoCommand('setup:upgrade', {
-            callback: output
+const migrateDatabase = {
+    title: 'Migrate database',
+    task: async (ctx, task) => {
+        const { code } = await runMagentoCommand('setup:db:status', {
+            throwNonZeroCode: false
         });
-        output('Magento upgraded!');
-        break;
-    }
-    default: {
+
+        switch (code) {
+        case 0: {
+            // No upgrade/install is needed
+            task.skip();
+            break;
+        }
+        case 1: {
+            await installMagento(ctx.ports);
+            break;
+        }
+        case 2: {
+            task.output = 'Upgrading magento';
+            await runMagentoCommand('setup:upgrade', {
+                callback: (t) => {
+                    task.output = t;
+                }
+            });
+            task.output = 'Magento upgraded!';
+            break;
+        }
+        default: {
         // TODO: handle these statuses ?
-        output('Database migration failed: manual action is required!');
-        break;
-    }
+            task.output = 'Database migration failed: manual action is required!';
+            break;
+        }
+        }
     }
 };
 

@@ -157,7 +157,9 @@ const dockerRemoveContainers = async ({ output }) => {
     try {
         const containerList = await execAsync('docker container ls -a');
 
-        const containersToRemove = docker.containerList.filter((container) => containerList.includes(container().name));
+        const containersToRemove = docker.containerList.filter(
+            (container) => containerList.includes(container().name)
+        );
 
         if (containersToRemove.length > 0) {
             output('Removing docker containers...');

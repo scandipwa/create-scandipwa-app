@@ -1,29 +1,39 @@
-const execCommandAsync = require('@scandipwa/scandipwa-dev-utils/exec-command');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const config = require('../config');
+/* eslint-disable no-param-reassign */
+const { php } = require('../config');
+const { execAsyncSpawn } = require('../util/exec-async-command');
 
-const configure = async () => {
-    const loadedModules = await execCommandAsync(`${ config.php.binPath } -m`);
-    const missingExtensions = config.php.extensions.filter(({ name }) => !loadedModules.includes(name));
+const configure = {
+    title: 'Configuring PHP extensions',
+    task: async (ctx, task) => {
+        const loadedModules = await execAsyncSpawn(`${ php.binPath } -m`);
+        const missingExtensions = php.extensions.filter(({ name }) => !loadedModules.includes(name));
 
-    if (missingExtensions.length <= 0) {
+        if (missingExtensions.length === 0) {
         // if all extensions are installed - do not configure PHP
-        return;
-    }
+            task.skip();
+            return;
+        }
 
-    try {
-        // TODO: check if this works?
-        await Promise.all(missingExtensions.map(({ name, options }) => (
-            execCommandAsync(
-                `source ~/.phpbrew/bashrc && \
-                    phpbrew use ${ config.php.version } && \
-                    phpbrew ext install ${ name }${ options ? ` -- ${ options }` : ''}`,
-            )
-        )));
-    } catch (e) {
-        logger.logN(e);
-        logger.error('Something went wrong during the extension installation.');
-        // TODO: add more detailed logs
+        try {
+            // eslint-disable-next-line no-restricted-syntax
+            for (const { name, options } of missingExtensions) {
+                // eslint-disable-next-line no-await-in-loop
+                await execAsyncSpawn(`source ~/.phpbrew/bashrc && \
+                phpbrew use ${ php.version } && \
+                phpbrew ext install ${ name }${ options ? ` -- ${ options }` : ''}`,
+                {
+                    callback: (t) => {
+                        task.output = t;
+                    }
+                });
+            }
+        } catch (e) {
+            task.report(e);
+            throw new Error('Something went wrong during the extension installation.');
+        }
+    },
+    options: {
+        bottomBar: 10
     }
 };
 

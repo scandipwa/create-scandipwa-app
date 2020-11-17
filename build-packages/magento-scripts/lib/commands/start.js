@@ -2,29 +2,25 @@
 const { getAvailablePorts } = require('./lib/util/get-ports');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { Listr } = require('listr2');
-const macosVersion = require('macos-version');
+// const macosVersion = require('macos-version');
 const { getApplicationConfig, defaultConfig, saveApplicationConfig } = require('../util/application-config');
 const openBrowser = require('../util/open-browser');
 const { startPhpFpmTask } = require('../../tasks/php-fpm');
-const {
-    deployDockerNetworkTask,
-    deployDockerVolumesTask,
-    deployDockerContainersTask,
-    checkDockerInstallTask
-} = require('../../tasks/docker');
-const { installPhp } = require('../../tasks/php');
-const { checkComposerTask } = require('../../tasks/composer');
-const {
-    setPortConfigTask,
-    setNginxConfigTask,
-    setPhpFpmConfigTask,
-    setPhpConfigTask
-} = require('../config');
+const { createCacheFolderTask } = require('../../tasks/cache');
 const {
     installMagento,
     setupMagento
 } = require('../magento');
-const { createCacheFolderTask } = require('../../tasks/cache');
+const { installComposer } = require('../composer');
+const { startServices } = require('../docker');
+const { installPhp } = require('../php');
+const {
+    createPortConfig,
+    createNginxConfig,
+    createPhpFpmConfig,
+    createPhpConfig
+} = require('../file-system');
+const { checkRequirements } = require('../requirements');
 
 module.exports = (yargs) => {
     yargs.command('start', 'Deploy the application.', (yargs) => {
@@ -59,59 +55,10 @@ module.exports = (yargs) => {
         );
     }, async () => {
         const tasks = new Listr([
-            {
-                title: 'Choose Magento Version',
-                task: async (ctx, task) => {
-                    ctx.magentoVersion = await task.prompt({
-                        type: 'Select',
-                        message: 'Choose Magento Version',
-                        choices: [
-                            {
-                                name: '2.4.0',
-                                message: '2.4.0'
-                            },
-                            {
-                                name: '2.4.1',
-                                message: '2.4.1'
-                            }
-                        ]
-                    });
-                }
-            },
             createCacheFolderTask,
-            {
-                title: 'Checking os',
-                task: (ctx, task) => {
-                    const osCheckTasks = [
-                        checkDockerInstallTask,
-                        installPhp,
-                        checkComposerTask
-                    ];
-
-                    if (macosVersion.isMacOS) {
-                        osCheckTasks.unshift({
-                            title: 'Check macos version',
-                            task: () => {
-                                const minimumVersion = '10.5';
-                                if (macosVersion.assertGreaterThanOrEqualTo(minimumVersion)) {
-                                // check if the version is above 10.5
-                                    logger.error(
-                                        'Please update your system!',
-                                        `MacOS bellow version ${ logger.style.misc(minimumVersion) } is not supported.`
-                                    );
-
-                                    throw new Error('Unsupported macos version');
-                                }
-                            }
-                        });
-                    }
-
-                    return task.newListr(osCheckTasks, {
-                        concurrent: false,
-                        exitOnError: true
-                    });
-                }
-            },
+            checkRequirements,
+            installComposer,
+            installPhp,
             {
                 title: 'Checking app config',
                 task: async (ctx, task) => {
@@ -201,7 +148,30 @@ module.exports = (yargs) => {
                         throw new Error('User have chosen to create config later.');
                     }
                 }
-            }, {
+            },
+            {
+                title: 'Choose Magento Version',
+                task: async (ctx, task) => {
+                    const { magentoVersion } = await task.prompt({
+                        type: 'Select',
+                        message: 'Choose Magento Version',
+                        name: 'magentoVersion',
+                        choices: [
+                            {
+                                name: '2.4.0',
+                                message: '2.4.0'
+                            },
+                            {
+                                name: '2.4.1',
+                                message: '2.4.1'
+                            }
+                        ]
+                    });
+
+                    ctx.magentoVersion = magentoVersion;
+                }
+            },
+            {
                 title: 'Get available ports',
                 task: async (ctx) => {
                     ctx.ports = await getAvailablePorts();
@@ -210,10 +180,10 @@ module.exports = (yargs) => {
             {
                 title: 'Preparing file system',
                 task: async (ctx, task) => task.newListr([
-                    setPortConfigTask,
-                    setNginxConfigTask,
-                    setPhpFpmConfigTask,
-                    setPhpConfigTask
+                    createPortConfig,
+                    createNginxConfig,
+                    createPhpFpmConfig,
+                    createPhpConfig
                 ], {
                     concurrent: true,
                     rendererOptions: {
@@ -225,21 +195,7 @@ module.exports = (yargs) => {
             },
             installMagento,
             startPhpFpmTask,
-            {
-                title: 'Start docker services',
-                task: async (ctx, task) => task.newListr([
-                    deployDockerNetworkTask,
-                    deployDockerVolumesTask,
-                    deployDockerContainersTask
-                ], {
-                    concurrent: false,
-                    exitOnError: true,
-                    rendererOptions: {
-                        collapse: false
-                    },
-                    ctx
-                })
-            },
+            startServices,
             setupMagento,
             {
                 title: 'Open browser',
