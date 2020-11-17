@@ -6,7 +6,7 @@
     "bin": "./index.js",
     "license": "OSL-3.0",
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "^0.0.11",
+        "@scandipwa/scandipwa-dev-utils": "0.0.11",
         "semver": "^7.3.2",
         "yargs": "^16.1.0"
     },

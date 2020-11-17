@@ -10,7 +10,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "^0.0.11",
+        "@scandipwa/scandipwa-dev-utils": "0.0.11",
         "eta": "^1.11.0",
         "command-exists": "^1.2.9",
         "semver": "^7.3.2",
