@@ -1,29 +1,30 @@
 const { execAsyncSpawn } = require('./exec-async-command');
 const {
-    php: { phpBinPath },
-    composer: { composerBinPath },
-    appPath
+    php,
+    composer,
+    config: { magentoDir }
 } = require('../config');
 /**
  * Execute composer command
  * @param {String} command composer command
  * @param {Object} options
+ * @param {Boolean} options.throwNonZeroCode Throw if command return non 0 code.
  */
-const runComposerCommand = async (command, options = {}) => execAsyncSpawn(`${phpBinPath} ${composerBinPath} ${command}`, {
-    ...options,
-    cwd: appPath
-});
+const runComposerCommand = async (command, options = {}) => {
+    const {
+        throwNonZeroCode = true
+    } = options;
+    const { code, result } = execAsyncSpawn(`${php.binPath} ${composer.binPath} ${command}`, {
+        ...options,
+        cwd: magentoDir
+    });
 
-const runComposerCommandSafe = async (command, options) => {
-    try {
-        const result = await runComposerCommand(command, options);
-        return result;
-    } catch (e) {
-        return e;
+    if (throwNonZeroCode && code !== 0) {
+        throw new Error(`Code: ${code}
+        Response: ${result}`);
     }
+
+    return { code, result };
 };
 
-module.exports = {
-    runComposerCommand,
-    runComposerCommandSafe
-};
+module.exports = runComposerCommand;

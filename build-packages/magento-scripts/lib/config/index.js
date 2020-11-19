@@ -14,7 +14,7 @@ const config = {
     // TODO: get more unique prefix
     prefix: path.parse(process.cwd()).name,
     magentoDir: path.join(process.cwd(), 'src'),
-    templateDir: path.join(__dirname, 'template'),
+    templateDir: path.join(__dirname, 'templates'),
     cacheDir: path.join(process.cwd(), 'node_modules', '.create-scandipwa-app-cache')
 };
 

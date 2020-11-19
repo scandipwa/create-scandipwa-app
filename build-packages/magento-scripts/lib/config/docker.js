@@ -55,7 +55,7 @@ module.exports = (app, config) => {
         }
     };
 
-    const getContainers = (ports) => ({
+    const getContainers = (ports = {}) => ({
         nginx: {
             ports: [`${ ports.app }:80`],
             mountVolumes: [

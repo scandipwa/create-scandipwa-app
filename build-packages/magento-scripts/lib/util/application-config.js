@@ -1,7 +1,7 @@
-const pathExists = require('./path-exists');
 const path = require('path');
 const fs = require('fs');
-const { cachePath } = require('../config');
+const { config } = require('../config');
+const { pathExists } = require('fs-extra');
 
 const defaultConfig = {
     magento: {
@@ -19,17 +19,22 @@ const defaultConfig = {
  * Get application config from cache folder
  */
 const getApplicationConfig = async () => {
-    const configExists = await pathExists(path.join(cachePath, 'app-config.json'));
+    const configExists = await pathExists(path.join(config.cacheDir, 'app-config.json'));
 
     if (configExists) {
-        return JSON.parse(await fs.promises.readFile(path.join(cachePath, 'app-config.json'), 'utf-8'));
+        return JSON.parse(await fs.promises.readFile(path.join(config.cacheDir, 'app-config.json'), 'utf-8'));
     }
 
     return null;
 };
 
-const saveApplicationConfig = async (config) => {
-    await fs.promises.writeFile(path.join(cachePath, 'app-config.json'), JSON.stringify(config, null, 2), 'utf-8');
+const saveApplicationConfig = async (appConfig) => {
+    await fs.promises.writeFile(
+        path.join(config.cacheDir, 'app-config.json'),
+        JSON.stringify(appConfig, null, 2),
+        'utf-8'
+    );
+
     return true;
 };
 

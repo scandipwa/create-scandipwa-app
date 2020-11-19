@@ -1,7 +1,6 @@
-const createDirSafe = require('./create-dir-safe');
-const pathExists = require('./path-exists');
 const eta = require('eta');
 const fs = require('fs');
+const { pathExists } = require('fs-extra');
 
 const setConfigFile = async ({
     configPathname,
@@ -21,7 +20,10 @@ const setConfigFile = async ({
     const compliedConfig = await eta.render(configTemplate, { ports, date: new Date().toUTCString(), ...templateArgs });
 
     if (dirName) {
-        await createDirSafe(dirName);
+        const dirExists = await pathExists(dirName);
+        if (!dirExists) {
+            await fs.promises.mkdir(dirName, { recursive: true });
+        }
     }
     await fs.promises.writeFile(configPathname, compliedConfig, { encoding: 'utf-8' });
 

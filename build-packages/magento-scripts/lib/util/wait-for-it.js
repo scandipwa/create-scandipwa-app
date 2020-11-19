@@ -1,4 +1,3 @@
-// const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const net = require('net');
 
 const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout));

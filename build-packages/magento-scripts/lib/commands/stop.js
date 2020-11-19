@@ -1,11 +1,11 @@
 const { Listr } = require('listr2');
-const { stopPhpFpmTask } = require('../../tasks/php-fpm');
 const { stopServices } = require('../docker');
+const { stopPhpFpm } = require('../php-fpm');
 
 module.exports = (yargs) => {
     yargs.command('stop', 'Stop the application.', () => {}, async () => {
         const tasks = new Listr([
-            stopPhpFpmTask,
+            stopPhpFpm,
             stopServices
         ], {
             concurrent: false,

@@ -1,38 +1,34 @@
 /* eslint-disable no-param-reassign */
-const { getAvailablePorts } = require('./lib/util/get-ports');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { Listr } = require('listr2');
-// const macosVersion = require('macos-version');
-const { getApplicationConfig, defaultConfig, saveApplicationConfig } = require('../util/application-config');
-const openBrowser = require('../util/open-browser');
-const { startPhpFpmTask } = require('../../tasks/php-fpm');
-const { createCacheFolderTask } = require('../../tasks/cache');
 const {
-    installMagento,
-    setupMagento
-} = require('../magento');
+    getApplicationConfig,
+    defaultConfig,
+    saveApplicationConfig
+} = require('../util/application-config');
+const { getAvailablePorts } = require('../util/ports');
+const openBrowser = require('../util/open-browser');
+
 const { installComposer } = require('../composer');
 const { startServices } = require('../docker');
 const { installPhp } = require('../php');
-const {
-    createPortConfig,
-    createNginxConfig,
-    createPhpFpmConfig,
-    createPhpConfig
-} = require('../file-system');
 const { checkRequirements } = require('../requirements');
+const { createCacheFolder } = require('../cache');
+const { startPhpFpm } = require('../php-fpm');
+const { prepareFileSystem } = require('../file-system');
+const { installMagento, setupMagento } = require('../magento');
 
 module.exports = (yargs) => {
     yargs.command('start', 'Deploy the application.', (yargs) => {
-        yargs.option(
-            'detached',
-            {
-                alias: 'd',
-                describe: 'Run application in detached mode.',
-                type: 'boolean',
-                default: false
-            }
-        );
+        // yargs.option(
+        //     'detached',
+        //     {
+        //         alias: 'd',
+        //         describe: 'Run application in detached mode.',
+        //         type: 'boolean',
+        //         default: false
+        //     }
+        // );
 
         yargs.option(
             'restart',
@@ -53,10 +49,11 @@ module.exports = (yargs) => {
                 nargs: 1
             }
         );
-    }, async () => {
+    }, async (args = {}) => {
         const tasks = new Listr([
-            createCacheFolderTask,
+            createCacheFolder,
             checkRequirements,
+            getAvailablePorts,
             installComposer,
             installPhp,
             {
@@ -169,32 +166,12 @@ module.exports = (yargs) => {
                     });
 
                     ctx.magentoVersion = magentoVersion;
+                    task.title = `Using Magento ${magentoVersion}`;
                 }
             },
-            {
-                title: 'Get available ports',
-                task: async (ctx) => {
-                    ctx.ports = await getAvailablePorts();
-                }
-            },
-            {
-                title: 'Preparing file system',
-                task: async (ctx, task) => task.newListr([
-                    createPortConfig,
-                    createNginxConfig,
-                    createPhpFpmConfig,
-                    createPhpConfig
-                ], {
-                    concurrent: true,
-                    rendererOptions: {
-                        collapse: false
-                    },
-                    exitOnError: true,
-                    ctx
-                })
-            },
+            prepareFileSystem,
             installMagento,
-            startPhpFpmTask,
+            startPhpFpm,
             startServices,
             setupMagento,
             {
@@ -202,17 +179,17 @@ module.exports = (yargs) => {
                 task: async (ctx) => {
                     openBrowser(`http://localhost:${ctx.ports.app}`);
                 }
-            }], {
+            }
+        ], {
             concurrent: false,
             exitOnError: true,
-            ctx: {},
+            ctx: { ...args },
             rendererOptions: { collapse: false }
         });
 
         try {
             await tasks.run();
         } catch (e) {
-            logger.error(e);
             tasks.err.forEach((error) => {
                 logger.error(error);
             });

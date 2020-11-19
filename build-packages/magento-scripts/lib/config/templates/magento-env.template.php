@@ -82,7 +82,7 @@ return [
         'persisted-query' => [
             'redis' => [
                 'host' => 'redis',
-                'port' => '6379',
+                'port' => '<%= it.ports.redis %>',
                 'database' => '5',
                 'scheme' => 'tcp'
             ]
