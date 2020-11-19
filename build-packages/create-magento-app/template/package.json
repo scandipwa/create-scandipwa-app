@@ -5,8 +5,6 @@
     "scripts": {
         "start": "magento-scripts start",
         "stop": "magento-scripts stop",
-        "restart": "magento-scripts restart",
-        "cleanup": "magento-scripts cleanup",
         "cli": "magento-scripts cli"
     },
     "scandipwa": {
