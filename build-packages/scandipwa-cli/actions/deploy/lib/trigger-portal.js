@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const portalUrl = 'https://newrmportal.indvp.swk8s.com/api/static-content/';
+const portalUrl = process.env.PORTAL_URL || 'https://newrmportal.indvp.swk8s.com/api/static-content/';
 
 const triggerPortal = async (path, body) => {
     const options = {

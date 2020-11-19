@@ -17,7 +17,7 @@ const uploadFile = async (filename, uploadUrl) => {
         body: bufferContent
     });
 
-    logger.log(`Code upload result: ${statusText}. Code: ${status}`);
+    logger.log(`Code upload result: ${logger.style.misc(statusText)}. Code: ${logger.style.misc(status)}`);
 };
 
 module.exports = uploadFile;
