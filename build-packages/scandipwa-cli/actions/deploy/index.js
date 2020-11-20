@@ -110,7 +110,7 @@ const deploy = async (argv) => {
 };
 
 module.exports = (yargs) => {
-    yargs.command('deploy', 'Deploy an application.', (yargs) => {
+    yargs.command('deploy', 'Deploy an application.', () => {
         // TODO: implement new branch creation
         // yargs.option('branch', {
         //     describe: 'Branch name. Default: master.'
