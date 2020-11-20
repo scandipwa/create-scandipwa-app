@@ -1,29 +1,33 @@
 const { execAsyncSpawn } = require('./exec-async-command');
-const {
-    php: { phpBinPath },
-    magento: { magentoBinPath },
-    appPath
-} = require('../config');
+const { getConfigFromMagentoVersion, magento } = require('../config');
 /**
  * Execute magento command
  * @param {String} command magento command
  * @param {Object} options
+ * @param {Boolean} options.throwNonZeroCode Throw if command return non 0 code.
+ * @param {String} options.magentoVersion Magento version for config
  */
-const runMagentoCommand = async (command, options = {}) => execAsyncSpawn(`${phpBinPath} ${magentoBinPath} ${command}`, {
-    ...options,
-    cwd: appPath
-});
+const runMagentoCommand = async (command, options = {}) => {
+    const {
+        throwNonZeroCode = true,
+        magentoVersion = magento.version
+    } = options;
+    const {
+        php,
+        config: { magentoDir }
+    } = getConfigFromMagentoVersion(magentoVersion);
+    const { code, result } = await execAsyncSpawn(`${php.binPath} ${magento.binPath} ${command}`, {
+        ...options,
+        cwd: magentoDir,
+        withCode: true
+    });
 
-const runMagentoCommandSafe = async (command, options) => {
-    try {
-        const result = await runMagentoCommand(command, options);
-        return result;
-    } catch (e) {
-        return e;
+    if (throwNonZeroCode && code !== 0) {
+        throw new Error(`Code: ${code}
+        Response: ${result}`);
     }
+
+    return { code, result };
 };
 
-module.exports = {
-    runMagentoCommand,
-    runMagentoCommandSafe
-};
+module.exports = runMagentoCommand;
