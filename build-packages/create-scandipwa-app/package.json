@@ -6,8 +6,8 @@
     "bin": "./index.js",
     "license": "OSL-3.0",
     "dependencies": {
-        "@scandipwa/csa-generator-theme": "^0.0.8",
-        "@scandipwa/scandipwa-dev-utils": "^0.0.11",
+        "@scandipwa/csa-generator-theme": "0.0.8",
+        "@scandipwa/scandipwa-dev-utils": "0.0.11",
         "semver": "^7.3.2",
         "yargs": "^16.1.0"
     },
