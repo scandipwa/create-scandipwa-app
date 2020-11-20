@@ -38,11 +38,11 @@ const execCommandAsync = (
 
     child.on('close', (code) => {
         if (code !== 0) {
-            reject(output);
+            reject(isReturnLogs ? output : code);
             return;
         }
 
-        resolve(output);
+        resolve(isReturnLogs ? output : code);
     });
 });
 

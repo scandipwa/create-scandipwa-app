@@ -4,9 +4,9 @@
     "version": "0.0.7",
     "license": "OSL-3.0",
     "dependencies": {
-        "@scandipwa/craco": "^0.0.4",
-        "@scandipwa/scandipwa-scripts": "^2.0.3",
-        "@scandipwa/webpack-fallback-plugin": "^1.1.2"
+        "@scandipwa/craco": "0.0.4",
+        "@scandipwa/scandipwa-scripts": "2.0.3",
+        "@scandipwa/webpack-fallback-plugin": "1.1.2"
     },
     "scandipwa": {
         "type": "extension",

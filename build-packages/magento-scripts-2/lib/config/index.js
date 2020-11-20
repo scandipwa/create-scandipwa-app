@@ -1,11 +1,12 @@
 const path = require('path');
 const getDockerConfig = require('./docker');
-const applicationConfig = require('./application');
+const versionConfigs = require('./version-config');
 const getPhpConfig = require('./php');
 const getComposerConfig = require('./composer');
+const getApplicationConfig = require('./application');
 
-// TODO: get application version from config
-const applicationVersion = '2.4.1';
+// TODO: ask for this version?
+const magentoVersion = '2.4.1';
 
 const config = {
     // TODO: get more unique prefix
@@ -15,13 +16,19 @@ const config = {
     cacheDir: path.join(process.cwd(), 'node_modules', '.create-scandipwa-app-cache')
 };
 
-const application = applicationConfig[applicationVersion];
-const php = getPhpConfig(application, config);
-const docker = getDockerConfig(application, config);
-const composer = getComposerConfig(application, config);
-const magento = { version: applicationVersion };
+const versionConfig = versionConfigs[magentoVersion];
+const php = getPhpConfig(versionConfig, config);
+const docker = getDockerConfig(versionConfig, config);
+const composer = getComposerConfig(versionConfig, config);
+const app = getApplicationConfig(versionConfig, config);
+
+const magento = {
+    version: magentoVersion,
+    binPath: path.join(config.magentoDir, 'bin', 'magento')
+};
 
 module.exports = {
+    app,
     config,
     magento,
     php,
