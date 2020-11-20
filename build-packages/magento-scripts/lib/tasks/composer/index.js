@@ -1,16 +1,15 @@
 /* eslint-disable no-param-reassign */
 const fs = require('fs');
 const { pathExists } = require('fs-extra');
-const { composer, php } = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
-const getComposerVersion = async () => {
+const getComposerVersion = async ({ composer, php }) => {
     const composerVersionOutput = await execAsyncSpawn(`${php.binPath} ${composer.binPath} --version --no-ansi`);
     const composerVersion = composerVersionOutput.match(/Composer version ([\d.]+)/i)[1];
     return composerVersion;
 };
 
-const createComposerDir = async () => {
+const createComposerDir = async ({ composer }) => {
     const dirExists = await pathExists(composer.dirPath);
     if (!dirExists) {
         await fs.promises.mkdir(composer.dirPath, { recursive: true });
@@ -19,12 +18,13 @@ const createComposerDir = async () => {
 
 const installComposer = {
     title: 'Installing composer',
-    task: async (ctx, task) => {
+    task: async ({ config }, task) => {
+        const { composer, php } = config;
         const hasComposerInCache = await pathExists(composer.binPath);
 
         if (!hasComposerInCache) {
             task.title = 'Installing Composer';
-            await createComposerDir();
+            await createComposerDir({ composer });
             try {
                 await execAsyncSpawn(
                     `${ php.binPath } -r "copy('https://getcomposer.org/composer-1.phar', '${ composer.binPath }');"`
@@ -43,7 +43,7 @@ const installComposer = {
             }
         }
 
-        const composerVersion = await getComposerVersion();
+        const composerVersion = await getComposerVersion({ composer, php });
         task.title = `Using composer version ${composerVersion}`;
     }
 };

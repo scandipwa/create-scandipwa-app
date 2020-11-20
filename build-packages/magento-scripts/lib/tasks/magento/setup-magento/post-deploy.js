@@ -1,9 +1,9 @@
-const runMagentoCommand = require('../../util/run-magento');
+const runMagentoCommand = require('../../../util/run-magento');
 
 module.exports = {
     title: 'Disabling maintenance mode',
-    task: async () => {
-        await runMagentoCommand('maintenance:disable');
-        await runMagentoCommand('info:adminuri');
+    task: async ({ magentoVersion }) => {
+        await runMagentoCommand('maintenance:disable', { magentoVersion });
+        await runMagentoCommand('info:adminuri', { magentoVersion });
     }
 };

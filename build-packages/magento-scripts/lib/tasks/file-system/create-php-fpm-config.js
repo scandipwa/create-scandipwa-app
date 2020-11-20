@@ -1,15 +1,15 @@
 const path = require('path');
-const { config, php } = require('../config');
-const setConfigFile = require('../util/set-config');
+const { config } = require('../../config');
+const setConfigFile = require('../../util/set-config');
 
 const createPhpFpmConfig = {
     title: 'Setting php-fpm config',
-    task: async (ctx, task) => {
+    task: async ({ ports, config: { php } }, task) => {
         try {
             await setConfigFile({
                 configPathname: php.fpmConfPath,
                 template: path.join(config.templateDir, 'php-fpm.template.conf'),
-                ports: ctx.ports,
+                ports,
                 overwrite: true
             });
         } catch (e) {

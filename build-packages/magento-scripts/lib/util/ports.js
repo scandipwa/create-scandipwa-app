@@ -45,9 +45,9 @@ const getAvailablePorts = {
 
             if (ctx.port && ports.app !== ctx.port) {
                 throw new Error(`Port ${ctx.port} is not available`);
+            } else if (ctx.port) {
+                ports.app = ctx.port;
             }
-
-            ports.app = ctx.port;
 
             await savePortsConfig(ports);
             ctx.ports = ports;
@@ -63,9 +63,9 @@ const getAvailablePorts = {
 
         if (ctx.port && availablePorts.app !== ctx.port) {
             throw new Error(`Port ${ctx.port} is not available`);
+        } else if (ctx.port) {
+            availablePorts.app = ctx.port;
         }
-
-        availablePorts.app = ctx.port;
 
         await savePortsConfig(availablePorts);
         ctx.ports = availablePorts;

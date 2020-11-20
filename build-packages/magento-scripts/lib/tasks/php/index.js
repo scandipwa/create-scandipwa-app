@@ -1,14 +1,14 @@
 /* eslint-disable no-param-reassign */
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { pathExists } = require('fs-extra');
-const { execAsyncSpawn } = require('../util/exec-async-command');
-const { php } = require('../config');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 const compile = require('./compile');
 const configure = require('./configure');
 
 const installPhp = {
     title: 'Install PHP',
     task: async (ctx, task) => {
+        const { config: { php } } = ctx;
         const phpBinExists = await pathExists(php.binPath);
 
         if (phpBinExists) {

@@ -9,9 +9,7 @@ module.exports = (app, config) => {
         }
     } = app;
 
-    const {
-        cacheDir
-    } = config;
+    const { cacheDir } = config;
 
     const phpVersionDir = path.join(
         os.homedir(),

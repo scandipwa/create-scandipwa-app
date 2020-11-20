@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
-const runMagentoCommand = require('../../util/run-magento');
+const runMagentoCommand = require('../../../util/run-magento');
 
 const disablePageCache = {
     title: 'Disabling full_page cache',
-    task: async (ctx, task) => {
+    task: async ({ magentoVersion }, task) => {
         try {
             await runMagentoCommand('cache:disable full_page', {
+                magentoVersion,
                 callback: (t) => {
                     task.output = t;
                 }

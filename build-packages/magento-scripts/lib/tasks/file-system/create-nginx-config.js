@@ -1,16 +1,16 @@
 const path = require('path');
-const { config } = require('../config');
-const setConfigFile = require('../util/set-config');
+const { config } = require('../../config');
+const setConfigFile = require('../../util/set-config');
 
 const createNginxConfig = {
     title: 'Setting nginx config',
-    task: async (ctx, task) => {
+    task: async ({ ports }, task) => {
         try {
             await setConfigFile({
                 configPathname: path.join(config.cacheDir, 'nginx', 'conf.d', 'default.conf'),
                 dirName: path.join(config.cacheDir, 'nginx', 'conf.d'),
                 template: path.join(config.templateDir, 'nginx.template.conf'),
-                ports: ctx.ports,
+                ports,
                 overwrite: true,
                 templateArgs: {
                     mageRoot: config.magentoDir

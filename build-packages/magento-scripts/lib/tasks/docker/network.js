@@ -1,9 +1,8 @@
-const { docker } = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const createNetwork = {
     title: 'Deploying docker network',
-    task: async (ctx, task) => {
+    task: async ({ config: { docker } }, task) => {
         const networkList = await execAsyncSpawn('docker network ls');
 
         if (networkList.includes(docker.network.name)) {
@@ -17,7 +16,7 @@ const createNetwork = {
 
 const removeNetwork = {
     title: 'Remove docker network',
-    task: async (ctx, task) => {
+    task: async ({ config: { docker } }, task) => {
         const networkList = await execAsyncSpawn('docker network ls');
 
         if (!networkList.includes(docker.network.name)) {

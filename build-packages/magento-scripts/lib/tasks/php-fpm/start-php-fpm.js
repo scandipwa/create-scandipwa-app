@@ -1,10 +1,9 @@
 /* eslint-disable no-param-reassign */
-const { php } = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const startPhpFpm = {
     title: 'Starting php-fpm',
-    task: async (ctx, task) => {
+    task: async ({ config: { php } }, task) => {
         try {
             await execAsyncSpawn(
                 `${php.fpmBinPath} --php-ini ${php.iniPath} --fpm-config ${php.fpmConfPath} --pid ${php.fpmPidFilePath} "$@"`,

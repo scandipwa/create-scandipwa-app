@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
-const runMagentoCommand = require('../../util/run-magento');
+const runMagentoCommand = require('../../../util/run-magento');
 const installMagento = require('./install-magento');
 
 const migrateDatabase = {
     title: 'Migrating database',
-    task: async (ctx, task) => {
+    task: async ({ ports, magentoVersion, magentoConfig: app }, task) => {
         const { code } = await runMagentoCommand('setup:db:status', {
+            magentoVersion,
             throwNonZeroCode: false
         });
 
@@ -16,12 +17,13 @@ const migrateDatabase = {
             break;
         }
         case 1: {
-            await installMagento(ctx.ports);
+            await installMagento({ ports, magentoVersion, app });
             break;
         }
         case 2: {
             task.output = 'Upgrading magento';
             await runMagentoCommand('setup:upgrade', {
+                magentoVersion,
                 callback: (t) => {
                     task.output = t;
                 }

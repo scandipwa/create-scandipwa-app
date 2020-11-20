@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
-const runComposerCommand = require('../../util/run-composer');
+const runComposerCommand = require('../../../util/run-composer');
 
 const installTheme = {
     title: 'Installing theme',
-    task: async (ctx, task) => {
-        const { composerData } = ctx;
+    task: async ({ composerData, magentoVersion }, task) => {
         try {
             await runComposerCommand(`require ${composerData.name}`, {
+                magentoVersion,
                 callback: (t) => {
                     task.output = t;
                 }

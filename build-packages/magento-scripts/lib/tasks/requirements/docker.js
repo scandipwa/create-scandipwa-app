@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const getDockerVersion = async () => {
     const { result, code } = await execAsyncSpawn('docker -v', {

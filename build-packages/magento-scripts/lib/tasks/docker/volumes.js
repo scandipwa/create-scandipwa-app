@@ -1,5 +1,4 @@
-const config = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const create = ({
     driver,
@@ -17,10 +16,10 @@ const create = ({
 
 const createVolumes = {
     title: 'Creating volumes',
-    task: async (ctx, task) => {
+    task: async ({ config: { docker } }, task) => {
         const volumeList = await execAsyncSpawn('docker volume ls -q');
 
-        const missingVolumes = Object.values(config.docker.volumes).filter(
+        const missingVolumes = Object.values(docker.volumes).filter(
             ({ name }) => !volumeList.includes(name)
         );
 
@@ -35,10 +34,10 @@ const createVolumes = {
 
 const removeVolumes = {
     title: 'Removing volumes',
-    task: async (ctx, task) => {
+    task: async ({ config: { docker } }, task) => {
         const volumeList = await execAsyncSpawn('docker volume ls -q');
 
-        const deployedVolumes = Object.values(config.docker.volumes).filter(
+        const deployedVolumes = Object.values(docker.volumes).filter(
             ({ name }) => volumeList.includes(name)
         );
 

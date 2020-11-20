@@ -1,12 +1,11 @@
 /* eslint-disable no-param-reassign */
-const runMagentoCommand = require('../../util/run-magento');
+const runMagentoCommand = require('../../../util/run-magento');
 
 /**
  * TODO move this block inside theme folder as post installation command
  */
 const themeSubtask = {
-    task: async (ctx, task) => {
-        const { ports } = ctx;
+    task: async ({ ports }, task) => {
         task.output = 'Setting up redis...';
 
         try {

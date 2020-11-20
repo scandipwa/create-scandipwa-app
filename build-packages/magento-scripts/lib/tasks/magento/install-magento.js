@@ -1,18 +1,15 @@
 /* eslint-disable no-param-reassign */
-const { pathExists } = require('fs-extra');
-const {
-    config: { magentoDir },
-    php,
-    composer,
-    magento
-} = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
-const matchFilesystem = require('../util/match-filesystem');
+const os = require('os');
+const path = require('path');
+const fs = require('fs');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
+const runComposerCommand = require('../../util/run-composer');
+const matchFilesystem = require('../../util/match-filesystem');
 
 const installMagento = {
     title: 'Installing Magento',
-    task: async (ctx, task) => {
-        const isFsMatching = await matchFilesystem(magentoDir, {
+    task: async ({ magentoVersion, config: { config } }, task) => {
+        const isFsMatching = await matchFilesystem(config.magentoDir, {
             'app/etc': [
                 'env.php'
             ],
@@ -26,27 +23,28 @@ const installMagento = {
             return;
         }
 
-        const appDirExists = await pathExists(magentoDir);
-
-        if (appDirExists) {
-            throw new Error(`App directory exists but magento is not installed.
-
-            This can happen if installation was aborted by error or by user.
-            To fix that we suggest to run command npm run cleanup --force which will fully remove src directory.`);
-        }
-
         task.title = 'Creating Magento project...';
-        await execAsyncSpawn(
-            `${php.binPath} ${composer.binPath} create-project \
-        --repository=https://repo.magento.com/ \
-        magento/project-community-edition=${magento.version} \
-        src`,
+        const tempDir = path.join(os.tmpdir(), `magento-tmpdir-${Date.now()}`);
+        await runComposerCommand(
+            `create-project \
+        --repository=https://repo.magento.com/ magento/project-community-edition=${magentoVersion} \
+        --no-install \
+        "${tempDir}"`,
+            { magentoVersion }
+        );
+
+        await execAsyncSpawn(`mv ${path.join(tempDir, 'composer.json')} ${process.cwd()}`);
+
+        await fs.promises.rmdir(tempDir);
+
+        await runComposerCommand('install',
             {
+                magentoVersion,
                 callback: (t) => {
                     task.output = t;
                 }
-            }
-        );
+            });
+
         task.title = 'Magento installed!';
     },
     options: {

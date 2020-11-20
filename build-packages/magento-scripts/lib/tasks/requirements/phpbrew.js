@@ -1,5 +1,5 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const checkPhpbrew = {
     title: 'Checking phpbrew',

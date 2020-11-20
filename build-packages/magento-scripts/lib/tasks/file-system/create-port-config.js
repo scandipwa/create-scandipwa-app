@@ -1,6 +1,6 @@
 const path = require('path');
-const { config } = require('../config');
-const setConfigFile = require('../util/set-config');
+const { config } = require('../../config');
+const setConfigFile = require('../../util/set-config');
 
 const createPortConfig = {
     title: 'Setting port config',

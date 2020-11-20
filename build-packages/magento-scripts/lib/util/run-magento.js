@@ -1,19 +1,21 @@
 const { execAsyncSpawn } = require('./exec-async-command');
-const {
-    php,
-    magento,
-    config: { magentoDir }
-} = require('../config');
+const { getConfigFromMagentoVersion, magento } = require('../config');
 /**
  * Execute magento command
  * @param {String} command magento command
  * @param {Object} options
  * @param {Boolean} options.throwNonZeroCode Throw if command return non 0 code.
+ * @param {String} options.magentoVersion Magento version for config
  */
 const runMagentoCommand = async (command, options = {}) => {
     const {
-        throwNonZeroCode = true
+        throwNonZeroCode = true,
+        magentoVersion = magento.version
     } = options;
+    const {
+        php,
+        config: { magentoDir }
+    } = getConfigFromMagentoVersion(magentoVersion);
     const { code, result } = await execAsyncSpawn(`${php.binPath} ${magento.binPath} ${command}`, {
         ...options,
         cwd: magentoDir,

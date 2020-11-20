@@ -1,10 +1,9 @@
 /* eslint-disable no-param-reassign */
-const { php } = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const configure = {
     title: 'Configuring PHP extensions',
-    task: async (ctx, task) => {
+    task: async ({ config: { php } }, task) => {
         const loadedModules = await execAsyncSpawn(`${ php.binPath } -m`);
         const missingExtensions = php.extensions.filter(({ name }) => !loadedModules.includes(name));
 

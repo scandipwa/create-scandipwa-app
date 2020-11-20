@@ -1,5 +1,5 @@
 const { Listr } = require('listr2');
-const linkTheme = require('../theme/link-theme');
+const linkTheme = require('../tasks/theme/link-theme');
 
 module.exports = (yargs) => {
     yargs.command('link', 'Link with ScandiPWA application.', () => {}, async () => {
@@ -8,7 +8,7 @@ module.exports = (yargs) => {
         ], {
             concurrent: false,
             exitOnError: true,
-            ctx: {},
+            ctx: { throwMagentoVersionMissing: true },
             rendererOptions: { collapse: false }
         });
 

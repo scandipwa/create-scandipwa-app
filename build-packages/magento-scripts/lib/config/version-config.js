@@ -1,4 +1,4 @@
-module.exports = {
+const magentoVersionConfigs = {
     '2.4.1': {
         php: {
             version: '7.3.22',
@@ -18,4 +18,11 @@ module.exports = {
         mysql: '5.7',
         elasticsearch: '7.6.2'
     }
+};
+
+const allVersions = Object.keys(magentoVersionConfigs);
+
+module.exports = {
+    magentoVersionConfigs,
+    allVersions
 };

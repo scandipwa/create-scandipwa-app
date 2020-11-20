@@ -1,5 +1,4 @@
-const { docker } = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const run = (options) => {
     const {
@@ -51,8 +50,7 @@ const stop = async (containers) => {
 
 const startContainers = {
     title: 'Starting containers',
-    task: async (ctx, task) => {
-        const { ports } = ctx;
+    task: async ({ ports, config: { docker } }, task) => {
         const containerList = await execAsyncSpawn('docker container ls');
 
         const missingContainers = Object.values(docker.getContainers(ports)).filter(
@@ -71,8 +69,7 @@ const startContainers = {
 
 const stopContainers = {
     title: 'Stopping containers',
-    task: async (ctx, task) => {
-        const { ports } = ctx;
+    task: async ({ ports, config: { docker } }, task) => {
         const containerList = await execAsyncSpawn('docker container ls -a');
 
         const runningContainers = Object.values(docker.getContainers(ports)).filter(

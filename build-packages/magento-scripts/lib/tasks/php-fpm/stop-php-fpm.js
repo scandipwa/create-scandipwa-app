@@ -1,13 +1,12 @@
 const { pathExists } = require('fs-extra');
 const fs = require('fs');
-const { execAsyncSpawn } = require('../util/exec-async-command');
-const { php } = require('../config');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
-const getProcessId = async () => {
-    const pidExists = await pathExists(php.fpmPidFilePath);
+const getProcessId = async (fpmPidFilePath) => {
+    const pidExists = await pathExists(fpmPidFilePath);
 
     if (pidExists) {
-        return fs.promises.readFile(php.fpmPidFilePath, 'utf-8');
+        return fs.promises.readFile(fpmPidFilePath, 'utf-8');
     }
 
     return null;
@@ -15,9 +14,9 @@ const getProcessId = async () => {
 
 const stopPhpFpmTask = {
     title: 'Stopping php-fpm',
-    task: async (ctx, task) => {
+    task: async ({ config: { php } }, task) => {
         try {
-            const processId = await getProcessId();
+            const processId = await getProcessId(php.fpmPidFilePath);
             if (!processId) {
                 task.skip();
                 return;

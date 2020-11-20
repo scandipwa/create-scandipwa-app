@@ -1,12 +1,6 @@
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { Listr } = require('listr2');
-const { removeCacheFolder } = require('../cache');
-const { stopServices } = require('../docker');
-const { removeVolumes } = require('../docker/volumes');
-const {
-    uninstallMagento,
-    removeMagento
-} = require('../magento');
-const { stopPhpFpm } = require('../php-fpm');
+const cleanup = require('../tasks/cleanup');
 
 module.exports = (yargs) => {
     yargs.command(
@@ -22,13 +16,9 @@ module.exports = (yargs) => {
             }
         ),
         async (args) => {
+            logger.warn('you should not use this command.');
             const tasks = new Listr([
-                stopPhpFpm,
-                stopServices,
-                removeVolumes,
-                removeCacheFolder,
-                uninstallMagento,
-                removeMagento
+                cleanup
             ], {
                 concurrent: false,
                 exitOnError: true,

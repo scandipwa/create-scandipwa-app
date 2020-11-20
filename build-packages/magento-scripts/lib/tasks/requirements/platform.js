@@ -1,6 +1,6 @@
 const os = require('os');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { platforms } = require('../config');
+const { platforms } = require('../../config');
 
 const checkPlatform = {
     title: 'Checking platform',

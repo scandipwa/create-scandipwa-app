@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
-const runMagentoCommand = require('../../util/run-magento');
+const runMagentoCommand = require('../../../util/run-magento');
 
 const upgradeMagento = {
     title: 'Upgrading magento',
-    task: async (ctx, task) => {
+    task: async ({ magentoVersion }, task) => {
         try {
             await runMagentoCommand('setup:upgrade', {
+                magentoVersion,
                 callback: (t) => {
                     task.output = t;
                 }

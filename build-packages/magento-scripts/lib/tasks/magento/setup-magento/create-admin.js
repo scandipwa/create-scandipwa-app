@@ -1,12 +1,13 @@
-const runMagentoCommand = require('../../util/run-magento');
-const { app } = require('../../config');
+const runMagentoCommand = require('../../../util/run-magento');
 
 const answers = ['Couldn\'t find the user account', 'was not locked or could not be unlocked'];
 
 module.exports = {
     title: 'Creating admin user',
-    task: async (ctx, task) => {
-        const { result: userStatus } = await runMagentoCommand(`admin:user:unlock ${app.user} -n`);
+    task: async ({ magentoVersion, magentoConfig: app }, task) => {
+        const { result: userStatus } = await runMagentoCommand(`admin:user:unlock ${app.user} -n`, {
+            magentoVersion
+        });
 
         if (answers.some((a) => userStatus.includes(a))) {
             task.skip();
@@ -19,7 +20,8 @@ module.exports = {
         --admin-email='${ app.email }' \
         --admin-user='${ app.user }' \
         --admin-password='${ app.password }'`, {
-            throwNonZeroCode: false
+            throwNonZeroCode: false,
+            magentoVersion
         });
     }
 };

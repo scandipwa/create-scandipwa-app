@@ -1,12 +1,11 @@
 /* eslint-disable no-param-reassign */
 const os = require('os');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { php } = require('../config');
-const { execAsyncSpawn } = require('../util/exec-async-command');
+const { execAsyncSpawn } = require('../../util/exec-async-command');
 
 const compile = {
     title: 'Compiling PHP',
-    task: async (ctx, task) => {
+    task: async ({ config: { php } }, task) => {
         let phpCompileCommand = `phpbrew install -j $(nproc) ${ php.version } \
         +bz2 +bcmath +ctype +curl -intl +dom +filter +hash \
         +iconv +json +mbstring +openssl +xml +mysql \
