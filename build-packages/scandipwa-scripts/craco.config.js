@@ -10,6 +10,7 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 const I18nPlugin = require('@scandipwa/webpack-i18n-plugin');
+const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 
 const {
     ESLINT_MODES,
@@ -30,6 +31,11 @@ module.exports = () => {
 
     // TODO: check SWorker
 
+    // Use ESLint config defined in package.json or fallback to default one
+    const eslintConfig = getPackageJson(process.cwd()).eslintConfig || {
+        extends: [require.resolve('@scandipwa/eslint-config')]
+    };
+
     return {
         paths: {
             // Simply fallback to core, this why it's here
@@ -44,11 +50,7 @@ module.exports = () => {
         eslint: {
             mode: ESLINT_MODES.extends,
             // Ensure we are extending the scandipwa-eslint config
-            configure: {
-                extends: [
-                    require.resolve('@scandipwa/eslint-config')
-                ]
-            }
+            configure: eslintConfig
         },
         babel: {
             plugins: [
