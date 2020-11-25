@@ -7,8 +7,8 @@ const semver = require('semver');
 
 const actions = [
     require('./actions/extension'),
-    require('./actions/magento'),
-    require('./actions/override'),
+    // require('./actions/magento'),
+    // require('./actions/override'),
     require('./actions/deploy')
 ];
 
@@ -30,7 +30,9 @@ const actions = [
         logger.log(); // add empty line
     }
 
-    yargs.scriptName('scandipwa');
+    yargs
+        .scriptName('scandipwa')
+        .demandCommand();
 
     // Initialize program actions
     actions.forEach((action) => action(yargs));
