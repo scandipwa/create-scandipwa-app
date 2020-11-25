@@ -1,3 +1,0 @@
-alias php="$HOME/.phpbrew/php/php-7.3.22/bin/php"
-alias magento="php $PWD/bin/magento"
-alias composer="php $PWD/node_modules/.create-scandipwa-app-cache/composer/composer.phar"
