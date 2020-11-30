@@ -1,7 +1,0 @@
-{
-    "app": <%= it.ports.app %>,
-    "fpm": <%= it.ports.fpm %>,
-    "mysql": <%= it.ports.mysql %>,
-    "redis": <%= it.ports.redis %>,
-    "elasticsearch": <%= it.ports.elasticsearch %>
-  }

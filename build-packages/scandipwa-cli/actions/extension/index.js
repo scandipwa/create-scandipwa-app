@@ -128,15 +128,17 @@ module.exports = (yargs) => {
             });
         }, installExtension);
 
-        yargs.command('search <query>', 'Search for available extension.', () => {}, (argv) => {
+        /* yargs.command('search <query>', 'Search for available extension.', () => {}, (argv) => {
             // TODO: implement search extension
             console.log('srch', argv);
-        });
+        }); */
 
         yargs.command('create <package>', 'Create and enable new ScandiPWA extension', (yargs) => {
             yargs.option('no-enable', {
                 describe: 'Do not enable installed extension.'
             });
         }, createExtension);
+
+        yargs.demandCommand();
     });
 };

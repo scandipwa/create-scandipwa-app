@@ -5,7 +5,7 @@ const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version'
 const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
-const DEFAULT_PROXY = 'http://scandipwapmrev.indvp.com';
+const DEFAULT_PROXY = 'https://scandipwapmrev.indvp.com';
 
 const greet = (
     name,
