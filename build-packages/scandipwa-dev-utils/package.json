@@ -18,6 +18,7 @@
         "create-filesystem.js",
         "install-deps.js",
         "get-context.js",
+        "escape-regex.js",
         "/lib"
     ],
     "dependencies": {
