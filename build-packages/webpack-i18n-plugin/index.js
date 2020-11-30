@@ -67,7 +67,7 @@ const addParsedVariableToModule = (parser, name) => {
     }
 
     const pathToTranslationFunction = path.join(__dirname, 'lib/translation-function.js');
-    const expression = `require('${ pathToTranslationFunction }')`;
+    const expression = `require(${ JSON.stringify(pathToTranslationFunction) })`;
     const deps = [];
 
     parser.parse(expression, {
