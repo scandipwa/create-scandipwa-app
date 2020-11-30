@@ -79,19 +79,10 @@ const getProperParentNode = (node) => {
 };
 
 const getNamespaceCommentForNode = (node, sourceCode) => {
-    const getNamespaceFromComments = (comments = []) => {
-        const comment = comments.find(
-            comment => comment.value.includes('@namespace')
-        );
-
-        if (!comment) {
-            return '';
-        }
-
-        return comment.value.split('@namespace').pop().trim();
-    }
+    const getNamespaceFromComments = (comments = []) => comments.find(
+        comment => comment.value.includes('@namespace')
+    );
     
-
     return getNamespaceFromComments(
         sourceCode.getCommentsBefore(getProperParentNode(node))
     );
@@ -201,12 +192,13 @@ module.exports = {
             types.PromiseHandlerArrowFunction,
             types.ExportedArrowFunction
         ].join(',')](node) {
-			const namespaceComment = getNamespaceCommentForNode(node, context.getSourceCode());
+            const namespaceComment = getNamespaceCommentForNode(node, context.getSourceCode()) || { value: '' };
+            const namespaceCommentString = namespaceComment.value.split('@namespace').pop().trim();
 
 			const namespace = extractNamespaceFromComment(namespaceComment);
 			const generatedNamespace = generateNamespace(node, context);
 
-            if (!namespaceComment) {
+            if (!namespaceCommentString) {
                 context.report({
                     node,
                     message: `Provide namespace for ${types.detectType(node)} by using @namespace magic comment`,
@@ -217,10 +209,7 @@ module.exports = {
 						generatedNamespace
 					) || []
                 });
-			} else if (generatedNamespace !== namespaceComment) {
-                console.log('>>>', generatedNamespace);
-                console.log('>>>', namespaceComment);
-
+			} else if (generatedNamespace !== namespaceCommentString) {
 				context.report({
                     node,
                     message: `Namespace for this node is not valid! Consider changing it to ${generatedNamespace}`,

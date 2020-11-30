@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 module.exports = (yargs) => {
     yargs.command('override <command>', 'Override a file', (yargs) => {
         yargs.command('theme', 'Select a parent theme as a target.', () => {}, (argv) => {
