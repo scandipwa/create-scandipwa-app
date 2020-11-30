@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 const I18nPlugin = require('@scandipwa/webpack-i18n-plugin');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
+const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
 
 const {
     ESLINT_MODES,
@@ -125,7 +126,7 @@ module.exports = () => {
 
                 // Inject extension import loader
                 webpackConfig.module.rules.push({
-                    test: new RegExp(path.join('util', 'Extensions', 'index.js')),
+                    test: new RegExp(escapeRegex(path.join('util', 'Extensions', 'index.js'))),
                     loader: '@scandipwa/webpack-extension-import-loader'
                 });
 

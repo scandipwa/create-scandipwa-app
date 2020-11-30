@@ -8,6 +8,8 @@ const {
     getExtensionProvisionedPath
 } = require('./lib/extensions');
 
+const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
+
 class FallbackPlugin {
     /**
      * Constructor, options provider
@@ -94,7 +96,7 @@ class FallbackPlugin {
      * @memberof FallbackPlugin
      */
     getRelativePathname(pathname) {
-        const isSrc = new RegExp(`${path.sep}src${path.sep}`).test(pathname);
+        const isSrc = new RegExp(escapeRegex(`${path.sep}src${path.sep}`)).test(pathname);
         const prefix = isSrc ? 'src' : 'public';
 
         // take the last occurrence of the prefix and get the path after it
@@ -128,7 +130,10 @@ class FallbackPlugin {
         }
 
         // all ".style" and "style/" must end with ".scss"
-        if ((new RegExp(`\\.style|style${path.sep}`)).test(pathname)) {
+        if (new RegExp([
+            escapeRegex('.style'),
+            escapeRegex(`style${ path.sep }`)
+        ].join('|')).test(pathname)) {
             return fs.existsSync(`${ pathname }.scss`);
         }
 

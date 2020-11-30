@@ -1,4 +1,5 @@
 const path = require('path');
+const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
 
 /**
  * Sources available for ScandiPWA Fallback mechanism
@@ -39,7 +40,10 @@ const prepareSources = (sources) => {
         },
         getRegexOf: {
             enumerable: false,
-            value: (source) => new RegExp(`${ path.join(sources[source], 'src') }|${ path.join(sources[source], 'public') }`)
+            value: (source) => new RegExp([
+                escapeRegex(path.join(sources[source], 'src')),
+                escapeRegex(path.join(sources[source], 'public'))
+            ].join('|'))
         }
     });
 
