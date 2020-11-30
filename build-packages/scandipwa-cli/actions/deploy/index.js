@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const shouldUseYarn = require('./should-use-yarn');
+const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const execCommandAsync = require('@scandipwa/scandipwa-dev-utils/exec-command');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
