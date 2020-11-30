@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
     "description": "Scripts and configuration used by CSA.",
-    "version": "2.0.7",
+    "version": "2.0.8",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
@@ -15,7 +15,7 @@
         "@babel/plugin-transform-async-to-generator": "^7.10.4",
         "@scandipwa/babel-plugin-middleware-decorator": "0.1.2",
         "@scandipwa/craco": "0.0.4",
-        "@scandipwa/eslint-config": "^0.1.5",
+        "@scandipwa/eslint-config": "^0.1.6",
         "@scandipwa/scandipwa-dev-utils": "^0.0.15",
         "@scandipwa/scandipwa-extensibility": "1.0.2",
         "@scandipwa/webpack-extension-import-loader": "^0.0.11",
