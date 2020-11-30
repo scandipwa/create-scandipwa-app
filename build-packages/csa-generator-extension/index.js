@@ -8,7 +8,7 @@ const greet = (
     pathname
 ) => {
     // logger.clear();
-    const relativePathname = `./${pathname}`;
+    const relativePathname = `.${ path.sep }${ pathname }`;
     logger.logN(`Success! Created ScandiPWA extension "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
 };
 

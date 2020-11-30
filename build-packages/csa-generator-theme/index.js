@@ -11,7 +11,7 @@ const greet = (
     name,
     pathname
 ) => {
-    const relativePathname = `./${pathname}`;
+    const relativePathname = `.${ path.sep }${ pathname }`;
     const displayedCommand = shouldUseYarn() ? 'yarn' : 'npm run';
 
     logger.logN(`Success! Created ScandiPWA theme "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);

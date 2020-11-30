@@ -26,9 +26,9 @@ const alias = require('./lib/alias');
 const when = require('./lib/when');
 
 module.exports = () => {
-    const abstractStyle = FallbackPlugin.getFallbackPathname('./src/style/abstract/_abstract.scss', sources);
-    const appIndexJs = FallbackPlugin.getFallbackPathname('./src/index.js', sources);
-    const appHtml = FallbackPlugin.getFallbackPathname('./public/index.html', sources);
+    const abstractStyle = FallbackPlugin.getFallbackPathname('src/style/abstract/_abstract.scss', sources);
+    const appIndexJs = FallbackPlugin.getFallbackPathname('src/index.js', sources);
+    const appHtml = FallbackPlugin.getFallbackPathname('public/index.html', sources);
 
     // TODO: check SWorker
 

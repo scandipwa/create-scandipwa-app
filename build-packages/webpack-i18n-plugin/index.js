@@ -66,7 +66,7 @@ const addParsedVariableToModule = (parser, name) => {
         return false;
     }
 
-    const pathToTranslationFunction = path.join(__dirname, './lib/translation-function.js');
+    const pathToTranslationFunction = path.join(__dirname, 'lib/translation-function.js');
     const expression = `require('${ pathToTranslationFunction }')`;
     const deps = [];
 
@@ -112,7 +112,7 @@ class I18nPlugin {
                 type: 'note',
                 args: [
                     `New locale ${ logger.style.misc(locale) } was discovered.`,
-                    `Created translation file ${ logger.style.file(`./${pathToTry}`) }.`,
+                    `Created translation file ${ logger.style.file(`.${ path.sep }${ pathToTry }`) }.`,
                     `Provide translations for ${ logger.style.misc(locale) } locale there.`
                 ]
             });
