@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 module.exports = (yargs) => {
     yargs.command('magento <command>', 'Interact with Magento', (yargs) => {
         yargs.command('cli', 'Open an interactive console.', () => {}, (argv) => {
