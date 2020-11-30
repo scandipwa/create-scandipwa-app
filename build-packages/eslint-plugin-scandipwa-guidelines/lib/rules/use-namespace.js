@@ -79,9 +79,18 @@ const getProperParentNode = (node) => {
 };
 
 const getNamespaceCommentForNode = (node, sourceCode) => {
-    const getNamespaceFromComments = (comments = []) => comments.find(
-        comment => comment.value.includes('@namespace')
-    );
+    const getNamespaceFromComments = (comments = []) => {
+        const comment = comments.find(
+            comment => comment.value.includes('@namespace')
+        );
+
+        if (!comment) {
+            return '';
+        }
+
+        return comment.value.split('@namespace').pop().trim();
+    }
+    
 
     return getNamespaceFromComments(
         sourceCode.getCommentsBefore(getProperParentNode(node))
@@ -209,6 +218,9 @@ module.exports = {
 					) || []
                 });
 			} else if (generatedNamespace !== namespaceComment) {
+                console.log('>>>', generatedNamespace);
+                console.log('>>>', namespaceComment);
+
 				context.report({
                     node,
                     message: `Namespace for this node is not valid! Consider changing it to ${generatedNamespace}`,
