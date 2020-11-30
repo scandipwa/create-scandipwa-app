@@ -15,6 +15,7 @@ const path = require('path');
 const fs = require('fs');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 
 // TODO: rework it to use JSON imports, so Webpack can track changes on the fly
 // TODO: add unused, missing translation notification system
@@ -95,13 +96,64 @@ const addParsedVariableToModule = (parser, name) => {
  * @constructor
  */
 class I18nPlugin {
-    constructor(options) {
-        const { locale } = options || {};
+    constructor(options = {}) {
+        const { locale } = options;
         this.afterEmitLogs = [];
-        this.translationMap = this.loadTranslationJSON(locale);
+        this.translationMap = this.loadTranslations(locale);
     }
 
-    loadTranslationJSON(locale) {
+    /**
+     * Get and merge all the translations from the theme and the extensions
+     * Theme's translations always overwrite the extensions' ones
+     * @param {string} locale
+     * @returns {object}
+     */
+    loadTranslations(locale) {
+        const baseTranslation = this.loadBaseTranslationJSON(locale);
+        const extensionsTranslations = this.loadExtensionsTranslations(locale);
+
+        return extensionsTranslations.reduce(
+            (acc, cur) => ({ ...cur, ...acc }),
+            baseTranslation
+        );
+    }
+
+    /**
+     * Get an array consisting of the extensions' translations for the given locale
+     * @param {string} locale
+     * @returns {object[]}
+     */
+    loadExtensionsTranslations(locale) {
+        return extensions.map(
+            (extension) => {
+                const pathToTry = path.join('i18n', `${locale}.json`);
+                const absolutePathToTry = path.join(extension.packagePath, pathToTry);
+
+                try {
+                    return require(absolutePathToTry);
+                } catch (err) {
+                    if (err.code !== 'MODULE_NOT_FOUND') {
+                        this.afterEmitLogs.push({
+                            type: 'note',
+                            args: [
+                                `Unable to load a translation from ${absolutePathToTry}.`,
+                                `Error: ${logger.style.misc(err.message)}`
+                            ]
+                        });
+                    }
+
+                    return {};
+                }
+            }
+        );
+    }
+
+    /**
+     * Get the theme's main translation file for the given locale
+     * @param {string} locale
+     * @returns {object}
+     */
+    loadBaseTranslationJSON(locale) {
         const pathToTry = path.join('i18n', `${locale}.json`);
         const absolutePathToTry = path.join(process.cwd(), pathToTry);
 
