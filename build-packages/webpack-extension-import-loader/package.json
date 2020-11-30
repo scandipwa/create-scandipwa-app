@@ -1,11 +1,11 @@
 {
     "name": "@scandipwa/webpack-extension-import-loader",
     "description": "Webpack extension import loader used by CSA.",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "main": "index.js",
     "license": "OSL-3.0",
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "^0.0.12"
+        "@scandipwa/scandipwa-dev-utils": "^0.0.13"
     },
     "publishConfig": {
         "access": "public"
