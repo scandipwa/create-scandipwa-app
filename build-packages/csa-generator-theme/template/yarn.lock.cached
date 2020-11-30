@@ -1431,10 +1431,10 @@
     lodash "^4.17.15"
     webpack-merge "^4.2.2"
 
-"@scandipwa/eslint-config@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@scandipwa/eslint-config/-/eslint-config-0.1.3.tgz#ef00d94e6e378a93a5c9d977c352b1f0dd62c829"
-  integrity sha512-kgZ/U/CjW8Z+MVFjV+LJqzeEwjGJWfU/yuQqET83pvOpt/Y6WU29ljjbz4jBoAO55PlpeKSAhBCs0m8hXHJHQA==
+"@scandipwa/eslint-config@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@scandipwa/eslint-config/-/eslint-config-0.1.4.tgz#97783eb5330ca03727cf90c5f91b0f572efa445c"
+  integrity sha512-xiKFWDuknFD5ckGHH32vFU3R97ZQRk4nBqfOopjxZOJ44EeKOospOKapSCXZf++5FpzyCpWu8UmA+FoxBVIRHQ==
   dependencies:
     "@scandipwa/eslint-plugin-scandipwa-guidelines" "2.0.2"
     "@typescript-eslint/eslint-plugin" "^4.5.0"
@@ -1460,10 +1460,10 @@
     eslint-traverse "^1.0.0"
     requireindex "~1.1.0"
 
-"@scandipwa/scandipwa-dev-utils@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-dev-utils/-/scandipwa-dev-utils-0.0.12.tgz#e9aa2cbccd73a9515f5d02f00e007aa827cd87e7"
-  integrity sha512-cqYvLkI1gAHg/vZHnw1o6aV5WUwV0hy/LREMi2gP3+WynbKdeFIIkVujreGgOeCnIORrturpiURuIOEU5rP+JA==
+"@scandipwa/scandipwa-dev-utils@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-dev-utils/-/scandipwa-dev-utils-0.0.13.tgz#174a53c6bb6778171df2cb069f5d43246ac5de22"
+  integrity sha512-kJqRjMFk0HqoZs7xa52cvVA0goWySwuZO749/hWf1j9/iM88XH89Rduv2yBzS2nCReYRerQvxJHO6WiVX/KI9Q==
   dependencies:
     chalk "^4.1.0"
     cross-spawn "^7.0.3"
@@ -1478,24 +1478,24 @@
   resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-extensibility/-/scandipwa-extensibility-1.0.2.tgz#7fef00f9b5fb5ea9d634cdf96a916c59e8486b0a"
   integrity sha512-3YUKzeXbAqrXcwh2zUyJsamARwl42fD256E0hryDIikx2+CNj4BKvHVMhtfYMRNhb64Vv/BRPa0BoRkw8HAwXA==
 
-"@scandipwa/webpack-extension-import-loader@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@scandipwa/webpack-extension-import-loader/-/webpack-extension-import-loader-0.0.8.tgz#e51ec220f358223534a1396114201eb2f378b989"
-  integrity sha512-Qvo43mQ+Ivt8LG8C+XFL7KRIDRj4H5eoHiVhq94fKHG6ZGOwVjsrrIayrN6tsvijcVGojpaueIU2Ea2qYeiU2A==
+"@scandipwa/webpack-extension-import-loader@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@scandipwa/webpack-extension-import-loader/-/webpack-extension-import-loader-0.0.9.tgz#e9c20add354cdb69cb06c1c3da42b88ca9d6d0dc"
+  integrity sha512-i8oRO9pYF+mheU1iFP/khgBm1q7uulCVsOmjQTXq6Nud+5vJ0mlfLtIsubK+xTe1IdmkvWDqcPHwtKIkLzS6UA==
   dependencies:
-    "@scandipwa/scandipwa-dev-utils" "^0.0.12"
+    "@scandipwa/scandipwa-dev-utils" "^0.0.13"
 
 "@scandipwa/webpack-fallback-plugin@1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@scandipwa/webpack-fallback-plugin/-/webpack-fallback-plugin-1.1.2.tgz#dd0ba066ac4c09449f955e0c7f9d7d1b0421df99"
   integrity sha512-iVJv+IGIqH6triqzMjWLhSbU8x6qAFWSa3WUbB2s1/euQoKbsNbNQkhHZepQ+w7JKbkFqknA6FgC5BjHYxsSLQ==
 
-"@scandipwa/webpack-i18n-plugin@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@scandipwa/webpack-i18n-plugin/-/webpack-i18n-plugin-0.0.12.tgz#5def917e2b65501a25f185645c78efa9feae4d2c"
-  integrity sha512-jpJ3KhfokFHrUpostHxdwkMSrOBDXAl62yaEWAJ2UQhUAAEMGRmm8TN14McgCZJaMCCEDhweerceiUp0b/bRHQ==
+"@scandipwa/webpack-i18n-plugin@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@scandipwa/webpack-i18n-plugin/-/webpack-i18n-plugin-0.0.13.tgz#9590c6376a3d4ba9f54058715cd1871e45acefe7"
+  integrity sha512-D31eahPk9rDs+ZvSytWp3RffwWMZC4R4nEG///RrGOQAvxdSZHKuv6Y3b7ozgzMo/xAPkaxwMq0UcltrmKnB7Q==
   dependencies:
-    "@scandipwa/scandipwa-dev-utils" "^0.0.12"
+    "@scandipwa/scandipwa-dev-utils" "^0.0.13"
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
