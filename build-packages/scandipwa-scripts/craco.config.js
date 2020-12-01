@@ -77,6 +77,8 @@ module.exports = () => {
                 // In development mode, provide simple translations and React
                 new webpack.ProvidePlugin({
                     React: 'react',
+                    // legacy support
+                    PureComponent: ['react', 'PureComponent'],
                     middleware: [require.resolve('@scandipwa/scandipwa-extensibility/middleware'), 'default'],
                     Extensible: [require.resolve('@scandipwa/scandipwa-extensibility/Extensible'), 'default']
                 }),
