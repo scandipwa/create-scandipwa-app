@@ -52,12 +52,6 @@ const fileSystemCreator = (templateOptions) => (
             templateOptions
         );
 
-        filesystem.copyTpl(
-            templatePath('yarn.lock.cached'),
-            destinationPath('yarn.lock'),
-            templateOptions
-        );
-
         filesystem.copy(
             templatePath('sample.gitignore'),
             destinationPath('.gitignore')
