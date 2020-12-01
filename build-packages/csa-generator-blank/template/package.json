@@ -8,8 +8,8 @@
     },
     "dependencies": {
         "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>",
-        "@scandipwa/framework": "^0.0.0",
-        "@scandipwa/router": "^0.0.0"
+        "@scandipwa/framework": "^0.0.3",
+        "@scandipwa/router": "^0.0.3"
     },
     "scandipwa": {
         "themeAlias": "Blank",
