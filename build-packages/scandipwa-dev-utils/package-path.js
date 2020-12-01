@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const getPackagePath = (packageName) => {
+const getPackagePath = (packageName, context = process.cwd()) => {
     const possibleRelativePath = path.join(
         process.cwd(),
         packageName,
@@ -29,7 +29,7 @@ const getPackagePath = (packageName) => {
 
     // This is not a local package, path based extension -> try loading it as a package
     return path.join(
-        require.resolve(`${ packageName }/package.json`, { paths: [process.cwd()] }),
+        require.resolve(`${ packageName }/package.json`, { paths: [context] }),
         '..'
     );
 };
