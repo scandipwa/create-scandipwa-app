@@ -75,6 +75,13 @@ const generateCorruptedJsonWriteError = (jsonPath, error) => ({
     ]
 });
 
+const generateMissingTranslationNote = (key) => ({
+    type: 'note',
+    args: [
+        `Translation for phrase "${logger.style.misc(key)}" is missing!`
+    ]
+});
+
 /**
  * @param {object} options object
  * @constructor
@@ -190,8 +197,8 @@ class I18nPlugin {
      * @returns {object}
      */
     loadChildTranslation(locale) {
-        const pathToTry = path.join();
-        const absolutePathToTry = path.join(process.cwd(), 'i18n', `${locale}.json`);
+        const pathToTry = path.join('i18n', `${locale}.json`);
+        const absolutePathToTry = path.join(process.cwd(), pathToTry);
 
         // Handle translation for the given locale exists
         if (fs.existsSync(absolutePathToTry)) {
@@ -309,6 +316,10 @@ class I18nPlugin {
         missingTranslations.forEach((translation) => {
             existingTranslations[translation] = null;
         });
+
+        Object.entries(existingTranslations)
+            .filter(([, value]) => !value)
+            .forEach(([key]) => this.afterEmitLogs.push(generateMissingTranslationNote(key)));
 
         writeJson(
             filepath,
