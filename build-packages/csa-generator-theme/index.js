@@ -4,8 +4,18 @@ const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesyst
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
 const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const { getComposerDeps } = require('@scandipwa/scandipwa-dev-utils/composer');
+const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
 const DEFAULT_PROXY = 'https://scandipwapmrev.indvp.com';
+
+const ensureLatestComposer = (pathname) => {
+    const composerDeps = getComposerDeps(pathname);
+    const composerPath = path.join(pathname, 'composer.json');
+    const composerJson = require(composerPath);
+    composerJson.require = Object.fromEntries(composerDeps);
+    writeJson(composerPath, composerJson);
+};
 
 const greet = (
     name,
@@ -27,8 +37,9 @@ const greet = (
     );
 
     logger.note(
-        'To bundle your application as the valid Magento 2 theme',
-        `install extension ${ logger.style.misc('@scandipwa/m2-theme') }!`,
+        'To bundle your application as the Magento 2 theme',
+        `add ${ logger.style.command('BUILD_MODE=magento') } environment variable before running the script!`,
+        '',
         `Your Magento 2 theme name is "${ logger.style.misc(`scandipwa/${ name }`) }"!`
     );
 
@@ -143,6 +154,8 @@ const run = async (options) => {
 
     // install dependencies
     await installDeps(destination);
+
+    await ensureLatestComposer(destination);
 
     // greet the user
     greet(name, pathname);
