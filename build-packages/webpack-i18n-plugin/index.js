@@ -16,51 +16,7 @@ const fs = require('fs');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
-
-// TODO: rework it to use JSON imports, so Webpack can track changes on the fly
-// TODO: add unused, missing translation notification system
-
-const appendTranslations = (filename, content, missingTranslations) => {
-    const translations = content ? JSON.parse(content) : {};
-
-    missingTranslations.forEach((translation) => {
-        translations[translation] = null;
-    });
-
-    writeJson(
-        filename,
-        translations
-    );
-};
-
-const appendTranslationsToFiles = (missingTranslations) => {
-    const dirname = path.join(process.cwd(), 'i18n');
-
-    fs.readdir(dirname, (err, filenames) => {
-        if (err) {
-            logger.logN(err);
-            return;
-        }
-
-        filenames
-            .filter((name) => /\.json$/.test(name))
-            .forEach((filename) => {
-                const pathToFile = path.join(dirname, filename);
-
-                fs.readFile(pathToFile, 'utf-8', (err, content) => {
-                    if (err) {
-                        logger.logN(err);
-                    } else {
-                        appendTranslations(
-                            pathToFile,
-                            content,
-                            missingTranslations
-                        );
-                    }
-                });
-            });
-    });
-};
+const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 
 const addParsedVariableToModule = (parser, name) => {
     if (!parser.state.current.addVariable) {
@@ -92,6 +48,19 @@ const addParsedVariableToModule = (parser, name) => {
 };
 
 /**
+ * Generate error for the after emit logs
+ * @param {string} jsonPath
+ * @param {object} error
+ */
+const generateCorruptedJsonError = (jsonPath, error) => ({
+    type: 'error',
+    args: [
+        `Unable to load a translation from ${jsonPath}.`,
+        `Error: ${logger.style.misc(error.message)}`
+    ]
+});
+
+/**
  * @param {object} options object
  * @constructor
  */
@@ -102,49 +71,102 @@ class I18nPlugin {
         this.translationMap = this.loadTranslations(locale);
     }
 
-    /**
-     * Get and merge all the translations from the theme and the extensions
-     * Theme's translations always overwrite the extensions' ones
-     * @param {string} locale
-     * @returns {object}
-     */
     loadTranslations(locale) {
-        const baseTranslation = this.loadBaseTranslationJSON(locale);
-        const extensionsTranslations = this.loadExtensionsTranslations(locale);
+        const childTranslation = this.loadChildTranslation(locale);
+        const parentTranslations = this.loadTranslationBatch(this.getParentRoots(), locale);
+        const extensionTranslations = this.loadTranslationBatch(this.getExtensionRoots(), locale);
 
-        return extensionsTranslations.reduce(
-            (acc, cur) => ({ ...cur, ...acc }),
-            baseTranslation
-        );
+        return this.mergeTranslations(childTranslation, parentTranslations, extensionTranslations);
     }
 
     /**
-     * Get an array consisting of the extensions' translations for the given locale
-     * @param {string} locale
-     * @returns {object[]}
+     * Get and merge all the available translations
+     * Merging the translations into one object as follows:
+     * All the null values are ignored and do not override anything
+     * The first translation that is found gets applied to the application
+     * Search sequence:
+     *   1. child theme
+     *   2. parent themes from youngest ("father") to oldest ("great-great-grandfather")
+     *   3. extensions
+     * @param {object} childTranslation
+     * @param {object[]} parentTranslations
+     * @param {object[]} extensionsTranslations
      */
-    loadExtensionsTranslations(locale) {
-        return extensions.map(
-            (extension) => {
-                const pathToTry = path.join('i18n', `${locale}.json`);
-                const absolutePathToTry = path.join(extension.packagePath, pathToTry);
+    mergeTranslations(childTranslation, parentTranslations, extensionsTranslations) {
+        /* eslint-disable guard-for-in, no-restricted-syntax, no-continue, no-param-reassign */
+        // The higher place in this array => the higher the override priority
+        const translations = [
+            childTranslation,
+            ...parentTranslations,
+            ...extensionsTranslations
+        ].reduce(
+            (mergedTranslations, incomingTranslations) => {
+                for (const key in incomingTranslations) {
+                    // Skip if already translated
+                    if (mergedTranslations[key]) {
+                        continue;
+                    }
 
-                try {
-                    return require(absolutePathToTry);
-                } catch (err) {
-                    if (err.code !== 'MODULE_NOT_FOUND') {
+                    const incomingValue = incomingTranslations[key];
+                    // Override by value if currently translated as `null` => notify!
+                    if (mergedTranslations[key] === null && incomingValue !== null) {
                         this.afterEmitLogs.push({
                             type: 'note',
                             args: [
-                                `Unable to load a translation from ${absolutePathToTry}.`,
-                                `Error: ${logger.style.misc(err.message)}`
+                                `Overriding translation's ${logger.style.code(null)} value for key ${logger.style.code(key)} with ${logger.style.code(incomingValue)}`
                             ]
                         });
                     }
 
-                    return {};
+                    // Write the new value into translation object
+                    mergedTranslations[key] = incomingValue;
                 }
+
+                return mergedTranslations;
+            },
+            {}
+        );
+
+        return translations;
+        /* eslint-enable guard-for-in, no-restricted-syntax, no-continue, no-param-reassign */
+    }
+
+    getParentRoots() {
+        return parentThemeHelper.getParentThemePaths(process.cwd());
+    }
+
+    getExtensionRoots() {
+        return extensions.map((extension) => extension.packagePath);
+    }
+
+    /**
+     * Fails silently on MODULE_NOT_FOUND
+     * Logs parsing errors to the afterEmitLogs
+     * Default value {}
+     * @param {string} pathToTry
+     */
+    loadJson(pathToTry) {
+        try {
+            return require(pathToTry);
+        } catch (error) {
+            if (error.code !== 'MODULE_NOT_FOUND') {
+                this.afterEmitLogs.push(generateCorruptedJsonError(pathToTry, error));
             }
+
+            return {};
+        }
+    }
+
+    /**
+     * Load translation from array of package root paths
+     * @param {string[]} packagePaths
+     * @param {string} locale
+     */
+    loadTranslationBatch(packagePaths, locale) {
+        return packagePaths.map(
+            (packagePath) => this.loadJson(
+                path.join(packagePath, 'i18n', `${locale}.json`)
+            )
         );
     }
 
@@ -153,29 +175,31 @@ class I18nPlugin {
      * @param {string} locale
      * @returns {object}
      */
-    loadBaseTranslationJSON(locale) {
-        const pathToTry = path.join('i18n', `${locale}.json`);
-        const absolutePathToTry = path.join(process.cwd(), pathToTry);
+    loadChildTranslation(locale) {
+        const pathToTry = path.join();
+        const absolutePathToTry = path.join(process.cwd(), 'i18n', `${locale}.json`);
 
-        try {
-            return require(absolutePathToTry);
-        } catch (e) {
-            this.afterEmitLogs.push({
-                type: 'note',
-                args: [
-                    `New locale ${ logger.style.misc(locale) } was discovered.`,
-                    `Created translation file ${ logger.style.file(`.${ path.sep }${ pathToTry }`) }.`,
-                    `Provide translations for ${ logger.style.misc(locale) } locale there.`
-                ]
-            });
-
-            writeJson(
-                absolutePathToTry,
-                {}
-            );
-
-            return {};
+        // Handle translation for the given locale exists
+        if (fs.existsSync(absolutePathToTry)) {
+            return this.loadJson(absolutePathToTry);
         }
+
+        // Handle no translation in child theme
+        this.afterEmitLogs.push({
+            type: 'note',
+            args: [
+                `New locale ${ logger.style.misc(locale) } was discovered.`,
+                `Created translation file ${ logger.style.file(`.${ path.sep }${ pathToTry }`) }.`,
+                `Provide translations for ${ logger.style.misc(locale) } locale there.`
+            ]
+        });
+
+        writeJson(
+            absolutePathToTry,
+            {}
+        );
+
+        return {};
     }
 
     apply(compiler) {
@@ -185,7 +209,7 @@ class I18nPlugin {
 
         // save missing translations into JSON
         compiler.hooks.emit.tap(plugin, () => {
-            appendTranslationsToFiles(missingTranslations);
+            this.appendTranslationsToFiles(missingTranslations);
 
             setTimeout(() => {
                 this.afterEmitLogs.forEach(
@@ -256,6 +280,42 @@ class I18nPlugin {
                     .tap(plugin, handler);
             }
         );
+    }
+
+    // TODO: add unused, missing translation notification system
+    appendTranslationsToFile(filepath, missingTranslations) {
+        let existingTranslations;
+        try {
+            existingTranslations = require(filepath);
+        } catch (err) {
+            this.afterEmitLogs.push(generateCorruptedJsonError(filepath, err));
+            return;
+        }
+
+        missingTranslations.forEach((translation) => {
+            existingTranslations[translation] = null;
+        });
+
+        writeJson(
+            filepath,
+            existingTranslations
+        );
+    }
+
+    appendTranslationsToFiles(missingTranslations) {
+        const dirname = path.join(process.cwd(), 'i18n');
+
+        fs.readdir(dirname, (err, filenames) => {
+            if (err) {
+                logger.logN(err);
+                return;
+            }
+
+            filenames
+                .filter((name) => /\.json$/.test(name))
+                .map((filename) => path.join(dirname, filename))
+                .forEach((filepath) => this.appendTranslationsToFile(filepath, missingTranslations));
+        });
     }
 }
 
