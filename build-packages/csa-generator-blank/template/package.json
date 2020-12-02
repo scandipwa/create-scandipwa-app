@@ -13,6 +13,7 @@
     },
     "scandipwa": {
         "themeAlias": "Blank",
+        "type": "theme",
         "extensions": {
             "@scandipwa/framework": true,
             "@scandipwa/router": true
