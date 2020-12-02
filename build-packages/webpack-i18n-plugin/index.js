@@ -52,11 +52,26 @@ const addParsedVariableToModule = (parser, name) => {
  * @param {string} jsonPath
  * @param {object} error
  */
-const generateCorruptedJsonError = (jsonPath, error) => ({
+const generateCorruptedJsonReadError = (jsonPath, error) => ({
     type: 'error',
     args: [
         `Unable to load a translation from ${jsonPath}.`,
-        `Error: ${logger.style.misc(error.message)}`
+        `Error: ${logger.style.misc(error.message)}`,
+        'Restart the compilation after you apply the corresponding changes.'
+    ]
+});
+
+/**
+ * Generate error for the after emit logs
+ * @param {string} jsonPath
+ * @param {object} error
+ */
+const generateCorruptedJsonWriteError = (jsonPath, error) => ({
+    type: 'error',
+    args: [
+        `Unable to update a translation in ${jsonPath}.`,
+        `Error: ${logger.style.misc(error.message)}`,
+        'Restart the compilation after you apply the corresponding changes.'
     ]
 });
 
@@ -99,33 +114,32 @@ class I18nPlugin {
             childTranslation,
             ...parentTranslations,
             ...extensionsTranslations
-        ].reduce(
-            (mergedTranslations, incomingTranslations) => {
-                for (const key in incomingTranslations) {
-                    // Skip if already translated
-                    if (mergedTranslations[key]) {
-                        continue;
-                    }
-
-                    const incomingValue = incomingTranslations[key];
-                    // Override by value if currently translated as `null` => notify!
-                    if (mergedTranslations[key] === null && incomingValue !== null) {
-                        this.afterEmitLogs.push({
-                            type: 'note',
-                            args: [
-                                `Overriding translation's ${logger.style.code(null)} value for key ${logger.style.code(key)} with ${logger.style.code(incomingValue)}`
-                            ]
-                        });
-                    }
-
-                    // Write the new value into translation object
-                    mergedTranslations[key] = incomingValue;
+        ].reduce((mergedTranslations, incomingTranslations) => {
+            for (const key in incomingTranslations) {
+                // Skip if already translated
+                if (mergedTranslations[key]) {
+                    continue;
                 }
 
-                return mergedTranslations;
-            },
-            {}
-        );
+                const incomingValue = incomingTranslations[key];
+                // If currently translated as `null` and overriding with value => notify!
+                if (mergedTranslations[key] === null && incomingValue) {
+                    this.afterEmitLogs.push({
+                        type: 'note',
+                        args: [
+                            'Overriding translation for key '
+                            + `"${logger.style.misc(key)}": ${logger.style.misc(null)} => "${logger.style.misc(incomingValue)}" `
+                            + 'from a translation file with less priority.'
+                        ]
+                    });
+                }
+
+                // Write the new value into the translation object
+                mergedTranslations[key] = incomingValue;
+            }
+
+            return mergedTranslations;
+        }, {});
 
         return translations;
         /* eslint-enable guard-for-in, no-restricted-syntax, no-continue, no-param-reassign */
@@ -150,7 +164,7 @@ class I18nPlugin {
             return require(pathToTry);
         } catch (error) {
             if (error.code !== 'MODULE_NOT_FOUND') {
-                this.afterEmitLogs.push(generateCorruptedJsonError(pathToTry, error));
+                this.afterEmitLogs.push(generateCorruptedJsonReadError(pathToTry, error));
             }
 
             return {};
@@ -288,7 +302,7 @@ class I18nPlugin {
         try {
             existingTranslations = require(filepath);
         } catch (err) {
-            this.afterEmitLogs.push(generateCorruptedJsonError(filepath, err));
+            this.afterEmitLogs.push(generateCorruptedJsonWriteError(filepath, err));
             return;
         }
 
