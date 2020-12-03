@@ -89,12 +89,13 @@ class I18nPlugin {
     }
 
     loadTranslations(locale) {
+        this.locale = locale;
+
         const childTranslation = this.loadChildTranslation(locale);
         const parentTranslations = this.loadTranslationBatch(this.getParentRoots(), locale);
         const extensionTranslations = this.loadTranslationBatch(this.getExtensionRoots(), locale);
 
         this.baseTranslation = childTranslation;
-        this.locale = locale;
 
         return this.mergeTranslations(childTranslation, parentTranslations, extensionTranslations);
     }
@@ -204,6 +205,11 @@ class I18nPlugin {
             return this.loadJson(absolutePathToTry);
         }
 
+        // Do not create a translation file for the default locale
+        if (this.locale === DEFAULT_LOCALE) {
+            return {};
+        }
+
         // Handle no translation in child theme
         this.afterEmitLogs.push({
             type: 'note',
@@ -245,15 +251,11 @@ class I18nPlugin {
             // Do not generate locale file for the base locale
             // Do not notify about missing or unused translations
             // Because translations are not necessary for the base locale
-            if (this.locale === DEFAULT_LOCALE) {
-                this.emitLogs();
-                return true;
-            }
 
             /**
-             * Handle missing translations
+             * Handle missing translations for non-default locales
              */
-            if (missingTranslations.length) {
+            if (this.locale !== DEFAULT_LOCALE && missingTranslations.length) {
                 this.appendTranslationsToFiles(missingTranslations);
 
                 this.afterEmitLogs.push({
@@ -273,7 +275,6 @@ class I18nPlugin {
             if (unusedTranslationKeys.length) {
                 this.afterEmitLogs.push({
                     type: 'warn',
-                    hideForDefaultLocale: true,
                     args: [
                         `Found ${logger.style.code(unusedTranslationKeys.length)} unused translations!`,
                         'Consider removing them! See the list below.',
