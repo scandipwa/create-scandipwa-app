@@ -94,7 +94,10 @@ module.exports = () => {
                 // Show progress bar when building
                 new ProgressBarPlugin(),
 
-                new I18nPlugin({ locale: process.env.PWA_LOCALE })
+                new I18nPlugin({
+                    locale: process.env.PWA_LOCALE,
+                    defaultLocale: 'en_US'
+                })
             ],
             configure: (webpackConfig) => {
                 // Remove module scope plugin, it breaks FallbackPlugin and ProvidePlugin
