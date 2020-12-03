@@ -53,4 +53,4 @@ We'd love to have your helping hand on `create-scandipwa-app`! See [CONTRIBUTING
 
 ## License
 
-Create React App is open source software licensed as [OSL-3](./LICENSE).
+Create ScandiPWA App is open source software licensed as [OSL-3.0](./LICENSE).
