@@ -18,8 +18,6 @@ const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 
-const DEFAULT_LOCALE = 'en_US';
-
 const addParsedVariableToModule = (parser, name) => {
     if (!parser.state.current.addVariable) {
         return false;
@@ -83,17 +81,22 @@ const generateCorruptedJsonWriteError = (jsonPath, error) => ({
  */
 class I18nPlugin {
     constructor(options = {}) {
-        const { locale } = options;
+        const {
+            locale,
+            defaultLocale = 'en_US'
+        } = options;
+
+        this.locale = locale;
+        this.isDefaultLocale = locale === defaultLocale;
+
         this.afterEmitLogs = [];
-        this.translationMap = this.loadTranslations(locale);
+        this.translationMap = this.loadTranslations();
     }
 
-    loadTranslations(locale) {
-        this.locale = locale;
-
-        const childTranslation = this.loadChildTranslation(locale);
-        const parentTranslations = this.loadTranslationBatch(this.getParentRoots(), locale);
-        const extensionTranslations = this.loadTranslationBatch(this.getExtensionRoots(), locale);
+    loadTranslations() {
+        const childTranslation = this.loadChildTranslation();
+        const parentTranslations = this.loadTranslationBatch(this.getParentRoots());
+        const extensionTranslations = this.loadTranslationBatch(this.getExtensionRoots());
 
         this.baseTranslation = childTranslation;
 
@@ -183,10 +186,10 @@ class I18nPlugin {
      * @param {string[]} packagePaths
      * @param {string} locale
      */
-    loadTranslationBatch(packagePaths, locale) {
+    loadTranslationBatch(packagePaths) {
         return packagePaths.map(
             (packagePath) => this.loadJson(
-                path.join(packagePath, 'i18n', `${locale}.json`)
+                path.join(packagePath, 'i18n', `${this.locale}.json`)
             )
         );
     }
@@ -196,8 +199,8 @@ class I18nPlugin {
      * @param {string} locale
      * @returns {object}
      */
-    loadChildTranslation(locale) {
-        const pathToTry = path.join('i18n', `${locale}.json`);
+    loadChildTranslation() {
+        const pathToTry = path.join('i18n', `${this.locale}.json`);
         const absolutePathToTry = path.join(process.cwd(), pathToTry);
 
         // Handle translation for the given locale exists
@@ -206,7 +209,7 @@ class I18nPlugin {
         }
 
         // Do not create a translation file for the default locale
-        if (this.locale === DEFAULT_LOCALE) {
+        if (this.isDefaultLocale) {
             return {};
         }
 
@@ -214,9 +217,9 @@ class I18nPlugin {
         this.afterEmitLogs.push({
             type: 'note',
             args: [
-                `New locale ${ logger.style.misc(locale) } was discovered.`,
+                `New locale ${ logger.style.misc(this.locale) } was discovered.`,
                 `Created translation file ${ logger.style.file(`.${ path.sep }${ pathToTry }`) }.`,
-                `Provide translations for ${ logger.style.misc(locale) } locale there.`
+                `Provide translations for ${ logger.style.misc(this.locale) } locale there.`
             ]
         });
 
@@ -232,7 +235,7 @@ class I18nPlugin {
         setTimeout(() => {
             this.afterEmitLogs
                 .filter(
-                    (log) => this.locale !== DEFAULT_LOCALE || !log.hideForDefaultLocale
+                    (log) => !this.isDefaultLocale || !log.hideForDefaultLocale
                 )
                 .forEach(
                     ({ type, args }) => logger[type](...args)
@@ -255,7 +258,7 @@ class I18nPlugin {
             /**
              * Handle missing translations for non-default locales
              */
-            if (this.locale !== DEFAULT_LOCALE && missingTranslations.length) {
+            if (!this.isDefaultLocale && missingTranslations.length) {
                 this.appendTranslationsToFiles(missingTranslations);
 
                 this.afterEmitLogs.push({
