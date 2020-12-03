@@ -75,13 +75,6 @@ const generateCorruptedJsonWriteError = (jsonPath, error) => ({
     ]
 });
 
-const generateMissingTranslationNote = (key) => ({
-    type: 'note',
-    args: [
-        `Translation for phrase "${logger.style.misc(key)}" is missing!`
-    ]
-});
-
 /**
  * @param {object} options object
  * @constructor
@@ -97,6 +90,9 @@ class I18nPlugin {
         const childTranslation = this.loadChildTranslation(locale);
         const parentTranslations = this.loadTranslationBatch(this.getParentRoots(), locale);
         const extensionTranslations = this.loadTranslationBatch(this.getExtensionRoots(), locale);
+
+        // This is used to determine the unused translations later on
+        this.baseTranslation = childTranslation;
 
         return this.mergeTranslations(childTranslation, parentTranslations, extensionTranslations);
     }
@@ -227,10 +223,39 @@ class I18nPlugin {
         const functionName = '__';
         const plugin = { name: 'I18nPlugin' };
         const missingTranslations = [];
+        // Initialize the unused translation list
+        const unusedTranslations = { ...this.baseTranslation };
 
-        // save missing translations into JSON
         compiler.hooks.emit.tap(plugin, () => {
-            this.appendTranslationsToFiles(missingTranslations);
+            /**
+             * Handle missing translations
+             */
+            if (missingTranslations.length) {
+                this.appendTranslationsToFiles(missingTranslations);
+
+                this.afterEmitLogs.push({
+                    type: 'warn',
+                    args: [
+                        `Missing ${logger.style.code(missingTranslations.length)} translations!`,
+                        'Please update your translation files and restart the compilation.'
+                    ]
+                });
+            }
+
+            /**
+             * Handle unused translations
+             */
+            const unusedTranslationKeys = Object.keys(unusedTranslations);
+            if (unusedTranslationKeys.length) {
+                this.afterEmitLogs.push({
+                    type: 'warn',
+                    args: [
+                        `Found ${logger.style.code(unusedTranslationKeys.length)} unused translations!`,
+                        'Consider removing them! See the list below.',
+                        ...unusedTranslationKeys.map((one) => `  - "${one}"`)
+                    ]
+                });
+            }
 
             setTimeout(() => {
                 this.afterEmitLogs.forEach(
@@ -269,14 +294,13 @@ class I18nPlugin {
                             return false;
                         }
 
-                        // Extract translation if the translated string is missing
-                        if (result === undefined) {
-                            missingTranslations.push(paramString);
-                            return false;
-                        }
+                        // Handle translation used: delete from unused list
+                        // eslint-disable-next-line fp/no-delete
+                        delete unusedTranslations[paramString];
 
-                        // Skip it, if the result is known, but not translated
-                        if (result === null) {
+                        // Extract translation if the translated string is missing
+                        if (!result) {
+                            missingTranslations.push(paramString);
                             return false;
                         }
 
@@ -316,10 +340,6 @@ class I18nPlugin {
         missingTranslations.forEach((translation) => {
             existingTranslations[translation] = null;
         });
-
-        Object.entries(existingTranslations)
-            .filter(([, value]) => !value)
-            .forEach(([key]) => this.afterEmitLogs.push(generateMissingTranslationNote(key)));
 
         writeJson(
             filepath,
