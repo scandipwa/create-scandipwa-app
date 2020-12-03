@@ -18,6 +18,8 @@ const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 
+const DEFAULT_LOCALE = 'en_US';
+
 const addParsedVariableToModule = (parser, name) => {
     if (!parser.state.current.addVariable) {
         return false;
@@ -91,8 +93,8 @@ class I18nPlugin {
         const parentTranslations = this.loadTranslationBatch(this.getParentRoots(), locale);
         const extensionTranslations = this.loadTranslationBatch(this.getExtensionRoots(), locale);
 
-        // This is used to determine the unused translations later on
         this.baseTranslation = childTranslation;
+        this.locale = locale;
 
         return this.mergeTranslations(childTranslation, parentTranslations, extensionTranslations);
     }
@@ -129,6 +131,7 @@ class I18nPlugin {
                 if (mergedTranslations[key] === null && incomingValue) {
                     this.afterEmitLogs.push({
                         type: 'note',
+                        hideForDefaultLocale: true,
                         args: [
                             'Overriding translation for key '
                             + `"${logger.style.misc(key)}": ${logger.style.misc(null)} => "${logger.style.misc(incomingValue)}" `
@@ -219,6 +222,18 @@ class I18nPlugin {
         return {};
     }
 
+    emitLogs() {
+        setTimeout(() => {
+            this.afterEmitLogs
+                .filter(
+                    (log) => this.locale !== DEFAULT_LOCALE || !log.hideForDefaultLocale
+                )
+                .forEach(
+                    ({ type, args }) => logger[type](...args)
+                );
+        }, 100);
+    }
+
     apply(compiler) {
         const functionName = '__';
         const plugin = { name: 'I18nPlugin' };
@@ -227,6 +242,14 @@ class I18nPlugin {
         const unusedTranslations = { ...this.baseTranslation };
 
         compiler.hooks.emit.tap(plugin, () => {
+            // Do not generate locale file for the base locale
+            // Do not notify about missing or unused translations
+            // Because translations are not necessary for the base locale
+            if (this.locale === DEFAULT_LOCALE) {
+                this.emitLogs();
+                return true;
+            }
+
             /**
              * Handle missing translations
              */
@@ -235,6 +258,7 @@ class I18nPlugin {
 
                 this.afterEmitLogs.push({
                     type: 'warn',
+                    hideForDefaultLocale: true,
                     args: [
                         `Missing ${logger.style.code(missingTranslations.length)} translations!`,
                         'Please update your translation files and restart the compilation.'
@@ -249,6 +273,7 @@ class I18nPlugin {
             if (unusedTranslationKeys.length) {
                 this.afterEmitLogs.push({
                     type: 'warn',
+                    hideForDefaultLocale: true,
                     args: [
                         `Found ${logger.style.code(unusedTranslationKeys.length)} unused translations!`,
                         'Consider removing them! See the list below.',
@@ -257,11 +282,7 @@ class I18nPlugin {
                 });
             }
 
-            setTimeout(() => {
-                this.afterEmitLogs.forEach(
-                    ({ type, args }) => logger[type](...args)
-                );
-            }, 100);
+            this.emitLogs();
 
             return true;
         });
