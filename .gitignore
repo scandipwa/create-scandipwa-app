@@ -24,8 +24,6 @@ yarn-error.log*
 
 runtime-packages/csa
 runtime-packages/csa/**/*
-runtime-packages/cma
-runtime-packages/cma/**/*
 
 # build specifc files
 lerna-debug.log

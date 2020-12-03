@@ -13,7 +13,7 @@ Create ScandiPWA App works on MacOS, Windows, and Linux. If something doesn’t 
 |-|-|-|
 | Create [modular](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/extensions) front-end application with unlimited extensibility using the [application plugins](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/application-plugins) feature. | Create [reusable presentations](https://scandipwa.gitbook.io/create-scandipwa-app/themes/extensions-and-themes) of your frontend with inheritance-based [theming mechansim](https://scandipwa.gitbook.io/create-scandipwa-app/themes/parent-themes). | Break boundaries with [pluggable build configurations](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/build-configuration-plugins). Package your build-configuration into a module and share across projects. |
 
-But that's not it! Create ScandiPWA App also allows for [virtual modules](https://app.gitbook.com/@scandipwa/s/create-scandipwa-app/extensions/virtual-modules), [file provision](https://app.gitbook.com/@scandipwa/s/create-scandipwa-app/extensions/file-provision), translations and more!
+But that's not it! Create ScandiPWA App also allows for [virtual modules](https://app.gitbook.com/@scandipwa/s/create-scandipwa-app/extensions/virtual-modules), [file provision](https://app.gitbook.com/@scandipwa/s/create-scandipwa-app/extensions/file-provision), [translations](https://scandipwa.gitbook.io/create-scandipwa-app/building-your-app/internationalization) and more!
 
 ## Creating an App
 
@@ -45,5 +45,12 @@ yarn create scandipwa-app my-app
 
 `yarn create` is available in Yarn 0.25+
 
-
 > **Note**: To create an application independent from [Magento 2](https://magento.com/), add `--template blank` option to creation command.
+
+## Contributing
+
+We'd love to have your helping hand on `create-scandipwa-app`! See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information on what we're looking for and how to get started.
+
+## License
+
+Create React App is open source software licensed as [OSL-3](./LICENSE).
