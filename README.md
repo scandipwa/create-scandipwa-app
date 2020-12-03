@@ -1,4 +1,4 @@
-# Create ScandiPWA app
+![Create ScandiPWA App](https://user-images.githubusercontent.com/29531824/101024447-c60eaf00-357c-11eb-8667-0fd83d6d30f5.png)
 
 A zero-configuration tool-chain which allows for front-end application theming, extension and translation.
 
@@ -7,11 +7,19 @@ A zero-configuration tool-chain which allows for front-end application theming, 
 
 Create ScandiPWA App works on MacOS, Windows, and Linux. If something doesn’t work, please [file an issue](https://github.com/scandipwa/create-scandipwa-app/issues/new).
 
-### Features we are most proud of:
+## Most important features
 
-| Application plugins :dna: | Theme overrides :nail_care: | Build configuration plugins :clamp: |
-|-|-|-|
-| Create [modular](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/extensions) front-end application with unlimited extensibility using the [application plugins](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/application-plugins) feature. | Create [reusable presentations](https://scandipwa.gitbook.io/create-scandipwa-app/themes/extensions-and-themes) of your frontend with inheritance-based [theming mechansim](https://scandipwa.gitbook.io/create-scandipwa-app/themes/parent-themes). | Break boundaries with [pluggable build configurations](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/build-configuration-plugins). Package your build-configuration into a module and share across projects. |
+### Application plugins :dna:
+
+Create [modular](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/extensions) front-end application with unlimited extensibility using the [application plugins](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/application-plugins) feature.
+
+### Theme overrides :nail_care:
+
+Create [reusable presentations](https://scandipwa.gitbook.io/create-scandipwa-app/themes/extensions-and-themes) of your frontend with inheritance-based [theming mechansim](https://scandipwa.gitbook.io/create-scandipwa-app/themes/parent-themes).
+
+### Build configuration plugins :clamp:
+
+Break boundaries with [pluggable build configurations](https://scandipwa.gitbook.io/create-scandipwa-app/extensions/build-configuration-plugins). Package your build-configuration into a module and share across projects.
 
 But that's not it! Create ScandiPWA App also allows for [virtual modules](https://app.gitbook.com/@scandipwa/s/create-scandipwa-app/extensions/virtual-modules), [file provision](https://app.gitbook.com/@scandipwa/s/create-scandipwa-app/extensions/file-provision), [translations](https://scandipwa.gitbook.io/create-scandipwa-app/building-your-app/internationalization) and more!
 
@@ -54,3 +62,4 @@ We'd love to have your helping hand on `create-scandipwa-app`! See [CONTRIBUTING
 ## License
 
 Create ScandiPWA App is open source software licensed as [OSL-3.0](./LICENSE).
+
