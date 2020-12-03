@@ -1,4 +1,4 @@
-# Create ScandiPWA App
+![Create ScandiPWA App](https://user-images.githubusercontent.com/29531824/101024447-c60eaf00-357c-11eb-8667-0fd83d6d30f5.png)
 
 A zero-configuration tool-chain which allows for front-end application theming, extension and translation.
 
