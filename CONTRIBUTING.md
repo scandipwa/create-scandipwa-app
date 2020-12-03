@@ -52,5 +52,9 @@ Setting Up a Local Copy
 
 You may now create a test project using `create-scandipwa-app`, for that, type in: `yarn csa`. This will create a ScandiPWA project in `runtime-packages/csa` and print you futher instructions.
 
+## Publishing
 
+Use `lerna publish --exact` command.
+
+For canary publishing, use `lerna publish --canary --exact --preid next --dist-tag=next minor`
 
