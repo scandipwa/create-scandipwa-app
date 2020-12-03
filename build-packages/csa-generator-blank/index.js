@@ -4,17 +4,20 @@ const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesyst
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
 const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const { getComposerDeps } = require('@scandipwa/scandipwa-dev-utils/composer');
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const execCommandAsync = require('@scandipwa/scandipwa-dev-utils/exec-command');
+const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
 
-const DEFAULT_PROXY = 'https://scandipwapmrev.indvp.com';
-
-const ensureLatestComposer = (pathname) => {
-    const composerDeps = getComposerDeps(pathname);
-    const composerPath = path.join(pathname, 'composer.json');
-    const composerJson = require(composerPath);
-    composerJson.require = Object.fromEntries(composerDeps);
-    writeJson(composerPath, composerJson);
+const eslintFix = (destination) => {
+    const eslintPath = getPackagePath('eslint', destination);
+    const binPath = path.join(eslintPath, 'bin', 'eslint.js');
+    return execCommandAsync('node', [
+        binPath,
+        'src',
+        '--resolve-plugins-relative-to', '.',
+        '--no-error-on-unmatched-pattern',
+        '--ext', '.js',
+        '--fix'
+    ], destination);
 };
 
 const greet = (
@@ -24,7 +27,7 @@ const greet = (
     const relativePathname = `.${ path.sep }${ pathname }`;
     const displayedCommand = shouldUseYarn() ? 'yarn' : 'npm run';
 
-    logger.logN(`Success! Created ScandiPWA theme "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
+    logger.logN(`Success! Created blank ScandiPWA app "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
 
     logger.log('Inside that directory, you can run several commands:');
     logger.logT(
@@ -34,13 +37,6 @@ const greet = (
     logger.logT(
         logger.style.command(`${displayedCommand} build`),
         logger.style.comment('Bundles the app into static files for production')
-    );
-
-    logger.note(
-        'To bundle your application as the Magento 2 theme',
-        `add ${ logger.style.command('BUILD_MODE=magento') } environment variable before running the script!`,
-        '',
-        `Your Magento 2 theme name is "${ logger.style.misc(`scandipwa/${ name }`) }"!`
     );
 
     logger.log('We suggest that you begin by typing:');
@@ -63,18 +59,6 @@ const fileSystemCreator = (templateOptions) => (
             templateOptions
         );
 
-        filesystem.copyTpl(
-            templatePath('yarn.lock.cached'),
-            destinationPath('yarn.lock'),
-            templateOptions
-        );
-
-        filesystem.copyTpl(
-            templatePath('composer.json'),
-            destinationPath('composer.json'),
-            templateOptions
-        );
-
         filesystem.copy(
             templatePath('sample.gitignore'),
             destinationPath('.gitignore')
@@ -83,12 +67,6 @@ const fileSystemCreator = (templateOptions) => (
         filesystem.copy(
             templatePath('README.md'),
             destinationPath('README.md')
-        );
-
-        filesystem.copyTpl(
-            templatePath('magento/**/*'),
-            destinationPath('magento'),
-            templateOptions
         );
 
         filesystem.copy(
@@ -119,16 +97,7 @@ const run = async (options) => {
 
     const destination = path.join(process.cwd(), pathname);
 
-    let scandipwaVersion = '0.0.0';
     let scandipwaScriptsVersion = '0.0.0';
-
-    try {
-        scandipwaVersion = await getLatestVersion('@scandipwa/scandipwa');
-    } catch (e) {
-        logger.warn(
-            `Package ${ logger.style.misc('@scandipwa/scandipwa') } is not yet published.`
-        );
-    }
 
     try {
         scandipwaScriptsVersion = await getLatestVersion('@scandipwa/scandipwa-scripts');
@@ -139,10 +108,8 @@ const run = async (options) => {
     }
 
     const templateOptions = {
-        scandipwaVersion,
         scandipwaScriptsVersion,
-        name,
-        proxy: DEFAULT_PROXY
+        name
     };
 
     // create filesystem from template
@@ -155,7 +122,8 @@ const run = async (options) => {
     // install dependencies
     await installDeps(destination);
 
-    await ensureLatestComposer(destination);
+    // fix the ESLint (package-name)
+    await eslintFix(destination);
 
     // greet the user
     greet(name, pathname);

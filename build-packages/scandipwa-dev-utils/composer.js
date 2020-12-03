@@ -1,7 +1,6 @@
 /* eslint-disable guard-for-in, fp/no-let, no-console, max-len, import/no-dynamic-require, global-require, fp/no-loops, no-restricted-syntax */
 const path = require('path');
 const semver = require('semver');
-// const minVersion = require('./lib/min-version');
 const logger = require('./logger');
 const { getPackageJson } = require('./package-json');
 
@@ -89,12 +88,12 @@ const isValidComposer = (pathname = process.cwd()) => {
         // - if the version requested is present in composer
         // - if the version requested satisfies version required
 
-        const versionRequired = composerDeps[composerModule];
+        const userDepVersion = composerDeps[composerModule];
         let rangeRequested = [];
 
         // Validate if the version required is valid
-        if (versionRequired && !semver.validRange(versionRequired)) {
-            logger.error(`Required composer module ${ logger.style.misc(composerModule) } version ${ logger.style.misc(versionRequired) } is invalid.`);
+        if (userDepVersion && !semver.validRange(userDepVersion)) {
+            logger.error(`Required composer module ${ logger.style.misc(composerModule) } version ${ logger.style.misc(userDepVersion) } is invalid.`);
             return false;
         }
 
@@ -146,8 +145,12 @@ const isValidComposer = (pathname = process.cwd()) => {
             continue;
         }
 
+        const { raw: minUserDepVersion } = semver.minVersion(userDepVersion);
+
         // Check if the version requested satisfies version required
-        if (!semver.satisfies(versionRequired, rangeRequested)) {
+        // if the version required is a range, take min version of it and
+        // validate it agains the range.
+        if (!semver.satisfies(minUserDepVersion, rangeRequested)) {
             logger.error(
                 'Composer module required is conflicting with requested module versions.',
                 `Please update ${ logger.style.misc(composerModule) } version to ${ logger.style.misc(minVersionRaw) }.`

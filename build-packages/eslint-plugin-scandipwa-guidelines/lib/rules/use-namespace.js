@@ -110,7 +110,8 @@ const getNodeNamespace = (node) => {
         collectFunctionNamespace(node.parent, stack);
     }
 
-    return stack.reverse().join(path.sep);
+    // not using path.sep on purpose
+    return stack.reverse().join('/');
 }
 
 const prepareFilePath = (pathname) => {
@@ -121,16 +122,32 @@ const prepareFilePath = (pathname) => {
 
 	const [name, postfix = ''] = filename.split('.');
 
+    /**
+     * We do not want the \\ paths on Windows, rather / =>
+     * split and then join with correct delimiter
+     **/
     return path.join(
 		dir,
 		// If dir name === file name without postfix => do not repeat it
 		new RegExp(`${path.sep}${name}$`).test(dir) ? '' : name,
 		postfix
-	);
+    ).split(path.sep)
+    // Filter out empty strings if they exist
+    .filter(x => !!x);
 }
 
 const preparePackageName = (packageName) => {
-    const [org, name] = packageName.split(path.sep);
+    // This is on purpose not a path.sep (windows support)
+    const [org = '', name = ''] = packageName.split('/');
+
+    if (!name) {
+        // if there is no name => there is not ORG
+        if (packageName === '<%= name %>') {
+            return 'placeholder'
+        }
+
+        return packageName;
+    }
 
     if (org === '@scandipwa') {
         // Legacy support
@@ -141,7 +158,7 @@ const preparePackageName = (packageName) => {
         return name;
     }
 
-    return path.join(org.slice(1), name);
+    return `${org.slice(1)}/${name}`;
 };
 
 const generateNamespace = (node, context) => {
@@ -151,19 +168,20 @@ const generateNamespace = (node, context) => {
     const toPackage = path.normalize(splitted.join('src'));
     const { name: packageName } = getPackageJson(toPackage);
 
-    const pathname = path.join(
+    // Not using path.join to support windows
+    const pathname = [
         // remove @ from organization, support @scandipwa legacy namespaces
         preparePackageName(packageName),
-        // trim post-fixes if they are not present
-        prepareFilePath(toFile)
-    ).replace(
+        // Trim post-fixes if they are not present
+        ...prepareFilePath(toFile)
+    ].join('/').replace(
         // Convert to pascal-case, and trim "-"
         /\b[a-z](?=[a-z]{2})/g,
         (letter) => letter.toUpperCase()
-	).replace('-', '');
+    ).replace('-', '');
 
-    // do not transform code to uppercase / lowercase it should be written alright
-    return path.join(pathname, getNodeNamespace(node));
+    // Do not transform code to uppercase / lowercase it should be written alright
+    return `${pathname}/${getNodeNamespace(node)}`;
 }
 
 const extractNamespaceFromComment = ({ value: comment = '' }) => {
