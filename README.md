@@ -55,9 +55,15 @@ yarn create scandipwa-app my-app
 
 > **Note**: To create an application independent from [Magento 2](https://magento.com/), add `--template blank` option to creation command.
 
-## Contributing
+## Contribution
 
 We'd love to have your helping hand on `create-scandipwa-app`! See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information on what we're looking for and how to get started.
+
+Thanks to these people for their existing contribution!
+
+<a href="https://github.com/scandipwa/create-scandipwa-app/graphs/contributors">
+<img src="https://contributors-img.web.app/image?repo=scandipwa/create-scandipwa-app" />
+</a>
 
 ## License
 
