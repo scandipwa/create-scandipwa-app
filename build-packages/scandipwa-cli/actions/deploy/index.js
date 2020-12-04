@@ -12,8 +12,6 @@ const compressDirectory = require('./lib/compress-directory');
 const triggerPortal = require('./lib/trigger-portal');
 const uploadFile = require('./lib/upload-file');
 
-const appIdFromEnv = process.env.APP_ID;
-
 const deploy = async (argv) => {
     const {
         branch: branchName = 'master'
@@ -35,7 +33,7 @@ const deploy = async (argv) => {
     // prepare application data
     const packageJson = getPackageJson(contextPathname);
     const appData = {
-        appId: appIdFromEnv || packageJson.scandipwa.staticDeploy || '',
+        appId: process.env.APP_ID || packageJson.scandipwa.staticDeploy || '',
         branchName,
         proxyServer: packageJson.proxy || ''
     };
