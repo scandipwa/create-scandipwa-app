@@ -6,9 +6,14 @@ const path = require('path');
  * @param {string} pathname
  * @return {object}
  */
-const getPackageJson = (pathname) => {
+const getPackageJson = (pathname, context = process.cwd()) => {
     try {
-        return require(path.join(pathname, 'package.json')) || {};
+        const pathToPackageJson = require.resolve(
+            path.join(pathname, 'package.json'),
+            { paths: [context] }
+        );
+
+        return require(pathToPackageJson) || {};
     } catch (e) {
         return {};
     }

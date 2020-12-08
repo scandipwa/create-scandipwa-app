@@ -13,7 +13,7 @@ let visitedDeps = [];
  * @param {string} modulePath
  * @return {array} an array of object entries.
  */
-const getComposerDeps = (modulePath) => {
+const getComposerDeps = (modulePath, context = modulePath) => {
     if (visitedDeps.indexOf(modulePath) !== -1) {
         return [];
     }
@@ -25,10 +25,10 @@ const getComposerDeps = (modulePath) => {
         scandipwa: {
             composer = []
         } = {}
-    } = getPackageJson(modulePath);
+    } = getPackageJson(modulePath, context);
 
     return Object.keys(dependencies).reduce(
-        (acc, dependency) => acc.concat(getComposerDeps(dependency)),
+        (acc, dependency) => acc.concat(getComposerDeps(dependency, context)),
         Object.entries(composer)
     );
 };

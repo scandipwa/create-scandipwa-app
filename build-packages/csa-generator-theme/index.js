@@ -155,7 +155,7 @@ const run = async (options) => {
     // install dependencies
     await installDeps(destination);
 
-    await ensureLatestComposer(destination);
+    ensureLatestComposer(destination);
 
     // greet the user
     greet(name, pathname);
