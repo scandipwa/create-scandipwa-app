@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/scandipwa-dev-utils",
     "description": "Development utilities used by CSA.",
-    "version": "0.0.18",
+    "version": "0.0.19",
     "files": [
         "composer.js",
         "should-use-yarn.js",
