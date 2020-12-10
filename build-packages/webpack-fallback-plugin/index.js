@@ -304,7 +304,7 @@ class FallbackPlugin {
                             path: sources[source],
                             request: `.${path.sep}${ requestToRelativePathname}`
                         },
-                        'Resolving with fallback!',
+                        'Resolving using the override-mechanism!',
                         resolveContext,
                         callback
                     );
@@ -331,9 +331,9 @@ class FallbackPlugin {
                     {
                         ...request,
                         path: packagePath,
-                        request: `.${path.sep}${ relativePath }`
+                        request: `.${ path.sep }${ relativePath }`
                     },
-                    'Resolving with fallback!',
+                    'Resolving using the module-preference!',
                     resolveContext,
                     callback
                 );

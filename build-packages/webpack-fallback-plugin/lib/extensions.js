@@ -1,5 +1,6 @@
 const prepareSources = require('./sources');
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const path = require('path');
 
 /**
@@ -44,6 +45,7 @@ const getExtensionProvisionedPath = (pathname) => {
 
         // Take provide field, check if pathname is not available in provisioned names
         const {
+            name,
             scandipwa: {
                 provide = [],
                 preference = ''
@@ -58,6 +60,18 @@ const getExtensionProvisionedPath = (pathname) => {
                 const relativePathname = pathname.slice(moduleIndex + preference.length);
 
                 if (path.normalize(relativePathname) === '.') {
+                    if (!main) {
+                        logger.error(
+                            `The import of preferenced module ${ logger.style.misc(name) } failed.`,
+                            'Trying to import module\'s entrypoint.',
+                            `Searched for ${ logger.style.misc('main') } field in ${ logger.style.misc(name) }'s ${ logger.style.file('packge.json') }. None found.`,
+                            `Make sure ${ logger.style.misc(name) } has an entrypoint defined in ${ logger.style.file('packge.json') }.`,
+                            'Alternatively, provide the relative path to module\'s file.'
+                        );
+
+                        process.exit();
+                    }
+
                     return {
                         absolutePath: path.join(packagePath, main),
                         relativePath: path.normalize(main),
