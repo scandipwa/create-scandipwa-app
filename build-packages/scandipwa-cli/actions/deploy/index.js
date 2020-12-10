@@ -33,7 +33,7 @@ const deploy = async (argv) => {
     // prepare application data
     const packageJson = getPackageJson(contextPathname);
     const appData = {
-        appId: packageJson.scandipwa.staticDeploy || '',
+        appId: process.env.APP_ID || packageJson.scandipwa.staticDeploy || '',
         branchName,
         proxyServer: packageJson.proxy || ''
     };
