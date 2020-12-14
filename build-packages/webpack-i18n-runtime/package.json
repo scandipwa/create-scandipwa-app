@@ -1,5 +1,5 @@
 {
-    "name": "@scandipwa/runtime-i18n",
+    "name": "@scandipwa/webpack-i18n-runtime",
     "version": "1.0.0",
     "license": "proprietary",
     "dependencies": {
