@@ -19,6 +19,9 @@ function noop() {}
  * @returns {object}
  */
 module.exports = function mergeTranslations(translations, handleOverridden = noop) {
+    // The child translations must always be passed first, as mentioned above
+    const childTranslations = translations[0];
+
     return translations.reduce((mergedTranslations, incomingTranslations) => {
         for (const key in incomingTranslations) {
             // * Skip if already translated
@@ -29,7 +32,7 @@ module.exports = function mergeTranslations(translations, handleOverridden = noo
             const incomingValue = incomingTranslations[key];
 
             // * Handle if overriding null
-            if (mergedTranslations[key] === null && incomingValue) {
+            if (childTranslations[key] === null && mergedTranslations[key] === null && incomingValue) {
                 handleOverridden(key, incomingValue);
             }
 
