@@ -105,10 +105,12 @@ module.exports = (script) => {
 
         chokidar
             .watch([
-                path.join(process.cwd(), 'src/**/*.js'),
-                path.join(process.cwd(), 'src/**/*.scss')
+                'src/**/*.js',
+                'src/**/*.scss'
             ], {
-                ignored: path.join(process.cwd(), 'node_modules'),
+                // should we ignore node_modules ?
+                ignored: '**/node_modules/**',
+                cwd: process.cwd(),
                 ignoreInitial: true
             })
             .on('add', killChild)
