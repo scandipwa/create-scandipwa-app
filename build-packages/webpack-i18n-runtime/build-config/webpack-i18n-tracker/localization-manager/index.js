@@ -16,6 +16,7 @@ const mergeTranslations = require('../../../shared/mergeTranslations');
 const unusedTranslationsMessage = require('../after-emit-logs/unused-translations');
 const missingTranslationsMessage = require('../after-emit-logs/missing-translations');
 const emptyTranslationsOverriddenMessage = require('../after-emit-logs/empty-translations-overridden');
+const nonExtractableTranslationMessage = require('../after-emit-logs/non-extractable-translation');
 
 const getParentRoots = () => parentThemeHelper.getParentThemePaths(process.cwd());
 const getExtensionRoots = () => extensions.map((extension) => extension.packagePath);
@@ -24,6 +25,8 @@ class LocalizationManager {
     moduleMap = {};
 
     overriddenEmptyTranslations = {};
+
+    nonExtractableCases = [];
 
     defaultLocale = 'en_US';
 
@@ -148,6 +151,22 @@ class LocalizationManager {
         afterEmitLogger.logMessage(emptyTranslationsOverriddenMessage(this.overriddenEmptyTranslations));
     }
 
+    handleOverridingEmptyTranslation(localeCode, translatable, incomingValue) {
+        if (!this.overriddenEmptyTranslations[localeCode]) {
+            this.overriddenEmptyTranslations[localeCode] = {};
+        }
+
+        this.overriddenEmptyTranslations[localeCode][translatable] = incomingValue;
+    }
+
+    handleNonExtractableParam(resource) {
+        this.nonExtractableCases.push(resource);
+    }
+
+    handleNonExtractableCases() {
+        afterEmitLogger.logMessage(nonExtractableTranslationMessage(this.nonExtractableCases));
+    }
+
     loadTranslationMap() {
         this.overriddenEmptyTranslations = {};
         const parentRoots = getParentRoots();
@@ -175,9 +194,7 @@ class LocalizationManager {
                         ...localeData.parent,
                         ...localeData.extensions
                     ],
-                    (translatable, incomingValue) => {
-                        this.overriddenEmptyTranslations[translatable] = incomingValue;
-                    }
+                    this.handleOverridingEmptyTranslation.bind(this, localeCode)
                 );
 
                 acc[localeCode] = localeData;
