@@ -32,6 +32,7 @@ class WebpackI18nTracker {
         this.localizationManager.handleOverriddenEmptyTranslations();
         this.localizationManager.handleMissingTranslations();
         this.localizationManager.handleUnusedTranslations();
+        this.localizationManager.handleNonExtractableCases();
 
         return true;
     };
@@ -45,7 +46,8 @@ class WebpackI18nTracker {
             const paramString = param.string;
 
             if (!paramString) {
-                // ? warn here ?
+                // Handle params that cannot be extracted
+                this.localizationManager.handleNonExtractableParam(parser.state.module.resource);
                 return expr;
             }
 
