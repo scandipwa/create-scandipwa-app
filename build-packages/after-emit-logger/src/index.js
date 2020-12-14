@@ -34,7 +34,7 @@ class Logger {
                 const updatedEmitsToLive = emitsToLive - 1;
 
                 // If needs to be logged during the next compilation - keep it
-                if (emitsToLive > 0) {
+                if (updatedEmitsToLive > 0) {
                     acc.push({
                         message,
                         emitsToLive: updatedEmitsToLive
