@@ -7,6 +7,11 @@
         "@scandipwa/scandipwa": "3.2.4-alpha.2"
     },
     "scandipwa": {
-        "type": "extension"
+        "type": "extension",
+        "build": {
+            "cracoPlugins": [
+                "build-config/config.plugin.js"
+            ]
+        }
     }
 }
