@@ -1,9 +1,11 @@
 const path = require("path");
+const semver = require("semver");
 
 const { log } = require("./logger");
 const { projectRoot } = require("./paths");
 
 let envLoaded = false;
+const CRA_LATEST_SUPPORTED_MAJOR_VERSION = "4.0.0";
 
 /************  Common  *******************/
 
@@ -34,6 +36,20 @@ function overrideModule(modulePath, newModule) {
     require.cache[modulePath].exports = newModule;
 
     log(`Overrided require cache for module: ${modulePath}`);
+}
+
+function resolvePackageJson(cracoConfig) {
+    return require.resolve(path.join(cracoConfig.reactScriptsVersion, "package.json"), { paths: [projectRoot] });
+}
+
+function getReactScriptVersion(cracoConfig) {
+    const reactScriptPackageJsonPath = resolvePackageJson(cracoConfig);
+    const { version } = require(reactScriptPackageJsonPath);
+
+    return {
+        version,
+        isSupported: semver.gte(version, CRA_LATEST_SUPPORTED_MAJOR_VERSION)
+    };
 }
 
 /************  Paths  *******************/
@@ -255,6 +271,7 @@ module.exports = {
     getCraPaths,
     overrideCraPathsConfig,
     getAppSrcName,
+    getReactScriptVersion,
     start,
     build,
     test
