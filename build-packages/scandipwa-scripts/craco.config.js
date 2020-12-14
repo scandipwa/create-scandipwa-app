@@ -9,7 +9,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
-const I18nPlugin = require('@scandipwa/webpack-i18n-plugin');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
 
@@ -92,12 +91,7 @@ module.exports = () => {
                 }),
 
                 // Show progress bar when building
-                new ProgressBarPlugin(),
-
-                new I18nPlugin({
-                    locale: process.env.PWA_LOCALE,
-                    defaultLocale: 'en_US'
-                })
+                new ProgressBarPlugin()
             ],
             configure: (webpackConfig) => {
                 // Remove module scope plugin, it breaks FallbackPlugin and ProvidePlugin
