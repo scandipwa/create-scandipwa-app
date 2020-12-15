@@ -22,7 +22,7 @@ const actions = [
             logger.warn(
                 `Global module ${ logger.style.misc(name) } is out-dated.`,
                 `Please upgrade it to latest version ${ logger.style.misc(latestVersion) }.`,
-                `You can do it by running following command: ${ logger.style.command(`npm upgrade -g ${ name }`) }.`
+                `You can do it by running following command: ${ logger.style.command(`npm install -g ${ name }@latest`) }.`
             );
         }
     } catch (e) {

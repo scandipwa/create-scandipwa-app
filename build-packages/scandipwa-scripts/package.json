@@ -27,10 +27,10 @@
         "craco-sass-resources-loader": "^1.1.0",
         "cross-spawn": "^7.0.0",
         "debounce": "^1.2.0",
-        "node-sass": "^4.14.1",
+        "node-sass": "4.14.1",
         "progress-bar-webpack-plugin": "^2.1.0",
         "react-dev-utils": "^10.2.1",
-        "react-scripts": "3.4.1",
+        "react-scripts": "4.0.1",
         "tree-kill": "^1.2.2"
     },
     "license": "OSL-3.0",

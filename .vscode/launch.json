@@ -39,7 +39,7 @@
                 "PORT": 3003,
                 "BROWSER": "none"
             },
-            "cwd": "${workspaceFolder}/runtime-packages/test",
+            "cwd": "${workspaceFolder}/runtime-packages/csa",
             "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
             "args": [
                 "start"
@@ -55,10 +55,26 @@
             "env": {
                 "PORT": 3003
             },
-            "cwd": "${workspaceFolder}/runtime-packages/test",
+            "cwd": "${workspaceFolder}/runtime-packages/csa",
             "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
             "args": [
                 "build"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Link",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "env": {
+                "PORT": 3003
+            },
+            "cwd": "${workspaceFolder}/runtime-packages/csa",
+            "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
+            "args": [
+                "link"
             ]
         }
     ]
