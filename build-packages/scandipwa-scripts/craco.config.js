@@ -42,9 +42,6 @@ module.exports = () => {
             // Simply fallback to core, this why it's here
             appIndexJs,
 
-            // Assume we are store-front, build into build
-            appBuild: path.join(process.cwd(), 'build'),
-
             // Assume store-front use normal HTML (defined in /public/index.html)
             appHtml
         },
@@ -70,7 +67,21 @@ module.exports = () => {
                         alias
                     }
                 ]
-            ]
+            ],
+            loaderOptions: (babelLoaderOptions) => {
+                babelLoaderOptions.presets = [
+                    [
+                        require.resolve('babel-preset-react-app'),
+                        {
+                            // for some reason only classic works
+                            // the "automatic" does not work
+                            runtime: 'classic'
+                        }
+                    ]
+                ];
+
+                return babelLoaderOptions;
+            }
         },
         webpack: {
             plugins: [
@@ -124,7 +135,6 @@ module.exports = () => {
                 if (hasAnyBabelLoaders) {
                     babelLoaders.forEach(({ loader }) => {
                         // Allow everything to be processed by babel
-                        // TODO: compose a list of known location, process only those
                         loader.include = undefined;
                     });
                 }
