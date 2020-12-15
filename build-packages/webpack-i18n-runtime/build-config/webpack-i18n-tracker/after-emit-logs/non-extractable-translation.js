@@ -5,7 +5,7 @@ const relativeToCwd = (pathname) => path.relative(process.cwd(), pathname);
 
 module.exports = (nonExtractableList) => {
     const nonExtractable = nonExtractableList.map(
-        ({ resource }) => `${logger.style.file(relativeToCwd(resource))}`
+        (resource) => `${logger.style.file(relativeToCwd(resource))}`
     );
 
     return {
