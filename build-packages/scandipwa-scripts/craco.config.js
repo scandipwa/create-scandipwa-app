@@ -31,6 +31,7 @@ module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('src/style/abstract/_abstract.scss', sources);
     const appIndexJs = FallbackPlugin.getFallbackPathname('src/index.js', sources);
     const appHtml = FallbackPlugin.getFallbackPathname('public/index.html', sources);
+    const swSrc = FallbackPlugin.getFallbackPathname('src/service-worker.js', sources);
 
     // Use ESLint config defined in package.json or fallback to default one
     const eslintConfig = getPackageJson(process.cwd()).eslintConfig || {
@@ -43,7 +44,10 @@ module.exports = () => {
             appIndexJs,
 
             // Assume store-front use normal HTML (defined in /public/index.html)
-            appHtml
+            appHtml,
+
+            // Allow to use SW in ScandiPWA
+            swSrc
         },
         eslint: {
             mode: ESLINT_MODES.extends,
