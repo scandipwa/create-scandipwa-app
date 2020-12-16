@@ -6,7 +6,7 @@ const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+// const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
@@ -24,12 +24,13 @@ const { sources } = require('./lib/sources');
 const alias = require('./lib/alias');
 const when = require('./lib/when');
 
+const isDev = process.env.NODE_ENV === 'development';
+
 module.exports = () => {
     const abstractStyle = FallbackPlugin.getFallbackPathname('src/style/abstract/_abstract.scss', sources);
     const appIndexJs = FallbackPlugin.getFallbackPathname('src/index.js', sources);
     const appHtml = FallbackPlugin.getFallbackPathname('public/index.html', sources);
-
-    // TODO: check SWorker
+    const swSrc = FallbackPlugin.getFallbackPathname('src/service-worker.js', sources);
 
     // Use ESLint config defined in package.json or fallback to default one
     const eslintConfig = getPackageJson(process.cwd()).eslintConfig || {
@@ -41,11 +42,11 @@ module.exports = () => {
             // Simply fallback to core, this why it's here
             appIndexJs,
 
-            // Assume we are store-front, build into build
-            appBuild: path.join(process.cwd(), 'build'),
-
             // Assume store-front use normal HTML (defined in /public/index.html)
-            appHtml
+            appHtml,
+
+            // Allow to use SW in ScandiPWA
+            swSrc
         },
         eslint: {
             mode: ESLINT_MODES.extends,
@@ -69,7 +70,21 @@ module.exports = () => {
                         alias
                     }
                 ]
-            ]
+            ],
+            loaderOptions: (babelLoaderOptions) => {
+                babelLoaderOptions.presets = [
+                    [
+                        require.resolve('babel-preset-react-app'),
+                        {
+                            // for some reason only classic works
+                            // the "automatic" does not work
+                            runtime: 'classic'
+                        }
+                    ]
+                ];
+
+                return babelLoaderOptions;
+            }
         },
         webpack: {
             plugins: [
@@ -118,7 +133,6 @@ module.exports = () => {
                 if (hasAnyBabelLoaders) {
                     babelLoaders.forEach(({ loader }) => {
                         // Allow everything to be processed by babel
-                        // TODO: compose a list of known location, process only those
                         loader.include = undefined;
                     });
                 }
@@ -130,17 +144,18 @@ module.exports = () => {
                 });
 
                 // Allow having empty entry point
-                webpackConfig.entry[whenDev(() => 1, 0)] = appIndexJs;
+                if (isDev) {
+                    webpackConfig.entry[1] = appIndexJs;
+                } else {
+                    webpackConfig.entry = appIndexJs;
+                }
 
                 // Disable LICENSE comments extraction in production
                 webpackConfig.optimization.minimizer[0].options.extractComments = whenDev(() => true, false);
 
                 // Modify plugins if needed
                 webpackConfig.plugins.forEach((plugin) => {
-                    if (plugin instanceof WorkboxWebpackPlugin.GenerateSW) {
-                        // Patch navigate fallback originally references hard-coded index.html
-                        plugin.config.navigateFallback = path.sep;
-                    } else if (plugin instanceof MiniCssExtractPlugin) {
+                    if (plugin instanceof MiniCssExtractPlugin) {
                         // Patch mini-css-extract-plugin issue of "Conflicting Order"
                         plugin.options.ignoreOrder = true;
                     }
