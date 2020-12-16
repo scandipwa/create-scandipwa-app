@@ -1,15 +1,17 @@
 import loadTranslation from './loadTranslation';
-
-const DEFAULT_LOCALE = 'en_US';
+import localeMap from './localeMap';
 
 class I18n {
-    currentLocale = DEFAULT_LOCALE;
+    constructor() {
+        if (window.defaultLocale) {
+            this.setLocale(window.defaultLocale);
+        }
+    }
 
     currentTranslation = {};
 
     getLocaleList() {
-        // TODO get from the child-est theme
-        return ['en_US', 'ru_RU'];
+        return Object.keys(localeMap);
     }
 
     getCurrentLocale() {
@@ -17,13 +19,20 @@ class I18n {
     }
 
     setLocale = async (locale) => {
+        // Ignore same locale
         if (locale === this.currentLocale) {
             return;
         }
 
+        // Set the new locale code
         this.currentLocale = locale;
-        this.currentTranslation = await loadTranslation(locale);
 
+        // Update the current translation map
+        this.isLoading = true;
+        this.currentTranslation = await loadTranslation(locale);
+        this.isLoading = false;
+
+        // Rerender the app for changes to get applied
         this.rerenderApplication();
     };
 
@@ -33,9 +42,7 @@ class I18n {
      */
     init(rerenderApplication) {
         if (typeof rerenderApplication !== 'function') {
-            throw new Error(
-                "App component's forceUpdate should be supplied to the i18n init sequence"
-            );
+            throw new Error("The root component's forceUpdate should be supplied to the i18n init sequence");
         }
 
         this.rerenderApplication = rerenderApplication;

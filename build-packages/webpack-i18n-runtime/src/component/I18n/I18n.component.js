@@ -10,7 +10,9 @@ export class I18nComponent extends PureComponent {
     };
 
     // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
-    componentDidMount() {
+    constructor(props) {
+        super(props);
+
         i18n.init(this.forceUpdate.bind(this));
     }
 
@@ -18,6 +20,12 @@ export class I18nComponent extends PureComponent {
         const { children } = this.props;
         const currentLocale = i18n.getCurrentLocale();
 
+        // Do not render anything while the translation is loading
+        if (i18n.isLoading) {
+            return null;
+        }
+
+        // Remount the application on locale change
         return (
             <div
               block="LocalizationWrapper"
