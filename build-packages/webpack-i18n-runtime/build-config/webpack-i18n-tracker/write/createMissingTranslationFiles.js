@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const afterEmitLogger = require('@scandipwa/after-emit-logger');
+const afterEmitLogger = require('@scandipwa/webpack-after-emit-logger');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
 const newLocaleCreated = require('../after-emit-logs/new-locale-created');

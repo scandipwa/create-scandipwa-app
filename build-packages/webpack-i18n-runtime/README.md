@@ -28,7 +28,7 @@ This implementation lacks these limitations.
 
 ### Dependencies
 
-`@scandipwa/after-emit-logger` is used to provide useful output after builds. Make sure it is enabled in your application to have all the information this package provides!
+`@scandipwa/webpack-after-emit-logger` is used to provide useful output after builds. Make sure it is enabled in your application to have all the information this package provides!
 
 `scandipwa/locale` PHP module is used to integrate this i18n implementation with Magento 2 framework. Use [the latest version](https://github.com/scandipwa/locale) to get support for this functionality!
 

@@ -6,7 +6,7 @@ const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const loadJson = require('./loadJson');
 
 const newLocaleCreated = require('../after-emit-logs/new-locale-created');
-const afterEmitLogger = require('@scandipwa/after-emit-logger');
+const afterEmitLogger = require('@scandipwa/webpack-after-emit-logger');
 
 /**
  * Get the theme's main translation file for the given locale

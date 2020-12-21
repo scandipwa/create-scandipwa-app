@@ -3,7 +3,7 @@
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 
-const afterEmitLogger = require('@scandipwa/after-emit-logger');
+const afterEmitLogger = require('@scandipwa/webpack-after-emit-logger');
 const getEnabledLocales = require('../../../shared/getEnabledLocales');
 
 const appendMissingTranslationsToFiles = require('../write/appendMissingTranslationsToFiles');

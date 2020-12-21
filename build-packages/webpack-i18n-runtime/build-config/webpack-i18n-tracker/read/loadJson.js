@@ -1,5 +1,5 @@
 const fs = require('fs');
-const afterEmitLogger = require('@scandipwa/after-emit-logger');
+const afterEmitLogger = require('@scandipwa/webpack-after-emit-logger');
 const corruptedJson = require('../after-emit-logs/read-corrupted-json');
 
 /**

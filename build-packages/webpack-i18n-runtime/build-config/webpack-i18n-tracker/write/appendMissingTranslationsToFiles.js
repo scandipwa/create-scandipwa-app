@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 const path = require('path');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
-const afterEmitLogger = require('@scandipwa/after-emit-logger');
+const afterEmitLogger = require('@scandipwa/webpack-after-emit-logger');
 const corruptedJson = require('../after-emit-logs/write-corrupted-json');
 
 function loadTranslationJson(localeFilePath) {

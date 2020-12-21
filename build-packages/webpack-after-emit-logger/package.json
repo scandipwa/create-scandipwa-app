@@ -1,5 +1,5 @@
 {
-    "name": "@scandipwa/after-emit-logger",
+    "name": "@scandipwa/webpack-after-emit-logger",
     "version": "0.0.0",
     "license": "proprietary",
     "main": "src/index.js",
