@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax, fp/no-delete, guard-for-in */
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
@@ -81,14 +82,17 @@ class LocalizationManager {
             // Handle locales separately
             for (const localeCode in this.translationMap) {
                 // Handle missing translation
-                if (!this.translationMap[localeCode].merged[usedTranslation]) {
-                    // Handle first missing translation for locale
-                    if (!missingTranslations[localeCode]) {
-                        missingTranslations[localeCode] = new Set();
-                    }
-
-                    missingTranslations[localeCode].add(usedTranslation);
+                // Ignore present translations
+                if (this.translationMap[localeCode].merged[usedTranslation]) {
+                    continue;
                 }
+
+                // Handle first missing translation for locale
+                if (!missingTranslations[localeCode]) {
+                    missingTranslations[localeCode] = new Set();
+                }
+
+                missingTranslations[localeCode].add(usedTranslation);
             }
         }
 
@@ -123,14 +127,17 @@ class LocalizationManager {
             // Check each translation from there
             for (const translatable in this.translationMap[localeCode].child) {
                 // Handle translation not used in the application
-                if (!this.usedTranslations.has(translatable)) {
-                    // Handle first unused for the locale
-                    if (!unusedTranslations[localeCode]) {
-                        unusedTranslations[localeCode] = new Set();
-                    }
-
-                    unusedTranslations[localeCode].add(translatable);
+                // Ignore the ones that are used
+                if (this.usedTranslations.has(translatable)) {
+                    continue;
                 }
+
+                // Handle first unused for the locale
+                if (!unusedTranslations[localeCode]) {
+                    unusedTranslations[localeCode] = new Set();
+                }
+
+                unusedTranslations[localeCode].add(translatable);
             }
         }
 
