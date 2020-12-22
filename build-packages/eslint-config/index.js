@@ -9,6 +9,7 @@ module.exports = {
     parser: 'babel-eslint',
     globals: {
         window: true,
+        globalThis: true,
         document: true,
         sessionStorage: true,
         localStorage: true,
