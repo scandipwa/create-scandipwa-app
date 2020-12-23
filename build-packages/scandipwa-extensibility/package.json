@@ -5,5 +5,17 @@
     "license": "OSL-3.0",
     "publishConfig": {
         "access": "public"
+    },
+    "scandipwa": {
+        "type": "extension",
+        "build": {
+            "cracoPlugins": [
+                "build-config/config.plugin.js"
+            ]
+        }
+    },
+    "dependencies": {
+        "@babel/plugin-transform-arrow-functions": "^7.10.4",
+        "@babel/plugin-transform-async-to-generator": "^7.10.4"
     }
 }
