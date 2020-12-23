@@ -1,3 +1,4 @@
+const path = require('path');
 const { getPackageJson } = require('./package-json');
 const getPackagePath = require('./package-path');
 const shouldUseYarn = require('./should-use-yarn');
@@ -36,9 +37,19 @@ const getEnabledExtensions = (pathname = process.cwd()) => {
     // reset visited deps, in case it's the second call to this function
     visitedDeps = [];
 
-    const extensions = getAllExtensions(pathname);
+    // take extensions from scandipwa-scripts
+    // this is a workaround, require.resolve('@scandipwa/scandipwa-scripts') does not work
+    // probably cyclic dependencies
+    const defaultExtensionsSource = path.dirname(
+        require.resolve('@scandipwa/scandipwa-scripts/package.json')
+    );
 
-    return Array.from(extensions.reduceRight(
+    const rootExtensions = getAllExtensions(defaultExtensionsSource);
+    const projectExtensions = getAllExtensions(pathname);
+
+    const allExtensions = [...projectExtensions, ...rootExtensions];
+
+    return Array.from(allExtensions.reduceRight(
         // Run reduce backwards - prefer root package declaration
         (acc, [packageName, isEnabled]) => {
             if (isEnabled) {
