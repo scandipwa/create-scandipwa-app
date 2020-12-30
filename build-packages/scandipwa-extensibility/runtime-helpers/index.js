@@ -9,4 +9,4 @@ export const extensions = [
     /** INJECT__HOOK */
 ];
 
-globalThis.plugins = generateConfig(extensions);
+window.plugins = generateConfig(extensions);
