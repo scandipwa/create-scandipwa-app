@@ -6,6 +6,7 @@
 const path = require('path');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
+const getLeadingCommentsForNode = require('../util/get-leading-comments');
 
 const types = {
     ExportedClass: [
@@ -82,9 +83,9 @@ const getNamespaceCommentForNode = (node, sourceCode) => {
     const getNamespaceFromComments = (comments = []) => comments.find(
         comment => comment.value.includes('@namespace')
     );
-    
+
     return getNamespaceFromComments(
-        sourceCode.getCommentsBefore(getProperParentNode(node))
+        getLeadingCommentsForNode(getProperParentNode(node), sourceCode)
     );
 };
 
