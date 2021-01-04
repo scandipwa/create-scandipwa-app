@@ -8,5 +8,5 @@ export default (namespaces) => {
     // The last pushed into the namespaces array namespace
     // Is an actual, not an inherited one.
     const outerNamespace = namespaces[namespaces.length - 1];
-    return globalThis.plugins?.[outerNamespace]?.class || [];
+    return window.plugins?.[outerNamespace]?.class || [];
 };
