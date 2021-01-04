@@ -1,3 +1,5 @@
+const getLeadingCommentsForNode = require('../util/get-leading-comments');
+
 /**
  * @fileoverview All components should be extensible.
  * @author Jegors Batovs
@@ -9,7 +11,7 @@ const hasNamespace = (node, context) => {
 		? node.parent
 		: node;
 
-    const leadingComments = context.getSourceCode().getCommentsBefore(nodeToProcess);
+    const leadingComments = getLeadingCommentsForNode(nodeToProcess, context.getSourceCode());
 
     const namespaceComment = leadingComments.find(
 		({ value }) => value.match(/@namespace/)
