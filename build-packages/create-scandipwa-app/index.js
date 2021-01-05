@@ -9,7 +9,8 @@ const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const templateMap = {
     theme: require('@scandipwa/csa-generator-theme'),
-    blank: require('@scandipwa/csa-generator-blank')
+    blank: require('@scandipwa/csa-generator-blank'),
+    cra: require('@scandipwa/csa-generator-cra')
 };
 
 const createApp = async (options) => {
