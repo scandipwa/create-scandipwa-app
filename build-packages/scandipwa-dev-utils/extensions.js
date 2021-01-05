@@ -36,9 +36,14 @@ const getEnabledExtensions = (pathname = process.cwd()) => {
     // reset visited deps, in case it's the second call to this function
     visitedDeps = [];
 
-    const extensions = getAllExtensions(pathname);
+    const allExtensions = [
+        // TODO: validate if this is necessary: by default @scandipwa/scandipwa-scripts is handled
+        // all extensions are core extensions + project extensions
+        ...getAllExtensions(pathname),
+        ...getAllExtensions(getPackagePath('@scandipwa/scandipwa-scripts'))
+    ];
 
-    return Array.from(extensions.reduceRight(
+    return Array.from(allExtensions.reduceRight(
         // Run reduce backwards - prefer root package declaration
         (acc, [packageName, isEnabled]) => {
             if (isEnabled) {

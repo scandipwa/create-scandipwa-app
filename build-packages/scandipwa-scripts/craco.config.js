@@ -2,7 +2,6 @@
 /* eslint-disable no-param-reassign */
 const webpack = require('webpack');
 const fs = require('fs');
-const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -10,7 +9,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
-const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
 
 const {
     ESLINT_MODES,
@@ -53,11 +51,6 @@ module.exports = () => {
             plugins: [
                 // Allow BEM props
                 'transform-rebem-jsx',
-                // Enable 3.x middleware decorators
-                '@scandipwa/babel-plugin-middleware-decorator',
-                // Required for extension mechanism to work
-                '@babel/plugin-transform-arrow-functions',
-                '@babel/plugin-transform-async-to-generator',
                 // Resolve imports like from 'Component/...'
                 [
                     'module-resolver', {
@@ -88,9 +81,7 @@ module.exports = () => {
                 new webpack.ProvidePlugin({
                     React: 'react',
                     // legacy support
-                    PureComponent: ['react', 'PureComponent'],
-                    middleware: [require.resolve('@scandipwa/scandipwa-extensibility/middleware'), 'default'],
-                    Extensible: [require.resolve('@scandipwa/scandipwa-extensibility/Extensible'), 'default']
+                    PureComponent: ['react', 'PureComponent']
                 }),
 
                 // Provide BEM specific variables
@@ -132,12 +123,6 @@ module.exports = () => {
                         loader.include = undefined;
                     });
                 }
-
-                // Inject extension import loader
-                webpackConfig.module.rules.push({
-                    test: new RegExp(escapeRegex(path.join('util', 'Extensions', 'index.js'))),
-                    loader: '@scandipwa/webpack-extension-import-loader'
-                });
 
                 // Allow having empty entry point
                 if (isDev) {
