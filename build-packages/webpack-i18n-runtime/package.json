@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "license": "proprietary",
     "dependencies": {
-        "@scandipwa/webpack-after-emit-logger": "0.0.1",
+        "@scandipwa/webpack-after-emit-logger": "0.0.0",
         "@scandipwa/scandipwa-dev-utils": "0.0.19"
     },
     "scandipwa": {
