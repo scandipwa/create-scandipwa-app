@@ -15,6 +15,9 @@
         "craco.config.js",
         "/lib"
     ],
+    "engines": {
+        "node": ">=12.0.0"
+    },
     "dependencies": {
         "@scandipwa/craco": "0.1.0",
         "@scandipwa/eslint-config": "0.1.9",
