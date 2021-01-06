@@ -3,12 +3,14 @@
     "version": "0.0.1",
     "license": "proprietary",
     "dependencies": {
-        "@scandipwa/scandipwa": "3.2.3",
-        "chokidar": "^3.4.3",
-        "loader-utils": "^2.0.0"
+        "@scandipwa/webpack-after-emit-logger": "0.0.1",
+        "@scandipwa/scandipwa-dev-utils": "0.0.19"
     },
     "scandipwa": {
         "type": "extension",
+        "extensions": {
+            "@scandipwa/webpack-after-emit-logger": true
+        },
         "build": {
             "cracoPlugins": [
                 "build-config/config.plugin.js"

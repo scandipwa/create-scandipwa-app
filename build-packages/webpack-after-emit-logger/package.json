@@ -4,7 +4,7 @@
     "license": "proprietary",
     "main": "src/index.js",
     "dependencies": {
-        "@scandipwa/scandipwa": "3.2.4-alpha.2"
+        "@scandipwa/scandipwa-dev-utils": "0.0.19"
     },
     "scandipwa": {
         "type": "extension",

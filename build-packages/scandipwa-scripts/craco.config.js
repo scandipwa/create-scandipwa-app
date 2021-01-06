@@ -5,7 +5,6 @@ const fs = require('fs');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-// const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');

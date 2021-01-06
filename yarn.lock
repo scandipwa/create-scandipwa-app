@@ -2394,6 +2394,11 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@scandipwa/babel-plugin-middleware-decorator@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@scandipwa/babel-plugin-middleware-decorator/-/babel-plugin-middleware-decorator-0.1.2.tgz#110741da828adae815601ab7e3d230f4abebd028"
+  integrity sha512-zXTH5z0cU1u2WVBj+giIDFJ3A4ETa3vvLhUIwU1aeTnqLph+jEs772XSEda9pGOclRunJuyHv2S6fVSBLZOamw==
+
 "@scandipwa/craco@0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@scandipwa/craco/-/craco-0.0.4.tgz#78e0c2e1cb9b640290327041780f554c9c2ecb5a"
@@ -2403,7 +2408,7 @@
     lodash "^4.17.15"
     webpack-merge "^4.2.2"
 
-"@scandipwa/m2-theme@^0.1.1-alpha.0":
+"@scandipwa/m2-theme@^0.1.1", "@scandipwa/m2-theme@^0.1.1-alpha.0":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@scandipwa/m2-theme/-/m2-theme-0.1.1.tgz#b1b0703e70816c191cec27edc9764e3f4677f639"
   integrity sha512-+skN6sGTWrw6EKPlpOFA3reJrbT4b6M6zEDKJ5LTpgU/EbF0gsCUPeXQMw7ohNlBDVPcslw1hYety1MLAVvNtw==
@@ -2411,6 +2416,38 @@
     "@scandipwa/craco" "0.0.4"
     "@scandipwa/scandipwa-scripts" "^2.0.11"
     "@scandipwa/webpack-fallback-plugin" "^1.1.3"
+
+"@scandipwa/scandipwa-extensibility@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-extensibility/-/scandipwa-extensibility-1.0.2.tgz#7fef00f9b5fb5ea9d634cdf96a916c59e8486b0a"
+  integrity sha512-3YUKzeXbAqrXcwh2zUyJsamARwl42fD256E0hryDIikx2+CNj4BKvHVMhtfYMRNhb64Vv/BRPa0BoRkw8HAwXA==
+
+"@scandipwa/scandipwa-scripts@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-scripts/-/scandipwa-scripts-2.1.1.tgz#f4f51db68113cc9662275b701175a20ee0dea3fc"
+  integrity sha512-sW22j/x7o2YtQ9nIZGMoE5sTQzark9tm7i9Egst8NlesXLgJZf4wfxs5kgvIKXT2P7nj+x/Bs/p2e6garaTIAg==
+  dependencies:
+    "@babel/plugin-transform-arrow-functions" "^7.10.4"
+    "@babel/plugin-transform-async-to-generator" "^7.10.4"
+    "@scandipwa/babel-plugin-middleware-decorator" "0.1.2"
+    "@scandipwa/craco" "0.1.0"
+    "@scandipwa/eslint-config" "0.1.9"
+    "@scandipwa/scandipwa-dev-utils" "0.0.19"
+    "@scandipwa/scandipwa-extensibility" "1.0.2"
+    "@scandipwa/webpack-extension-import-loader" "0.0.16"
+    "@scandipwa/webpack-fallback-plugin" "1.1.4"
+    "@scandipwa/webpack-i18n-plugin" "0.1.4"
+    babel-plugin-module-resolver "^4.0.0"
+    babel-plugin-transform-rebem-jsx "^0.3.3"
+    chokidar "^3.4.2"
+    craco-sass-resources-loader "^1.1.0"
+    cross-spawn "^7.0.0"
+    debounce "^1.2.0"
+    node-sass "4.14.1"
+    progress-bar-webpack-plugin "^2.1.0"
+    react-dev-utils "^10.2.1"
+    react-scripts "4.0.1"
+    tree-kill "^1.2.2"
 
 "@scandipwa/scandipwa@3.2.3":
   version "3.2.3"
@@ -2462,6 +2499,43 @@
     rebem-classname "^0.4.0"
     redux "^4.0.5"
     unstated "^2.1.1"
+
+"@scandipwa/scandipwa@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa/-/scandipwa-4.0.0.tgz#01cc55251fd9310b7f719897fa81edea60f1c38b"
+  integrity sha512-iMs1rC6sDh9C91TBwlos/GGMn8uWd8H0nj+DU4OKCCTIsPMlw9utIQ6zGLPecP/su0crmsBC1RQDA1ufJHbnvQ==
+  dependencies:
+    "@scandipwa/m2-theme" "^0.1.1"
+    "@scandipwa/scandipwa-scripts" "^2.1.2"
+    "@scandipwa/service-worker" "^0.0.2"
+    braintree-web-drop-in "^1.23.0"
+    history "^4.9.0"
+    html-react-parser "^0.13.0"
+    prop-types "^15.6.2"
+    react "^16.13.1"
+    react-dom "^16.13.1"
+    react-input-range "^1.3.0"
+    react-redux "^7.2.0"
+    react-router "^5.2.0"
+    react-router-dom "^5.2.0"
+    react-stripe-elements "^6.1.2"
+    react-vimeo "^2.0.0"
+    react-visibility-sensor "^5.1.1"
+    react-youtube "^7.11.2"
+    react-zoom-pan-pinch "^1.6.1"
+    rebem-classname "^0.4.0"
+    redux "^4.0.5"
+    unstated "^2.1.1"
+
+"@scandipwa/service-worker@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@scandipwa/service-worker/-/service-worker-0.0.2.tgz#571abcca61a25b12ebefc079f9e962d4adbd2619"
+  integrity sha512-UJM36gkeYrm6OahM2/znfEz+S/iUfewXC+7q+SQWCO8P/c/3vRqmVfPMlSLqyHJrS2GCPaVziNjQgwjpg6UEHQ==
+  dependencies:
+    "@scandipwa/craco" "0.0.4"
+    "@scandipwa/scandipwa-scripts" "2.1.1"
+    "@scandipwa/webpack-fallback-plugin" "^1.1.3"
+    lodash.clonedeep "^4.5.0"
 
 "@scandipwa/webpack-extension-import-loader@0.0.16":
   version "0.0.16"
