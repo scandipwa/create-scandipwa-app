@@ -1,7 +1,7 @@
 import { render } from 'react-dom';
 
-import WelcomePage from './component/WelcomePage';
+import App from './component/App';
 
 import './style/reset.css';
 
-render(<WelcomePage />, document.getElementById('root'));
+render(<App />, document.getElementById('root'));
