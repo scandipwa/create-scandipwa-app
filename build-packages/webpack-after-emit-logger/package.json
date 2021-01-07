@@ -1,5 +1,6 @@
 {
     "name": "@scandipwa/webpack-after-emit-logger",
+    "description": "Webpack logger plugin used used by CSA.",
     "version": "0.0.1",
     "license": "proprietary",
     "main": "src/index.js",
