@@ -60,6 +60,7 @@ module.exports = (script) => {
                     // after restart do not launch new browser, and by default
                     // start new session based on env variable value
                     BROWSER: isRestarted ? 'none' : (process.env.BROWSER || ''),
+                    // TODO: resolve the plugins not toggling fast-refresh!
                     FAST_REFRESH: true,
                     FORCE_COLOR: true,
                     PWA_LOCALE: locale,
