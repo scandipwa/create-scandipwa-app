@@ -16,5 +16,8 @@
                 "build-config/config.plugin.js"
             ]
         }
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
