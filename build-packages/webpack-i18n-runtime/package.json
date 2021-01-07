@@ -1,10 +1,10 @@
 {
     "name": "@scandipwa/webpack-i18n-runtime",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "proprietary",
     "dependencies": {
-        "@scandipwa/webpack-after-emit-logger": "0.0.0",
-        "@scandipwa/scandipwa-dev-utils": "0.0.19"
+        "@scandipwa/scandipwa-dev-utils": "0.0.20",
+        "@scandipwa/webpack-after-emit-logger": "0.0.1"
     },
     "scandipwa": {
         "type": "extension",
