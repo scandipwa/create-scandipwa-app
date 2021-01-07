@@ -9,6 +9,7 @@ const {
 } = require('./lib/extensions');
 
 const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
+const { getParentThemePaths } = require('@scandipwa/scandipwa-dev-utils/parent-theme');
 
 class FallbackPlugin {
     /**
@@ -41,8 +42,11 @@ class FallbackPlugin {
      * @return {string} - absolute path to top-priority matching source
      * @memberof FallbackPlugin
      */
-    static getFallbackPathname(pathname, sources) {
-        const sourcePaths = Object.values(sources);
+    static getFallbackPathname(pathname) {
+        const sourcePaths = [
+            process.cwd(),
+            ...getParentThemePaths()
+        ];
 
         for (let i = 0; i < sourcePaths.length; i++) {
             const sourcePath = sourcePaths[i];

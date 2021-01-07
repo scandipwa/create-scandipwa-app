@@ -19,16 +19,18 @@ const {
 } = require('@scandipwa/craco');
 
 const { cracoPlugins } = require('./lib/build-plugins');
-const { sources } = require('./lib/sources');
 const alias = require('./lib/alias');
 const when = require('./lib/when');
+
+// we still need Sources for aliases, etc
+const { sources } = require('./lib/sources');
 
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = () => {
-    const abstractStyle = FallbackPlugin.getFallbackPathname('src/style/abstract/_abstract.scss', sources);
-    const appIndexJs = FallbackPlugin.getFallbackPathname('src/index.js', sources);
-    const appHtml = FallbackPlugin.getFallbackPathname('public/index.html', sources);
+    const abstractStyle = FallbackPlugin.getFallbackPathname('src/style/abstract/_abstract.scss');
+    const appIndexJs = FallbackPlugin.getFallbackPathname('src/index.js');
+    const appHtml = FallbackPlugin.getFallbackPathname('public/index.html');
 
     // Use ESLint config defined in package.json or fallback to default one
     const eslintConfig = getPackageJson(process.cwd()).eslintConfig || {

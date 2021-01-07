@@ -2,12 +2,11 @@
 const fs = require('fs');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
-const { sources } = require('@scandipwa/scandipwa-scripts/lib/sources');
 const getWorkboxBabelPlugin = require('./lib/workbox-babel-plugin');
 const getWarningPlugin = require('./lib/workbox-warning-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
-const swSrc = FallbackPlugin.getFallbackPathname('src/service-worker.js', sources);
+const swSrc = FallbackPlugin.getFallbackPathname('src/service-worker.js');
 
 module.exports = {
     plugin: {
