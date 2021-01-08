@@ -8,6 +8,7 @@
     "dependencies": {
         "@scandipwa/csa-generator-blank": "0.1.0",
         "@scandipwa/csa-generator-theme": "0.2.0",
+        "@scandipwa/csa-generator-cra": "0.1.0",
         "@scandipwa/scandipwa-dev-utils": "0.0.20",
         "semver": "^7.3.2",
         "yargs": "^16.1.0"
