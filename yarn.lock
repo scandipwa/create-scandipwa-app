@@ -2340,6 +2340,19 @@
     lodash "^4.17.15"
     webpack-merge "^4.2.2"
 
+"@scandipwa/scandipwa-dev-utils@0.0.19":
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-dev-utils/-/scandipwa-dev-utils-0.0.19.tgz#21e07cba1bd992130a22b22f7de2a2b11ea38be1"
+  integrity sha512-rz1Lh/gl+Bv8MYSAHW1pm72imtgKDWxDnlUpkuo4AjOsc9UrQ49N1ClCCu6DPgbhhO2mljD0WTcjunIi5pkm0A==
+  dependencies:
+    chalk "^4.1.0"
+    cross-spawn "^7.0.3"
+    mem-fs "^1.2.0"
+    mem-fs-editor "^7.0.1"
+    react-dev-utils "^10.2.1"
+    semver "^7.3.2"
+    validate-npm-package-name "^3.0.0"
+
 "@scandipwa/webpack-extension-import-loader@0.0.16":
   version "0.0.16"
   resolved "https://registry.yarnpkg.com/@scandipwa/webpack-extension-import-loader/-/webpack-extension-import-loader-0.0.16.tgz#1daf4209cf74d33efb7d3b447d448a20830fc8ba"
@@ -10638,6 +10651,11 @@ node-sass@4.14.1:
     stdout-stream "^1.4.0"
     "true-case-path" "^1.0.2"
 
+noop-loader@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/noop-loader/-/noop-loader-1.0.0.tgz#04c53f759bb08f56def63ee26922c65e3f0a4e5a"
+  integrity sha1-BMU/dZuwj1be9j7iaSLGXj8KTlo=
+
 "nopt@2 || 3":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-3.0.6.tgz#c6465dbf08abcd4db359317f79ac68a646b28ff9"
@@ -10789,6 +10807,14 @@ nth-check@^1.0.2:
   integrity sha512-WeBOdju8SnzPN5vTUJYxYUxLeXpCaVP5i5e0LF8fg7WORF2Wd7wFX/pk0tYZk7s8T+J7VLy0Da6J1+wCT0AtHg==
   dependencies:
     boolbase "~1.0.0"
+
+null-loader@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/null-loader/-/null-loader-4.0.1.tgz#8e63bd3a2dd3c64236a4679428632edd0a6dbc6a"
+  integrity sha512-pxqVbi4U6N26lq+LmgIbB5XATP0VdZKOG25DhHi8btMmJJefGArFyDg1yc4U3hWCJbMqSrw0qyrz1UQX+qYXqg==
+  dependencies:
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
 
 num2fraction@^1.2.2:
   version "1.2.2"

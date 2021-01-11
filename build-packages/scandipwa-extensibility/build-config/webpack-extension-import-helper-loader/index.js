@@ -24,6 +24,5 @@ module.exports = function injectImports(source) {
         codeAfterInjectable
     ].join('');
 
-    // support legacy, non stealthy extensions, stripout the Util/Extensions import
-    return injectedCode.replace(/import ('|")Util\/Extensions('|");/gm, '');
+    return injectedCode;
 };

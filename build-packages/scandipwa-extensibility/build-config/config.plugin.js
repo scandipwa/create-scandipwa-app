@@ -1,6 +1,9 @@
 /* eslint-disable no-param-reassign */
 
+const path = require('path');
 const webpack = require('webpack');
+const { whenDev } = require('@scandipwa/craco');
+const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
 
 // Inject the runtime helpers into the entry point
 const addImportInjectorLoaderHelper = (webpackConfig) => {
@@ -50,6 +53,12 @@ module.exports = {
             addImportInjectorLoaderHelper(webpackConfig);
             addImportInjectorLoader(webpackConfig);
             provideGlobals(webpackConfig);
+
+            // support legacy, non stealthy extensions, stripout the Util/Extensions import
+            webpackConfig.module.rules.push({
+                test: new RegExp(escapeRegex(path.join('util', 'Extensions', 'index.js'))),
+                loader: whenDev(() => 'null-loader', 'noop-loader')
+            });
 
             return webpackConfig;
         }
