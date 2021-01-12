@@ -1,17 +1,13 @@
-/* eslint-disable no-param-reassign */
-
-// TODO support any provided template typings
-
 // Load the locale map with import injector
-const addTemplatesMiddleware = (config) => {
-    config.module.rules.push({
-        test: /\.(p?html|php)$/,
+const addTemplatesMiddleware = (webpackConfig, templatePath) => {
+    webpackConfig.module.rules.push({
+        test: templatePath,
         loader: require.resolve('../webpack-template-plugin-loader')
     });
 };
 
-const addDefaultHtmlLoader = (config) => {
-    config.module.rules.push({
+const addDefaultHtmlLoader = (webpackConfig) => {
+    webpackConfig.module.rules.push({
         test: /\.(p?html|php)$/,
         loader: require.resolve('../default-html-loader')
     });
@@ -19,14 +15,16 @@ const addDefaultHtmlLoader = (config) => {
 
 module.exports = {
     plugin: {
-        overrideWebpackConfig: ({ webpackConfig }) => {
+        overrideWebpackConfig: ({ webpackConfig, cracoConfig }) => {
+            const templatePath = cracoConfig.paths.appHtml;
+
             // Ensure that the HTML template itself is handled
             // The loader coming from the HtmlWebpackPlugin is disabled from within itself
             // Because "some other" HTML loader (the middleware one) is enabled
-            addDefaultHtmlLoader(webpackConfig);
+            addDefaultHtmlLoader(webpackConfig, templatePath);
 
             // Add the loader (middleware) that ensures template plugins
-            addTemplatesMiddleware(webpackConfig);
+            addTemplatesMiddleware(webpackConfig, templatePath);
 
             return webpackConfig;
         }
