@@ -2,7 +2,7 @@ const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const { STRING_API_KEY } = require('../util/exposed-api-keys');
 
-module.exports = class NoPluginReturnStringException extends Error {
+module.exports = class PluginInvalidStringException extends Error {
     constructor(returnValue) {
         super();
 

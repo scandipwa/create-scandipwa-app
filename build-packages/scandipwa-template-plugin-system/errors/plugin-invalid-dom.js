@@ -2,7 +2,7 @@ const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const { DOM_API_KEY } = require('../util/exposed-api-keys');
 
-module.exports = class BothApiUsageException extends Error {
+module.exports = class PluginInvalidDomException extends Error {
     constructor(returnValue) {
         super();
 
