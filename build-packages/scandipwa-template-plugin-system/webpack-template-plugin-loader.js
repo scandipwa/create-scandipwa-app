@@ -1,4 +1,4 @@
-const xmldom = require('xmldom');
+const xmldom = require('@scandipwa/xmldom');
 
 const { STRING_API_KEY, DOM_API_KEY } = require('./util/exposed-api-keys');
 
