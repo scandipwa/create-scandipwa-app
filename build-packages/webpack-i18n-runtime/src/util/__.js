@@ -11,7 +11,7 @@ function translateString(string) {
 }
 
 function getTranslatedStringWithInjectedValues(string, values) {
-    return injectValues(translateString(string), values);
+    return injectValues(translateString(string), ...values);
 }
 
 class TranslatedValue extends String {
