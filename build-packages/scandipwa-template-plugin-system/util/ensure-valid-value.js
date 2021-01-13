@@ -12,7 +12,6 @@ const faultyCaseMap = (value) => ({
     [DOM_API_KEY]: [
         !value,
         typeof value !== 'object',
-        JSON.stringify(value) === '{}',
         Array.isArray(value)
     ],
     [STRING_API_KEY]: [
