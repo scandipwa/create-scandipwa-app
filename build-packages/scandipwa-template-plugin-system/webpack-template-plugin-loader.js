@@ -2,12 +2,10 @@ const xmldom = require('xmldom');
 
 const { STRING_API_KEY, DOM_API_KEY } = require('./util/exposed-api-keys');
 
-const handlePossiblePluginError = require('./error-handlers/possible-plugin-error');
+const getGroupedPlugins = require('./util/get-grouped-plugins');
 
-const NoPluginReturnDomException = require('./errors/no-plugin-return-dom');
-const NoPluginReturnStringException = require('./errors/no-plugin-return-string');
-const BothApiUsageException = require('./errors/both-api-usage');
-const NoLifecycleDeclaredException = require('./errors/no-lifecycle-declared');
+const handlePossiblePluginError = require('./error-handlers/possible-plugin-error');
+const ensureValidValue = require('./util/ensure-valid-value');
 
 const domParser = new xmldom.DOMParser();
 const xmlSerializer = new xmldom.XMLSerializer();
@@ -26,59 +24,35 @@ const parseToString = (dom) => xmlSerializer.serializeToString(dom);
  */
 module.exports = function middleware(templateFile) {
     const htmlPlugins = getHtmlPlugins();
+    const groupedHtmlPlugins = getGroupedPlugins(htmlPlugins);
 
-    const middlewaredDOM = Object.entries(htmlPlugins).reduce(
-        (accDom, [name, templatePlugins]) => handlePossiblePluginError(name,
-            () => templatePlugins.reduce((childAccDom, pluginObject) => {
-                const {
-                    templatePlugin: {
-                        [DOM_API_KEY]: overrideDOM,
-                        [STRING_API_KEY]: overrideString
-                    }
-                } = pluginObject;
-
-                // Prohibit attempting to use both DOM API and String API in a single plugin
-                // It makes no sense using both, user should go with one per plugin file
-                if (overrideDOM && overrideString) {
-                    throw new BothApiUsageException();
-                }
-
-                if (!(overrideDOM || overrideString)) {
-                    throw new NoLifecycleDeclaredException();
-                }
-
-                // Handle String API usage
-                if (overrideString) {
-                    const textRepresentationOfDom = parseToString(childAccDom);
-                    const overriddenTextRepresentation = overrideString({
-                        markup: textRepresentationOfDom
-                    });
-
-                    // Handle faulty code returned from the plugin
-                    if (!overriddenTextRepresentation || typeof overriddenTextRepresentation !== 'string') {
-                        throw new NoPluginReturnStringException(overriddenTextRepresentation);
-                    }
-
-                    return parseToDOM(overriddenTextRepresentation);
-                }
-
-                // Handle DOM API usage
-                const resultFromPlugin = overrideDOM({
-                    dom: childAccDom,
+    // Perform DOM API usages first
+    const middlewaredDOM = groupedHtmlPlugins[DOM_API_KEY].reduce(
+        (acc, { name, override }) => handlePossiblePluginError(
+            name,
+            () => ensureValidValue(
+                DOM_API_KEY,
+                override({
+                    dom: acc,
                     parser: domParser,
                     serializer: xmlSerializer
-                });
-
-                // TODO check if valid DOM returned
-                // Handle faulty DOM returned
-                if (!resultFromPlugin || typeof resultFromPlugin !== 'object') {
-                    throw new NoPluginReturnDomException(resultFromPlugin);
-                }
-
-                return resultFromPlugin;
-            }, accDom)),
+                })
+            )
+        ),
         parseToDOM(templateFile)
     );
 
-    return parseToString(middlewaredDOM);
+    // Perform the text API usages second
+    const middlewaredText = groupedHtmlPlugins[STRING_API_KEY].reduce(
+        (acc, { name, override }) => handlePossiblePluginError(
+            name,
+            () => ensureValidValue(
+                STRING_API_KEY,
+                override({ markup: acc })
+            )
+        ),
+        parseToString(middlewaredDOM)
+    );
+
+    return middlewaredText;
 };
