@@ -14,9 +14,11 @@ It provides an opportunity to modify the template similarly to the process which
 
 2. Your extension is incompatible with some existing HTML/PHP nodes in the template and needs to remove them
 
+3. Your extension needs to change attributes of the existing nodes to some other values
+
 ### Limitations
 
-1. This tool is not meant for PHP code modifications. It offers an opportunity to interact with template as with text, but changing PHP or JS code such way would be considered a misuse, due to possible incompatibilities with a plugin written such a way.
+1. This tool is not meant for PHP code modifications. It offers an opportunity to interact with template as with text, but changing PHP or JS code such way would be considered a misuse, due to possible incompatibilities with a plugin written such a way. To change the PHP logic - change abstractions, not delta-modify the code.
 
 ### Dependencies
 
@@ -62,4 +64,48 @@ Interact with the text representation of the template. It is __not recommended__
 
 This API is meant strictly for interaction with template types that are __not supported__ by the first API, e.g. `cshtml`, Razor syntax etc.
 
-A valid markup should be returned from this method.
+Such plugins will be executed after the DOM plugins. A valid markup should be returned from this method.
+
+### Usage examples
+
+1. Adding an additional tag to the document
+
+```js
+module.exports = {
+    templatePlugin: {
+        overrideDOM({ dom, parser, serializer }) {
+            // Generate the node as you would do that in the browser scope
+            const additionalLink = dom.createElement('link');
+            additionalLink.setAttribute('rel', 'stylesheet');
+            additionalLink.setAttribute('href', 'https://my-super-source/style.css');
+
+            // Or parse it directly from the markup!
+            const additionalLink = parser.parseFromString(
+                `<link rel="stylesheet" href="https://my-super-source/style.css">`
+            );
+
+            // Modify the DOM that is going to be present in the application
+            dom.getElementsByTagName('head')[0].appendChild(additionalLink);
+
+            // Remember to always return DOM from this method!
+            return dom;
+        }
+    }
+};
+```
+
+2. Adding additional non-supported by DOM syntax to the document
+
+```js
+module.exports = {
+    templatePlugin: {
+        overrideText({ markup }) {
+            const additionalText = `@{
+                var greeting = "Welcome to our Razor-powered website!";
+            }`;
+
+            return additionalText.concat(markup);
+        }
+    }
+};
+```
