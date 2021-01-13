@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutator": "javascript",
+  "packageManager": "npm",
+  "reporters": [
+    "html",
+    "clear-text",
+    "progress",
+    "dashboard"
+  ],
+  "testRunner": "command",
+  "transpilers": [],
+  "dashboard": {
+    "project": "github.com/brodybits/xmldom",
+    "version": "master"
+  },
+  "coverageAnalysis": "all",
+  "commandRunner": {
+    "command": "npm run test:unit"
+  }
+}
