@@ -48,6 +48,8 @@ It provides an opportunity to modify the template similarly to the process which
 
 ### API reference
 
+The processing happens during the build time. Don't let the API (which is really similar to what browsers have for DOM) trick you!
+
 1. `overrideDOM({ dom, parser, serializer }): DOM`
 
 Interact with the DOM representation of the template. This is a __recommended__ way to modify a template using this plugin system.
