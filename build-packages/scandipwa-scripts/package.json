@@ -8,7 +8,8 @@
     "scandipwa": {
         "extensions": {
             "@scandipwa/scandipwa-extensibility": true,
-            "@scandipwa/scandipwa-template-plugin-system": true
+            "@scandipwa/scandipwa-template-plugin-system": true,
+            "@scandipwa/webpack-after-emit-logger": true
         }
     },
     "files": [
