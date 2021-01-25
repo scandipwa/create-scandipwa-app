@@ -70,7 +70,7 @@ function generateLocaleMapContents(localePathMap, defaultLocale) {
 module.exports = function injectImports(source) {
     const {
         defaultLocale = 'en_US'
-    } = loaderUtils.getOptions(this);
+    } = loaderUtils.getOptions(this) || {};
 
     // Get the active locales from the current theme's package.json
     const locales = getEnabledLocales();
