@@ -8,6 +8,9 @@
     },
     "scandipwa": {
         "type": "theme",
+        "locales": {
+            "en_US": true
+        },
         "parentTheme": "@scandipwa/scandipwa",
         "extensions": {}
     },
