@@ -179,7 +179,7 @@ const generateNamespace = (node, context) => {
         // Convert to pascal-case, and trim "-"
         /\b[a-z](?=[a-z]{2})/g,
         (letter) => letter.toUpperCase()
-    ).replaceAll('-', '');
+    ).split('-').join('');
 
     // Do not transform code to uppercase / lowercase it should be written alright
     return `${pathname}/${getNodeNamespace(node)}`;
