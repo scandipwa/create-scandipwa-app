@@ -10,12 +10,15 @@ const logger = require('@scandipwa/scandipwa-dev-utils/logger');
  * @returns {any} the result of the callback
  */
 module.exports = (name, cb) => {
+    // Throw this error to be handled by the main compilation error handler
+    // It is thrown only when this package contains coding errors
     if (!name) {
         throw new Error(
             'The plugin\'s name has not been provided to the possible error handler!'
         );
     }
 
+    // Catch all of these errors to be handled as user-caused errors
     try {
         return cb();
     } catch (err) {

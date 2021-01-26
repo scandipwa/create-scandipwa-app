@@ -18,6 +18,8 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.20",
-    "@scandipwa/xmldom": "0.4.1-dev"
+    "@scandipwa/xmldom": "0.4.1-dev",
+    "@scandipwa/scandipwa-dev-utils": "0.0.20",
+    "loader-utils": "^2.0.0"
   }
 }
