@@ -162,6 +162,14 @@ module.exports = () => {
                 return webpackConfig;
             }
         },
+        devServer: (devServerConfig, { proxy }) => {
+            // initially added by https://github.com/facebook/create-react-app/issues/1676
+            // removing X-Forwarded-* headers so Kubernetes won't panic
+            // question is - how do they help and why are they needed?
+            // maybe they should be ScandiPWA specific?
+            proxy[0].xfwd = false;
+            return devServerConfig;
+        },
         plugins: [
             ...when(
                 // if there is no abstract style, do not inject it
