@@ -3,26 +3,29 @@ const { STRING_API_KEY, DOM_API_KEY } = require('./exposed-api-keys');
 const PluginInvalidDomException = require('../errors/plugin-invalid-dom');
 const PluginInvalidStringException = require('../errors/plugin-invalid-string');
 
-const exceptionMap = {
-    [DOM_API_KEY]: PluginInvalidDomException,
-    [STRING_API_KEY]: PluginInvalidStringException
-};
-
-const faultyCaseMap = (value) => ({
-    [DOM_API_KEY]: [
-        !value,
-        typeof value !== 'object',
-        Array.isArray(value)
-    ],
-    [STRING_API_KEY]: [
-        !value,
-        typeof value !== 'string'
-    ]
+const validationMap = (value) => ({
+    [DOM_API_KEY]: {
+        validators: [
+            !value,
+            typeof value !== 'object',
+            Array.isArray(value)
+        ],
+        Exception: PluginInvalidDomException
+    },
+    [STRING_API_KEY]: {
+        validators: [
+            !value,
+            typeof value !== 'string'
+        ],
+        Exception: PluginInvalidStringException
+    }
 });
 
 const ensureValidValue = (apiType, value) => {
-    if (faultyCaseMap(value)[apiType].find(Boolean)) {
-        throw new exceptionMap[apiType](value);
+    const validation = validationMap(value);
+
+    if (validation[apiType].validators.find(Boolean)) {
+        throw new validation[apiType].Exception(value);
     }
 
     return value;
