@@ -9,7 +9,7 @@ module.exports = (nonExtractableList) => {
     );
 
     return {
-        type: 'error',
+        type: 'warn',
         args: [
             'Non-extractable translations found in your application!',
             'Consider refactoring them so that they are translatable.',
