@@ -171,6 +171,10 @@ class LocalizationManager {
     }
 
     handleNonExtractableCases() {
+        if (!this.nonExtractableCases.length) {
+            return;
+        }
+
         afterEmitLogger.logMessage(nonExtractableTranslationMessage(this.nonExtractableCases));
     }
 
