@@ -73,7 +73,7 @@ const addSuperToConstructor = (path, types) => {
 
 /**
  * Attempt to read package.json located by p
- * @param {string} packageJsonPath 
+ * @param {string} packageJsonPath
  */
 const getPackageJson = (packagePath) => {
     const packageJsonPath = path.join(packagePath, 'package.json');
@@ -81,15 +81,15 @@ const getPackageJson = (packagePath) => {
     try {
         return require(packageJsonPath);
     } catch (err) {
-        return {}
+        return {};
     }
-}
+};
 
 /**
  * Memoization strategy is valid only for functions with 1 argument
  * This strategy works better with 1-argument functions
- * 
- * @param {function} cb 
+ *
+ * @param {function} cb
  */
 const memoizeBySingleArgument = (cb) => {
     const memoizedValues = {};
@@ -100,14 +100,17 @@ const memoizeBySingleArgument = (cb) => {
             const result = cb(arg);
             memoizedValues[arg] = result;
         }
-        
+
         return memoizedValues[arg];
     };
-}
+};
 
 const isScandipwaPackageFile = memoizeBySingleArgument((filePath) => {
     // Potentially, only the files inside of the src/ directory need to be transpiled
     const src = filePath.lastIndexOf('/src/');
+    if (src === -1) {
+        return false;
+    }
 
     const packagePath = filePath.slice(0, src);
     const packageJson = getPackageJson(packagePath);
