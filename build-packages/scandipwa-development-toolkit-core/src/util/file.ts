@@ -1,8 +1,7 @@
+// TODO remove
 import * as vscode from 'vscode';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as path from 'path';
-
-// TODO clean up
 
 export const getWorkspacePath = () : string => {
     return vscode.workspace.workspaceFolders?.[0].uri.fsPath || '';
@@ -22,13 +21,10 @@ export const validateScandiPWA = () => {
 };
 
 export const ensureDirectory = (name: string) => {
-    const dirName = `${getWorkspacePath()}/${name}`;
+    const dirName = path.resolve(getWorkspacePath(), name);
 
-    if (!fs.existsSync(dirName)) {
-        fs.mkdirSync(dirName);
-    }
+    fs.ensureDirSync(dirName);
 };
-
 
 export const createNewFileFromTemplate = async (src: string, dest: string, pattern: RegExp, name: string) : Promise<void> => {
     if (!src || !dest || !name) {
@@ -45,13 +41,6 @@ export const createNewFileFromTemplate = async (src: string, dest: string, patte
     await fs.writeFileSync(destFile, content);
 };
 
-const getDirContents = (path: string) : string[] => {
-    if (!fs.existsSync(path)) {
-        return [];
-    }
-    return fs.readdirSync(path);
-};
-
 /**
  * Get path to corresponding (src/<this>) folder
  * @param pathToSourceFolder
@@ -61,19 +50,23 @@ export const getSourcePath = (pathToSourceFolder: string) : string => {
     return path.join(getWorkspacePath(), sourcePath, pathToSourceFolder);
 };
 
-export const showSourceDirectoryContentInSelect = async (pathToSourceFolder: string, placeHolder: string) => {
-    const componentNames = await getDirContents(getSourcePath(pathToSourceFolder))
-        .map(directoryEntry => {
-            if (pathToSourceFolder.includes('query')) {
-                return directoryEntry.split('.')[0];
-            }
+/**
+ * Create a new file and fill it with given contents
+ * @param newFilePath
+ * @param contents
+ */
+export const createNewFileWithContents = async (newFilePath: string, contents: string) => {
+    ensureDirectory(path.dirname(newFilePath));
 
-            return directoryEntry;
-        })
-        .filter(x => x !== ('index.js'));
+    // Prevent overwrites
+    if (fs.existsSync(newFilePath)) {
+        return;
+    }
 
-    return await vscode.window.showQuickPick(
-        componentNames.map(label => ({ label })),
-        { placeHolder }
+    // Create the file
+    fs.writeFile(
+        newFilePath,
+        contents,
+        console.error
     );
 };

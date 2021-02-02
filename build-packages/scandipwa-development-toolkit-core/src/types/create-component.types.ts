@@ -1,31 +1,31 @@
-enum ResourceType {
-    Route = 'route',
-    Component = 'component',
-    Store = 'store',
-    Query = 'query'
+export enum ResourceType {
+    Route = 'Route',
+    Component = 'Component',
+    Store = 'Store',
+    Query = 'Query'
 }
 
-type FileMap = Record<string, string | null>;
+export type FileMap = Record<string, string | null>;
 
-type MapGeneratorOptions = {
+export type MapGeneratorOptions = {
     resourceType: ResourceType,
     resourceName: string
 }
 
-enum DispatcherType {
+export enum DispatcherType {
     QueryDispatcher = 'dispatcher-query',
     RegularDispatcher = 'dispatcher-regular',
     NoDispatcher = 'no-dispatcher'
 }
 
-type FileOpenCallback = (filename: string) => void;
+export type FileOpenCallback = (filename: string) => void;
 
-type ComponentResourceParams = {
+export type ComponentResourceParams = {
     containerFeatures: string[]
 };
 
-type StoreResourceParams = {
+export type StoreResourceParams = {
     dispatcherType: DispatcherType
 }
 
-type ResourceParams = ComponentResourceParams | StoreResourceParams;
+export type ResourceParams = ComponentResourceParams | StoreResourceParams;

@@ -22,11 +22,11 @@ export interface ExportData {
     type: ExportType
 }
 
-export enum Extendable {
-    route = 'Route',
-    component = 'Component',
-    query = 'Query',
-    store = 'Store'
+export enum ResourceType {
+    Route = 'Route',
+    Component = 'Component',
+    Query = 'Query',
+    Store = 'Store'
 }
 
 export enum StylesOption {
@@ -44,5 +44,8 @@ export interface FileInformation {
     chosenExports: ExportData[],
     defaultExportCode: string | undefined,
     fileName: string,
-    originalCode: string
+    originalCode: string,
+    resourceType: ResourceType,
+    resourceName: string,
+    chosenStylesOption: StylesOption
 }
