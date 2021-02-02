@@ -29,6 +29,7 @@
             "runtime-packages/cma/**",
             "build-packages/eslint-plugin-scandipwa-guidelines/**",
             "build-packages/scandipwa-development-toolkit-csa/**",
+            "build-packages/scandipwa-development-toolkit-core/**",
             "**/node_modules/**"
         ]
     },
