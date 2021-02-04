@@ -1,4 +1,4 @@
-const storeOptions = (yargs) => yargs
+const withStoreOptions = (yargs) => yargs
     .option('dispatcher-type', {
         describe: 'Type of dispatcher to create',
         alias: 'd',
@@ -6,4 +6,4 @@ const storeOptions = (yargs) => yargs
         default: 'no'
     });
 
-module.exports = storeOptions;
+module.exports = withStoreOptions;

@@ -1,4 +1,4 @@
-const componentOptions = (yargs) => yargs
+const withComponentOptions = (yargs) => yargs
     .option('business-logic', {
         describe: 'Contains business logic',
         alias: 'b',
@@ -12,4 +12,4 @@ const componentOptions = (yargs) => yargs
         default: false
     });
 
-module.exports = componentOptions;
+module.exports = withComponentOptions;

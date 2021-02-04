@@ -2,9 +2,9 @@
 const { ResourceType } = require('@scandipwa/scandipwa-development-toolkit-core');
 
 const creator = require('./lib/creator');
-const componentOptions = require('./lib/options/componentOptions');
-const storeOptions = require('./lib/options/storeOptions');
-const withTargetDirectory = require('./lib/options/withTargetDirectory');
+const componentOptions = require('./lib/options/withComponentOptions');
+const storeOptions = require('./lib/options/withStoreOptions');
+const withTargetDirectory = require('../../common/options/withTargetDirectory');
 
 module.exports = (yargs) => {
     yargs.command('create <resource type>', 'Create a new resource', (yargs) => {
