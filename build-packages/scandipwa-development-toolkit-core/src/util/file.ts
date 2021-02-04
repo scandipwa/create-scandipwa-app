@@ -2,6 +2,22 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { ILogger, ReplacementInstruction } from '../types';
 
+/**
+ * Returns true if override has been prevented
+ */
+export const preventOverwrite = (dest: string, logger: ILogger): boolean => {
+    // Prevent overwriting existing files
+    if (fs.existsSync(dest)) {
+        logger.warn(
+            `File ${logger?.style?.file(dest) || dest} exists and will not be overwritten\n`
+        );
+
+        return true;
+    }
+
+    return false;
+}
+
 export const createNewFileFromTemplate = (
     src: string, 
     dest: string,
@@ -21,11 +37,8 @@ export const createNewFileFromTemplate = (
         template
     );
 
-    // Prevent overwriting existing files
-    if (fs.existsSync(dest)) {
-        logger.warn(
-            `File ${logger?.style?.file(dest) || dest} exists and will not be overwritten\n`
-        );
+    // Handle file already exists
+    if (preventOverwrite(dest, logger)) {
         return false;
     }
 
@@ -39,14 +52,18 @@ export const createNewFileFromTemplate = (
  * @param newFilePath
  * @param contents
  */
-export const createNewFileWithContents = async (newFilePath: string, contents: string) => {
+export const createNewFileWithContents = (
+    newFilePath: string, 
+    contents: string,
+    logger: ILogger
+): boolean => {
     // Make sure parent dir exists
     const parentDirectory = path.dirname(newFilePath);
     fs.ensureDirSync(parentDirectory);
 
     // Prevent overwrites
-    if (fs.existsSync(newFilePath)) {
-        return;
+    if (preventOverwrite(newFilePath, logger)) {
+        return false;
     }
 
     // Create the file
@@ -55,4 +72,6 @@ export const createNewFileWithContents = async (newFilePath: string, contents: s
         contents,
         console.error
     );
+
+    return true;
 };
