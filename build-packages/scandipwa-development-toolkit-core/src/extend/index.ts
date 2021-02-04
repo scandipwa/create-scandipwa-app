@@ -33,14 +33,14 @@ const shouldHandleStyles = (resourceType: ResourceType, fileName: string) => {
  * @param logger 
  * @param userInteraction 
  */
-const extend = (
+const extend = async (
     resourceType: ResourceType, 
     resourceName: string,
     targetModulePath: string,
     sourceModulePath: string,
     logger: ILogger,
     userInteraction: IUserInteraction
-) => {
+): Promise<string[]> => {
     const resourceTypeDirectory = extendableDirectoryMap[resourceType];
     const sourceResourceDirectory = getSourceResourceDirectory(
         resourceName, 
@@ -51,9 +51,9 @@ const extend = (
 
     const sourceFileList = getFileListForResource(resourceType, resourceName, sourceResourceDirectory);
 
-    sourceFileList.reduce(
+    const createdFileList = await sourceFileList.reduce(
         async (acc: Promise<any>, fileName: string): Promise<any> => {
-            await acc;
+            const createdFiles = await acc;
 
             const sourceFilePath = path.resolve(sourceResourceDirectory, fileName);
             const newFilePath = path.resolve(targetModulePath, resourceTypeDirectory, fileName);
@@ -117,9 +117,21 @@ const extend = (
                 chosenStylesOption: stylesOption!
             });
 
-            createNewFileWithContents(newFilePath, newFileContents);
-        }, Promise.resolve(undefined)
+            const fileIsCreated = createNewFileWithContents(
+                newFilePath, 
+                newFileContents, 
+                logger
+            );
+
+            if (fileIsCreated) {
+                return createdFiles.concat(newFilePath);
+            }
+
+            return createdFiles;
+        }, Promise.resolve([])
     );
+
+    return createdFileList;
 }
 
 export default extend;
