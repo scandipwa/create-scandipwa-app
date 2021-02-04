@@ -3,6 +3,7 @@ import * as path from 'path';
 import getFileMap from './file-map';
 
 import generateFilesFromMap from '../util/generate-files-from-map';
+import fixESLint from '../util/eslint';
 import validateResourceParams from './validate-resource-params';
 import { ILogger, ResourceType } from '../types';
 import { FileOpenCallback, ResourceParams } from '../types';
@@ -30,7 +31,7 @@ const create = (
     const fileMap = getFileMap(resourceType, resourceParams);
 
     // Create the files
-    return generateFilesFromMap(
+    const generatedFiles = generateFilesFromMap(
         fileMap, 
         resourceName, 
         resourceType, 
@@ -38,6 +39,11 @@ const create = (
         logger,
         openFile
     );
+
+    // Run eslint fix to prettify the created files
+    fixESLint(generatedFiles);
+
+    return generatedFiles;
 };
 
 export default create;

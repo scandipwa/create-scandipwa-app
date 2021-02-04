@@ -18,6 +18,7 @@
 		"@babel/traverse": "^7.9.6",
 		"@babel/types": "^7.9.6",
 		"@types/fs-extra": "^9.0.6",
+		"eslint": "^7.19.0",
 		"fs-extra": "^9.1.0"
 	},
 	"devDependencies": {
@@ -29,7 +30,6 @@
 		"@types/vscode": "^1.45.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"@typescript-eslint/parser": "^2.30.0",
-		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
