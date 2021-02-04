@@ -1,8 +1,8 @@
-const path = require('path');
-
-const { create, locateScandipwaModule } = require('@scandipwa/scandipwa-development-toolkit-core');
+const { create } = require('@scandipwa/scandipwa-development-toolkit-core');
 const { DispatcherType } = require('@scandipwa/scandipwa-development-toolkit-core');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+
+const invokeGenerator = require('../../../common/invoke-generator');
 
 const dispatcherTypeMap = {
     no: DispatcherType.NoDispatcher,
@@ -10,50 +10,29 @@ const dispatcherTypeMap = {
     regular: DispatcherType.RegularDispatcher
 };
 
-const BUBBLE_DEPTH = 5;
-
-const componentCreator = (resourceType) => ({
+const creator = (resourceType) => ({
     name,
     businessLogic = false,
     connected = false,
     dispatcherType,
-    targetModule = locateScandipwaModule(process.cwd(), BUBBLE_DEPTH)
+    targetModule
 }) => {
-    if (!targetModule) {
-        logger.error(
-            `Unable to locate a ScandiPWA module ${logger.style.misc(BUBBLE_DEPTH)} directories up from`,
-            logger.style.file(process.cwd()),
-            'Please make sure the command is ran in a ScandiPWA module',
-            `Or supply a path to a ScandiPWA module by using ${logger.style.command('--target-module [-t]')} flag`
-        );
-
-        return;
-    }
-
-    const createdFiles = create(
-        resourceType,
-        name,
-        {
-            containerFeatures: {
-                logic: businessLogic,
-                state: connected
-            },
-            dispatcherType: dispatcherTypeMap[dispatcherType]
-        },
+    invokeGenerator(
         targetModule,
-        logger
-    );
-
-    if (!createdFiles.length) {
-        return;
-    }
-
-    logger.note(
-        'The following files have been created:',
-        ...createdFiles.map(
-            (filepath) => logger.style.file(path.relative(process.cwd(), filepath))
+        (resolvedTargetModule) => create(
+            resourceType,
+            name,
+            {
+                containerFeatures: {
+                    logic: businessLogic,
+                    state: connected
+                },
+                dispatcherType: dispatcherTypeMap[dispatcherType]
+            },
+            resolvedTargetModule,
+            logger
         )
     );
 };
 
-module.exports = componentCreator;
+module.exports = creator;
