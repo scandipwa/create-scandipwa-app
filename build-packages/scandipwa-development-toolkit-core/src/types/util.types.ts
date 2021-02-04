@@ -24,3 +24,9 @@ export interface IUserInteraction {
 
     yesNo(question: string): Promise<boolean>;
 }
+
+
+export type ReplacementInstruction = {
+    pattern: RegExp | string,
+    replacement: string
+};

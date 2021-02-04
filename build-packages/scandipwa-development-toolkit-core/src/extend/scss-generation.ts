@@ -25,8 +25,10 @@ const createStyleFile = (
     createNewFileFromTemplate(
         templatePath, 
         targetPath, 
-        /Placeholder/g, 
-        extendableName, 
+        [{
+            pattern: /Placeholder/g,
+            replacement: extendableName
+        }], 
         logger
     );
 };

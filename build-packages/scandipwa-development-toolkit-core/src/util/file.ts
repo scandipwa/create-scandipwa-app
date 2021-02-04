@@ -1,41 +1,27 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { ILogger } from '../types';
-
-// const RECURSION_LIMIT = 5;
-
-// const getTargetScandipwaModulePath = (cwd: string, recursionLevel = 1): string | null => {
-//     const packageJsonPath = path.join(cwd, 'package.json');
-
-//     if (fs.existsSync(packageJsonPath)) {
-//         const { scandipwa } = require(packageJsonPath);
-//         if (scandipwa) {
-//             return cwd;
-//         }
-//     }
-
-//     if (recursionLevel > RECURSION_LIMIT) {
-//         // TODO throw
-//         return null;
-//     }
-
-//     const parentDirectory = path.resolve(cwd, '..');
-//     return getTargetScandipwaModulePath(parentDirectory, --recursionLevel);
-// }
+import { ILogger, ReplacementInstruction } from '../types';
 
 export const createNewFileFromTemplate = (
     src: string, 
-    dest: string, 
-    pattern: RegExp, 
-    name: string,
+    dest: string,
+    replace: ReplacementInstruction[],
     logger: ILogger
 ) : boolean => {
-    if (!src || !dest || !name) {
+    if (!src || !dest) {
         return false;
     }
-    const data = fs.readFileSync(src, 'utf8');
-    const content = data.replace(pattern, name);
 
+    // Read the template
+    const template = fs.readFileSync(src, 'utf8');
+
+    // Replace all the necessary patterns
+    const content = replace.reduce(
+        (data, { pattern, replacement }) => data.replace(pattern, replacement), 
+        template
+    );
+
+    // Prevent overwriting existing files
     if (fs.existsSync(dest)) {
         logger.warn(
             `File ${logger?.style?.file(dest) || dest} exists and will not be overwritten\n`
@@ -43,6 +29,7 @@ export const createNewFileFromTemplate = (
         return false;
     }
 
+    // Create the file
     fs.writeFileSync(dest, content);
     return true;
 };

@@ -54,8 +54,13 @@ const generateFilesFromMap = (
             const createdNewFile = createNewFileFromTemplate(
                 templatePath,
                 newFilePath,
-                /Placeholder/g,
-                resourceName,
+                [{
+                    pattern: /Placeholder/g,
+                    replacement: resourceName
+                },{
+                    pattern: /PLACEHOLDER/g,
+                    replacement: resourceName.toUpperCase()
+                }],
                 logger
             );
 
