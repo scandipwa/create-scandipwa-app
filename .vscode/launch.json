@@ -76,6 +76,17 @@
             "args": [
                 "link"
             ]
-        }
+        },
+        {
+            "name": "CLI",
+            "program": "${workspaceFolder}/build-packages/scandipwa-cli/index.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": ["create", "component", "MyComponent"],
+            "cwd": "${workspaceFolder}/runtime-packages/csa",
+            "type": "pwa-node"
+        },
     ]
 }
