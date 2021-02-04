@@ -4,6 +4,7 @@ import {
 } from '@babel/types';
 
 import { NodePath } from '@babel/traverse';
+import { ResourceType } from './common.types';
 
 export type ExportsPaths = Array<
     NodePath<ExportNamedDeclaration> |
@@ -20,13 +21,6 @@ export enum ExportType {
 export interface ExportData {
     name: string,
     type: ExportType
-}
-
-export enum ResourceType {
-    Route = 'Route',
-    Component = 'Component',
-    Query = 'Query',
-    Store = 'Store'
 }
 
 export enum StylesOption {

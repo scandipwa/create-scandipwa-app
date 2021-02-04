@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { IUserInteraction, StylesOption } from "../types";
+import { ILogger, IUserInteraction, StylesOption } from "../types";
 import { createNewFileFromTemplate } from '../util/file';
 
 /**
@@ -9,7 +9,8 @@ import { createNewFileFromTemplate } from '../util/file';
 const createStyleFile = (
     extendableName: string,
     resourceTypeDirectory: string,
-    stylesOption: StylesOption
+    stylesOption: StylesOption,
+    logger: ILogger
 ) => {
     const extensionRoot = path.join(__dirname, '..', '..');
 
@@ -21,7 +22,13 @@ const createStyleFile = (
         targetName,
     );
 
-    createNewFileFromTemplate(templatePath, targetPath, /Placeholder/g, extendableName);
+    createNewFileFromTemplate(
+        templatePath, 
+        targetPath, 
+        /Placeholder/g, 
+        extendableName, 
+        logger
+    );
 };
 
 export const selectStylesOption = (userInteraction: IUserInteraction) => userInteraction.singleSelect(
@@ -46,7 +53,8 @@ export const selectStylesOption = (userInteraction: IUserInteraction) => userInt
 export const handleStyles = async (
     extendableName: string,
     resourceTypeDirectory: string,
-    stylesOption: StylesOption
+    stylesOption: StylesOption,
+    logger: ILogger
 ) => {
     // Keep styles => skip this
     if (stylesOption === StylesOption.keep) {
@@ -54,5 +62,10 @@ export const handleStyles = async (
     }
 
     // Create the new file
-    createStyleFile(extendableName, resourceTypeDirectory, stylesOption);
+    createStyleFile(
+        extendableName, 
+        resourceTypeDirectory, 
+        stylesOption, 
+        logger
+    );
 }

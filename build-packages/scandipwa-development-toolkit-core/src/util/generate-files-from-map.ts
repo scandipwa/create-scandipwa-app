@@ -1,7 +1,9 @@
 import * as path from 'path';
-import { createNewFileFromTemplate, ensureDirectory } from './file';
+import * as fs from 'fs-extra';
+import { FileMap, FileOpenCallback, ILogger, ResourceType } from '../types';
+import { createNewFileFromTemplate } from './file';
 
-const extensionRoot = path.resolve(__dirname, '..', '..');
+const templateDirectory = path.resolve(__dirname, '..', 'templates');
 
 const getIsNested = (resourceType: ResourceType) => resourceType !== ResourceType.Query;
 
@@ -17,18 +19,18 @@ const generateFilesFromMap = (
     fileMap: FileMap, 
     resourceName: string, 
     resourceType: ResourceType, 
+    targetModulePath: string,
+    logger: ILogger,
     openFile?: FileOpenCallback
 ): string[] => {
-    // Ensure that "head" directory is present, e.g. src/component or src/route etc.
-    const resourceTypeDirectory = path.join('src', resourceType);
-    ensureDirectory(resourceTypeDirectory);
+    // Calculate the resource path
+    const resourceTypeDirectory = path.join(targetModulePath, 'src', resourceType);
+    const resourceDirectory = getIsNested(resourceType)
+        ? path.join(resourceTypeDirectory, resourceName)
+        : resourceTypeDirectory;
 
-    // Ensure that the resource's "personal" directory is present, e.g. src/component/AddToCart
-    const isNested = getIsNested(resourceType);
-    if (isNested) {
-        const resourceNameDirectory = path.join(resourceTypeDirectory, resourceName);
-        ensureDirectory(resourceNameDirectory);
-    }
+    // Ensure parent direcotory exists for files which'll be generated below
+    fs.ensureDirSync(resourceDirectory);
 
     // Process entry point
     const createdFiles: string[] = Object.entries(fileMap).reduce(
@@ -39,27 +41,28 @@ const generateFilesFromMap = (
             }
 
             // Calculate the template path
-            const templatePath = path.join(extensionRoot, templateName);
+            const templatePath = path.join(templateDirectory, templateName);
 
             // Index.js is not a postfix, it should be handled differently
             const newFileName = postfix === 'index.js' && 'index.js' 
                 || `${resourceName}.${postfix}`;
 
             // Calculate the new file path
-            const newFilePath = path.join(
-                resourceType, 
-                // Additional directory if it should be there (e.g. if not Query)
-                isNested ? resourceName : '',
-                newFileName
-            );
+            const newFilePath = path.join(resourceDirectory, newFileName);
 
             // Create a new file
-            createNewFileFromTemplate(
+            const createdNewFile = createNewFileFromTemplate(
                 templatePath,
                 newFilePath,
                 /Placeholder/g,
-                resourceName
+                resourceName,
+                logger
             );
+
+            // Handle file not created
+            if (!createdNewFile) {
+                return createdFiles;
+            }
 
             // Preserve path to the new file
             return createdFiles.concat(newFilePath);

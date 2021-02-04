@@ -7,6 +7,7 @@ const semver = require('semver');
 
 const actions = [
     require('./actions/extension'),
+    require('./actions/create'),
     // require('./actions/magento'),
     // require('./actions/override'),
     require('./actions/deploy')

@@ -8,12 +8,9 @@ import {
 } from '@babel/types';
 
 import {
-    ResourceType,
-    FileInformation,
     ExportsPaths,
     ExportData,
-    ExportType,
-    StylesOption
+    ExportType
 } from '../types/extend-component.types';
 
 /**
@@ -70,7 +67,8 @@ export const getNamedExportsNames = (exports: ExportsPaths) : ExportData[] => {
 
             traverse(headNode, {
                 ExportSpecifier: (path) => {
-                    const { node: { exported: { name } }, node } = path;
+                    // TODO remove any
+                    const { node: { exported: { name } }, node } = path as any;
                     searchResult = { name, type: ExportType.specifier };
                     path.stop();
                 },

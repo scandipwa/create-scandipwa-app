@@ -1,53 +1,50 @@
-// TODO remove
-import * as vscode from 'vscode';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import { ILogger } from '../types';
 
-export const getWorkspacePath = () : string => {
-    return vscode.workspace.workspaceFolders?.[0].uri.fsPath || '';
-};
+// const RECURSION_LIMIT = 5;
 
-/**
- * Make sure the extension is executed in ScandiPWA working directory
- */
-export const validateScandiPWA = () => {
-    const workspaceFolders = vscode.workspace.workspaceFolders || [];
+// const getTargetScandipwaModulePath = (cwd: string, recursionLevel = 1): string | null => {
+//     const packageJsonPath = path.join(cwd, 'package.json');
 
-    if (!workspaceFolders?.length) {
+//     if (fs.existsSync(packageJsonPath)) {
+//         const { scandipwa } = require(packageJsonPath);
+//         if (scandipwa) {
+//             return cwd;
+//         }
+//     }
+
+//     if (recursionLevel > RECURSION_LIMIT) {
+//         // TODO throw
+//         return null;
+//     }
+
+//     const parentDirectory = path.resolve(cwd, '..');
+//     return getTargetScandipwaModulePath(parentDirectory, --recursionLevel);
+// }
+
+export const createNewFileFromTemplate = (
+    src: string, 
+    dest: string, 
+    pattern: RegExp, 
+    name: string,
+    logger: ILogger
+) : boolean => {
+    if (!src || !dest || !name) {
+        return false;
+    }
+    const data = fs.readFileSync(src, 'utf8');
+    const content = data.replace(pattern, name);
+
+    if (fs.existsSync(dest)) {
+        logger.warn(
+            `File ${logger?.style?.file(dest) || dest} exists and will not be overwritten\n`
+        );
         return false;
     }
 
+    fs.writeFileSync(dest, content);
     return true;
-};
-
-export const ensureDirectory = (name: string) => {
-    const dirName = path.resolve(getWorkspacePath(), name);
-
-    fs.ensureDirSync(dirName);
-};
-
-export const createNewFileFromTemplate = async (src: string, dest: string, pattern: RegExp, name: string) : Promise<void> => {
-    if (!src || !dest || !name) {
-        return;
-    }
-    const data = await fs.readFileSync(src, 'utf8');
-    const content = data.replace(pattern, name);
-    const destFile = `${getWorkspacePath()}/${dest}`;
-
-    if (fs.existsSync(destFile)) {
-        vscode.window.showInformationMessage(`File ${destFile} exists and will not be overwritten`);
-        return;
-    }
-    await fs.writeFileSync(destFile, content);
-};
-
-/**
- * Get path to corresponding (src/<this>) folder
- * @param pathToSourceFolder
- */
-export const getSourcePath = (pathToSourceFolder: string) : string => {
-    const sourcePath : string = vscode.workspace.getConfiguration().get('scandipwa.sourcePath') || '';
-    return path.join(getWorkspacePath(), sourcePath, pathToSourceFolder);
 };
 
 /**
@@ -56,7 +53,9 @@ export const getSourcePath = (pathToSourceFolder: string) : string => {
  * @param contents
  */
 export const createNewFileWithContents = async (newFilePath: string, contents: string) => {
-    ensureDirectory(path.dirname(newFilePath));
+    // Make sure parent dir exists
+    const parentDirectory = path.dirname(newFilePath);
+    fs.ensureDirSync(parentDirectory);
 
     // Prevent overwrites
     if (fs.existsSync(newFilePath)) {

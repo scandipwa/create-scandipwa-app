@@ -1,11 +1,13 @@
+import { ComponentResourceParams, ResourceParams, ResourceType, StoreResourceParams } from "../types";
+
 const componentValidator = (
     { containerFeatures }: ComponentResourceParams,
 ) => {
     const errors: Error[] = [];
 
-    if (!Array.isArray(containerFeatures)) {
+    if (!containerFeatures) {
         errors.push(new Error(
-            `Container features should be supplied as an array, ${typeof containerFeatures} has been supplied instead.`
+            `Container features could've been supplied empty, but they must've been supplied`
         ));
     }
 

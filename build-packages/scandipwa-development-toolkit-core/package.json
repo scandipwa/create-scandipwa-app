@@ -1,14 +1,14 @@
 {
 	"version": "1.0.0",
-	"name": "scandipwa-development-toolkit-csa",
+	"name": "@scandipwa/scandipwa-development-toolkit-core",
 	"publisher": "ScandiPWA",
 	"description": "ScandiPWA development tools' base",
 	"license": "SEE LICENSE IN LICENSE",
-	"main": "./out/extension.js",
+	"main": "./out",
 	"scripts": {
-		"compile": "tsc -p ./",
+		"compile": "tsc -p ./ && cp -r src/templates out/",
 		"lint": "eslint src --ext ts",
-		"watch": "tsc -watch -p ./",
+		"watch": "tsc -watch -p ./ && cp -r src/templates out/",
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js"
 	},

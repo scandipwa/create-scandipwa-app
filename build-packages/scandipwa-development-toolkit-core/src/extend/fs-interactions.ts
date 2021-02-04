@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ResourceType } from "../types";
-import { getSourcePath } from '../util/file';
 
 /**
  * Resource = one component/query/store/etc.
@@ -31,18 +30,19 @@ export const getFileListForResource = (
 /**
  * Builds a path to the directory of extendable files
  */
-export const getResourceDirectory = (
+export const getSourceResourceDirectory = (
     resourceName: string, 
     resourceType: ResourceType,
-    resourceTypeDirectory: string
+    resourceTypeDirectory: string,
+    sourceModulePath: string
 ) => {
     if ([
         ResourceType.Component, 
         ResourceType.Route, 
         ResourceType.Store
     ].includes(resourceType)) {
-        return path.join(getSourcePath(resourceTypeDirectory), resourceName);
+        return path.join(sourceModulePath, resourceTypeDirectory, resourceName);
     }
 
-    return getSourcePath(resourceTypeDirectory);
+    return path.join(sourceModulePath, resourceTypeDirectory);
 }

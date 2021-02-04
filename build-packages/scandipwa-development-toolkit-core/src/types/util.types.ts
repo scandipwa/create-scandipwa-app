@@ -1,6 +1,12 @@
+type LoggerStyle = {
+    file: (text: string) => string
+};
+
 export interface ILogger {
-    warn(message: string): void;
-    error(message: string): void;
+    warn(...messages: string[]): void;
+    error(...messages: string[]): void;
+
+    style?: LoggerStyle
 }
 
 export type EnquiryOption<Y> = { displayName: string, value: Y } | string;

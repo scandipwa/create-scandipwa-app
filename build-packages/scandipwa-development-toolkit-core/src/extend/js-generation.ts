@@ -1,7 +1,7 @@
 import * as path from 'path';
+import { ResourceType } from '../types';
 
 import {
-    ResourceType,
     FileInformation,
     ExportType,
     StylesOption,

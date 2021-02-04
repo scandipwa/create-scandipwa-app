@@ -1,16 +1,16 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { getWorkspacePath, createNewFileWithContents } from '../util/file';
+import { createNewFileWithContents } from '../util/file';
 
 import { getDefaultExportCode, getExportPathsFromCode, getNamedExportsNames } from './ast-interactions';
-import { getFileListForResource, getResourceDirectory } from './fs-interactions';
+import { getFileListForResource, getSourceResourceDirectory } from './fs-interactions';
 import generateNewFileContents from './js-generation';
 import { handleStyles, selectStylesOption } from './scss-generation';
 import extendableDirectoryMap from './extendable-dir-map';
 
-import { ExportData, ResourceType, StylesOption } from '../types/extend-component.types';
-import { ILogger, IUserInteraction } from '../types';
+import { ExportData, StylesOption } from '../types/extend-component.types';
+import { ILogger, IUserInteraction, ResourceType } from '../types';
 
 const notNestedExtendables = [ResourceType.Query];
 
@@ -26,35 +26,43 @@ const shouldHandleStyles = (resourceType: ResourceType, fileName: string) => {
     return true;
 };
 
-const process = (
+/**
+ * @param resourceType Type of resource to extend
+ * @param resourceName Name of resource to extend
+ * @param targetModulePath Module to create new resource in
+ * @param logger 
+ * @param userInteraction 
+ */
+const extend = (
     resourceType: ResourceType, 
-    resourceName: string, 
+    resourceName: string,
+    targetModulePath: string,
+    sourceModulePath: string,
     logger: ILogger,
     userInteraction: IUserInteraction
 ) => {
     const resourceTypeDirectory = extendableDirectoryMap[resourceType];
-    const resourceDirectory = getResourceDirectory(resourceName, resourceType, resourceTypeDirectory);
+    const sourceResourceDirectory = getSourceResourceDirectory(
+        resourceName, 
+        resourceType, 
+        resourceTypeDirectory,
+        sourceModulePath
+    );
 
-    getFileListForResource(resourceType, resourceName, resourceDirectory).reduce(
+    getFileListForResource(resourceType, resourceName, sourceResourceDirectory).reduce(
         async (acc: Promise<any>, fileName: string): Promise<any> => {
             await acc;
 
-            const fullSourcePath = path.resolve(resourceDirectory, fileName);
-            const newFilePath = path.resolve(
-                getWorkspacePath(),
-                resourceTypeDirectory,
-                // Handle extendables like query, which don't have one extra directory
-                !notNestedExtendables.includes(resourceType) ? resourceName : '',
-                fileName
-            );
+            const sourceFilePath = path.resolve(sourceResourceDirectory, fileName);
+            const newFilePath = path.resolve(targetModulePath, resourceTypeDirectory, fileName);
 
             // Prevent overwriting
             if (fs.existsSync(newFilePath)) {
-                throw new Error(`File ${fileName} exists and will not be overwritten`);
+                return logger.warn(`File ${fileName} exists and will not be overwritten`);
             }
 
             // Parse the code, get exports
-            const code = fs.readFileSync(fullSourcePath, 'utf-8');
+            const code = fs.readFileSync(sourceFilePath, 'utf-8');
             const exportsPaths = getExportPathsFromCode(code);
             const namedExportsData = getNamedExportsNames(exportsPaths);
 
@@ -62,8 +70,7 @@ const process = (
             if (!namedExportsData.length) {
                 const [, postfix] = fileName.split('.');
 
-                logger.warn(`No named exports were found in ${postfix}, continuing.`);
-                return;
+                return logger.warn(`No named exports were found in ${postfix}, continuing.`);
             }
 
             // Get default export code
@@ -83,7 +90,12 @@ const process = (
             if (shouldHandleStyles(resourceType, fileName)) {
                 stylesOption = await selectStylesOption(userInteraction);
 
-                handleStyles(resourceName, resourceTypeDirectory, stylesOption);
+                handleStyles(
+                    resourceName, 
+                    resourceTypeDirectory, 
+                    stylesOption, 
+                    logger
+                );
             }
 
             // Handle not extending anything in the file
@@ -107,3 +119,5 @@ const process = (
         }, Promise.resolve(undefined)
     );
 }
+
+export default extend;

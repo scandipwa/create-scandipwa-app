@@ -1,9 +1,4 @@
-export enum ResourceType {
-    Route = 'Route',
-    Component = 'Component',
-    Store = 'Store',
-    Query = 'Query'
-}
+import { ResourceType } from './common.types';
 
 export type FileMap = Record<string, string | null>;
 
@@ -20,8 +15,13 @@ export enum DispatcherType {
 
 export type FileOpenCallback = (filename: string) => void;
 
+export type ContainerFeatures = {
+    logic: boolean,
+    state: boolean
+};
+
 export type ComponentResourceParams = {
-    containerFeatures: string[]
+    containerFeatures: ContainerFeatures
 };
 
 export type StoreResourceParams = {

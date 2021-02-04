@@ -4,6 +4,8 @@ import getFileMap from './file-map';
 
 import generateFilesFromMap from '../util/generate-files-from-map';
 import validateResourceParams from './validate-resource-params';
+import { ILogger, ResourceType } from '../types';
+import { FileOpenCallback, ResourceParams } from '../types';
 
 export const extensionRoot = path.resolve(__dirname, '..', '..', 'src');
 
@@ -13,7 +15,9 @@ export const extensionRoot = path.resolve(__dirname, '..', '..', 'src');
 const create = (
     resourceType: ResourceType, 
     resourceName: string, 
-    resourceParams: ResourceParams, 
+    resourceParams: ResourceParams,
+    targetModulePath: string,
+    logger: ILogger,
     openFile?: FileOpenCallback
 ) => {
     // Validate input data
@@ -26,7 +30,14 @@ const create = (
     const fileMap = getFileMap(resourceType, resourceParams);
 
     // Create the files
-    return generateFilesFromMap(fileMap, resourceName, resourceType, openFile);
+    return generateFilesFromMap(
+        fileMap, 
+        resourceName, 
+        resourceType, 
+        targetModulePath,
+        logger,
+        openFile
+    );
 };
 
 export default create;

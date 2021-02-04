@@ -1,23 +1,48 @@
+import { 
+    ComponentResourceParams, 
+    DispatcherType, 
+    FileMap, 
+    ResourceParams, 
+    ResourceType, 
+    StoreResourceParams,
+    ContainerFeatures
+} from "../types";
+
 /**
  * Generate a container template name from the supplied container features
  */
-const getContainerTemplateName = (containerFeatures: string[]) => {
-    if (!containerFeatures.length) {
+const getContainerTemplateName = (containerFeatures: ContainerFeatures) => {
+    const featuresEntries = Object.entries(containerFeatures)
+
+    const enabledFeatures = featuresEntries.filter(
+        ([, enabled]) => enabled
+    );
+
+    // No container options -> no container
+    if (!enabledFeatures.length) {
         return null;
     }
 
-    return ['container', ...containerFeatures].join('-').concat('.js');
+    const enabledNames = enabledFeatures.map(
+        ([featureName]) => featureName
+    );
+
+    return ['container', ...enabledNames.sort()].join('-').concat('.js');
+}
+
+const hasContainerFeatures = (containerFeatures: ContainerFeatures) => {
+    return Object.values(containerFeatures).filter(Boolean).length;
 }
 
 /**
  * Map for Components/Routes
  */
 const getComponentMap = ({ 
-    containerFeatures = [] 
+    containerFeatures
 }: ComponentResourceParams) => ({
     'component.js': 'component.js',
     'style.scss': 'stylesheet.scss',
-    'index.js': containerFeatures.length ? 'index-container.js' : 'index.js',
+    'index.js': hasContainerFeatures(containerFeatures) ? 'index-container.js' : 'index.js',
     'container.js': getContainerTemplateName(containerFeatures),
 });
 
