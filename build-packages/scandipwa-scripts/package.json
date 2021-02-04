@@ -15,6 +15,9 @@
         "craco.config.js",
         "/lib"
     ],
+    "scripts": {
+        "postinstall": "node -e \"try{require('./postinstall')}catch(e){}\""
+    },
     "engines": {
         "node": ">=12.0.0"
     },
