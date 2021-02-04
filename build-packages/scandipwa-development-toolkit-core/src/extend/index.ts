@@ -49,7 +49,9 @@ const extend = (
         sourceModulePath
     );
 
-    getFileListForResource(resourceType, resourceName, sourceResourceDirectory).reduce(
+    const sourceFileList = getFileListForResource(resourceType, resourceName, sourceResourceDirectory);
+
+    sourceFileList.reduce(
         async (acc: Promise<any>, fileName: string): Promise<any> => {
             await acc;
 
