@@ -4,8 +4,7 @@ import {
     Identifier,
     ExportNamedDeclaration,
     ExportDefaultDeclaration,
-    SourceLocation,
-    VariableDeclaration
+    SourceLocation
 } from '@babel/types';
 
 import {
