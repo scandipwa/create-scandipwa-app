@@ -4,7 +4,8 @@ import {
     Identifier,
     ExportNamedDeclaration,
     ExportDefaultDeclaration,
-    SourceLocation
+    SourceLocation,
+    VariableDeclaration
 } from '@babel/types';
 
 import {
@@ -12,6 +13,24 @@ import {
     ExportData,
     ExportType
 } from '../types/extend-component.types';
+
+const isAsyncImport = (node: ExportNamedDeclaration): boolean => {
+    const declaration = node.declaration;
+
+    if (declaration?.type === 'VariableDeclaration') {
+        const init = declaration.declarations[0].init;
+
+        if (init?.type === 'CallExpression') {
+            const { callee } = init;
+
+            if (callee.type === 'Import') {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 /**
  * Extract export nodes from original code
@@ -34,6 +53,11 @@ export const getExportPathsFromCode = (originalCode: string) : ExportsPaths => {
 
     traverse(ast, {
         ExportNamedDeclaration: (path) => {
+            // Skip `export const x = import(...)` statements
+            if (isAsyncImport(path.node)) {
+                return;
+            }
+
             exportsPaths.push(path);
         },
         ExportDefaultDeclaration: (path) => {
@@ -134,6 +158,9 @@ export const getDefaultExportCode = (exports: ExportsPaths, code: string) : stri
     };
 
     const exportDefaultPaths = exports.filter(e => e.type === 'ExportDefaultDeclaration');
-    if (!exportDefaultPaths.length) { return; }
+    if (!exportDefaultPaths.length) { 
+        return; 
+    }
+    
     return processDefaultExport(<NodePath<ExportDefaultDeclaration>>exportDefaultPaths[0]);
 }
