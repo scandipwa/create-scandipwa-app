@@ -16,39 +16,48 @@ const invokeGenerator = require('../../../common/invoke-generator');
 const FallbackPlugin = require('../../../../webpack-fallback-plugin');
 
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
-const resourceExists = (resourceType, resourceName, resourceDirectory) => {
-    // Queries don't have subdirectories
+
+/**
+ * Returns path to a resource's folder
+ * Or to the resource file itself, if a query is given
+ *
+ * @param {*} resourceName string
+ * @param {*} resourceType string
+ */
+const getFallbackResourcePath = (resourceName, resourceType) => {
+    const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
+
     if (resourceType === ResourceType.Query) {
-        return fs.existsSync(path.join(resourceDirectory, `${resourceName}.query.js`))
-            || fs.existsSync(path.join(resourceDirectory, `${resourceName}.query.ts`));
+        const queryName = `${resourceName}.query.js`;
+        const queryFilePath = path.join(relativeResourceDirectory, queryName);
+
+        return FallbackPlugin.getFallbackPathname(queryFilePath);
     }
 
-    // Component dir exists => resource exists
-    return fs.existsSync(resourceDirectory);
+    return FallbackPlugin.getFallbackPathname(relativeResourceDirectory);
 };
 
 const extender = (resourceType) => async ({
     name,
     targetModule = process.cwd()
 }) => {
-    const expectedResourceDirectory = getRelativeResourceDirectory(name, resourceType);
-    const sourceResourceDirectoryPath = FallbackPlugin.getFallbackPathname(expectedResourceDirectory);
-    const sourceModule = locateScandipwaModule(sourceResourceDirectoryPath);
+    const sourceResourcePath = getFallbackResourcePath(name, resourceType);
+    const sourceModule = locateScandipwaModule(sourceResourcePath);
 
-    // Handle resource not found
+    // Handle resource falling back to the invoker directory
     if (sourceModule === targetModule) {
         const resourceIdentifier = [capitalize(resourceType), name].join('/');
 
-        // Resource does not exist
-        if (!resourceExists(resourceType, name, sourceResourceDirectoryPath)) {
-            logger.error(
-                `Resource ${logger.style.file(resourceIdentifier)} does not exist.`,
-                `Use ${logger.style.command('scandipwa create')} command to create new resources.`
-            );
-        } else {
-        // Resource is already overridden
+        // Exists in the directory => is already created
+        if (fs.existsSync(sourceResourcePath)) {
             logger.error(
                 `Resource ${logger.style.file(resourceIdentifier)} has already been created!`,
+            );
+        // Doesn't exist in the directory => doesn't exist at all
+        } else {
+            logger.error(
+                `Resource ${logger.style.file(resourceIdentifier)} does not exist.`,
+                `Run the following command to create it: ${logger.style.command(`scandipwa create ${resourceType} ${capitalize(name)}`)}`
             );
         }
 
