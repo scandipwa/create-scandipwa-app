@@ -13,5 +13,26 @@ module.exports = (yargs) => {
             (yargs) => withTargetDirectory(withExtendOptions(yargs)),
             extender(ResourceType.Component)
         );
+
+        yargs.command(
+            'route <name>',
+            'Override a route',
+            (yargs) => withTargetDirectory(withExtendOptions(yargs)),
+            extender(ResourceType.Route)
+        );
+        
+        yargs.command(
+            'store <name>',
+            'Override a store',
+            (yargs) => withTargetDirectory(withExtendOptions(yargs)),
+            extender(ResourceType.Store)
+        );
+
+        yargs.command(
+            'query <name>',
+            'Override a query',
+            (yargs) => withTargetDirectory(withExtendOptions(yargs)),
+            extender(ResourceType.Query)
+        );
     });
 };
