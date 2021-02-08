@@ -8,24 +8,54 @@ import {
     ExportData
 } from '../types/extend-component.types';
 
+import { getPackageJson } from '@scandipwa/scandipwa-dev-utils/package-json';
+
 import { getStyleFileName } from './scss-generation';
 
 const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+const decapitalize = (word: string) => word.charAt(0).toLowerCase() + word.slice(1);
 const isMapping = (name: string) => ['mapStateToProps', 'mapDispatchToProps'].includes(name);
 
-const getPrefixedName = (name: string) => {
+const getModuleAlias = (sourceModule: string) => {
+    const { 
+        scandipwa: { 
+            type,         
+            themeAlias 
+        } 
+    } = getPackageJson(sourceModule);
+
+    // TODO catch this
+    // Handle no module type in the base module
+    if (!type) {
+        throw new Error('No package type found in the base module!');
+    }
+
+    // Handle no theme alias in a theme
+    if (type === 'theme' && !themeAlias) {
+        throw new Error('No theme alias found in the base module!');
+    }
+
+    if (type !== 'theme') {
+        return 'Base';
+    }
+
+    return themeAlias;
+}
+
+const getPrefixedName = (name: string, moduleAlias: string) => {
     const isCapitalized = (word: string) => word[0].toUpperCase() === word[0];
     const isUpperCase = (word: string) => word.toUpperCase() === word;
 
+
     if (isUpperCase(name)) {
-        return `SOURCE_${name}`;
+        return `${moduleAlias.toUpperCase()}_${name}`;
     }
 
     if (isCapitalized(name)) {
-        return `Source${capitalize(name)}`;
+        return [moduleAlias, name].map(capitalize).join('');
     }
 
-    return `source${capitalize(name)}`;
+    return [decapitalize(moduleAlias), capitalize(name)].join('');
 }
 
 const generateAdditionalImportString = (originalCode: string, defaultExportCode?: string): string => {
@@ -91,7 +121,8 @@ const generateStyleImport = (
 };
 
 const generateImportString = (
-    sourceFilePath: string, 
+    sourceFilePath: string,
+    sourceModuleAlias: string,
     chosenExports: ExportData[], 
     notChosenExports: ExportData[]
 ): string => {
@@ -101,7 +132,7 @@ const generateImportString = (
 
     return 'import {\n'
         .concat(chosenExports.map(
-            ({ name }) => `    ${name} as ${getPrefixedName(name)},\n`).join('')
+            ({ name }) => `    ${name} as ${getPrefixedName(name, sourceModuleAlias)},\n`).join('')
         )
         .concat(notChosenExports.map(({ name }) => `    ${name},\n`).join(''))
         .concat(`} from \'${sourceFilePath}\';`);
@@ -117,7 +148,7 @@ const generateExportsFromSource = (notChosenExports: ExportData[]): string => {
         .concat('};');
 };
 
-const generateClassExtend = (chosenExports: ExportData[]): string => {
+const generateClassExtend = (chosenExports: ExportData[], sourceModuleAlias: string): string => {
     const classExport = chosenExports.find(one => one.type === ExportType.class);
     if (!classExport) {
         return '';
@@ -125,12 +156,12 @@ const generateClassExtend = (chosenExports: ExportData[]): string => {
 
     const { name } = classExport;
 
-    return `export class ${name} extends ${getPrefixedName(name)} {\n`
+    return `export class ${name} extends ${getPrefixedName(name, sourceModuleAlias)} {\n`
         + '    // TODO implement logic\n'
         + '};';
 };
 
-const generateMappingsExtends = (chosenExports: ExportData[]): Array<string> => {
+const generateMappingsExtends = (chosenExports: ExportData[], sourceModuleAlias: string): Array<string> => {
     return chosenExports
         .filter(({ name }) => isMapping(name))
         .map(
@@ -141,7 +172,7 @@ const generateMappingsExtends = (chosenExports: ExportData[]): Array<string> => 
 
                 const newExport =
                     `export const ${name} = ${argument} => ({\n` +
-                    `    ...${getPrefixedName(name)}(${argument}),\n` +
+                    `    ...${getPrefixedName(name, sourceModuleAlias)}(${argument}),\n` +
                     `    // TODO extend ${name}\n` +
                     `});`;
 
@@ -150,7 +181,7 @@ const generateMappingsExtends = (chosenExports: ExportData[]): Array<string> => 
         );
 };
 
-const generateExtendStrings = (chosenExports: ExportData[]): Array<string> => {
+const generateExtendStrings = (chosenExports: ExportData[], sourceModuleAlias: string): Array<string> => {
     if (!chosenExports.length) {
         return [];
     }
@@ -159,7 +190,7 @@ const generateExtendStrings = (chosenExports: ExportData[]): Array<string> => {
         .filter(one => one.type !== ExportType.class && !isMapping(one.name))
         .map(({ name }) =>
             `//TODO: implement ${name}\n`
-            + `export const ${name} = ${getPrefixedName(name)};`
+            + `export const ${name} = ${getPrefixedName(name, sourceModuleAlias)};`
         );
 };
 
@@ -174,6 +205,7 @@ const generateNewFileContents = ({
     originalCode,
     resourceType,
     resourceName,
+    sourceModule,
     chosenStylesOption
 }: FileInformation) : string => {
     const sourceFileImportPath = path.join(
@@ -186,15 +218,17 @@ const generateNewFileContents = ({
         one => !chosenExports.includes(one)
     );
 
+    const sourceModuleAlias = getModuleAlias(sourceModule);
+
     // Generate new file: imports + exports from source + all extendables + class template + exdf
     const result = [
         generateAdditionalImportString(originalCode, defaultExportCode),
-        generateImportString(sourceFileImportPath, chosenExports, notChosenExports),
+        generateImportString(sourceFileImportPath, sourceModuleAlias, chosenExports, notChosenExports),
         generateStyleImport(fileName, resourceName, resourceType, chosenStylesOption),
         generateExportsFromSource(notChosenExports),
-        ...generateExtendStrings(chosenExports),
-        ...generateMappingsExtends(chosenExports),
-        generateClassExtend(chosenExports),
+        ...generateExtendStrings(chosenExports, sourceModuleAlias),
+        ...generateMappingsExtends(chosenExports, sourceModuleAlias),
+        generateClassExtend(chosenExports, sourceModuleAlias),
         defaultExportCode
     ].filter(Boolean).join('\n\n').concat('\n');
 

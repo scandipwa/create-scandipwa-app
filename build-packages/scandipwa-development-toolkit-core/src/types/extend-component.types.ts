@@ -41,5 +41,6 @@ export interface FileInformation {
     originalCode: string,
     resourceType: ResourceType,
     resourceName: string,
-    chosenStylesOption: StylesOption
+    chosenStylesOption: StylesOption,
+    sourceModule: string
 }

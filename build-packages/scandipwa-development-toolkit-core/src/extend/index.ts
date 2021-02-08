@@ -117,7 +117,8 @@ const extend = async (
                 originalCode: code,
                 resourceType: resourceType,
                 resourceName: resourceName,
-                chosenStylesOption: stylesOption!
+                chosenStylesOption: stylesOption!,
+                sourceModule: sourceModulePath
             });
             
             // Attempt actual file creation
