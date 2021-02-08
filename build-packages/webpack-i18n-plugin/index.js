@@ -23,7 +23,11 @@ const addParsedVariableToModule = (parser, name) => {
         return false;
     }
 
-    const pathToTranslationFunction = path.join(__dirname, 'lib/translation-function.js');
+    const pathToTranslationFunction = path
+        .join(__dirname, 'lib/translation-function.js')
+        .split(path.pos)
+        .join(path.posix.pos);
+
     const expression = `require(${ JSON.stringify(pathToTranslationFunction) })`;
     const deps = [];
 

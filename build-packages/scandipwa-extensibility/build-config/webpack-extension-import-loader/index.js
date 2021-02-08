@@ -48,7 +48,10 @@ const getExtensionImports = (pathname) => {
         return [];
     }
 
-    return findPluginFiles(pathname).map((pluginFile) => `require('${pluginFile}').default`);
+    return findPluginFiles(pathname).map((pluginFile) => {
+        const pluginFilePath = pluginFile.split(path.sep).join(path.posix.sep);
+        return `require('${pluginFilePath}').default`;
+    });
 };
 
 module.exports = function injectImports(source) {
