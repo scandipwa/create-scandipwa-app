@@ -11,11 +11,27 @@ import {
 import { getStyleFileName } from './scss-generation';
 
 const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
-const isCapitalized = (word: string) => word[0].toUpperCase() === word[0];
 const isMapping = (name: string) => ['mapStateToProps', 'mapDispatchToProps'].includes(name);
 
+const getPrefixedName = (name: string) => {
+    const isCapitalized = (word: string) => word[0].toUpperCase() === word[0];
+    const isUpperCase = (word: string) => word.toUpperCase() === word;
+
+    if (isUpperCase(name)) {
+        return `SOURCE_${name}`;
+    }
+
+    if (isCapitalized(name)) {
+        return `Source${capitalize(name)}`;
+    }
+
+    return `source${capitalize(name)}`;
+}
+
 const generateAdditionalImportString = (originalCode: string, defaultExportCode?: string): string => {
-    if (!defaultExportCode) { return ''; }
+    if (!defaultExportCode) { 
+        return ''; 
+    }
 
     const exdfWords = [
         ...new Set(
@@ -33,6 +49,7 @@ const generateAdditionalImportString = (originalCode: string, defaultExportCode?
             const library = originalCode.match(
                 new RegExp(`import.+${importableName}.+from '(?<library>.+)'`)
             )?.groups?.library;
+
             const braces = !!originalCode.match(
                 new RegExp(`import.+{.*${importableName}.*}.+from '(?<library>.+)'`)
             );
@@ -83,11 +100,7 @@ const generateImportString = (
 
     return 'import {\n'
         .concat(chosenExports.map(
-            ({ name }) => `    ${name} as ${
-                isCapitalized(name) ? 'Source' : 'source'
-            }${
-                capitalize(name)
-            },\n`).join('')
+            ({ name }) => `    ${name} as ${getPrefixedName(name)},\n`).join('')
         )
         .concat(notChosenExports.map(({ name }) => `    ${name},\n`).join(''))
         .concat(`} from \'${sourceFilePath}\';`);
@@ -109,7 +122,9 @@ const generateClassExtend = (chosenExports: ExportData[]): string => {
         return '';
     }
 
-    return `export class ${classExport.name} extends Source${classExport.name} {\n`
+    const { name } = classExport;
+
+    return `export class ${name} extends ${getPrefixedName(name)} {\n`
         + '    // TODO implement logic\n'
         + '};';
 };
@@ -125,7 +140,7 @@ const generateMappingsExtends = (chosenExports: ExportData[]): Array<string> => 
 
                 const newExport =
                     `export const ${name} = ${argument} => ({\n` +
-                    `    ...source${capitalize(name)}(${argument}),\n` +
+                    `    ...${getPrefixedName(name)}(${argument}),\n` +
                     `    // TODO extend ${name}\n` +
                     `});`;
 
@@ -143,7 +158,7 @@ const generateExtendStrings = (chosenExports: ExportData[]): Array<string> => {
         .filter(one => one.type !== ExportType.class && !isMapping(one.name))
         .map(({ name }) =>
             `//TODO: implement ${name}\n`
-            + `export const ${name} = Source${capitalize(name)};`
+            + `export const ${name} = ${getPrefixedName(name)};`
         );
 };
 
