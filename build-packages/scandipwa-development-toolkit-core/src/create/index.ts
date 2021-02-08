@@ -40,7 +40,7 @@ const create = (
         openFile
     );
 
-    // Run eslint fix to prettify the created files
+    // Prettify!
     fixESLint(generatedFiles);
 
     return generatedFiles;
