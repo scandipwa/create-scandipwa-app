@@ -80,6 +80,7 @@ const generateStyleImport = (
     if (
         [ResourceType.Route, ResourceType.Component].includes(extendableType)
         && fileName.includes('component')
+        && chosenStylesOption !== StylesOption.keep
     ) {
         const styleFilename = getStyleFileName(resourceName, chosenStylesOption).replace(/\.s?(c|a)ss$/, '');
 
