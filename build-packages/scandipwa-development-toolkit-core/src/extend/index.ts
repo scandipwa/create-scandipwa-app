@@ -4,15 +4,14 @@ import * as fs from 'fs';
 import { createNewFileWithContents } from '../util/file';
 
 import { getDefaultExportCode, getExportPathsFromCode, getNamedExportsNames } from './ast-interactions';
-import { getFileListForResource, getSourceResourceDirectory } from './fs-interactions';
+import { getFileListForResource, getRelativeResourceDirectory } from './fs-interactions';
 import generateNewFileContents from './js-generation';
-import { handleStyles, selectStylesOption } from './scss-generation';
-import extendableDirectoryMap from './extendable-dir-map';
+import { createStyleFile, selectStylesOption } from './scss-generation';
+
+import fixESLint from '../util/eslint';
 
 import { ExportData, StylesOption } from '../types/extend-component.types';
 import { ILogger, IUserInteraction, ResourceType } from '../types';
-
-const notNestedExtendables = [ResourceType.Query];
 
 const shouldHandleStyles = (resourceType: ResourceType, fileName: string) => {
     if (![ResourceType.Route, ResourceType.Component].includes(resourceType)) {
@@ -41,26 +40,24 @@ const extend = async (
     logger: ILogger,
     userInteraction: IUserInteraction
 ): Promise<string[]> => {
-    const resourceTypeDirectory = extendableDirectoryMap[resourceType];
-    const sourceResourceDirectory = getSourceResourceDirectory(
-        resourceName, 
-        resourceType, 
-        resourceTypeDirectory,
-        sourceModulePath
-    );
+    const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
 
-    const sourceFileList = getFileListForResource(resourceType, resourceName, sourceResourceDirectory);
+    const sourceResourceDirectory = path.join(sourceModulePath, relativeResourceDirectory);
+    const targetResourceDirectory = path.join(targetModulePath, relativeResourceDirectory);
 
-    const createdFileList = await sourceFileList.reduce(
-        async (acc: Promise<any>, fileName: string): Promise<any> => {
+    const sourceFiles = getFileListForResource(resourceType, resourceName, sourceResourceDirectory);
+
+    const createdFiles = await sourceFiles.reduce(
+        async (acc: Promise<any>, fileName: string): Promise<string[]> => {
             const createdFiles = await acc;
 
             const sourceFilePath = path.resolve(sourceResourceDirectory, fileName);
-            const newFilePath = path.resolve(targetModulePath, resourceTypeDirectory, fileName);
+            const newFilePath = path.resolve(targetResourceDirectory, fileName);
 
             // Prevent overwriting
             if (fs.existsSync(newFilePath)) {
-                return logger.warn(`File ${fileName} exists and will not be overwritten`);
+                logger.warn(`File ${fileName} exists and will not be overwritten`);
+                return createdFiles;
             }
 
             // Parse the code, get exports
@@ -72,7 +69,8 @@ const extend = async (
             if (!namedExportsData.length) {
                 const [, postfix] = fileName.split('.');
 
-                return logger.warn(`No named exports were found in ${postfix}, continuing.`);
+                logger.warn(`No named exports were found in ${postfix}, continuing.`);
+                return createdFiles;
             }
 
             // Get default export code
@@ -92,17 +90,22 @@ const extend = async (
             if (shouldHandleStyles(resourceType, fileName)) {
                 stylesOption = await selectStylesOption(userInteraction);
 
-                handleStyles(
-                    resourceName, 
-                    resourceTypeDirectory, 
-                    stylesOption, 
-                    logger
-                );
+                // If selected option is "keep styles" => skip style creation
+                if (stylesOption !== StylesOption.keep) {
+                    const styleFilePath = createStyleFile(
+                        resourceName, 
+                        targetResourceDirectory,
+                        stylesOption,
+                        logger
+                    );
+
+                    createdFiles.push(styleFilePath);
+                }
             }
 
             // Handle not extending anything in the file
             if (!chosenExports.length) { 
-                return; 
+                return createdFiles; 
             }
 
             // Generate contents for the new file
@@ -116,13 +119,11 @@ const extend = async (
                 resourceName: resourceName,
                 chosenStylesOption: stylesOption!
             });
+            
+            // Attempt actual file creation
+            const fileIsCreated = createNewFileWithContents(newFilePath, newFileContents, logger);
 
-            const fileIsCreated = createNewFileWithContents(
-                newFilePath, 
-                newFileContents, 
-                logger
-            );
-
+            // If creation successful => add to the created list
             if (fileIsCreated) {
                 return createdFiles.concat(newFilePath);
             }
@@ -131,7 +132,10 @@ const extend = async (
         }, Promise.resolve([])
     );
 
-    return createdFileList;
+    // Prettify!
+    fixESLint(createdFiles);
+
+    return createdFiles;
 }
 
 export default extend;

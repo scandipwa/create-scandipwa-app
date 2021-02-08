@@ -1,13 +1,17 @@
-/* eslint-disable no-console */
+/* eslint-disable */
+const { ResourceType } = require('@scandipwa/scandipwa-development-toolkit-core');
+const withTargetDirectory = require('../../common/options/withTargetDirectory');
+const withExtendOptions = require('./lib/options/withExtendOptions');
+
+const extender = require('./lib/extender');
 
 module.exports = (yargs) => {
-    yargs.command('override <command>', 'Override a file', (yargs) => {
-        yargs.command('theme', 'Select a parent theme as a target.', () => {}, (argv) => {
-            console.log('ovr pth', argv);
-        });
-
-        yargs.command('extension', 'Select an extension as a target.', () => {}, (argv) => {
-            console.log('ovr ext', argv);
-        });
+    yargs.command('override <resource type>', 'Override an existing resource', (yargs) => {
+        yargs.command(
+            'component <name>',
+            'Override a component',
+            (yargs) => withTargetDirectory(withExtendOptions(yargs)),
+            extender(ResourceType.Component)
+        );
     });
 };

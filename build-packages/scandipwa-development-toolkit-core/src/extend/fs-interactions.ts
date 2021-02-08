@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ResourceType } from "../types";
+import extendableDirectoryMap from './extendable-dir-map';
 
 /**
  * Resource = one component/query/store/etc.
@@ -30,19 +31,17 @@ export const getFileListForResource = (
 /**
  * Builds a path to the directory of extendable files
  */
-export const getSourceResourceDirectory = (
-    resourceName: string, 
-    resourceType: ResourceType,
-    resourceTypeDirectory: string,
-    sourceModulePath: string
+export const getRelativeResourceDirectory = (
+    resourceName: string,
+    resourceType: ResourceType
 ) => {
-    if ([
-        ResourceType.Component, 
-        ResourceType.Route, 
-        ResourceType.Store
-    ].includes(resourceType)) {
-        return path.join(sourceModulePath, resourceTypeDirectory, resourceName);
+    const resourceTypeDirectory = extendableDirectoryMap[resourceType];
+
+    // Queries don't have their own dirs in src/query
+    if (resourceType === ResourceType.Query) {
+        return resourceTypeDirectory;
     }
 
-    return path.join(sourceModulePath, resourceTypeDirectory);
+    // Other resources do have
+    return path.join(resourceTypeDirectory, resourceName);
 }

@@ -5,7 +5,7 @@ const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const BUBBLE_DEPTH = 5;
 
-const invokeGenerator = (
+const invokeGenerator = async (
     targetModule = locateScandipwaModule(process.cwd(), BUBBLE_DEPTH),
     fileGenerator
 ) => {
@@ -22,7 +22,7 @@ const invokeGenerator = (
     }
 
     // Invoke the callback to generate files
-    const createdFiles = fileGenerator(targetModule);
+    const createdFiles = await fileGenerator(targetModule);
 
     // Handle no files generated
     if (!createdFiles.length) {

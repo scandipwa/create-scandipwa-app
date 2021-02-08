@@ -66,12 +66,17 @@ export const createNewFileWithContents = (
         return false;
     }
 
-    // Create the file
-    fs.writeFile(
-        newFilePath,
-        contents,
-        console.error
-    );
+    try {
+        // Create the file
+        fs.writeFileSync(
+            newFilePath,
+            contents
+        );
+    } catch (error) {
+        logger.error(error.message);
+
+        return false;
+    }
 
     return true;
 };

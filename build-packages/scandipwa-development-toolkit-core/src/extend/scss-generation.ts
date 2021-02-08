@@ -1,36 +1,52 @@
 import * as path from 'path';
+import * as fs from 'fs-extra';
 
 import { ILogger, IUserInteraction, StylesOption } from "../types";
 import { createNewFileFromTemplate } from '../util/file';
 
+// Initial paths' calculation
+const extensionRoot = path.join(__dirname, '..', '..');
+const templatePath = path.join(extensionRoot, 'src', 'templates', 'stylesheet.scss');
+
+export const getStyleFileName = (
+    resourceName: string, 
+    stylesOption: StylesOption
+) => {
+    if (stylesOption === StylesOption.extend) {
+        return `${resourceName}.override.style.scss`;
+    }
+
+    return `${resourceName}.style.scss`;
+};
+
 /**
  * Create style file from template
  */
-const createStyleFile = (
-    extendableName: string,
-    resourceTypeDirectory: string,
+export const createStyleFile = (
+    resourceName: string,
+    targetResourceDirectory: string,
     stylesOption: StylesOption,
     logger: ILogger
-) => {
-    const extensionRoot = path.join(__dirname, '..', '..');
+): string | null => {
+    // Calculate target file name and path
+    const styleFileName = getStyleFileName(resourceName, stylesOption);
+    const targetPath = path.join(targetResourceDirectory, styleFileName);
 
-    const templatePath = path.join(extensionRoot, `src', 'templates', 'stylesheet.scss`);
-    const targetName = `${extendableName}.style${stylesOption === StylesOption.override ? '.override' : ''}.scss`;
-    const targetPath = path.join(
-        resourceTypeDirectory,
-        extendableName,
-        targetName,
-    );
+    // Ensure parent directory
+    fs.ensureDirSync(path.dirname(targetPath));
 
+    // Create the file
     createNewFileFromTemplate(
         templatePath, 
         targetPath, 
         [{
             pattern: /Placeholder/g,
-            replacement: extendableName
+            replacement: resourceName
         }], 
         logger
     );
+
+    return targetPath;
 };
 
 export const selectStylesOption = (userInteraction: IUserInteraction) => userInteraction.singleSelect(
@@ -48,26 +64,3 @@ export const selectStylesOption = (userInteraction: IUserInteraction) => userInt
         value: StylesOption.override
     }]
 );
-
-/**
- * Handle operations with style files (should be called for components and routes only)
- */
-export const handleStyles = async (
-    extendableName: string,
-    resourceTypeDirectory: string,
-    stylesOption: StylesOption,
-    logger: ILogger
-) => {
-    // Keep styles => skip this
-    if (stylesOption === StylesOption.keep) {
-        return;
-    }
-
-    // Create the new file
-    createStyleFile(
-        extendableName, 
-        resourceTypeDirectory, 
-        stylesOption, 
-        logger
-    );
-}

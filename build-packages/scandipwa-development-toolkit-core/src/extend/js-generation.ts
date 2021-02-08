@@ -8,7 +8,10 @@ import {
     ExportData
 } from '../types/extend-component.types';
 
+import { getStyleFileName } from './scss-generation';
+
 const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+const isCapitalized = (word: string) => word[0].toUpperCase() === word[0];
 const isMapping = (name: string) => ['mapStateToProps', 'mapDispatchToProps'].includes(name);
 
 const generateAdditionalImportString = (originalCode: string, defaultExportCode?: string): string => {
@@ -53,7 +56,7 @@ const generateAdditionalImportString = (originalCode: string, defaultExportCode?
 
 const generateStyleImport = (
     fileName: string, 
-    generableName: string,
+    resourceName: string,
     extendableType: ResourceType, 
     chosenStylesOption: StylesOption
 ): string => {
@@ -61,14 +64,9 @@ const generateStyleImport = (
         [ResourceType.Route, ResourceType.Component].includes(extendableType)
         && fileName.includes('component')
     ) {
-        switch (chosenStylesOption) {
-        case StylesOption.extend:
-            return `import '${generableName}.style.override'`;
+        const styleFilename = getStyleFileName(resourceName, chosenStylesOption).replace(/\.s?(c|a)ss$/, '');
 
-        case StylesOption.override:
-        default:
-            return `import '${generableName}.style'`;
-        }
+        return `import '${styleFilename}';`;
     }
 
     return '';
@@ -84,7 +82,13 @@ const generateImportString = (
     }
 
     return 'import {\n'
-        .concat(chosenExports.map(({ name }) => `    ${name} as Source${capitalize(name)},\n`).join(''))
+        .concat(chosenExports.map(
+            ({ name }) => `    ${name} as ${
+                isCapitalized(name) ? 'Source' : 'source'
+            }${
+                capitalize(name)
+            },\n`).join('')
+        )
         .concat(notChosenExports.map(({ name }) => `    ${name},\n`).join(''))
         .concat(`} from \'${sourceFilePath}\';`);
 };
@@ -121,7 +125,7 @@ const generateMappingsExtends = (chosenExports: ExportData[]): Array<string> => 
 
                 const newExport =
                     `export const ${name} = ${argument} => ({\n` +
-                    `    ...Source${capitalize(name)}(${argument}),\n` +
+                    `    ...source${capitalize(name)}(${argument}),\n` +
                     `    // TODO extend ${name}\n` +
                     `});`;
 
@@ -152,15 +156,14 @@ const generateNewFileContents = ({
     chosenExports, 
     defaultExportCode, 
     originalCode,
-    resourceType: extendableType,
-    resourceName: extendableName,
+    resourceType,
+    resourceName,
     chosenStylesOption
 }: FileInformation) : string => {
-    const generableName = fileName.slice(0, fileName.lastIndexOf('.'));
-    const sourceFilePath = path.join(
-        `Source${extendableType}`,
-        extendableName,
-        generableName
+    const sourceFileImportPath = path.join(
+        `Source${capitalize(resourceType)}`,
+        resourceName,
+        fileName.slice(0, fileName.lastIndexOf('.'))
     );
 
     const notChosenExports = allExports.filter(
@@ -170,8 +173,8 @@ const generateNewFileContents = ({
     // Generate new file: imports + exports from source + all extendables + class template + exdf
     const result = [
         generateAdditionalImportString(originalCode, defaultExportCode),
-        generateImportString(sourceFilePath, chosenExports, notChosenExports),
-        generateStyleImport(fileName, generableName, extendableType, chosenStylesOption),
+        generateImportString(sourceFileImportPath, chosenExports, notChosenExports),
+        generateStyleImport(fileName, resourceName, resourceType, chosenStylesOption),
         generateExportsFromSource(notChosenExports),
         ...generateExtendStrings(chosenExports),
         ...generateMappingsExtends(chosenExports),
