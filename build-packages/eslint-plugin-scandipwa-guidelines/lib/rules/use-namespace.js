@@ -7,6 +7,7 @@ const path = require('path');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
 const getLeadingCommentsForNode = require('../util/get-leading-comments');
+const locateScandipwaModule = require('@scandipwa/scandipwa-dev-utils/locate-scandipwa-module');
 
 const types = {
     ExportedClass: [
@@ -163,18 +164,17 @@ const preparePackageName = (packageName) => {
 };
 
 const generateNamespace = (node, context) => {
-    const filename = context.getFilename();
-    const splitted = filename.split('src');
-    const toFile = splitted.pop();
-    const toPackage = path.normalize(splitted.join('src'));
-    const { name: packageName } = getPackageJson(toPackage);
+    const filePath = context.getFilename();
+    const modulePath = locateScandipwaModule(filePath, 7);
+    const fileRelative = path.relative(modulePath, filePath).replace(/^(\.\/)?src\//, '');
+    const { name: packageName } = getPackageJson(modulePath);
 
     // Not using path.join to support windows
     const pathname = [
         // remove @ from organization, support @scandipwa legacy namespaces
         preparePackageName(packageName),
         // Trim post-fixes if they are not present
-        ...prepareFilePath(toFile)
+        ...prepareFilePath(fileRelative)
     ].join('/').replace(
         // Convert to pascal-case, and trim "-"
         /\b[a-z](?=[a-z]{2})/g,
