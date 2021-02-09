@@ -1,6 +1,7 @@
 const path = require('path');
 
-const { locateScandipwaModule } = require('@scandipwa/scandipwa-development-toolkit-core');
+const locateScandipwaModule = require('@scandipwa/scandipwa-dev-utils/locate-scandipwa-module');
+
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const BUBBLE_DEPTH = 5;

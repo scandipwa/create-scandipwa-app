@@ -1,22 +1,37 @@
-import * as fs from 'fs';
-import * as path from 'path';
+/* eslint-disable no-use-before-define */
+const fs = require('fs');
+const path = require('path');
 
 const DEFAULT_MAX_LEVEL = 5;
 
-var bubbleUp = (dir: string, maxLevel: number, level: number) => {
+/**
+ * Invoke another iteration
+ * @param {string} dir
+ * @param {number} maxLevel
+ * @param {number} level
+ */
+function bubbleUp(dir, maxLevel, level) {
     const parentDir = path.resolve(dir, '..');
 
-    return locateScandipwaModule(parentDir, maxLevel, ++level);
-
+    return locateScandipwaModule(parentDir, maxLevel, level + 1);
 }
 
-var locateScandipwaModule = (
-    dir: string, 
+// TODO memoize
+/**
+ * Look for the scandipwa module above the given path
+ * Bubble up up to <maxLevel> directories from the given path
+ * @param {string} dir
+ * @param {number} maxLevel
+ * @param {number} level
+ * @returns {string|null}
+ */
+function locateScandipwaModule(
+    dir,
     maxLevel = DEFAULT_MAX_LEVEL,
     level = 1
-): string | null => {
+) {
     const packageJsonPath = path.join(dir, 'package.json');
-    
+
     if (!fs.existsSync(packageJsonPath)) {
         // Handle max recursion depth
         if (level === maxLevel) {
@@ -37,6 +52,6 @@ var locateScandipwaModule = (
 
     // Handle non-scandipwa package inside of scandipwa package
     return bubbleUp(dir, maxLevel, level);
-};
+}
 
-export default locateScandipwaModule;
+module.exports = locateScandipwaModule;

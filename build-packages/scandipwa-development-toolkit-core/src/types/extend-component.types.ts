@@ -42,5 +42,20 @@ export interface FileInformation {
     resourceType: ResourceType,
     resourceName: string,
     chosenStylesOption: StylesOption,
-    sourceModule: string
+    // sourceModule: string,
+    relativeResourceDirectory: string,
+    sourceModuleName: string,
+    sourceModuleType: SourceType,
+    sourceModuleAlias: string
 }
+
+export type ModuleInformation = {
+    type: SourceType,
+    alias: string,
+    name: string
+};
+
+export enum SourceType {
+    Theme = 'theme',
+    Extension = 'extension'
+};

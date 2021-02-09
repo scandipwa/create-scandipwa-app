@@ -9,8 +9,9 @@ import generateNewFileContents from './js-generation';
 import { createStyleFile, selectStylesOption } from './scss-generation';
 
 import fixESLint from '../util/eslint';
+import { getModuleInformation } from '../util/module';
 
-import { ExportData, StylesOption } from '../types/extend-component.types';
+import { ExportData, SourceType, StylesOption } from '../types/extend-component.types';
 import { ILogger, IUserInteraction, ResourceType } from '../types';
 
 const shouldHandleStyles = (resourceType: ResourceType, fileName: string) => {
@@ -24,6 +25,24 @@ const shouldHandleStyles = (resourceType: ResourceType, fileName: string) => {
 
     return true;
 };
+
+const getTargetResourceDirectory = (
+    relativeResourceDirectory: string,
+    targetModulePath: string,
+    sourceModuleType: SourceType,
+    sourceModuleName: string
+) => {
+    // Handle specific folder structure for extensions
+    // When overriding @scandipwa/paypal/src/component/Paypal
+    // Expected path   src/@scandipwa/paypal/component/PayPal
+    if (sourceModuleType === SourceType.Extension) {
+        const shortenedRelativeResourceDirectory = relativeResourceDirectory.replace(/^(\.\/)?src\/?/, '');
+
+        return path.join(targetModulePath, sourceModuleName, shortenedRelativeResourceDirectory);
+    }
+
+    return path.join(targetModulePath, relativeResourceDirectory);
+}
 
 /**
  * @param resourceType Type of resource to extend
@@ -43,7 +62,19 @@ const extend = async (
     const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
 
     const sourceResourceDirectory = path.join(sourceModulePath, relativeResourceDirectory);
-    const targetResourceDirectory = path.join(targetModulePath, relativeResourceDirectory);
+
+    const { 
+        name: sourceModuleName,
+        type: sourceModuleType,
+        alias: sourceModuleAlias
+    } = getModuleInformation(sourceModulePath);
+
+    const targetResourceDirectory = getTargetResourceDirectory(
+        relativeResourceDirectory,
+        targetModulePath,
+        sourceModuleType,
+        sourceModuleName
+    );
 
     const sourceFiles = getFileListForResource(resourceType, resourceName, sourceResourceDirectory);
 
@@ -118,7 +149,10 @@ const extend = async (
                 resourceType: resourceType,
                 resourceName: resourceName,
                 chosenStylesOption: stylesOption!,
-                sourceModule: sourceModulePath
+                relativeResourceDirectory,
+                sourceModuleName,
+                sourceModuleType,
+                sourceModuleAlias
             });
             
             // Attempt actual file creation

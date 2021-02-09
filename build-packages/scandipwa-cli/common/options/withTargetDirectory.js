@@ -1,6 +1,6 @@
 const withTargetDirectory = (yargs) => yargs
     .option('target-module', {
-        describe: 'Module to generate functionality in',
+        describe: 'Path to the module to generate functionality in',
         alias: 't',
         type: 'string'
     });

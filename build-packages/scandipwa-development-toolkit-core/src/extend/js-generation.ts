@@ -1,51 +1,21 @@
-import * as path from 'path';
 import { ResourceType } from '../types';
 
 import {
     FileInformation,
     ExportType,
     StylesOption,
-    ExportData
+    ExportData,
 } from '../types/extend-component.types';
-
-import { getPackageJson } from '@scandipwa/scandipwa-dev-utils/package-json';
+import { getImportPath } from '../util/js-generation';
+import { capitalize, decapitalize } from '../util/misc';
 
 import { getStyleFileName } from './scss-generation';
 
-const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
-const decapitalize = (word: string) => word.charAt(0).toLowerCase() + word.slice(1);
 const isMapping = (name: string) => ['mapStateToProps', 'mapDispatchToProps'].includes(name);
-
-const getModuleAlias = (sourceModule: string) => {
-    const { 
-        scandipwa: { 
-            type,         
-            themeAlias 
-        } 
-    } = getPackageJson(sourceModule);
-
-    // TODO catch this
-    // Handle no module type in the base module
-    if (!type) {
-        throw new Error('No package type found in the base module!');
-    }
-
-    // Handle no theme alias in a theme
-    if (type === 'theme' && !themeAlias) {
-        throw new Error('No theme alias found in the base module!');
-    }
-
-    if (type !== 'theme') {
-        return 'Base';
-    }
-
-    return themeAlias;
-}
 
 const getPrefixedName = (name: string, moduleAlias: string) => {
     const isCapitalized = (word: string) => word[0].toUpperCase() === word[0];
     const isUpperCase = (word: string) => word.toUpperCase() === word;
-
 
     if (isUpperCase(name)) {
         return `${moduleAlias.toUpperCase()}_${name}`;
@@ -205,25 +175,28 @@ const generateNewFileContents = ({
     originalCode,
     resourceType,
     resourceName,
-    sourceModule,
-    chosenStylesOption
+    chosenStylesOption,
+    relativeResourceDirectory,
+    sourceModuleName,
+    sourceModuleType,
+    sourceModuleAlias
 }: FileInformation) : string => {
-    const sourceFileImportPath = path.join(
-        `Source${capitalize(resourceType)}`,
+    const importPath = getImportPath(
         resourceName,
-        fileName.slice(0, fileName.lastIndexOf('.'))
+        resourceType,
+        relativeResourceDirectory,
+        sourceModuleAlias,
+        sourceModuleType,
+        sourceModuleName,
+        fileName
     );
 
-    const notChosenExports = allExports.filter(
-        one => !chosenExports.includes(one)
-    );
-
-    const sourceModuleAlias = getModuleAlias(sourceModule);
+    const notChosenExports = allExports.filter(one => !chosenExports.includes(one));
 
     // Generate new file: imports + exports from source + all extendables + class template + exdf
     const result = [
         generateAdditionalImportString(originalCode, defaultExportCode),
-        generateImportString(sourceFileImportPath, sourceModuleAlias, chosenExports, notChosenExports),
+        generateImportString(importPath, sourceModuleAlias, chosenExports, notChosenExports),
         generateStyleImport(fileName, resourceName, resourceType, chosenStylesOption),
         generateExportsFromSource(notChosenExports),
         ...generateExtendStrings(chosenExports, sourceModuleAlias),
