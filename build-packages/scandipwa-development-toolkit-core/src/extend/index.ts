@@ -38,7 +38,7 @@ const getTargetResourceDirectory = (
     if (sourceModuleType === SourceType.Extension) {
         const shortenedRelativeResourceDirectory = relativeResourceDirectory.replace(/^(\.\/)?src\/?/, '');
 
-        return path.join(targetModulePath, sourceModuleName, shortenedRelativeResourceDirectory);
+        return path.join(targetModulePath, 'src', sourceModuleName, shortenedRelativeResourceDirectory);
     }
 
     return path.join(targetModulePath, relativeResourceDirectory);
