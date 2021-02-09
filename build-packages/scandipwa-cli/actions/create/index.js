@@ -28,5 +28,12 @@ module.exports = (yargs) => {
             (yargs) => storeOptions(withTargetDirectory(yargs)),
             creator(ResourceType.Store)
         );
+
+        yargs.command(
+            'query <name>',
+            'Create a query',
+            (yargs) => withTargetDirectory(yargs),
+            creator(ResourceType.Query)
+        );
     });
 };
