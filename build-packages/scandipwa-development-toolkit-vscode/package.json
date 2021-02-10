@@ -1,84 +1,17 @@
 {
 	"private": true,
 	"version": "1.0.1",
-	"name": "scandipwa-development-toolkit-csa",
+	"name": "scandipwa-development-toolkit-vscode",
 	"publisher": "ScandiPWA",
-	"displayName": "ScandiPWA development toolkit for CSA",
-	"description": "ScandiPWA VSCode development tools",
+	"displayName": "ScandiPWA devtools for VSCode",
+	"description": "ScandiPWA development tools for Visual Studio Code",
 	"icon": "icon.png",
 	"license": "SEE LICENSE IN LICENSE",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/scandipwa/base-theme"
+		"url": "https://github.com/scandipwa/create-scandipwa-app"
 	},
-	"homepage": "https://github.com/scandipwa/base-theme",
-	"engines": {
-		"vscode": "^1.45.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:extension.createNewComponent",
-		"onCommand:extension.createNewRoute",
-		"onCommand:extension.createNewQuery",
-		"onCommand:extension.createNewStore",
-		"onCommand:extension.extendCoreComponent",
-		"onCommand:extension.extendCoreRoute",
-		"onCommand:extension.extendCoreQuery",
-		"onCommand:extension.extendCoreStore"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "extension.createNewComponent",
-				"title": "ScandiPWA: Create new component"
-			},
-			{
-				"command": "extension.createNewRoute",
-				"title": "ScandiPWA: Create new route"
-			},
-			{
-				"command": "extension.createNewQuery",
-				"title": "ScandiPWA: Create new query"
-			},
-			{
-				"command": "extension.createNewStore",
-				"title": "ScandiPWA: Create new store"
-			},
-			{
-				"command": "extension.extendCoreComponent",
-				"title": "ScandiPWA: Extend source component"
-			},
-			{
-				"command": "extension.extendCoreRoute",
-				"title": "ScandiPWA: Extend source route"
-			},
-			{
-				"command": "extension.extendCoreQuery",
-				"title": "ScandiPWA: Extend source query"
-			},
-			{
-				"command": "extension.extendCoreStore",
-				"title": "ScandiPWA: Extend source store"
-			}
-		],
-		"configuration": [
-			{
-				"title": "ScandiPWA configuration",
-				"properties": {
-					"scandipwa.sourcePath": {
-						"type": "string",
-						"default": "../../../../../vendor/scandipwa/source/",
-						"description": "Path to Scandipwa source",
-						"format": "uri",
-						"scope": "window"
-					}
-				}
-			}
-		]
-	},
+	"homepage": "https://github.com/scandipwa/create-scandipwa-app",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
@@ -87,11 +20,66 @@
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js"
 	},
+	"engines": {
+		"vscode": "^1.45.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.createComponent",
+		"onCommand:extension.createRoute",
+		"onCommand:extension.createQuery",
+		"onCommand:extension.createStore",
+
+		"onCommand:extension.extendComponent",
+		"onCommand:extension.extendRoute",
+		"onCommand:extension.extendQuery",
+		"onCommand:extension.extendStore"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.createComponent",
+				"title": "ScandiPWA: Create a component"
+			},
+			{
+				"command": "extension.createRoute",
+				"title": "ScandiPWA: Create a route"
+			},
+			{
+				"command": "extension.createQuery",
+				"title": "ScandiPWA: Create a query"
+			},
+			{
+				"command": "extension.createStore",
+				"title": "ScandiPWA: Create a store"
+			},
+			{
+				"command": "extension.extendComponent",
+				"title": "ScandiPWA: Extend a component"
+			},
+			{
+				"command": "extension.extendRoute",
+				"title": "ScandiPWA: Extend a route"
+			},
+			{
+				"command": "extension.extendQuery",
+				"title": "ScandiPWA: Extend a query"
+			},
+			{
+				"command": "extension.extendStore",
+				"title": "ScandiPWA: Extend a store"
+			}
+		]
+	},
 	"dependencies": {
 		"@babel/generator": "^7.9.6",
 		"@babel/parser": "^7.9.6",
 		"@babel/traverse": "^7.9.6",
-		"@babel/types": "^7.9.6"
+		"@babel/types": "^7.9.6",
+		"@scandipwa/scandipwa-development-toolkit-core": "^1.0.0"
 	},
 	"devDependencies": {
 		"@types/babel__generator": "^7.6.1",
