@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import ContextManager from '../managers/context';
+import ContextManager from './managers/context';
 
 export const getStorage = <T>(storageKey: string, defaultValue?: any): T => {
     const context = ContextManager.getInstance().getContext();

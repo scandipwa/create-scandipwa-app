@@ -3,8 +3,8 @@ import {
 	ResourceType
 } from '@scandipwa/scandipwa-development-toolkit-core';
 
-import ContextManager from './managers/context';
-import { creator } from './create';
+import ContextManager from './util/managers/context';
+import { creator } from './commands/create';
 // import { extender } from './extend';
 
 const commandMap = {
