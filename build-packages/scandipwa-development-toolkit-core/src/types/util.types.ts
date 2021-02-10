@@ -9,7 +9,7 @@ export interface ILogger {
     style?: LoggerStyle
 }
 
-export type EnquiryOption<Y> = { displayName: string, value: Y } | string;
+export type EnquiryOption<Y> = { displayName: string, value: Y };
 
 export interface IUserInteraction {
     singleSelect<T>(

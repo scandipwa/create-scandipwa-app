@@ -28,4 +28,6 @@ export type StoreResourceParams = {
     dispatcherType: DispatcherType
 }
 
-export type ResourceParams = ComponentResourceParams | StoreResourceParams;
+export type QueryResourceParams = {};
+
+export type ResourceParams = ComponentResourceParams | StoreResourceParams | QueryResourceParams;
