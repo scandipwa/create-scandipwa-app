@@ -71,15 +71,74 @@ const addSuperToConstructor = (path, types) => {
     constructor.get('body').unshiftContainer('body', superCall);
 };
 
+/**
+ * Attempt to read package.json located by p
+ * @param {string} packageJsonPath
+ */
+const getPackageJson = (packagePath) => {
+    const packageJsonPath = path.join(packagePath, 'package.json');
+
+    try {
+        return require(packageJsonPath);
+    } catch (err) {
+        return {};
+    }
+};
+
+/**
+ * Memoization strategy is valid only for functions with 1 argument
+ * This strategy works better with 1-argument functions
+ *
+ * @param {function} cb
+ */
+const memoizeBySingleArgument = (cb) => {
+    const memoizedValues = {};
+
+    return (arg) => {
+        // Handle new value
+        if (!memoizedValues[arg]) {
+            const result = cb(arg);
+            memoizedValues[arg] = result;
+        }
+
+        return memoizedValues[arg];
+    };
+};
+
+const isScandipwaPackageFile = memoizeBySingleArgument((filePath) => {
+    // Potentially, only the files inside of the src/ directory need to be transpiled
+    const src = filePath.lastIndexOf('/src/');
+    if (src === -1) {
+        return false;
+    }
+
+    const packagePath = filePath.slice(0, src);
+    const packageJson = getPackageJson(packagePath);
+
+    // If package.json has `scandipwa` configurations => is a scandipwa package
+    if (packageJson.scandipwa) {
+        return true;
+    }
+
+    return false;
+});
+
 const isMustProcessNamespace = (state) => {
     const { filename } = state.file.opts;
 
+    // Handle enabled extensions: 'src/', 'public/'
     for (let i = 0; i < allowedPaths.length; i++) {
         const allowedPath = allowedPaths[i];
 
         if (filename.includes(allowedPath)) {
             return true;
         }
+    }
+
+    // Handle packages which don't need to be explicitly enabled
+    // E.g. @scandipwa/form
+    if (isScandipwaPackageFile(filename)) {
+        return true;
     }
 
     return false;
