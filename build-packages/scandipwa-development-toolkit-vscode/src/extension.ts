@@ -8,10 +8,10 @@ import { creator } from './commands/create';
 // import { extender } from './extend';
 
 const commandMap = {
-	// 'extension.createComponent': creator(ResourceType.Component),
-	// 'extension.createRoute': creator(ResourceType.Route),
+	'extension.createComponent': creator(ResourceType.Component),
+	'extension.createRoute': creator(ResourceType.Route),
 	'extension.createQuery': creator(ResourceType.Query),
-	// 'extension.createStore': creator(ResourceType.Store),
+	'extension.createStore': creator(ResourceType.Store),
 
 	// 'extension.extendComponent': extender(ResourceType.Component),
 	// 'extension.extendRoute': extender(ResourceType.Route),
