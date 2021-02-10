@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import locateScandipwaModule from "@scandipwa/scandipwa-dev-utils/locate-scandipwa-module";
 
 import { createNewFileWithContents } from '../util/file';
 
@@ -7,42 +8,14 @@ import { getDefaultExportCode, getExportPathsFromCode, getNamedExportsNames } fr
 import { getFileListForResource, getRelativeResourceDirectory } from './fs-interactions';
 import generateNewFileContents from './js-generation';
 import { createStyleFile, selectStylesOption } from './scss-generation';
+import { resolveExtendableResourcePath, resolveTargetResourceDirectory } from './resolve';
 
 import fixESLint from '../util/eslint';
 import { getModuleInformation } from '../util/module';
 
-import { ExportData, SourceType, StylesOption } from '../types/extend-component.types';
+import { ExportData, StylesOption } from '../types/extend-component.types';
 import { ILogger, IUserInteraction, ResourceType } from '../types';
-
-const shouldHandleStyles = (resourceType: ResourceType, fileName: string) => {
-    if (![ResourceType.Route, ResourceType.Component].includes(resourceType)) {
-        return false;
-    } 
-
-    if (!fileName.includes('component')) {
-        return false;
-    }
-
-    return true;
-};
-
-const getTargetResourceDirectory = (
-    relativeResourceDirectory: string,
-    targetModulePath: string,
-    sourceModuleType: SourceType,
-    sourceModuleName: string
-) => {
-    // Handle specific folder structure for extensions
-    // When overriding @scandipwa/paypal/src/component/Paypal
-    // Expected path   src/@scandipwa/paypal/component/PayPal
-    if (sourceModuleType === SourceType.Extension) {
-        const shortenedRelativeResourceDirectory = relativeResourceDirectory.replace(/^(\.\/)?src\/?/, '');
-
-        return path.join(targetModulePath, 'src', sourceModuleName, shortenedRelativeResourceDirectory);
-    }
-
-    return path.join(targetModulePath, relativeResourceDirectory);
-}
+import validateResourceExistance from './validate-resource-existance';
 
 /**
  * @param resourceType Type of resource to extend
@@ -55,13 +28,24 @@ const extend = async (
     resourceType: ResourceType, 
     resourceName: string,
     targetModulePath: string,
-    sourceModulePath: string,
     logger: ILogger,
-    userInteraction: IUserInteraction
+    userInteraction: IUserInteraction,
+    optionalSourceModulePath?: string
 ): Promise<string[]> => {
     const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
+    const sourceResourceDirectory = resolveExtendableResourcePath(resourceName, resourceType, optionalSourceModulePath);
+    const sourceModulePath = locateScandipwaModule(sourceResourceDirectory)!;
 
-    const sourceResourceDirectory = path.join(sourceModulePath, relativeResourceDirectory);
+    if (!validateResourceExistance(
+        sourceResourceDirectory,
+        sourceModulePath,
+        targetModulePath,
+        resourceType,
+        resourceName,
+        logger
+    )) {
+        return [];
+    }
 
     const { 
         name: sourceModuleName,
@@ -69,7 +53,7 @@ const extend = async (
         alias: sourceModuleAlias
     } = getModuleInformation(sourceModulePath);
 
-    const targetResourceDirectory = getTargetResourceDirectory(
+    const targetResourceDirectory = resolveTargetResourceDirectory(
         relativeResourceDirectory,
         targetModulePath,
         sourceModuleType,
@@ -118,7 +102,7 @@ const extend = async (
 
             let stylesOption: StylesOption;
             // Handle styles if necessary
-            if (shouldHandleStyles(resourceType, fileName)) {
+            if ([ResourceType.Route, ResourceType.Component].includes(resourceType) && fileName.includes('.component')) {
                 stylesOption = await selectStylesOption(userInteraction);
 
                 // If selected option is "keep styles" => skip style creation
