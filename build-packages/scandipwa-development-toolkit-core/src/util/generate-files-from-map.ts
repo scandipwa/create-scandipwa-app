@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { FileMap, FileOpenCallback, ILogger, ResourceType } from '../types';
+import { FileMap, ILogger, ResourceType } from '../types';
 import { createNewFileFromTemplate } from './file';
 
 const templateDirectory = path.resolve(__dirname, '..', 'templates');
@@ -20,8 +20,7 @@ const generateFilesFromMap = (
     resourceName: string, 
     resourceType: ResourceType, 
     targetModulePath: string,
-    logger: ILogger,
-    openFile?: FileOpenCallback
+    logger: ILogger
 ): string[] => {
     // Calculate the resource path
     const resourceTypeDirectory = path.join(targetModulePath, 'src', resourceType);
@@ -74,10 +73,6 @@ const generateFilesFromMap = (
         },
         [] as string[]
     );
-
-    if (openFile && createdFiles.length) {
-        openFile(createdFiles.pop()!);
-    }
 
     return createdFiles;
 }

@@ -13,8 +13,6 @@ export enum DispatcherType {
     NoDispatcher = 'no-dispatcher'
 }
 
-export type FileOpenCallback = (filename: string) => void;
-
 export type ContainerFeatures = {
     logic: boolean,
     state: boolean

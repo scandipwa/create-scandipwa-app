@@ -6,7 +6,7 @@ import generateFilesFromMap from '../util/generate-files-from-map';
 import fixESLint from '../util/eslint';
 import validateResourceParams from './validate-resource-params';
 import { ILogger, ResourceType } from '../types';
-import { FileOpenCallback, ResourceParams } from '../types';
+import { ResourceParams } from '../types';
 
 export const extensionRoot = path.resolve(__dirname, '..', '..', 'src');
 
@@ -18,8 +18,7 @@ const create = (
     resourceName: string, 
     resourceParams: ResourceParams,
     targetModulePath: string,
-    logger: ILogger,
-    openFile?: FileOpenCallback
+    logger: ILogger
 ) => {
     // Validate input data
     const validationErrors = validateResourceParams(resourceName, resourceType, resourceParams);
@@ -36,8 +35,7 @@ const create = (
         resourceName, 
         resourceType, 
         targetModulePath,
-        logger,
-        openFile
+        logger
     );
 
     // Prettify!
