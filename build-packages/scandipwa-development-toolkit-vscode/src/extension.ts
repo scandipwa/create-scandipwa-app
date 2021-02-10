@@ -1,38 +1,37 @@
 import * as vscode from 'vscode';
+import {
+	ResourceType
+} from '@scandipwa/scandipwa-development-toolkit-core';
 
-import createQuery from './commands/create-query';
-import createStore from './commands/create-store';
-import createComponent from './commands/create-component';
-import extend from './commands/extender';
-import { Extendable } from './types/extend-component.types';
-import { validateScandiPWA } from './util/file';
+import ContextManager from './managers/context';
+import { creator } from './create';
+// import { extender } from './extend';
 
 const commandMap = {
-	'extension.createNewComponent': createComponent.bind(null, false),
-	'extension.createNewRoute': createComponent.bind(null, true),
-	'extension.createNewQuery': createQuery,
-	'extension.createNewStore': createStore,
-	'extension.extendCoreComponent': extend.bind(null, Extendable.component),
-	'extension.extendCoreRoute': extend.bind(null, Extendable.route),
-	'extension.extendCoreQuery': extend.bind(null, Extendable.query),
-	'extension.extendCoreStore': extend.bind(null, Extendable.store),
+	// 'extension.createComponent': creator(ResourceType.Component),
+	// 'extension.createRoute': creator(ResourceType.Route),
+	'extension.createQuery': creator(ResourceType.Query),
+	// 'extension.createStore': creator(ResourceType.Store),
+
+	// 'extension.extendComponent': extender(ResourceType.Component),
+	// 'extension.extendRoute': extender(ResourceType.Route),
+	// 'extension.extendQuery': extender(ResourceType.Query),
+	// 'extension.extendStore': extender(ResourceType.Store),
 };
 
 export function activate(context: vscode.ExtensionContext) {
-	Object.entries(commandMap).forEach(
-		([ name, handler ]) => {
-			const disposable = vscode.commands.registerCommand(
-				name,
-				() => {
-					if (validateScandiPWA()) {
-						return handler();
-					}
-					vscode.window.showErrorMessage('ScandiPWA directory is not recognized!');
+	Object.entries(commandMap).forEach(([ name, handler ]) => {
+		context.subscriptions.push(
+			vscode.commands.registerCommand(
+				name, 
+				async () => {
+					ContextManager.createInstance(context);
+
+					handler();
 				}
-			);
-			context.subscriptions.push(disposable);
-		}
-	);
+			)
+		);
+	});
 }
 
 export function deactivate() {}

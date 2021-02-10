@@ -1,4 +1,4 @@
-const validateName = (value: string | undefined) => {
+export const validateName = (value: string | undefined) => {
     if (!value) {
         return 'Name must not be empty.';
     }
@@ -9,8 +9,4 @@ const validateName = (value: string | undefined) => {
         return 'Name must start from upper-case letter.';
     }
     return null;
-};
-
-module.exports = {
-    validateName
 };
