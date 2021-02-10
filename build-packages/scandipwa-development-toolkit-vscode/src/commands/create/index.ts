@@ -1,12 +1,13 @@
 import { create, ResourceType } from "@scandipwa/scandipwa-development-toolkit-core";
 
+import { ActionType } from '../../types';
 import { getTargetModule } from "../../options/module-selection";
-import { getResourceParams } from '../../options/resource-params';
+import { getResourceParams } from './options';
 import logger from '../../util/logger';
 import { handlePossibleError } from "../../util/error-handling";
 
 export const creator = (resourceType: ResourceType) => handlePossibleError(async () => {
-	const resourceParams = await getResourceParams(resourceType);
+	const resourceParams = await getResourceParams(resourceType, ActionType.Create);
 	const targetModule = await getTargetModule();
 
 	create(

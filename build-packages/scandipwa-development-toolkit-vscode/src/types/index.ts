@@ -1,2 +1,4 @@
-type InjectOptionCallback = (options: any) => void;
-type InjectableCallback = InjectOptionCallback | Promise<InjectOptionCallback>;
+export enum ActionType {
+    Create = 'create',
+    Extend = 'extend'
+}

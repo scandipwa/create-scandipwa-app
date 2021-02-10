@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 import { 
     ComponentResourceParams, 
     ContainerFeatures, 
@@ -9,7 +7,9 @@ import {
     StoreResourceParams 
 } from "@scandipwa/scandipwa-development-toolkit-core";
 
-import UI from '../util/ui';
+import UI from '../../util/ui';
+import { getResourceName } from '../common/options';
+import { ActionType } from '../../types';
 
 const componentParamGetter = async () => {
     const containerFeaturesChoice = await UI.multiSelect(
@@ -64,24 +64,15 @@ const getterMap: Record<ResourceType, () => ResourceParams> = {
     [ResourceType.Query]: () => ({})
 }
 
-const getCommonResourceParams = async (resourceType: ResourceType) => {
-    const resourceName = await vscode.window.showInputBox({ 
-        placeHolder: `Name of the ${resourceType} to create` 
-    });
-
-    if (!resourceName) {
-        throw new Error('Supply resource name to create a resource!');
-    }
-
-    return { resourceName };
-}
-
-export const getResourceParams = async (resourceType: ResourceType): Promise<ResourceParams & {resourceName: string}> => {
-    const commonResourceParams = await getCommonResourceParams(resourceType);
+export const getResourceParams = async (
+    resourceType: ResourceType, 
+    actionType: ActionType
+): Promise<ResourceParams & {resourceName: string}> => {
+    const resourceName = await getResourceName(resourceType, actionType);
     const typeSpecificResourceParams = await getterMap[resourceType]();
 
     return {
-        resourceName: commonResourceParams.resourceName,
+        resourceName,
         ...typeSpecificResourceParams
     };
 }

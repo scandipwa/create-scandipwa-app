@@ -5,7 +5,7 @@ import {
 
 import ContextManager from './util/managers/context';
 import { creator } from './commands/create';
-// import { extender } from './extend';
+import { extender } from './commands/extend';
 
 const commandMap = {
 	'extension.createComponent': creator(ResourceType.Component),
@@ -13,10 +13,10 @@ const commandMap = {
 	'extension.createQuery': creator(ResourceType.Query),
 	'extension.createStore': creator(ResourceType.Store),
 
-	// 'extension.extendComponent': extender(ResourceType.Component),
-	// 'extension.extendRoute': extender(ResourceType.Route),
-	// 'extension.extendQuery': extender(ResourceType.Query),
-	// 'extension.extendStore': extender(ResourceType.Store),
+	'extension.extendComponent': extender(ResourceType.Component),
+	'extension.extendRoute': extender(ResourceType.Route),
+	'extension.extendQuery': extender(ResourceType.Query),
+	'extension.extendStore': extender(ResourceType.Store),
 };
 
 export function activate(context: vscode.ExtensionContext) {
