@@ -6,10 +6,10 @@ export const TARGET_MODULE = 'targetModule';
 const SOURCE_MODULE_DESCRIPTION = 'source';
 const TARGET_MODULE_DESCRIPTION = 'target';
 
-const getModule = async (description: string): Promise<string> => {
+const getModule = async (description: string, moduleKey: string): Promise<string> => {
     const modulePath = await selectDirectoryWithHistory(
-        `Please, select ${description} module!`,
-        SOURCE_MODULE
+        `Select ${description} module`,
+        moduleKey
     );
 
     if (!modulePath) {
@@ -19,6 +19,6 @@ const getModule = async (description: string): Promise<string> => {
     return modulePath;
 }
 
-export const getTargetModule = () => getModule(TARGET_MODULE_DESCRIPTION);
+export const getTargetModule = () => getModule(TARGET_MODULE_DESCRIPTION, TARGET_MODULE);
 
-export const getSourceModule = () => getModule(SOURCE_MODULE_DESCRIPTION);
+export const getSourceModule = () => getModule(SOURCE_MODULE_DESCRIPTION, SOURCE_MODULE);
