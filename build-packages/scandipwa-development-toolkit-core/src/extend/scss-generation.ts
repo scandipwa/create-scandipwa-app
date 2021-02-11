@@ -27,7 +27,7 @@ export const createStyleFile = (
     targetResourceDirectory: string,
     stylesOption: StylesOption,
     logger: ILogger
-): string | null => {
+): string => {
     // Calculate target file name and path
     const styleFileName = getStyleFileName(resourceName, stylesOption);
     const targetPath = path.join(targetResourceDirectory, styleFileName);
