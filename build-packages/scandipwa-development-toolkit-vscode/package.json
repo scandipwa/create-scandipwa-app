@@ -79,7 +79,7 @@
 		"@babel/parser": "^7.9.6",
 		"@babel/traverse": "^7.9.6",
 		"@babel/types": "^7.9.6",
-		"@scandipwa/scandipwa-development-toolkit-core": "^1.0.0"
+		"@scandipwa/scandipwa-development-toolkit-core": "1.0.0"
 	},
 	"devDependencies": {
 		"@types/babel__generator": "^7.6.1",
