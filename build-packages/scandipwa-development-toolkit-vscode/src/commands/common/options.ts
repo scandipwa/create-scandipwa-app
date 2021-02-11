@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { ResourceType } from "@scandipwa/scandipwa-development-toolkit-core/out";
+import { ResourceType } from "@scandipwa/scandipwa-development-toolkit-core";
 import { ActionType } from "../../types";
 
 export const getResourceName = async (
