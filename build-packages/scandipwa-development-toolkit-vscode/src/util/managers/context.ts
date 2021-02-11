@@ -5,7 +5,6 @@ class ContextManager {
     static createInstance(context: vscode.ExtensionContext) {
         if (!this.instance) {
             this.instance = new this(context);
-            console.log('Instance has been created!');
         }
     }
 
