@@ -12,18 +12,18 @@ const getParentTheme = (pathname) => {
     return parentTheme;
 };
 
-const getParentThemePaths = (pathname = process.cwd()) => {
+const getParentThemePaths = (pathname = process.cwd(), rootTheme = pathname) => {
     const parentThemePackage = getParentTheme(pathname);
 
     if (!parentThemePackage) {
         return [];
     }
 
-    const parentThemePathname = getPackagePath(parentThemePackage);
+    const parentThemePathname = getPackagePath(parentThemePackage, rootTheme);
 
     return [
         parentThemePathname,
-        ...getParentThemePaths(parentThemePathname)
+        ...getParentThemePaths(parentThemePathname, rootTheme)
     ];
 };
 

@@ -3,6 +3,7 @@
     "description": "Webpack fallback plugin used by CSA.",
     "version": "1.2.0",
     "main": "index.js",
+    "types": "index.d.ts",
     "license": "OSL-3.0",
     "files": [
         "/lib"
