@@ -7,31 +7,49 @@ export const getStorage = <T>(storageKey: string, defaultValue?: any): T => {
     return context.globalState.get(storageKey, defaultValue);
 }
 
+/**
+ * Returns false if SKIP
+ * Returns null if NONE
+ * Returns value if value 
+ */
 export const proposeFromHistory = async (
     storageKey: string,
     message: string,
-    noneOption?: string
-) => {
+    noneOption?: string,
+    isSkippable?: boolean
+): Promise<string|null|undefined> => {
     const targetHistory = getStorage<string>(storageKey, []);
     
     // Handle no history
     if (!targetHistory.length) {
-        return null;
+        return;
     }
-    
-    // Attempt to serve option from the history
+
+    // Additional options initialization
     const NONE = noneOption || 'None of the above';
-    const resultFromHistory = await vscode.window.showQuickPick([
-        ...targetHistory,
-        NONE
-    ], {
+    const SKIP = 'Skip';
+
+    // Additional options addition
+    const selectOptions = [...targetHistory];
+    selectOptions.push(NONE);
+    if (isSkippable) {
+        selectOptions.unshift(SKIP);
+    }
+
+    // Attempt to serve option from the history
+    const resultFromHistory = await vscode.window.showQuickPick(selectOptions, {
         canPickMany: false,
         placeHolder: message
     });
 
     // Handle proposed options not selected
-    if (resultFromHistory === NONE) {
+    if (resultFromHistory === NONE || typeof resultFromHistory !== 'string') {
         return null;
+    }
+
+    // Handle skip option selected
+    if (resultFromHistory === SKIP) {
+        return undefined;
     }
 
     // Proposed option has been selected => return
