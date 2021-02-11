@@ -36,17 +36,17 @@ const extend = async (
     const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
 
     // Resolve the source resource using the target module as CWD
-    const sourceResourceDirectory = resolveExtendableResourcePath(    
+    const sourceResourcePath = resolveExtendableResourcePath(    
         resourceName, 
         resourceType, 
         optionalSourceModulePath,
         targetModulePath
     );
 
-    const sourceModulePath = locateScandipwaModule(sourceResourceDirectory)!;
+    const sourceModulePath = locateScandipwaModule(sourceResourcePath)!;
 
     if (!validateResourceExistance(
-        sourceResourceDirectory,
+        sourceResourcePath,
         sourceModulePath,
         targetModulePath,
         resourceType,
@@ -69,13 +69,17 @@ const extend = async (
         sourceModuleName
     );
 
-    const sourceFiles = getFileListForResource(resourceType, resourceName, sourceResourceDirectory);
+    const sourceFiles = getFileListForResource(resourceType, resourceName, sourceResourcePath);
 
     const createdFiles = await sourceFiles.reduce(
         async (acc: Promise<string[]>, fileName: string): Promise<string[]> => {
             const createdFiles = await acc;
 
-            const sourceFilePath = path.resolve(sourceResourceDirectory, fileName);
+            // Query's resource path is the file path
+            // For other resources - it is a parent dir
+            const sourceFilePath = resourceType === ResourceType.Query
+                ? sourceResourcePath
+                :  path.resolve(sourceResourcePath, fileName);
             const newFilePath = path.resolve(targetResourceDirectory, fileName);
 
             // Prevent overwriting
