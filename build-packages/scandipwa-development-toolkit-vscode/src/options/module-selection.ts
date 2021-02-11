@@ -6,19 +6,32 @@ export const TARGET_MODULE = 'targetModule';
 const SOURCE_MODULE_DESCRIPTION = 'source';
 const TARGET_MODULE_DESCRIPTION = 'target';
 
-const getModule = async (description: string, moduleKey: string): Promise<string> => {
+const getModule = async (
+    description: string, 
+    moduleKey: string,
+    isSkippable?: boolean
+): Promise<string|undefined> => {
     const modulePath = await selectDirectoryWithHistory(
         `Select ${description} module`,
-        moduleKey
+        moduleKey,
+        isSkippable
     );
 
-    if (!modulePath) {
+    if (!modulePath && !isSkippable) {
         throw new Error(`A ${description} module must have been selected!`);
     }
 
-    return modulePath;
+    return modulePath as string | undefined;
 }
 
-export const getTargetModule = () => getModule(TARGET_MODULE_DESCRIPTION, TARGET_MODULE);
+export const getTargetModule = (isSkippable?: boolean) => getModule(
+    TARGET_MODULE_DESCRIPTION, 
+    TARGET_MODULE, 
+    isSkippable
+);
 
-export const getSourceModule = () => getModule(SOURCE_MODULE_DESCRIPTION, SOURCE_MODULE);
+export const getSourceModule = (isSkippable?: boolean) => getModule(
+    SOURCE_MODULE_DESCRIPTION, 
+    SOURCE_MODULE, 
+    isSkippable
+);

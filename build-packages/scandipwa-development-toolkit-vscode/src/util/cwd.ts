@@ -1,13 +1,19 @@
 import * as vscode from 'vscode';
 
 import { proposeFromHistory, unshiftUniqueToHistory } from './history';
-import locateScandipwaModule from '@scandipwa/scandipwa-dev-utils/locate-scandipwa-module';
+const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
 
 export const selectDirectoryWithHistory = async (
     message: string, 
-    historyKey: string
-) => {
-    const selectedFromHistory = await proposeFromHistory(historyKey, message);
+    historyKey: string,
+    isSkippable?: boolean
+): Promise<string | undefined | null> => {
+    const selectedFromHistory = await proposeFromHistory(historyKey, message, undefined, isSkippable);
+
+    // Handle skip option selected
+    if (isSkippable && selectedFromHistory === undefined) {
+        return undefined;
+    }
 
     // Handle selected one of previously selected ones
     if (selectedFromHistory) {

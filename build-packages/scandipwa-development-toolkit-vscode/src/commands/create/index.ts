@@ -8,14 +8,13 @@ import { handlePossibleError } from "../../util/error-handling";
 
 export const creator = (resourceType: ResourceType) => handlePossibleError(async () => {
 	const resourceParams = await getResourceParams(resourceType, ActionType.Create);
-	const targetModule = await getTargetModule();
+	const targetModule = await getTargetModule(false);
 
 	create(
 		resourceType, 
 		resourceParams.resourceName, 
 		resourceParams, 
-		targetModule, 
-		logger, 
-		() => {}
+		targetModule!, 
+		logger
 	);
 });
