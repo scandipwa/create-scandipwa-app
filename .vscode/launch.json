@@ -84,9 +84,22 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "args": ["create", "component", "MyComponent"],
+            "args": ["override", "component", "AddToCart"],
             "cwd": "${workspaceFolder}/runtime-packages/csa",
             "type": "pwa-node"
         },
+        {
+			"name": "VSCode",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${workspaceFolder}/build-packages/scandipwa-development-toolkit-vscode/${execPath}",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/build-packages/scandipwa-development-toolkit-vscode"
+			],
+			"outFiles": [
+				"${workspaceFolder}/build-packages/scandipwa-development-toolkit-vscode/out/**/*.js"
+			],
+			"preLaunchTask": "${defaultBuildTask}"
+		},
     ]
 }
