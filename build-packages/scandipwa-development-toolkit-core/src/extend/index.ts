@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import locateScandipwaModule from "@scandipwa/scandipwa-dev-utils/locate-scandipwa-module";
+
+const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
 
 import { createNewFileWithContents } from '../util/file';
 
@@ -33,7 +34,15 @@ const extend = async (
     optionalSourceModulePath?: string
 ): Promise<string[]> => {
     const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
-    const sourceResourceDirectory = resolveExtendableResourcePath(resourceName, resourceType, optionalSourceModulePath);
+
+    // Resolve the source resource using the target module as CWD
+    const sourceResourceDirectory = resolveExtendableResourcePath(    
+        resourceName, 
+        resourceType, 
+        optionalSourceModulePath,
+        targetModulePath
+    );
+
     const sourceModulePath = locateScandipwaModule(sourceResourceDirectory)!;
 
     if (!validateResourceExistance(
@@ -63,7 +72,7 @@ const extend = async (
     const sourceFiles = getFileListForResource(resourceType, resourceName, sourceResourceDirectory);
 
     const createdFiles = await sourceFiles.reduce(
-        async (acc: Promise<any>, fileName: string): Promise<string[]> => {
+        async (acc: Promise<string[]>, fileName: string): Promise<string[]> => {
             const createdFiles = await acc;
 
             const sourceFilePath = path.resolve(sourceResourceDirectory, fileName);

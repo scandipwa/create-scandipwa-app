@@ -1,5 +1,5 @@
-import locateScandipwaModule from "@scandipwa/scandipwa-dev-utils/locate-scandipwa-module";
-import FallbackPlugin from '@scandipwa/webpack-fallback-plugin';
+const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
+const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 
 import * as path from 'path';
 
@@ -15,14 +15,15 @@ import { getRelativeResourceDirectory } from "./fs-interactions";
  */
 export const resolveExtendableResourcePath = (
     resourceName: string, 
-    resourceType: ResourceType, 
-    sourceModule?: string
+    resourceType: ResourceType,
+    strictSourceModule?: string,
+    cwd?: string
 ) => {
     const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
 
     // If source module is specified explicitly -> use it
-    if (sourceModule) {
-        const scandipwaModule = locateScandipwaModule(sourceModule);
+    if (strictSourceModule) {
+        const scandipwaModule = locateScandipwaModule(strictSourceModule);
 
         if (!scandipwaModule) {
             throw new Error('The provided path is not within a ScandiPWA module!');
@@ -36,11 +37,11 @@ export const resolveExtendableResourcePath = (
         const queryName = `${resourceName}.query.js`;
         const queryFilePath = path.join(relativeResourceDirectory, queryName);
 
-        return FallbackPlugin.getFallbackPathname(queryFilePath);
+        return FallbackPlugin.getFallbackPathname(queryFilePath, cwd);
     }
 
     // If a directory with resource's name exists -> resource exists
-    return FallbackPlugin.getFallbackPathname(relativeResourceDirectory);
+    return FallbackPlugin.getFallbackPathname(relativeResourceDirectory, cwd);
 };
 
 
