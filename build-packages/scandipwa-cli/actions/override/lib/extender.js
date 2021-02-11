@@ -15,9 +15,9 @@ const extender = (resourceType) => async ({
             resourceType,
             name,
             resolvedTargetModule,
-            sourceModule,
             logger,
-            userInteraction
+            userInteraction,
+            sourceModule
         )
     );
 };
