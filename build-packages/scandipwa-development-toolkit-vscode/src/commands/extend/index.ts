@@ -21,5 +21,7 @@ export const extender = (resourceType: ResourceType) => async () => {
         sourceModule,
     );
 
-    createdFiles.map(openFile);
+    if (createdFiles.length) {
+        openFile(createdFiles[0]);
+    }
 };
