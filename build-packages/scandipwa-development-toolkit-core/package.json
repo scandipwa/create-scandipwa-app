@@ -17,6 +17,9 @@
 		"@babel/parser": "^7.9.6",
 		"@babel/traverse": "^7.9.6",
 		"@babel/types": "^7.9.6",
+		"@scandipwa/scandipwa-dev-utils": "0.0.20",
+		"@scandipwa/webpack-fallback-plugin": "1.2.0",
+		"@types/eslint": "^7.2.6",
 		"@types/fs-extra": "^9.0.6",
 		"eslint": "^7.19.0",
 		"fs-extra": "^9.1.0"
