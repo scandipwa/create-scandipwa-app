@@ -7,9 +7,16 @@ const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-sca
 export const selectDirectoryWithHistory = async (
     message: string, 
     historyKey: string,
-    isSkippable?: boolean
+    isSkippable?: boolean,
+    additionalHistoryEntries?: string[]
 ): Promise<string | undefined | null> => {
-    const selectedFromHistory = await proposeFromHistory(historyKey, message, undefined, isSkippable);
+    const selectedFromHistory = await proposeFromHistory(
+        historyKey, 
+        message, 
+        undefined, 
+        isSkippable,
+        additionalHistoryEntries
+    );
 
     // Handle selection halted
     if (selectedFromHistory === HALT) {
@@ -23,6 +30,7 @@ export const selectDirectoryWithHistory = async (
 
     // Handle selected one of previously selected ones
     if (typeof selectedFromHistory === 'string') {
+        unshiftUniqueToHistory(historyKey, selectedFromHistory);
         return locateScandipwaModule(selectedFromHistory);
     }
 

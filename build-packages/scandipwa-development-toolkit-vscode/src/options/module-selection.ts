@@ -1,4 +1,5 @@
 import { selectDirectoryWithHistory } from '../util/cwd';
+import { getScandipwaModulesOfWorkspace } from '../util/cwd/workspace';
 
 export const SOURCE_MODULE = 'sourceModule';
 export const TARGET_MODULE = 'targetModule';
@@ -11,10 +12,13 @@ const getModule = async (
     moduleKey: string,
     isSkippable?: boolean
 ): Promise<string | null | undefined> => {
+    const additionalHistoryEntries = getScandipwaModulesOfWorkspace();
+
     const modulePath = await selectDirectoryWithHistory(
         `Select ${description} module`,
         moduleKey,
-        isSkippable
+        isSkippable,
+        additionalHistoryEntries
     );
 
     if (!modulePath && !isSkippable) {

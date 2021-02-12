@@ -22,7 +22,8 @@ export const proposeFromHistory = async (
     storageKey: string,
     message: string,
     noneOption?: string,
-    isSkippable?: boolean
+    isSkippable?: boolean,
+    additionalHistoryEntries: string[] = []
 ): Promise<string | Symbol | null> => {
     const targetHistory = getStorage<string>(storageKey, []);
     
@@ -33,14 +34,15 @@ export const proposeFromHistory = async (
 
     // Additional options initialization
     const NONE = noneOption || 'None of the above';
-    const SKIP = 'Skip';
+    const SKIP = isSkippable && 'Skip' || null;
 
     // Additional options addition
-    const selectOptions = [...targetHistory];
-    selectOptions.push(NONE);
-    if (isSkippable) {
-        selectOptions.unshift(SKIP);
-    }
+    const selectOptions: string[] = [...new Set([
+        SKIP!,
+        ...targetHistory,
+        ...additionalHistoryEntries,
+        NONE
+    ].filter(Boolean))];
 
     // Attempt to serve option from the history
     const resultFromHistory = await UI.singleSelect<string>(message, selectOptions);
