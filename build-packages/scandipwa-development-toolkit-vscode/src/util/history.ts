@@ -10,7 +10,7 @@ import UI from './ui';
 export const getStorage = <T>(storageKey: string, defaultValue?: any): T => {
     const context = ContextManager.getInstance().getContext();
 
-    return context.globalState.get(storageKey, defaultValue);
+    return context.workspaceState.get(storageKey, defaultValue);
 }
 
 /**
@@ -28,7 +28,7 @@ export const proposeFromHistory = async (
     const targetHistory = getStorage<string>(storageKey, []);
     
     // Handle no history
-    if (!targetHistory.length) {
+    if (!targetHistory.length && !additionalHistoryEntries.length) {
         return null;
     }
 
@@ -71,11 +71,11 @@ const updateHistory = <T> (
     updater: (history: T[], newValue: T) => T[]
 ) => {
     const context = ContextManager.getInstance().getContext();
-    const targetHistory = context.globalState.get<T[]>(storageKey, []);
+    const targetHistory = getStorage<T[]>(storageKey, []);
 
     const updatedHistory = updater(targetHistory, newValue);
 
-    return context.globalState.update(storageKey, updatedHistory);
+    return context.workspaceState.update(storageKey, updatedHistory);
 }
 
 export const pushToHistory = async <T> (storageKey: string, newValue: T) => {

@@ -23,8 +23,14 @@ const isScandipwaModule = (
     return true;
 }
 
-const getScandipwaModulesOfCwd = (pathname: string): string[] => {
+const getLocalModulesOfCwd = (pathname: string): string[] => {
     const localModules = path.join(pathname, 'packages');
+
+    // Handle no local modules
+    if (!fs.existsSync(localModules)) {
+        return [];
+    }
+
     const localModulesDirs = fs.readdirSync(localModules).filter(
         (entry) => fs.lstatSync(path.join(localModules, entry)).isDirectory()
     );
@@ -54,21 +60,23 @@ const getScandipwaModulesOfCwd = (pathname: string): string[] => {
 
     const absolutize = (module: string): string => path.resolve(localModules, module);
 
-    const childModules = [
-        ...unscopedModules.map(absolutize),
-        ...scopedModules.map(absolutize)
+    return [
+        ...unscopedModules,
+        ...scopedModules
     ]
+        .map(absolutize)
+        .filter((modulePath) => isScandipwaModule(modulePath));
+}
+
+const getScandipwaModulesOfCwd = (pathname: string): string[] => {
+    const foundModules = getLocalModulesOfCwd(pathname);
 
     // Check if the requested pathname is a module itself
-    const additionalModules = [];
     if (isScandipwaModule(pathname, ['theme', 'extension'])) {
-        additionalModules.push(pathname);
+        foundModules.push(pathname);
     }
 
-    return [
-        ...childModules,
-        ...additionalModules
-    ];
+    return foundModules;
 };
 
 export const getScandipwaModulesOfWorkspace = (): string[] => {
