@@ -2,13 +2,15 @@ import * as vscode from 'vscode';
 
 import { proposeFromHistory, unshiftUniqueToHistory } from '../history';
 import { HALT, SKIP } from './keys';
+import { isScandipwaModule } from './workspace';
 const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
 
-export const selectDirectoryWithHistory = async (
+export const selectModuleWithHistory = async (
     message: string, 
     historyKey: string,
     skipOption?: string,
-    additionalHistoryEntries?: string[]
+    additionalHistoryEntries?: string[],
+    allowedModuleTypes?: string[]
 ): Promise<string | undefined | null> => {
     const selectedFromHistory = await proposeFromHistory(
         historyKey, 
@@ -57,6 +59,10 @@ export const selectDirectoryWithHistory = async (
 
     // Preserve the selected value
     const targetDirectory = locateScandipwaModule(selectedDirectories[0].fsPath);
+    if (allowedModuleTypes && !isScandipwaModule(targetDirectory, allowedModuleTypes)) {
+        throw new Error('Selected module\'s type is not allowed for this action!');
+    }
+
     unshiftUniqueToHistory(historyKey, targetDirectory);
 
     return targetDirectory;

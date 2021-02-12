@@ -1,4 +1,4 @@
-import { selectDirectoryWithHistory } from '../util/cwd';
+import { selectModuleWithHistory } from '../util/cwd';
 
 export const SOURCE_MODULE = 'sourceModule';
 export const TARGET_MODULE = 'targetModule';
@@ -10,13 +10,15 @@ const getModule = async (
     description: string, 
     moduleKey: string,
     skipOption?: string,
-    additionalHistoryEntries?: string[]
+    additionalHistoryEntries?: string[],
+    allowedModuleTypes?: string[]
 ): Promise<string | null | undefined> => {
-    const modulePath = await selectDirectoryWithHistory(
+    const modulePath = await selectModuleWithHistory(
         `Select ${description} module`,
         moduleKey,
         skipOption,
-        additionalHistoryEntries
+        additionalHistoryEntries,
+        allowedModuleTypes
     );
 
     if (!modulePath && !skipOption) {
@@ -27,12 +29,14 @@ const getModule = async (
 }
 
 export const getTargetModule = (
-    additionalHistoryEntries?: string[]
+    additionalHistoryEntries?: string[],
+    allowedModuleTypes?: string[]
 ) => getModule(
     TARGET_MODULE_DESCRIPTION, 
     TARGET_MODULE, 
     undefined,
-    additionalHistoryEntries
+    additionalHistoryEntries,
+    allowedModuleTypes
 );
 
 export const getSourceModule = (

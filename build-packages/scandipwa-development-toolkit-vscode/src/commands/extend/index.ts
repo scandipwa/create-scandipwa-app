@@ -7,8 +7,9 @@ import logger from "../../util/logger";
 import ui from '../../util/ui';
 import { getResourceName } from "../common/options";
 import { getScandipwaModulesOfWorkspace, isScandipwaModule } from '../../util/cwd/workspace';
+import { handlePossibleError } from "../../util/error-handling";
 
-export const extender = (resourceType: ResourceType) => async () => {
+export const extender = (resourceType: ResourceType) => handlePossibleError(async () => {
     const resourceName = await getResourceName(resourceType, ActionType.Extend);
     if (resourceName === null) {
         return;
@@ -19,7 +20,7 @@ export const extender = (resourceType: ResourceType) => async () => {
         (modulePath) => isScandipwaModule(modulePath, ['theme'])
     );
 
-	const targetModule = await getTargetModule(workspaceThemes);
+	const targetModule = await getTargetModule(workspaceThemes, ['theme']);
     if (targetModule === null) {
         return;
     }
@@ -41,4 +42,4 @@ export const extender = (resourceType: ResourceType) => async () => {
     if (createdFiles.length) {
         openFile(createdFiles[0]);
     }
-};
+});
