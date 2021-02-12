@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
+const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
 
 import { createNewFileWithContents } from '../util/file';
 
@@ -43,7 +43,7 @@ const extend = async (
         targetModulePath
     );
 
-    const sourceModulePath = locateScandipwaModule(sourceResourcePath)!;
+    const sourceModulePath = walkDirectoryUp(sourceResourcePath).pathname;
 
     if (!validateResourceExistance(
         sourceResourcePath,
@@ -79,7 +79,7 @@ const extend = async (
             // For other resources - it is a parent dir
             const sourceFilePath = resourceType === ResourceType.Query
                 ? sourceResourcePath
-                :  path.resolve(sourceResourcePath, fileName);
+                : path.resolve(sourceResourcePath, fileName);
             const newFilePath = path.resolve(targetResourceDirectory, fileName);
 
             // Prevent overwriting
@@ -113,13 +113,13 @@ const extend = async (
                 }))
             );
 
-            let stylesOption: StylesOption;
+            let stylesOption: StylesOption | null;
             // Handle styles if necessary
             if ([ResourceType.Route, ResourceType.Component].includes(resourceType) && fileName.includes('.component')) {
                 stylesOption = await selectStylesOption(userInteraction);
 
                 // If selected option is "keep styles" => skip style creation
-                if (stylesOption !== StylesOption.keep) {
+                if (stylesOption && stylesOption !== StylesOption.keep) {
                     const styleFilePath = createStyleFile(
                         resourceName, 
                         targetResourceDirectory,
@@ -132,7 +132,7 @@ const extend = async (
             }
 
             // Handle not extending anything in the file
-            if (!chosenExports.length) { 
+            if (!chosenExports || !chosenExports.length) { 
                 return createdFiles; 
             }
 

@@ -1,5 +1,5 @@
-const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
 const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
+const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
 
 import * as path from 'path';
 
@@ -23,11 +23,7 @@ export const resolveExtendableResourcePath = (
 
     // If source module is specified explicitly -> use it
     if (strictSourceModule) {
-        const scandipwaModule = locateScandipwaModule(strictSourceModule);
-
-        if (!scandipwaModule) {
-            throw new Error('The provided path is not within a ScandiPWA module!');
-        }
+        const scandipwaModule = walkDirectoryUp(strictSourceModule).pathname;
 
         return path.join(scandipwaModule, relativeResourceDirectory);
     }

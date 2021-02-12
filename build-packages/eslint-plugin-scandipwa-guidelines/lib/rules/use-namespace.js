@@ -7,7 +7,7 @@ const path = require('path');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
 const getLeadingCommentsForNode = require('../util/get-leading-comments');
-const locateScandipwaModule = require('@scandipwa/scandipwa-dev-utils/locate-scandipwa-module');
+const { walkDirectoryUp } = require('@scandipwa/scandipwa-dev-utils/get-context');
 
 const types = {
     ExportedClass: [
@@ -165,7 +165,7 @@ const preparePackageName = (packageName) => {
 
 const generateNamespace = (node, context) => {
     const filePath = context.getFilename();
-    const modulePath = locateScandipwaModule(filePath, 7);
+    const modulePath = walkDirectoryUp(filePath).pathname;
     const fileRelative = path.relative(modulePath, filePath).replace(/^(\.\/)?src\//, '');
     const { name: packageName } = getPackageJson(modulePath);
 

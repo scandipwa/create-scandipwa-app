@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { proposeFromHistory, unshiftUniqueToHistory } from '../history';
 import { HALT, SKIP } from './keys';
 import { isScandipwaModule } from './workspace';
-const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
+const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
 
 export const selectModuleWithHistory = async (
     message: string, 
@@ -33,7 +33,7 @@ export const selectModuleWithHistory = async (
     // Handle selected one of previously selected ones
     if (typeof selectedFromHistory === 'string') {
         unshiftUniqueToHistory(historyKey, selectedFromHistory);
-        return locateScandipwaModule(selectedFromHistory);
+        return walkDirectoryUp(selectedFromHistory).pathname;
     }
 
     // Initialize for non-mac
@@ -58,7 +58,7 @@ export const selectModuleWithHistory = async (
     }
 
     // Preserve the selected value
-    const targetDirectory = locateScandipwaModule(selectedDirectories[0].fsPath);
+    const targetDirectory = walkDirectoryUp(selectedDirectories[0].fsPath);
     if (allowedModuleTypes && !isScandipwaModule(targetDirectory, allowedModuleTypes)) {
         throw new Error('Selected module\'s type is not allowed for this action!');
     }

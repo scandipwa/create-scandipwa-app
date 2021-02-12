@@ -1,25 +1,30 @@
 const path = require('path');
 
-const locateScandipwaModule = require('@scandipwa/scandipwa-dev-utils/locate-scandipwa-module');
+const { walkDirectoryUp } = require('@scandipwa/scandipwa-dev-utils/get-context');
 
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const BUBBLE_DEPTH = 5;
 
 const invokeGenerator = async (
-    targetModule = locateScandipwaModule(process.cwd(), BUBBLE_DEPTH),
+    targetModule,
     fileGenerator
 ) => {
     // Handle no target module
     if (!targetModule) {
-        logger.error(
-            `Unable to locate a ScandiPWA module ${logger.style.misc(BUBBLE_DEPTH)} directories up from`,
-            logger.style.file(process.cwd()),
-            'Please make sure the command is ran in a ScandiPWA module',
-            `Or supply a path to a ScandiPWA module by using ${logger.style.command('--target-module [-t]')} flag`
-        );
+        try {
+            // eslint-disable-next-line no-param-reassign
+            targetModule = walkDirectoryUp(process.cwd()).pathname;
+        } catch (err) {
+            logger.error(
+                `Unable to locate a ScandiPWA module ${logger.style.misc(BUBBLE_DEPTH)} directories up from`,
+                logger.style.file(process.cwd()),
+                'Please make sure the command is ran in a ScandiPWA module',
+                `Or supply a path to a ScandiPWA module by using ${logger.style.command('--target-module [-t]')} flag`
+            );
 
-        return;
+            return;
+        }
     }
 
     // Invoke the callback to generate files
