@@ -10,5 +10,9 @@ export const getResourceName = async (
 ): Promise<string | null> => {
     const resourceName = await UI.input(`Name of the ${resourceType} to ${actionType}`);
 
+    if (resourceName === '') {
+        throw new Error('Resource name cannot be empty');
+    }
+
     return resourceName;
 }

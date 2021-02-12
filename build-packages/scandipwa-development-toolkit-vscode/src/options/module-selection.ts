@@ -1,3 +1,4 @@
+import { ActionType } from '../types';
 import { selectModuleWithHistory } from '../util/cwd';
 
 export const SOURCE_MODULE = 'sourceModule';
@@ -29,22 +30,31 @@ const getModule = async (
 }
 
 export const getTargetModule = (
+    actionType: ActionType,
     additionalHistoryEntries?: string[],
     allowedModuleTypes?: string[]
-) => getModule(
-    TARGET_MODULE_DESCRIPTION, 
-    TARGET_MODULE, 
-    undefined,
-    additionalHistoryEntries,
-    allowedModuleTypes
-);
+) => {
+    // If only one proposal - use it by default
+    if (additionalHistoryEntries?.length === 1) {
+        return additionalHistoryEntries[0];
+    }
+
+    return getModule(
+        TARGET_MODULE_DESCRIPTION, 
+        [actionType, TARGET_MODULE].join('').toUpperCase(), 
+        undefined,
+        additionalHistoryEntries,
+        allowedModuleTypes
+    );
+}
 
 export const getSourceModule = (
+    actionType: ActionType,
     isSkippable?: boolean,
     additionalHistoryEntries?: string[]
 ) => getModule(
     SOURCE_MODULE_DESCRIPTION, 
-    SOURCE_MODULE, 
-    isSkippable ? 'Determine by Fallback plugin' : undefined,
+    [actionType, SOURCE_MODULE].join('').toUpperCase(), 
+    isSkippable ? 'Determine by Fallback plugin (recommended)' : undefined,
     additionalHistoryEntries
 );

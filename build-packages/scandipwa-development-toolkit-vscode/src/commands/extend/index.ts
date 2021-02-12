@@ -20,12 +20,12 @@ export const extender = (resourceType: ResourceType) => handlePossibleError(asyn
         (modulePath) => isScandipwaModule(modulePath, ['theme'])
     );
 
-	const targetModule = await getTargetModule(workspaceThemes, ['theme']);
+	const targetModule = await getTargetModule(ActionType.Extend, workspaceThemes, ['theme']);
     if (targetModule === null) {
         return;
     }
 
-	const sourceModule = await getSourceModule(true, workspaceModules);
+	const sourceModule = await getSourceModule(ActionType.Extend, true, workspaceModules);
     if (sourceModule === null) {
         return;
     }

@@ -14,7 +14,7 @@ export const creator = (resourceType: ResourceType) => handlePossibleError(async
 		return;
 	}
 
-	const targetModule = await getTargetModule(getScandipwaModulesOfWorkspace());
+	const targetModule = await getTargetModule(ActionType.Create, getScandipwaModulesOfWorkspace());
 	if (targetModule === null) {
 		return;
 	}
