@@ -5,6 +5,7 @@ import {
     NONE as noneSymbol,
     HALT as haltSymbol
 } from './cwd/keys';
+import UI from './ui';
 
 export const getStorage = <T>(storageKey: string, defaultValue?: any): T => {
     const context = ContextManager.getInstance().getContext();
@@ -42,12 +43,9 @@ export const proposeFromHistory = async (
     }
 
     // Attempt to serve option from the history
-    const resultFromHistory = await vscode.window.showQuickPick(selectOptions, {
-        canPickMany: false,
-        placeHolder: message
-    });
+    const resultFromHistory = await UI.singleSelect<string>(message, selectOptions);
 
-    if (resultFromHistory === undefined) {
+    if (resultFromHistory === null) {
         return haltSymbol;
     }
 
