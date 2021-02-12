@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const isScandipwaModule = (
+export const isScandipwaModule = (
     pathname: string, 
     includeTypes?: string[]
 ): boolean => {

@@ -6,6 +6,7 @@ import { openFile } from "../../util/file";
 import logger from "../../util/logger";
 import ui from '../../util/ui';
 import { getResourceName } from "../common/options";
+import { getScandipwaModulesOfWorkspace, isScandipwaModule } from '../../util/cwd/workspace';
 
 export const extender = (resourceType: ResourceType) => async () => {
     const resourceName = await getResourceName(resourceType, ActionType.Extend);
@@ -13,12 +14,17 @@ export const extender = (resourceType: ResourceType) => async () => {
         return;
     }
 
-	const targetModule = await getTargetModule(false);
+    const workspaceModules = getScandipwaModulesOfWorkspace();
+    const workspaceThemes = workspaceModules.filter(
+        (modulePath) => isScandipwaModule(modulePath, ['theme'])
+    );
+
+	const targetModule = await getTargetModule(workspaceThemes);
     if (targetModule === null) {
         return;
     }
 
-	const sourceModule = await getSourceModule(true);
+	const sourceModule = await getSourceModule(true, workspaceModules);
     if (sourceModule === null) {
         return;
     }

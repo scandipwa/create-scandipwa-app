@@ -6,6 +6,7 @@ import { getResourceParams } from './options';
 import logger from '../../util/logger';
 import { handlePossibleError } from "../../util/error-handling";
 import { openFile } from "../../util/file";
+import { getScandipwaModulesOfWorkspace } from '../../util/cwd/workspace';
 
 export const creator = (resourceType: ResourceType) => handlePossibleError(async () => {
 	const resourceParams = await getResourceParams(resourceType, ActionType.Create);
@@ -13,7 +14,7 @@ export const creator = (resourceType: ResourceType) => handlePossibleError(async
 		return;
 	}
 
-	const targetModule = await getTargetModule(false);
+	const targetModule = await getTargetModule(getScandipwaModulesOfWorkspace());
 	if (targetModule === null) {
 		return;
 	}

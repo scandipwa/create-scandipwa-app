@@ -1,5 +1,4 @@
 import { selectDirectoryWithHistory } from '../util/cwd';
-import { getScandipwaModulesOfWorkspace } from '../util/cwd/workspace';
 
 export const SOURCE_MODULE = 'sourceModule';
 export const TARGET_MODULE = 'targetModule';
@@ -10,32 +9,38 @@ const TARGET_MODULE_DESCRIPTION = 'target';
 const getModule = async (
     description: string, 
     moduleKey: string,
-    isSkippable?: boolean
+    skipOption?: string,
+    additionalHistoryEntries?: string[]
 ): Promise<string | null | undefined> => {
-    const additionalHistoryEntries = getScandipwaModulesOfWorkspace();
-
     const modulePath = await selectDirectoryWithHistory(
         `Select ${description} module`,
         moduleKey,
-        isSkippable,
+        skipOption,
         additionalHistoryEntries
     );
 
-    if (!modulePath && !isSkippable) {
+    if (!modulePath && !skipOption) {
         throw new Error(`A ${description} module must have been selected!`);
     }
 
     return modulePath;
 }
 
-export const getTargetModule = (isSkippable?: boolean) => getModule(
+export const getTargetModule = (
+    additionalHistoryEntries?: string[]
+) => getModule(
     TARGET_MODULE_DESCRIPTION, 
     TARGET_MODULE, 
-    isSkippable
+    undefined,
+    additionalHistoryEntries
 );
 
-export const getSourceModule = (isSkippable?: boolean) => getModule(
+export const getSourceModule = (
+    isSkippable?: boolean,
+    additionalHistoryEntries?: string[]
+) => getModule(
     SOURCE_MODULE_DESCRIPTION, 
     SOURCE_MODULE, 
-    isSkippable
+    isSkippable ? 'Determine by Fallback plugin' : undefined,
+    additionalHistoryEntries
 );
