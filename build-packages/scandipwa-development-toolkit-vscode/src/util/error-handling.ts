@@ -8,14 +8,8 @@ import * as vscode from 'vscode';
  */
 export const handlePossibleError = (callback: Function | Promise<Function>) => async () => {
     try {
-        (await callback)()
+        await (await callback)()
     } catch ({ message }) {
-        const processedMessage = [
-            'Something went wrong!',
-            'Please, provide a screenshot with the error below to the ScandiPWA developer team!',
-            message
-        ].join('\n');
-
-        vscode.window.showErrorMessage(processedMessage);
+        vscode.window.showErrorMessage(message);
     }
 }
