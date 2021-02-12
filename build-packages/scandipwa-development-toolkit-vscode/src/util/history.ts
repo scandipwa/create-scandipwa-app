@@ -1,5 +1,10 @@
 import * as vscode from 'vscode';
 import ContextManager from './managers/context';
+import { 
+    SKIP as skipSymbol,
+    NONE as noneSymbol,
+    HALT as haltSymbol
+} from './cwd/keys';
 
 export const getStorage = <T>(storageKey: string, defaultValue?: any): T => {
     const context = ContextManager.getInstance().getContext();
@@ -17,12 +22,12 @@ export const proposeFromHistory = async (
     message: string,
     noneOption?: string,
     isSkippable?: boolean
-): Promise<string|null|undefined> => {
+): Promise<string | Symbol | null> => {
     const targetHistory = getStorage<string>(storageKey, []);
     
     // Handle no history
     if (!targetHistory.length) {
-        return;
+        return null;
     }
 
     // Additional options initialization
@@ -42,14 +47,18 @@ export const proposeFromHistory = async (
         placeHolder: message
     });
 
-    // Handle proposed options not selected
-    if (resultFromHistory === NONE || typeof resultFromHistory !== 'string') {
-        return null;
+    if (resultFromHistory === undefined) {
+        return haltSymbol;
+    }
+
+    // Handle "None from the above"
+    if (resultFromHistory === NONE) {
+        return noneSymbol;
     }
 
     // Handle skip option selected
     if (resultFromHistory === SKIP) {
-        return undefined;
+        return skipSymbol;
     }
 
     // Proposed option has been selected => return

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
-import { proposeFromHistory, unshiftUniqueToHistory } from './history';
+import { proposeFromHistory, unshiftUniqueToHistory } from '../history';
+import { HALT, SKIP } from './keys';
 const locateScandipwaModule = require("@scandipwa/scandipwa-dev-utils/locate-scandipwa-module");
 
 export const selectDirectoryWithHistory = async (
@@ -10,13 +11,18 @@ export const selectDirectoryWithHistory = async (
 ): Promise<string | undefined | null> => {
     const selectedFromHistory = await proposeFromHistory(historyKey, message, undefined, isSkippable);
 
+    // Handle selection halted
+    if (selectedFromHistory === HALT) {
+        return null;
+    }
+
     // Handle skip option selected
-    if (isSkippable && selectedFromHistory === undefined) {
+    if (isSkippable && selectedFromHistory === SKIP) {
         return undefined;
     }
 
     // Handle selected one of previously selected ones
-    if (selectedFromHistory) {
+    if (typeof selectedFromHistory === 'string') {
         return locateScandipwaModule(selectedFromHistory);
     }
 
@@ -37,10 +43,8 @@ export const selectDirectoryWithHistory = async (
     const selectedDirectories = await vscode.window.showOpenDialog(options);
 
     // Handle not selecting anything
-    if (!selectedDirectories) {
-        vscode.window.showErrorMessage('Select a directory to create functionality in');
-
-        return null;
+    if (!selectedDirectories?.length) {
+        return undefined;
     }
 
     // Preserve the selected value

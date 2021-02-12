@@ -9,8 +9,19 @@ import { getResourceName } from "../common/options";
 
 export const extender = (resourceType: ResourceType) => async () => {
     const resourceName = await getResourceName(resourceType, ActionType.Extend);
+    if (resourceName === null) {
+        return;
+    }
+
 	const targetModule = await getTargetModule(false);
+    if (targetModule === null) {
+        return;
+    }
+
 	const sourceModule = await getSourceModule(true);
+    if (sourceModule === null) {
+        return;
+    }
 
     const createdFiles = await extend(
         resourceType,

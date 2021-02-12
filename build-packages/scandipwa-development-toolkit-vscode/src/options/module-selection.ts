@@ -10,7 +10,7 @@ const getModule = async (
     description: string, 
     moduleKey: string,
     isSkippable?: boolean
-): Promise<string|undefined> => {
+): Promise<string | null | undefined> => {
     const modulePath = await selectDirectoryWithHistory(
         `Select ${description} module`,
         moduleKey,
@@ -21,7 +21,7 @@ const getModule = async (
         throw new Error(`A ${description} module must have been selected!`);
     }
 
-    return modulePath as string | undefined;
+    return modulePath;
 }
 
 export const getTargetModule = (isSkippable?: boolean) => getModule(

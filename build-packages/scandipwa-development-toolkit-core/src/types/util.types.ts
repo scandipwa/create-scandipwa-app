@@ -16,12 +16,12 @@ export interface IUserInteraction {
     singleSelect<T>(
         question: string,
         selectOptions: EnquiryOption<T>[]
-    ): Promise<T>;
+    ): Promise<T | null>;
 
     multiSelect<T>(
         question: string,
         selectOptions: EnquiryOption<T>[]
-    ): Promise<T[]>;
+    ): Promise<T[] | null>;
 
     yesNo(question: string): Promise<boolean>;
 }

@@ -9,7 +9,14 @@ import { openFile } from "../../util/file";
 
 export const creator = (resourceType: ResourceType) => handlePossibleError(async () => {
 	const resourceParams = await getResourceParams(resourceType, ActionType.Create);
+	if (resourceParams === null) {
+		return;
+	}
+
 	const targetModule = await getTargetModule(false);
+	if (targetModule === null) {
+		return;
+	}
 
 	const createdFiles = await create(
 		resourceType, 

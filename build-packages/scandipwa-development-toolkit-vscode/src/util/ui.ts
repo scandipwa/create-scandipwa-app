@@ -6,7 +6,7 @@ class UI implements IUserInteraction {
         question: string,
         selectOptions: EnquiryOption<T>[],
         isMultiSelect: boolean
-    ): Promise<T|null|T[]> {
+    ): Promise<T | null | T[]> {
         if (!selectOptions.length) {
             throw new Error('Select options must have been supplied!');
         }
@@ -22,10 +22,6 @@ class UI implements IUserInteraction {
                 canPickMany: isMultiSelect
             }
         );
-        
-        if (!selectedOptions && isMultiSelect) {
-            return [];
-        }
 
         if (!selectedOptions) {
             return null;
@@ -44,15 +40,15 @@ class UI implements IUserInteraction {
     singleSelect<T>(
         question: string,
         selectOptions: EnquiryOption<T>[]
-    ): Promise<T> {
-        return this.select<T>(question, selectOptions, false) as Promise<T>;
+    ): Promise<T | null> {
+        return this.select<T>(question, selectOptions, false) as Promise<T | null>;
     };
 
     multiSelect<T>(
         question: string,
         selectOptions: EnquiryOption<T>[]
-    ): Promise<T[]> {
-        return this.select<T>(question, selectOptions, true) as Promise<T[]>;
+    ): Promise<T[] | null> {
+        return this.select<T>(question, selectOptions, true) as Promise<T[] | null>;
     };
 
     async yesNo(question: string): Promise<boolean> {

@@ -11,7 +11,7 @@ import UI from '../../util/ui';
 import { getResourceName } from '../common/options';
 import { ActionType } from '../../types';
 
-const componentParamGetter = async () => {
+const componentParamGetter = async (): Promise<ComponentResourceParams | null> => {
     const containerFeaturesChoice = await UI.multiSelect(
         'Select container features',
         [{
@@ -22,6 +22,10 @@ const componentParamGetter = async () => {
             value: 'state'
         }]
     );
+
+    if (containerFeaturesChoice === null) {
+        return null;
+    }
 
     const containerFeatures: ContainerFeatures = {
         logic: containerFeaturesChoice.includes('logic'),
@@ -35,7 +39,7 @@ const componentParamGetter = async () => {
     return componentResourceParams;
 }
 
-const storeParamGetter = async () => {
+const storeParamGetter = async (): Promise<StoreResourceParams | null> => {
     const dispatcherType = await UI.singleSelect(
         'Select dispatcher type',
         [{
@@ -48,7 +52,11 @@ const storeParamGetter = async () => {
             displayName: 'Query dispatcher',
             value: DispatcherType.QueryDispatcher
         }]
-    )
+    );
+
+    if (dispatcherType === null) {
+        return null;
+    }
 
     const storeResourceParams: StoreResourceParams = {
         dispatcherType
@@ -57,7 +65,7 @@ const storeParamGetter = async () => {
     return storeResourceParams;
 }
 
-const getterMap: Record<ResourceType, () => ResourceParams> = {
+const getterMap: Record<ResourceType, () => ResourceParams | null> = {
     [ResourceType.Component]: componentParamGetter,
     [ResourceType.Route]: componentParamGetter,
     [ResourceType.Store]: storeParamGetter,
@@ -67,9 +75,16 @@ const getterMap: Record<ResourceType, () => ResourceParams> = {
 export const getResourceParams = async (
     resourceType: ResourceType, 
     actionType: ActionType
-): Promise<ResourceParams & {resourceName: string}> => {
+): Promise<ResourceParams & {resourceName: string} | null> => {
     const resourceName = await getResourceName(resourceType, actionType);
+    if (resourceName === null) {
+        return null;
+    }
+
     const typeSpecificResourceParams = await getterMap[resourceType]();
+    if (typeSpecificResourceParams === null) {
+        return null;
+    }
 
     return {
         resourceName,
