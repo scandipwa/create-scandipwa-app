@@ -35,7 +35,9 @@
 		"onCommand:extension.extendComponent",
 		"onCommand:extension.extendRoute",
 		"onCommand:extension.extendQuery",
-		"onCommand:extension.extendStore"
+		"onCommand:extension.extendStore",
+
+		"onCommand:extension.extensionCreate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -71,6 +73,10 @@
 			{
 				"command": "extension.extendStore",
 				"title": "ScandiPWA: Extend a store"
+			},
+			{
+				"command": "extension.extensionCreate",
+				"title": "ScandiPWA: Create an extension"
 			}
 		]
 	},

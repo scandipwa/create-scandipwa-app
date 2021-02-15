@@ -7,6 +7,8 @@ import ContextManager from './util/managers/context';
 import { creator } from './commands/create';
 import { extender } from './commands/extend';
 
+import extensionCreator from './commands/extension/create';
+
 const commandMap = {
 	'extension.createComponent': creator(ResourceType.Component),
 	'extension.createRoute': creator(ResourceType.Route),
@@ -17,6 +19,8 @@ const commandMap = {
 	'extension.extendRoute': extender(ResourceType.Route),
 	'extension.extendQuery': extender(ResourceType.Query),
 	'extension.extendStore': extender(ResourceType.Store),
+
+	'extension.extensionCreate': extensionCreator,
 };
 
 export function activate(context: vscode.ExtensionContext) {

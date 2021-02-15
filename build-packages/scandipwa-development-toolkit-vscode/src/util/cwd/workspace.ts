@@ -23,7 +23,7 @@ export const isScandipwaModule = (
     return true;
 }
 
-const getLocalModulesOfCwd = (pathname: string): string[] => {
+const getLocalModulesOfDir = (pathname: string): string[] => {
     const localModules = path.join(pathname, 'packages');
 
     // Handle no local modules
@@ -68,8 +68,8 @@ const getLocalModulesOfCwd = (pathname: string): string[] => {
         .filter((modulePath) => isScandipwaModule(modulePath));
 }
 
-const getScandipwaModulesOfCwd = (pathname: string): string[] => {
-    const foundModules = getLocalModulesOfCwd(pathname);
+const getModulesOfDir = (pathname: string): string[] => {
+    const foundModules = getLocalModulesOfDir(pathname);
 
     // Check if the requested pathname is a module itself
     if (isScandipwaModule(pathname, ['theme', 'extension'])) {
@@ -79,7 +79,7 @@ const getScandipwaModulesOfCwd = (pathname: string): string[] => {
     return foundModules;
 };
 
-export const getScandipwaModulesOfWorkspace = (): string[] => {
+export const getWorkspaceModules = (): string[] => {
     const openDirectories = vscode.workspace.workspaceFolders;
 
     if (!openDirectories) {
@@ -87,7 +87,17 @@ export const getScandipwaModulesOfWorkspace = (): string[] => {
     }
 
     return openDirectories.reduce(
-        (modules, dir) => modules.concat(getScandipwaModulesOfCwd(dir.uri.fsPath)),
+        (modules, dir) => modules.concat(getModulesOfDir(dir.uri.fsPath)),
         [] as string[]
     );
+}
+
+export const getWorkspaceThemes = (
+    workspaceModules: string[] = getWorkspaceModules()
+): string[] => {
+    const workspaceThemes = workspaceModules.filter(
+        (modulePath) => isScandipwaModule(modulePath, ['theme'])
+    );
+
+    return workspaceThemes;
 }

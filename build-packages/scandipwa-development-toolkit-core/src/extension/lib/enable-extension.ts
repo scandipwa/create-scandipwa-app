@@ -1,6 +1,6 @@
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
-export const enableExtension = (
+const enableExtension = (
     themePath: string, 
     extensionName: string
 ) => {
@@ -18,3 +18,5 @@ export const enableExtension = (
         packageJson
     );
 };
+
+export default enableExtension;

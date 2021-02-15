@@ -8,7 +8,7 @@ module.exports = (yargs) => {
                 describe: 'Do not enable installed extension.'
             });
         }, async ({ name, noEnable }) => {
-            const installedSuccessfully = await installExtension(name, !noEnable);
+            const installedSuccessfully = await installExtension(name, !noEnable, process.cwd(), logger);
 
             if (!installedSuccessfully) {
                 return;
@@ -29,17 +29,8 @@ module.exports = (yargs) => {
                 describe: 'Do not enable installed extension.',
                 default: false
             });
-        }, async ({ name, noEnable }) => {
-            const createdPackage = await createExtension(name, !noEnable, logger);
-
-            if (!createdPackage) {
-                return;
-            }
-
-            logger.note(
-                `Package ${logger.style.misc(name)} has been created successfully!`,
-                `See it at ${logger.style.file(createdPackage)}`
-            );
+        }, ({ name, noEnable }) => {
+            createExtension(name, !noEnable, process.cwd(), logger);
         });
 
         yargs.demandCommand();

@@ -1,11 +1,6 @@
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
 const generateExtension = require('@scandipwa/csa-generator-extension');
 const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
-
-import { injectScripts } from './lib/inject-scripts';
-import { addDependency } from './lib/add-dependency';
-import { enableExtension } from './lib/enable-extension';
-
 const { 
     walkDirectoryUp, 
     contextTypes: { 
@@ -13,18 +8,23 @@ const {
     } 
 } = require('@scandipwa/scandipwa-dev-utils/get-context');
 
+import injectScripts from './lib/inject-scripts';
+import addDependency from './lib/add-dependency';
+import enableExtension from './lib/enable-extension';
+
 import * as path from 'path';
 import { ILogger } from "../types";
 
 const createExtension = async (
     packageName: string,
     enable = true,
+    targetModule = process.cwd(),
     logger: ILogger
 ): Promise<string | null> => {
     const { 
         type: context, 
         pathname: contextPathname 
-    } = walkDirectoryUp(process.cwd(), THEME_TYPE);
+    } = walkDirectoryUp(targetModule, THEME_TYPE);
 
     if (!context) {
         // make sure we are in ScandiPWA theme context
@@ -81,6 +81,11 @@ const createExtension = async (
         enableExtension(contextPathname, packageName);
     }
 
+    logger.note(
+        `Package ${logger.style.misc(packageName)} has been created successfully!`,
+        `See it at ${logger.style.file(relativePackagePath)}`
+    );
+    
     return relativePackagePath;
 };
 

@@ -1,4 +1,5 @@
 export enum ActionType {
     Create = 'create',
-    Extend = 'extend'
+    Extend = 'extend',
+    Install = 'install'
 }

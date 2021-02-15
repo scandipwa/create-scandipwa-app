@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as fs from 'fs';
 import ContextManager from './managers/context';
 import { 
     SKIP as skipSymbol,
@@ -110,4 +110,14 @@ export const pushUniqueToHistory = async <T> (storageKey: string, newValue: T) =
         newValue, 
         (history: T[], newValue: T) => dedupeHistory([...history, newValue])
     );
+}
+
+export const removeDeadFsEntries = async (storageKey: string) => {
+    return updateHistory<string>(
+        storageKey,
+        '',
+        (history: string[]) => history.filter(
+            (pathname: string) => fs.existsSync(pathname)
+        )
+    )
 }

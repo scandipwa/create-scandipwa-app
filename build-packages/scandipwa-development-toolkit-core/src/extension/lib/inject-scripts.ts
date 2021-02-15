@@ -3,7 +3,7 @@ const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
-export const injectScripts = (
+const injectScripts = (
     contextPathname: string
 ) => {
     const packagePath = path.join(contextPathname, 'package.json');
@@ -45,3 +45,5 @@ export const injectScripts = (
     // Update package json with new scripts.preinstall field
     writeJson(packagePath, packageJson);
 };
+
+export default injectScripts;

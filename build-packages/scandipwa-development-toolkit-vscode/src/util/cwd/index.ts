@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 
-import { proposeFromHistory, unshiftUniqueToHistory } from '../history';
+const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
+
+import { proposeFromHistory, unshiftUniqueToHistory, removeDeadFsEntries } from '../history';
 import { HALT, SKIP } from './keys';
 import { isScandipwaModule } from './workspace';
-const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
 
 export const selectModuleWithHistory = async (
     message: string, 
@@ -12,6 +13,7 @@ export const selectModuleWithHistory = async (
     additionalHistoryEntries?: string[],
     allowedModuleTypes?: string[]
 ): Promise<string | undefined | null> => {
+    removeDeadFsEntries(historyKey);
     const selectedFromHistory = await proposeFromHistory(
         historyKey, 
         message, 
