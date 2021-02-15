@@ -21,7 +21,7 @@ export default (BaseClass = EmptyBase) => {
 
     const { name } = BaseClass;
     // Get the cache identity for the base class, omit inherited prop
-    const { 
+    const {
         // Generate unique cache identities as default value
         value: cacheIdentity = Symbol(`Cache Identity ${name}`)
     } = Object.getOwnPropertyDescriptor(BaseClass, cacheIdentityKey) || {};
