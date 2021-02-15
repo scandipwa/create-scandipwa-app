@@ -2,7 +2,12 @@ const path = require('path');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
-const addDependency = async (contextPathname, packageName, version, isDev) => {
+export const addDependency = async (
+    contextPathname: string, 
+    packageName: string, 
+    version: string, 
+    isDev?: boolean
+) => {
     const packagePath = path.join(contextPathname, 'package.json');
     const packageJson = require(packagePath);
     const depKey = isDev ? 'devDependencies' : 'dependencies';
@@ -21,5 +26,3 @@ const addDependency = async (contextPathname, packageName, version, isDev) => {
         packageJson
     );
 };
-
-module.exports = addDependency;

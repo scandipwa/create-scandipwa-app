@@ -1,11 +1,14 @@
 type LoggerStyle = {
     file: (text: string) => string,
     command: (text: string) => string,
+    misc: (text: string) => string
 };
 
 export interface ILogger {
     warn(...messages: string[]): void;
     error(...messages: string[]): void;
+    note(...messages: string[]): void;
+    log(...messages: string[]): void;
 
     style: LoggerStyle
 }

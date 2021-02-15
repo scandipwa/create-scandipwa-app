@@ -13,9 +13,14 @@ class Logger implements ILogger {
         vscode.window.showErrorMessage(messages.join('\n'));
     }
 
+    log(...messages: string[]) {
+        vscode.window.showInformationMessage(messages.join('\n'));
+    }
+
     style = {
         file: (text: string) => text,
-        command: (text: string) => text
+        command: (text: string) => text,
+        misc: (text: string) => text
     }
 }
 
