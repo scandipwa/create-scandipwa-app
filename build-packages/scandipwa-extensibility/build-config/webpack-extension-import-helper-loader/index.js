@@ -6,7 +6,11 @@ const path = require('path');
  * But it will occur before ReactDOM.render()
  */
 module.exports = function injectImports(source) {
-    const injectablePath = path.resolve(__dirname, '..', '..', 'runtime-helpers');
+    const injectablePath = path
+        .resolve(__dirname, '..', '..', 'runtime-helpers')
+        .split(path.sep)
+        .join(path.posix.sep);
+
     const injectableCode = `import '${injectablePath}';\n`;
 
     const importMatcher = /^import .+$/gm;
