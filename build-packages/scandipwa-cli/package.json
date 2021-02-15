@@ -9,6 +9,7 @@
     "dependencies": {
         "@scandipwa/csa-generator-extension": "0.0.19",
         "@scandipwa/scandipwa-dev-utils": "0.0.20",
+        "@scandipwa/scandipwa-development-toolkit-core": "1.0.0",
         "archiver": "^5.0.2",
         "inquirer": "^7.3.3",
         "node-fetch": "^2.6.1",

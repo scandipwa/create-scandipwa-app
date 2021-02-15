@@ -19,6 +19,7 @@
 		"@babel/types": "^7.9.6",
 		"@scandipwa/scandipwa-dev-utils": "0.0.20",
 		"@scandipwa/webpack-fallback-plugin": "1.2.0",
+		"@scandipwa/csa-generator-extension": "0.0.19",
 		"@types/eslint": "^7.2.6",
 		"@types/fs-extra": "^9.0.6",
 		"eslint": "^7.19.0",
