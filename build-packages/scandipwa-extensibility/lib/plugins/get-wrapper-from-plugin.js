@@ -1,10 +1,4 @@
-/**
- * TODO: Describe
- *
- * @param {Object} plugin
- * @param {String} memberName
- */
-export default (plugin, memberName) => {
+export default function getWrapperFromPlugin(plugin, memberName) {
     const { implementation } = plugin;
 
     if (typeof plugin === 'function') {
@@ -18,4 +12,4 @@ export default (plugin, memberName) => {
     throw new Error(
         `No implementation found in plugin definition for member ${memberName}.`
     );
-};
+}

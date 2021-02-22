@@ -1,26 +1,9 @@
+/* eslint-disable max-lines */
+/* eslint-disable no-continue */
+/* eslint-disable no-param-reassign */
 /* eslint-disable guard-for-in */
-/**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
- * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
- *
- * The purpose of this functionality is to generate the runtime plugin configuration object
- * All the default exports of the .plugin.js files of enabled extensions must get processed by this algorithm
- */
+/* eslint-disable no-restricted-syntax */
 
-/*
-    eslint-disable
-    no-param-reassign,
-    no-restricted-syntax,
-    no-continue
-*/
-
-// Allowed handler types
 const handlerTypes = [
     'member-function',
     'member-property',
