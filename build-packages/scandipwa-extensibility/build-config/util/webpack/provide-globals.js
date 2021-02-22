@@ -1,16 +1,28 @@
 /* eslint-disable no-param-reassign */
 const webpack = require('webpack');
 
-// Provide the middleware and Extensible functions globally
+const extUtilsDefinition = {
+    ExtUtils: [
+        '@scandipwa/scandipwa-extensibility/ExtUtils',
+        'default'
+    ]
+};
+
+// Provide ExtUtils globally
 const provideGlobals = (webpackConfig) => {
-    webpackConfig.plugins.forEach((plugin) => {
-        if (plugin instanceof webpack.ProvidePlugin) {
-            plugin.definitions.ExtUtils = [
-                '@scandipwa/scandipwa-extensibility/ExtUtils',
-                'default'
-            ];
-        }
-    });
+    const providePlugin = webpackConfig.plugins.find(
+        (one) => one instanceof webpack.ProvidePlugin
+    );
+
+    // Handle plugin already defined
+    if (providePlugin) {
+        Object.assign(providePlugin.definitions, extUtilsDefinition);
+    // Handle not defined -> define
+    } else {
+        webpackConfig.plugins.push(
+            new webpack.ProvidePlugin(extUtilsDefinition)
+        );
+    }
 
     return webpackConfig;
 };
