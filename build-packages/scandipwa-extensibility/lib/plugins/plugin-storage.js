@@ -3,6 +3,7 @@ import generateConfig from './generate-config';
 
 class PluginStorage {
     constructor() {
+        // Plugins' storage, ex: window.plugins
         this.plugins = [];
     }
 

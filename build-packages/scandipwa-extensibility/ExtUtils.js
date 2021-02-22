@@ -14,9 +14,6 @@ import pluginStorage from './lib/plugins/plugin-storage';
 
 class ExtUtils {
     constructor() {
-        // Plugins' storage, ex: window.plugins
-        this.plugins = {};
-
         // Cache to optimise class generation
         this.generated = [];
     }
