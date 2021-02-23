@@ -1,7 +1,7 @@
 // Inject the actual extensions' imports
-const addImportInjectorLoader = (webpackConfig) => {
+const addImportInjectorLoader = (webpackConfig, entryMatcher) => {
     webpackConfig.module.rules.push({
-        test: webpackConfig.entry,
+        test: entryMatcher || webpackConfig.entry,
         loader: require.resolve('../../webpack-extension-import-loader')
     });
 
