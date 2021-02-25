@@ -4,12 +4,17 @@ const { walkDirectoryUp, contextTypes: { THEME_TYPE } } = require('@scandipwa/sc
 import { ILogger } from "../types";
 import enableExtension from './lib/enable-extension';
 import addDependency from './lib/add-dependency';
+import getVersionConstraint from "./lib/util/get-version-constraint";
 
 const installExtension = async (
     packageName: string,
+    packageVersion: string | undefined,
+    isDev: boolean,
     enable = true,
     targetModule = process.cwd(),
-    logger: ILogger
+    logger: ILogger,
+    explicitlyDefinedPath?: string,
+    useLocalPackage?: boolean
 ): Promise<true | null> => {
     const { 
         type: context, 
@@ -28,16 +33,26 @@ const installExtension = async (
     }
 
     try {
+        const version = getVersionConstraint(
+            packageName, 
+            packageVersion, 
+            contextPathname, 
+            explicitlyDefinedPath, 
+            useLocalPackage
+        );
+
         // add package as dependency and install sub-dependencies
-        await addDependency(contextPathname, packageName);
+        await addDependency(contextPathname, packageName, version, isDev);
         await installDeps(contextPathname);
     } catch (e) {
-        logger.log(e);
+        logger.log(e.stack);
 
         logger.error(
             `Failed to install ScandiPWA extension in ${ logger.style.file(contextPathname) }.`,
-            'See the error log above.'
+            'See an error log below and a stack - above.'
         );
+
+        logger.error(...e.message.split('\n'));
 
         return null;
     }

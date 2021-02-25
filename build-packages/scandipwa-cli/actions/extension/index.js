@@ -7,15 +7,57 @@ module.exports = (yargs) => {
             yargs.option('no-enable', {
                 describe: 'Do not enable installed extension.'
             });
-        }, async ({ name, noEnable }) => {
-            const installedSuccessfully = await installExtension(name, !noEnable, process.cwd(), logger);
+
+            yargs.option('local', {
+                alias: 'l',
+                describe: `Use a local module from ${logger.style.file('packages/<name>')}`,
+                type: 'boolean',
+                default: false
+            });
+
+            yargs.option('use', {
+                alias: 'u',
+                describe: 'Use a local module from the specified path',
+                type: 'string'
+            });
+
+            yargs.option('version', {
+                alias: 'v',
+                describe: 'Define a specific version to use',
+                type: 'string'
+            });
+
+            yargs.option('save-dev', {
+                alias: 'D',
+                describe: 'Install the package as a devDependency',
+                type: 'boolean'
+            });
+        }, async ({
+            name,
+            noEnable,
+            use: explicitlyDefinedPath,
+            local: useLocalPackage,
+            version,
+            saveDev
+        }) => {
+            const installedSuccessfully = await installExtension(
+                name,
+                version,
+                saveDev,
+                !noEnable,
+                process.cwd(),
+                logger,
+                explicitlyDefinedPath,
+                useLocalPackage
+            );
 
             if (!installedSuccessfully) {
                 return;
             }
 
             logger.note(
-                `Package ${logger.style.misc(name)} has been installed successfully!`
+                'Success!',
+                `Package ${logger.style.misc(name)} has been installed!`
             );
         });
 
