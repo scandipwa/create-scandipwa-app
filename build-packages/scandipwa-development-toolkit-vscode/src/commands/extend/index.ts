@@ -18,12 +18,12 @@ export const extender = (resourceType: ResourceType) => handlePossibleError(asyn
     const workspaceModules = getWorkspaceModules();
     const workspaceThemes = getWorkspaceThemes(workspaceModules);
 
-	const targetModule = await getTargetModule(ActionType.Extend, workspaceThemes, ['theme']);
+    const targetModule = await getTargetModule(ActionType.Extend, workspaceThemes, ['theme']);
     if (targetModule === null) {
         return;
     }
 
-	const sourceModule = await getSourceModule(ActionType.Extend, true, workspaceModules);
+    const sourceModule = await getSourceModule(ActionType.Extend, true, workspaceModules);
     if (sourceModule === null) {
         return;
     }

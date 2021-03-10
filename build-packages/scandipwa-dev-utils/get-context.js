@@ -26,7 +26,7 @@ const walkDirectoryUp = (pathname, expectedType = false, depth = 0) => {
                 throw new Error(`Found type does not match the expected ones (${expectedType})`);
             }
 
-            if (expectedType && type !== expectedType) {
+            if (type !== expectedType) {
                 // we throw this to trigger the catch function
                 throw new Error(`Found type does not match the expected one (${expectedType})`);
             }

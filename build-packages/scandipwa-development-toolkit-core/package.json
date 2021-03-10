@@ -6,6 +6,7 @@
 	"license": "SEE LICENSE IN LICENSE",
 	"main": "./out",
 	"scripts": {
+		"prepublish": "compile",
 		"compile": "tsc -p ./ -d && cp -r src/templates out/",
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./ && cp -r src/templates out/",

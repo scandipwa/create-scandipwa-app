@@ -59,11 +59,13 @@ const generateAdditionalImportString = (originalCode: string, defaultExportCode?
             }
 
             acc.push(
-                ''.concat('import ')
-                .concat(braces ? '{ ' : '')
-                .concat(`${importableName}`)
-                .concat(braces ? ' }' : '')
-                .concat(` from '${library}';`)
+                [
+                    'import',
+                    braces ? '{' : '',
+                    importableName,
+                    braces ? '}' : '',
+                    `from '${library}';`
+                ].join(' ')
             );
 
             return acc;
@@ -100,12 +102,12 @@ const generateImportString = (
         return '';
     }
 
-    return 'import {\n'
-        .concat(chosenExports.map(
-            ({ name }) => `    ${name} as ${getPrefixedName(name, sourceModuleAlias)},\n`).join('')
-        )
-        .concat(notChosenExports.map(({ name }) => `    ${name},\n`).join(''))
-        .concat(`} from \'${sourceFilePath}\';`);
+    return [
+        'import {\n',
+        ...chosenExports.map(({ name }) => `    ${name} as ${getPrefixedName(name, sourceModuleAlias)},\n`),
+        ...notChosenExports.map(({ name }) => `    ${name},\n`),
+        `} from '${sourceFilePath}';`
+    ].join('');
 };
 
 const generateExportsFromSource = (notChosenExports: ExportData[]): string => {
@@ -113,9 +115,11 @@ const generateExportsFromSource = (notChosenExports: ExportData[]): string => {
         return '';
     }
 
-    return 'export {\n'
-        .concat(notChosenExports.map(({ name }) => `    ${name},\n`).join(''))
-        .concat('};');
+    return [
+        'export {\n',
+        ...notChosenExports.map(({ name }) => `    ${name},\n`),
+        '};'
+    ].join('');
 };
 
 const generateClassExtend = (chosenExports: ExportData[], sourceModuleAlias: string): string => {

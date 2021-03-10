@@ -43,8 +43,9 @@ const generateFilesFromMap = (
             const templatePath = path.join(templateDirectory, templateName);
 
             // Index.js is not a postfix, it should be handled differently
-            const newFileName = postfix === 'index.js' && 'index.js' 
-                || `${resourceName}.${postfix}`;
+            const newFileName = postfix === 'index.js'
+                ? 'index.js' 
+                : `${resourceName}.${postfix}`;
 
             // Calculate the new file path
             const newFilePath = path.join(resourceDirectory, newFileName);
