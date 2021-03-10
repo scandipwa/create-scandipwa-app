@@ -2,6 +2,7 @@
 /* eslint-disable no-param-reassign */
 const webpack = require('webpack');
 const fs = require('fs');
+const path = require('path');
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -10,6 +11,7 @@ const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
 const I18nPlugin = require('@scandipwa/webpack-i18n-plugin');
+const escapeRegex = require('@scandipwa/scandipwa-dev-utils/escape-regex');
 
 const {
     ESLINT_MODES,
@@ -170,6 +172,21 @@ module.exports = () => {
                 // maybe they should be ScandiPWA specific?
                 proxy[0].xfwd = false;
             }
+
+            const ignoredPaths = [
+                ...Object.values(sources),
+                ...extensions.map(({ packagePath }) => packagePath)
+            ].map(
+                (source) => escapeRegex(
+                    // we only care about "src" folders
+                    path.normalize(`${path.join(source, 'src') }/`).replace(/[\\]+/g, '/')
+                )
+            );
+
+            devServerConfig.watchOptions.ignored = new RegExp(
+                `^(?!${ ignoredPaths.join('|') }).+/node_modules/`,
+                'g'
+            );
 
             return devServerConfig;
         },
