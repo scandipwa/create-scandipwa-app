@@ -107,7 +107,7 @@ module.exports = () => {
                 );
 
                 // Add FallbackPlugin
-                webpackConfig.resolve.plugins.push(new FallbackPlugin({ sources }));
+                webpackConfig.resolve.plugins.push(new FallbackPlugin({ sources, processRoot: process.cwd() }));
 
                 // Allow importing .style files without specifying the extension
                 webpackConfig.resolve.extensions.push('.scss');

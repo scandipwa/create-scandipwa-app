@@ -21,7 +21,10 @@ class FallbackPlugin {
             throw new Error('Fallback plugin expects options argument to be an object.');
         }
 
-        const { sources } = options;
+        const {
+            sources,
+            processRoot
+        } = options;
 
         if (!sources) {
             throw new Error('Fallback plugin expects sources object as an option.');
@@ -29,7 +32,7 @@ class FallbackPlugin {
 
         this.options = {
             sources: prepareSources(sources),
-            extensions: prepareExtensions()
+            extensions: prepareExtensions(processRoot)
         };
     }
 
@@ -42,10 +45,10 @@ class FallbackPlugin {
      * @return {string} - absolute path to top-priority matching source
      * @memberof FallbackPlugin
      */
-    static getFallbackPathname(pathname) {
+    static getFallbackPathname(pathname, cwd = process.cwd()) {
         const sourcePaths = [
-            process.cwd(),
-            ...getParentThemePaths()
+            cwd,
+            ...getParentThemePaths(cwd)
         ];
 
         for (let i = 0; i < sourcePaths.length; i++) {
@@ -58,7 +61,7 @@ class FallbackPlugin {
             }
         }
 
-        const { absolutePath } = getExtensionProvisionedPath(pathname);
+        const { absolutePath } = getExtensionProvisionedPath(pathname, cwd);
 
         if (absolutePath) {
             // check if the pathname is available in provisioned paths of extensions

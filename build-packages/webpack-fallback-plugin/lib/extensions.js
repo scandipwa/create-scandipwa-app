@@ -1,5 +1,6 @@
 const prepareSources = require('./sources');
-const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
+const { getExtensionsForCwd } = require('@scandipwa/scandipwa-dev-utils/extensions-core');
+
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const path = require('path');
 
@@ -16,8 +17,8 @@ const path = require('path');
  * @param {} packages
  * @returns {Extensions} extensions appended with helper methods
  */
-const prepareExtensions = () => {
-    const rawExtensions = extensions.reduce((acc, { packageName, packagePath }) => (
+const prepareExtensions = (processRoot) => {
+    const rawExtensions = getExtensionsForCwd(processRoot).reduce((acc, { packageName, packagePath }) => (
         { ...acc, [packageName]: packagePath }
     ), {});
 
@@ -39,7 +40,9 @@ const prepareExtensions = () => {
  *
  * @param {String} pathname - relative pathname
  */
-const getExtensionProvisionedPath = (pathname) => {
+const getExtensionProvisionedPath = (pathname, cwd) => {
+    const extensions = getExtensionsForCwd(cwd);
+
     for (let j = 0; j < extensions.length; j++) {
         const { packageJson, packagePath } = extensions[j];
 

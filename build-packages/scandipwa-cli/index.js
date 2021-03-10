@@ -7,9 +7,10 @@ const semver = require('semver');
 
 const actions = [
     require('./actions/extension'),
-    // require('./actions/magento'),
-    // require('./actions/override'),
+    require('./actions/create'),
+    require('./actions/override'),
     require('./actions/deploy')
+    // require('./actions/magento')
 ];
 
 (async () => {
