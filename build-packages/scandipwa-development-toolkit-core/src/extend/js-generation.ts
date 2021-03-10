@@ -103,11 +103,11 @@ const generateImportString = (
     }
 
     return [
-        'import {\n',
-        ...chosenExports.map(({ name }) => `    ${name} as ${getPrefixedName(name, sourceModuleAlias)},\n`),
-        ...notChosenExports.map(({ name }) => `    ${name},\n`),
+        'import {',
+        ...chosenExports.map(({ name }) => `    ${name} as ${getPrefixedName(name, sourceModuleAlias)},`),
+        ...notChosenExports.map(({ name }) => `    ${name},`),
         `} from '${sourceFilePath}';`
-    ].join('');
+    ].join('\n');
 };
 
 const generateExportsFromSource = (notChosenExports: ExportData[]): string => {
@@ -130,9 +130,11 @@ const generateClassExtend = (chosenExports: ExportData[], sourceModuleAlias: str
 
     const { name } = classExport;
 
-    return `export class ${name} extends ${getPrefixedName(name, sourceModuleAlias)} {\n`
-        + '    // TODO implement logic\n'
-        + '};';
+    return [
+        `export class ${name} extends ${getPrefixedName(name, sourceModuleAlias)} {`,
+        '    // TODO implement logic',
+        '};'
+    ].join('\n');
 };
 
 const generateMappingsExtends = (chosenExports: ExportData[], sourceModuleAlias: string): Array<string> => {
@@ -144,12 +146,13 @@ const generateMappingsExtends = (chosenExports: ExportData[], sourceModuleAlias:
                     ? 'state'
                     : 'dispatch';
 
-                const newExport =
-                    `export const ${name} = ${argument} => ({\n` +
-                    `    ...${getPrefixedName(name, sourceModuleAlias)}(${argument}),\n` +
-                    `    // TODO extend ${name}\n` +
-                    `});`;
-
+                const newExport = [
+                    `export const ${name} = ${argument} => ({` +
+                    `    ...${getPrefixedName(name, sourceModuleAlias)}(${argument}),` +
+                    `    // TODO extend ${name}` +
+                    `});`
+                ].join('\n')
+                
                 return newExport;
             }
         );
@@ -162,10 +165,10 @@ const generateExtendStrings = (chosenExports: ExportData[], sourceModuleAlias: s
 
     return chosenExports
         .filter(one => one.type !== ExportType.class && !isMapping(one.name))
-        .map(({ name }) =>
-            `//TODO: implement ${name}\n`
-            + `export const ${name} = ${getPrefixedName(name, sourceModuleAlias)};`
-        );
+        .map(({ name }) => [
+            `//TODO: implement ${name}`,
+            `export const ${name} = ${getPrefixedName(name, sourceModuleAlias)};`
+        ].join('\n'));
 };
 
 /**
