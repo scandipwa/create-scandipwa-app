@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/scandipwa-extensibility",
     "description": "Extension logic used by CSA.",
-    "version": "2.0.0",
+    "version": "2.0.2",
     "license": "OSL-3.0",
     "publishConfig": {
         "access": "public"

@@ -28,8 +28,9 @@ function getFilePathsForLocale(locale) {
     );
 }
 
-function generateImportDeclaration(path, chunkName) {
-    return `import(/* webpackMode: "lazy", webpackChunkName: "${chunkName}" */ '${path}')`;
+function generateImportDeclaration(pathname, chunkName) {
+    const posixPathname = pathname.split(path.sep).join(path.posix.sep);
+    return `import(/* webpackMode: "lazy", webpackChunkName: "${chunkName}" */ '${posixPathname}')`;
 }
 
 function generateLocaleMapContents(localePathMap, defaultLocale) {
@@ -73,7 +74,10 @@ module.exports = function injectImports(source) {
     } = loaderUtils.getOptions(this) || {};
 
     // Get the active locales from the current theme's package.json
-    const locales = getEnabledLocales();
+    const locales = Array.from(new Set([
+        ...getEnabledLocales(),
+        defaultLocale // this should be here, so map is not empty!
+    ]));
 
     // Build a map: langCode => paths[]
     const localePathMap = locales.reduce(

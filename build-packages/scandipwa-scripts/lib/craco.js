@@ -15,6 +15,7 @@ module.exports = (script) => {
     const localeArgIndex = args.indexOf('--locale');
     const locale = localeArgIndex === -1 ? 'en_US' : args[localeArgIndex + 1];
 
+    // TODO: remove locale aeg in next MAJOR
     // check if the locale matches expected Regex
     if (!/^[a-z]{2}_[A-Z]{2}$/.test(locale)) {
         logger.error(
@@ -107,8 +108,7 @@ module.exports = (script) => {
 
         chokidar
             .watch([
-                'src/**/*.js',
-                'src/**/*.scss'
+                'src/**/*'
             ], {
                 // should we ignore node_modules ?
                 ignored: '**/node_modules/**',
