@@ -29,21 +29,18 @@
             ]
         },
         {
-            "type": "node",
-            "request": "launch",
             "name": "Start",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "start"
+            ],
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}/runtime-packages/csa",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "env": {
-                "PORT": 3003,
-                "BROWSER": "none"
-            },
-            "cwd": "${workspaceFolder}/runtime-packages/csa",
-            "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
-            "args": [
-                "start"
-            ]
+            "type": "pwa-node"
         },
         {
             "type": "node",

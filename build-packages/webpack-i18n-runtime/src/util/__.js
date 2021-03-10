@@ -14,7 +14,7 @@ function getTranslatedStringWithInjectedValues(string, values) {
     return injectValues(translateString(string), ...values);
 }
 
-class TranslatedValue extends String {
+export class TranslatedValue extends String {
     // Translate and inject values during the initialization
     constructor(value, args = []) {
         super(getTranslatedStringWithInjectedValues(value, args));

@@ -1,13 +1,14 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
     "description": "Scripts and configuration used by CSA.",
-    "version": "2.2.4",
+    "version": "2.2.5",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
     "scandipwa": {
         "extensions": {
-            "@scandipwa/scandipwa-extensibility": true
+            "@scandipwa/scandipwa-extensibility": true,
+            "@scandipwa/scandipwa-template-plugin-system": true
         }
     },
     "files": [
@@ -22,10 +23,11 @@
         "@scandipwa/craco": "0.1.1",
         "@scandipwa/eslint-config": "0.1.12",
         "@scandipwa/scandipwa-dev-utils": "0.0.20",
-        "@scandipwa/scandipwa-extensibility": "2.0.1",
+        "@scandipwa/scandipwa-extensibility": "2.0.2",
         "@scandipwa/webpack-extension-import-loader": "0.0.16",
+        "@scandipwa/scandipwa-template-plugin-system": "0.1.0",
         "@scandipwa/webpack-fallback-plugin": "1.2.0",
-        "@scandipwa/webpack-i18n-plugin": "0.1.5",
+        "@scandipwa/webpack-i18n-plugin": "0.1.6",
         "babel-plugin-module-resolver": "^4.0.0",
         "babel-plugin-transform-rebem-jsx": "^0.3.3",
         "chokidar": "^3.4.2",

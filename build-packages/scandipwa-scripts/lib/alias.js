@@ -62,9 +62,11 @@ const preferenceAliases = extensions.reduce((acc, extension) => {
         return acc;
     }
 
+    const posixPackagePath = packagePath.split(path.sep).join(path.posix.sep);
+
     return {
         ...acc,
-        [`${preference}/*`]: [path.relative(process.cwd(), packagePath)]
+        [`${preference}/*`]: [path.relative(process.cwd(), posixPackagePath)]
     };
 }, {});
 
@@ -78,9 +80,10 @@ const { parentThemeAliases } = Object.entries(aliasMap).reduceRight(
     (acc, [, aliasPathMap]) => {
         Object.entries(aliasPathMap).forEach(
             ([alias, pathname], i) => {
+                const posixPathname = pathname.split(path.sep).join(path.posix.sep);
                 acc.aliasStack[i].push(
                     // it is required to be relative, otherwise it does not work
-                    `${path.relative(process.cwd(), pathname)}/*`
+                    `${path.relative(process.cwd(), posixPathname)}/*`
                 );
 
                 acc.parentThemeAliases[`${ alias }/*`] = Array.from(acc.aliasStack[i]);
@@ -98,7 +101,7 @@ const { parentThemeAliases } = Object.entries(aliasMap).reduceRight(
 // TODO: generate jsconfig.js for VSCode suggestions
 const jsConfig = {
     compilerOptions: {
-        baseUrl: `.${path.sep}`,
+        baseUrl: `.${path.posix.sep}`,
         jsx: 'react',
         paths: {
             ...parentThemeAliases,

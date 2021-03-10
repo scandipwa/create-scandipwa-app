@@ -20,10 +20,11 @@ export default (BaseClass = EmptyBase) => {
     }
 
     const { name } = BaseClass;
+    // Get the cache identity for the base class, omit inherited prop
     const {
         // Generate unique cache identities as default value
-        [cacheIdentityKey]: cacheIdentity = Symbol(`Cache Identity ${name}`)
-    } = BaseClass;
+        value: cacheIdentity = Symbol(`Cache Identity ${name}`)
+    } = Object.getOwnPropertyDescriptor(BaseClass, cacheIdentityKey) || {};
 
     // If such class is not yet generated => generate the class
     if (!generated[cacheIdentity]) {
