@@ -2,3 +2,4 @@ runtime-packages/test
 runtime-packages/test-*
 runtime-packages/test/**/*
 
+build-packages/xmldom
