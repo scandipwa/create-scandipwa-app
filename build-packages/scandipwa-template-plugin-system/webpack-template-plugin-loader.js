@@ -1,16 +1,13 @@
-const xmldom = require('@scandipwa/xmldom');
+const xmldom = require('xmldom');
 
-const { STRING_API_KEY, DOM_API_KEY } = require('./util/exposed-api-keys');
-
+const getTemplatePlugins = require('./util/get-template-plugins');
 const getGroupedPlugins = require('./util/get-grouped-plugins');
-
+const { STRING_API_KEY, DOM_API_KEY } = require('./util/exposed-api-keys');
 const handlePossiblePluginError = require('./error-handlers/possible-plugin-error');
 const ensureValidValue = require('./util/ensure-valid-value');
 
 const domParser = new xmldom.DOMParser();
 const xmlSerializer = new xmldom.XMLSerializer();
-
-const getHtmlPlugins = require('./util/get-html-plugins');
 
 // Parse with HTML mime type even if contains PHP to prevent throwing on invalid XML
 const parseToDOM = (code) => domParser.parseFromString(code, 'text/html');
@@ -23,11 +20,11 @@ const parseToString = (dom) => xmlSerializer.serializeToString(dom);
  * @param {string} templateFile
  */
 module.exports = function middleware(templateFile) {
-    const htmlPlugins = getHtmlPlugins();
-    const groupedHtmlPlugins = getGroupedPlugins(htmlPlugins);
+    const templatePlugins = getTemplatePlugins();
+    const groupedTemplatePlugins = getGroupedPlugins(templatePlugins);
 
     // Perform DOM API usages first
-    const middlewaredDOM = groupedHtmlPlugins[DOM_API_KEY].reduce(
+    const middlewaredDOM = groupedTemplatePlugins[DOM_API_KEY].reduce(
         (acc, { name, override }) => handlePossiblePluginError(
             name,
             () => ensureValidValue(
@@ -43,7 +40,7 @@ module.exports = function middleware(templateFile) {
     );
 
     // Perform the text API usages second
-    const middlewaredText = groupedHtmlPlugins[STRING_API_KEY].reduce(
+    const middlewaredText = groupedTemplatePlugins[STRING_API_KEY].reduce(
         (acc, { name, override }) => handlePossiblePluginError(
             name,
             () => ensureValidValue(
