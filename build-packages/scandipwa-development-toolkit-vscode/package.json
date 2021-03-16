@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"name": "scandipwa-development-toolkit-vscode",
 	"publisher": "ScandiPWA",
 	"displayName": "ScandiPWA devtools for VSCode",
@@ -31,12 +31,10 @@
 		"onCommand:extension.createRoute",
 		"onCommand:extension.createQuery",
 		"onCommand:extension.createStore",
-
 		"onCommand:extension.extendComponent",
 		"onCommand:extension.extendRoute",
 		"onCommand:extension.extendQuery",
 		"onCommand:extension.extendStore",
-
 		"onCommand:extension.extensionCreate"
 	],
 	"main": "./out/extension.js",
@@ -85,8 +83,8 @@
 		"@babel/parser": "^7.9.6",
 		"@babel/traverse": "^7.9.6",
 		"@babel/types": "^7.9.6",
-		"@scandipwa/scandipwa-development-toolkit-core": "1.0.0",
-		"@scandipwa/scandipwa-dev-utils": "0.0.20"
+		"@scandipwa/scandipwa-dev-utils": "0.0.21",
+		"@scandipwa/scandipwa-development-toolkit-core": "1.0.1"
 	},
 	"devDependencies": {
 		"@types/babel__generator": "^7.6.1",
