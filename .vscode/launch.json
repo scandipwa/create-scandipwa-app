@@ -29,21 +29,18 @@
             ]
         },
         {
-            "type": "node",
-            "request": "launch",
             "name": "Start",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "start"
+            ],
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}/runtime-packages/csa",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "env": {
-                "PORT": 3003,
-                "BROWSER": "none"
-            },
-            "cwd": "${workspaceFolder}/runtime-packages/csa",
-            "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
-            "args": [
-                "start"
-            ]
+            "type": "pwa-node"
         },
         {
             "type": "node",
@@ -76,6 +73,30 @@
             "args": [
                 "link"
             ]
-        }
+        },
+        {
+            "name": "CLI",
+            "program": "${workspaceFolder}/build-packages/scandipwa-cli/index.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": ["override", "component", "AddToCart"],
+            "cwd": "${workspaceFolder}/runtime-packages/csa",
+            "type": "pwa-node"
+        },
+        {
+			"name": "VSCode",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${workspaceFolder}/build-packages/scandipwa-development-toolkit-vscode/${execPath}",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/build-packages/scandipwa-development-toolkit-vscode"
+			],
+			"outFiles": [
+				"${workspaceFolder}/build-packages/scandipwa-development-toolkit-vscode/out/**/*.js"
+			],
+			"preLaunchTask": "${defaultBuildTask}"
+		},
     ]
 }

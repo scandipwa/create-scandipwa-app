@@ -1,15 +1,5 @@
 const path = require('path');
 const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesystem');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-
-const greet = (
-    name,
-    pathname
-) => {
-    // logger.clear();
-    const relativePathname = `.${ path.sep }${ pathname }`;
-    logger.logN(`Success! Created ScandiPWA extension "${ logger.style.misc(name) }" at ${ logger.style.file(relativePathname) }!`);
-};
 
 const fileSystemCreator = (templateOptions) => (
     (
@@ -52,9 +42,6 @@ const run = async (options) => {
         path.join(__dirname, 'template'),
         fileSystemCreator(templateOptions)
     );
-
-    // greet the user
-    greet(name, pathname);
 };
 
 module.exports = run;

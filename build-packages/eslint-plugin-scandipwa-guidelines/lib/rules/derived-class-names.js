@@ -4,6 +4,7 @@
  */
 const path = require('path');
 
+const traverse = require('eslint-traverse');
 const capitalize = (word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
@@ -31,15 +32,38 @@ module.exports = {
             }
 
             const expectedClassName = capitalize(filename) + capitalize(postfix);
+            const actualClassName = node.id.name;
 
-            if (expectedClassName !== node.id.name) {
+            if (expectedClassName !== actualClassName) {
                 // Check if expected class name does match the node class name
                 const { id: { loc } } = node;
 
                 context.report({
                     loc,
                     message: 'Class name must be derived from the file name, using postfix.',
-                    fix: fixer => fixer.replaceText(node.id, expectedClassName)
+                    fix: fixer => {
+                        // Initialize fixes - replace the name in class declaration
+                        const fixes = [];
+
+                        // Replace all the usages in this file
+                        traverse(
+                            context,
+                            context.getSourceCode().ast,
+                            ({ node }) => {
+                                if (
+                                    node.type !== 'Identifier' 
+                                    || node.name !== actualClassName 
+                                    || node.parent.type === 'ImportSpecifier'
+                                ) {
+                                    return;
+                                }
+
+                                fixes.push(fixer.replaceText(node, expectedClassName));
+                            }
+                        );
+
+                        return fixes;
+                    }
                 });
             }
         }
