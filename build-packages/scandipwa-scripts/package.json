@@ -5,6 +5,9 @@
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
+    "scripts": {
+        "postinstall": "node -e \"try{require('@scandipwa/scandipwa-dev-utils/announcement')()}catch(e){}\""
+    },
     "scandipwa": {
         "extensions": {
             "@scandipwa/scandipwa-extensibility": true,
