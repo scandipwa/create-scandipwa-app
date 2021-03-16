@@ -6,7 +6,7 @@
         "csa": "create-scandipwa-app runtime-packages/csa",
         "csa-blank": "create-scandipwa-app runtime-packages/csa-blank --template blank",
         "csa-cra": "create-scandipwa-app runtime-packages/csa-cra --template cra",
-        "postinstall": "lerna bootstrap",
+        "postinstall": "lerna bootstrap && lerna run compile",
         "clean": "lerna clean --yes",
         "compile:lockfile": "node build-tasks/compile-lockfile.js"
     },

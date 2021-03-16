@@ -15,7 +15,14 @@ const extensionCreator = async () => {
         return;
     }
 
-    installExtension(resourceName, true, logger);
+    installExtension(
+        resourceName,
+        '0.0.0',
+        false,
+        true,
+        process.cwd(),
+        logger
+    );
 };
 
 export default extensionCreator;
