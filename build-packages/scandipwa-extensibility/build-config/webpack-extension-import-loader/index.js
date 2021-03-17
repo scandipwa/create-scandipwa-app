@@ -33,7 +33,7 @@ const findPluginFiles = (basepath) => (
         return [
             ...acc,
             // recursively walk the child directory
-            findPluginFiles(pluginPath)
+            ...findPluginFiles(pluginPath)
         ];
     }, [])
 );
