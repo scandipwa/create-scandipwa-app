@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
     "description": "Scripts and configuration used by CSA.",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
@@ -26,7 +26,7 @@
         "@scandipwa/craco": "0.1.1",
         "@scandipwa/eslint-config": "0.1.13",
         "@scandipwa/scandipwa-dev-utils": "0.0.21",
-        "@scandipwa/scandipwa-extensibility": "2.1.0",
+        "@scandipwa/scandipwa-extensibility": "2.1.1",
         "@scandipwa/scandipwa-template-plugin-system": "0.1.1",
         "@scandipwa/webpack-extension-import-loader": "0.0.16",
         "@scandipwa/webpack-fallback-plugin": "1.2.1",
