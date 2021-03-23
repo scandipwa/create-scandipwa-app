@@ -5,6 +5,9 @@
 	"description": "ScandiPWA development tools' base",
 	"license": "SEE LICENSE IN LICENSE",
 	"main": "./out",
+	"files": [
+		"out"
+	],
 	"scripts": {
 		"prepublish": "npm run compile",
 		"compile": "rm -rf out/ && tsc -p ./ -d && cp -r src/templates out/",
