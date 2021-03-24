@@ -75,14 +75,14 @@ module.exports = (script) => {
 
         child.on('error', (e) => {
             logger.log('error', e);
-            process.exit();
+            process.exit(1);
         });
 
         child.on('close', (code) => {
             if (code !== null || isProd) {
                 // if the process exits "voluntarily" stop the parent as well
                 // See more in answer here: https://stackoverflow.com/a/39169784
-                process.exit();
+                process.exit(1);
             }
         });
     };

@@ -116,7 +116,7 @@ const run = async (options) => {
             `Unable to determine the latest version of package ${ logger.style.misc('react') }`
         );
 
-        process.exit(255);
+        process.exit(1);
     }
 
     let reactDomVersion = '0.0.0';
@@ -127,7 +127,7 @@ const run = async (options) => {
             `Unable to determine the latest version of package ${ logger.style.misc('react-dom') }`
         );
 
-        process.exit(255);
+        process.exit(1);
     }
 
     const templateOptions = {

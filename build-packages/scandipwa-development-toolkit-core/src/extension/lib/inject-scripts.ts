@@ -36,7 +36,7 @@ const injectScripts = (
                 `Please remove current ${ logger.style.misc(`scripts.${ script }`) } field from ${ logger.style.file('package.json') }.`
             );
 
-            process.exit();
+            process.exit(1);
         }
 
         packageJson.scripts[script] = linkCommand;

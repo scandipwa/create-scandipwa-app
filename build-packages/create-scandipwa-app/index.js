@@ -107,7 +107,7 @@ yargs.command(
             : pathArr[pathArr.length - 1];
 
         if (!isValidPackageName(packageName)) {
-            process.exit();
+            process.exit(1);
         }
 
         const pathToDist = isOrg

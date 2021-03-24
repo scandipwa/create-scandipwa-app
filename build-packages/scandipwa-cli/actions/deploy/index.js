@@ -27,7 +27,7 @@ const deploy = async (argv) => {
             `There was no folders containing ${ logger.style.file('package.json') }, where ${ logger.style.misc('scandipwa.type') } field was equal to ${ logger.style.misc('theme') }.`
         );
 
-        process.exit();
+        process.exit(1);
     }
 
     // prepare application data
@@ -52,7 +52,7 @@ const deploy = async (argv) => {
             'See the error log above.'
         );
 
-        process.exit();
+        process.exit(1);
     }
 
     try {
@@ -73,7 +73,7 @@ const deploy = async (argv) => {
         fs.unlink(archivePath, (err) => {
             if (err) {
                 logger.error(err);
-                process.exit();
+                process.exit(1);
             }
 
             logger.log('Build archive successfully removed.');
@@ -107,7 +107,7 @@ const deploy = async (argv) => {
             'See the error log above.'
         );
 
-        process.exit();
+        process.exit(1);
     }
 };
 

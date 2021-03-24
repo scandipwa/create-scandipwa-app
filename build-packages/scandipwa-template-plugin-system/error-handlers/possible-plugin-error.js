@@ -33,6 +33,6 @@ module.exports = (name, cb) => {
             ...trimmedMessageLines
         );
 
-        process.exit(255);
+        process.exit(1);
     }
 };

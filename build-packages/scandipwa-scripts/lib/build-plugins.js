@@ -39,7 +39,7 @@ const {
                 'See detailed error log above.'
             );
 
-            process.exit();
+            process.exit(1);
         }
     }
 
@@ -57,7 +57,7 @@ const {
                 'See detailed error log above.'
             );
 
-            process.exit();
+            process.exit(1);
         }
     }
 
