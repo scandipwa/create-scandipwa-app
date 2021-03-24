@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/webpack-fallback-plugin",
     "description": "Webpack fallback plugin used by CSA.",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "main": "index.js",
     "types": "index.d.ts",
     "license": "OSL-3.0",
@@ -12,7 +12,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "0.0.23"
+        "@scandipwa/scandipwa-dev-utils": "0.0.24"
     },
     "gitHead": "1dc70f97183dc4f826e64114343c51abdb0030ea"
 }

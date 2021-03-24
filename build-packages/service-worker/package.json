@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/service-worker",
     "description": "Service-worker capabilities for CSA.",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "license": "OSL-3.0",
     "scandipwa": {
         "type": "extension",
@@ -16,7 +16,7 @@
     },
     "dependencies": {
         "@scandipwa/craco": "0.0.4",
-        "@scandipwa/webpack-fallback-plugin": "1.2.3",
+        "@scandipwa/webpack-fallback-plugin": "1.2.4",
         "lodash.clonedeep": "^4.5.0"
     },
     "publishConfig": {

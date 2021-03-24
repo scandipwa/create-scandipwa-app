@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/scandipwa-extensibility",
     "description": "Extension logic used by CSA.",
-    "version": "2.1.3",
+    "version": "2.1.4",
     "license": "OSL-3.0",
     "publishConfig": {
         "access": "public"
@@ -18,7 +18,7 @@
         "@babel/plugin-transform-arrow-functions": "^7.10.4",
         "@babel/plugin-transform-async-to-generator": "^7.10.4",
         "@scandipwa/craco": "0.1.1",
-        "@scandipwa/scandipwa-dev-utils": "0.0.23",
+        "@scandipwa/scandipwa-dev-utils": "0.0.24",
         "noop-loader": "^1.0.0",
         "null-loader": "^4.0.1"
     },
