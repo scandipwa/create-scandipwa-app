@@ -10,7 +10,6 @@ const actions = [
     require('./actions/create'),
     require('./actions/override'),
     require('./actions/deploy')
-    // require('./actions/magento')
 ];
 
 (async () => {
