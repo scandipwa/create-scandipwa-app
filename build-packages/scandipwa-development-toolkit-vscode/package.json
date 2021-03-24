@@ -3,7 +3,7 @@
 	"version": "1.0.1",
 	"name": "scandipwa-development-toolkit-vscode",
 	"publisher": "ScandiPWA",
-	"displayName": "ScandiPWA devtools for VSCode",
+	"displayName": "ScandiPWA devtools",
 	"description": "ScandiPWA development tools for Visual Studio Code",
 	"icon": "icon.png",
 	"license": "SEE LICENSE IN LICENSE",
