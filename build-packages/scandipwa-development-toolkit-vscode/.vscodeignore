@@ -4,7 +4,6 @@ out/test/**
 !src/templates
 src/**
 .gitignore
-vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map

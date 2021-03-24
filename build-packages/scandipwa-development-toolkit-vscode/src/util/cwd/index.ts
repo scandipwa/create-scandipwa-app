@@ -43,6 +43,8 @@ export const selectModuleWithHistory = async (
         canSelectFolders: true,
         canSelectFiles: false,
         canSelectMany: false,
+        
+        // @ts-expect-error this does not work on Mac, but should work on Linux and Windows
         title: message
     };
 
