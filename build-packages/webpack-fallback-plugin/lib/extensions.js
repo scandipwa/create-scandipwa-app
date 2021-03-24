@@ -72,7 +72,7 @@ const getExtensionProvisionedPath = (pathname, cwd) => {
                             'Alternatively, provide the relative path to module\'s file.'
                         );
 
-                        process.exit();
+                        process.exit(1);
                     }
 
                     return {

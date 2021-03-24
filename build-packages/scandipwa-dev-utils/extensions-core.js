@@ -81,7 +81,7 @@ const getExtensionsForCwd = memoize((cwd = process.cwd()) => getEnabledExtension
             `Append ${ logger.style.code(`"${ packageName }": false`) } line to the end of the ${ logger.style.code('scandipwa.extensions') } field.`
         );
 
-        process.exit();
+        process.exit(1);
     }
 
     return acc;
