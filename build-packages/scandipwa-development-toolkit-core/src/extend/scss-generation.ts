@@ -5,8 +5,8 @@ import { ILogger, IUserInteraction, StylesOption } from "../types";
 import { createNewFileFromTemplate } from '../util/file';
 
 // Initial paths' calculation
-const extensionRoot = path.join(__dirname, '..', '..');
-const templatePath = path.join(extensionRoot, 'src', 'templates', 'stylesheet.scss');
+const templateDirectory = path.join(__dirname, '..', 'templates');
+const templatePath = path.join(templateDirectory, 'stylesheet.scss');
 
 export const getStyleFileName = (
     resourceName: string, 
