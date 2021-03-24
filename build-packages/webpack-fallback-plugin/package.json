@@ -13,5 +13,6 @@
     },
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "0.0.23"
-    }
+    },
+    "gitHead": "1dc70f97183dc4f826e64114343c51abdb0030ea"
 }

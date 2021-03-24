@@ -46,5 +46,6 @@
     "license": "OSL-3.0",
     "publishConfig": {
         "access": "public"
-    }
+    },
+    "gitHead": "1dc70f97183dc4f826e64114343c51abdb0030ea"
 }

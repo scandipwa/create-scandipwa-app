@@ -21,5 +21,6 @@
         "@scandipwa/scandipwa-dev-utils": "0.0.23",
         "noop-loader": "^1.0.0",
         "null-loader": "^4.0.1"
-    }
+    },
+    "gitHead": "1dc70f97183dc4f826e64114343c51abdb0030ea"
 }
