@@ -1,45 +1,22 @@
 # ScandiPWA development toolkit
 
-#### Made to simplify your work with ScandiPWA.
+### Overview
 
-This extension is a core extension of ScandiPWA extension pack for development in VSCode editor.
+Made to *simplify* your work with ScandiPWA.
 
-## Requirements
+This extension is for development ScandiPWA and projects based on it in VSCode editor.
 
-1. Node 10^ + npm 6.8^
-2. VSCode ^1.45
+Basically, it is an API to the same functionality that `scandipwa-cli` offers. If something is able to be achieved by using these tools - we recommend using them. It has been proven to produce safer code than manual copying/templating/etc.
+
+The functionality of this extension is identical to `scandipwa-cli`.
+
+You will be asked to choose the ScandiPWA module (theme or extension), where to create/override resources. So yes, this tool is able to help you even with extensions and external modules!
 
 ### Commands
 
-- ScandiPWA: Create new component
-- ScandiPWA: Create new route
-- ScandiPWA: Create new query
-- ScandiPWA: Create new store
-- ScandiPWA: Extend source component
-- ScandiPWA: Extend source route
-- ScandiPWA: Extend source query
-- ScandiPWA: Extend source store
+- ScandiPWA: Create. Creates templates for new resources from scratch.
+- ScandiPWA: Extend. Use this to properly and safe override the existing functionality.
 
-## How to build manually?
+### Configuration
 
-1. Install node modules
-
-```
-npm ci
-```
-
-2. Install `vsce` – official extension packaging tool
-
-```
-npm i -g vsce
-```
-
-3. Pack the extension
-
-```
-vsce package
-```
-
-4. Open command pallete, type `> Install from VSIX`
-
-5. Choose generated `.vsix` file
+No
