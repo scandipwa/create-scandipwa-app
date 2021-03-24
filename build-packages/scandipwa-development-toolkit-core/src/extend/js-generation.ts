@@ -147,9 +147,9 @@ const generateMappingsExtends = (chosenExports: ExportData[], sourceModuleAlias:
                     : 'dispatch';
 
                 const newExport = [
-                    `export const ${name} = ${argument} => ({` +
-                    `    ...${getPrefixedName(name, sourceModuleAlias)}(${argument}),` +
-                    `    // TODO extend ${name}` +
+                    `export const ${name} = ${argument} => ({`,
+                    `    ...${getPrefixedName(name, sourceModuleAlias)}(${argument}),`,
+                    `    // TODO extend ${name}`,
                     `});`
                 ].join('\n')
                 
