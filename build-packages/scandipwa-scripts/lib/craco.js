@@ -82,7 +82,7 @@ module.exports = (script) => {
             if (code !== null || isProd) {
                 // if the process exits "voluntarily" stop the parent as well
                 // See more in answer here: https://stackoverflow.com/a/39169784
-                process.exit(1);
+                process.exit(code);
             }
         });
     };
