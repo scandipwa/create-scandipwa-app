@@ -32,13 +32,13 @@ const types = {
 
     PromiseHandlerArrowFunction: [
         [
-          "CallExpression",
-          "[callee.type='MemberExpression']",
-          "[callee.object.name!=/.+Dispatcher/]",
-          ":matches(",
-          	"[callee.property.name='then'], ",
-          	"[callee.property.name='catch']",
-          ")",
+            "CallExpression",
+            "[callee.type='MemberExpression']",
+            "[callee.object.name!=/.+Dispatcher/]",
+            ":matches(",
+            "[callee.property.name='then'], ",
+            "[callee.property.name='catch']",
+            ")",
         ].join(''),
         'ArrowFunctionExpression'
     ].join(' > '),
@@ -49,10 +49,10 @@ const types = {
 
         return (
             node.type === 'ArrowFunctionExpression'
-			&& parent.type === 'CallExpression'
-			&& parent.callee.type === 'MemberExpression'
-			&& !(parent.callee.object.name || "").endsWith('Dispatcher')
-			&& promiseHandlerNames.includes(parent.callee.property.name)
+            && parent.type === 'CallExpression'
+            && parent.callee.type === 'MemberExpression'
+            && !(parent.callee.object.name || "").endsWith('Dispatcher')
+            && promiseHandlerNames.includes(parent.callee.property.name)
         );
     },
 
@@ -122,20 +122,20 @@ const prepareFilePath = (pathname) => {
         dir
     } = path.parse(pathname);
 
-	const [name, postfix = ''] = filename.split('.');
+    const [name, postfix = ''] = filename.split('.');
 
     /**
      * We do not want the \\ paths on Windows, rather / =>
      * split and then join with correct delimiter
      **/
     return path.join(
-		dir,
-		// If dir name === file name without postfix => do not repeat it
-		new RegExp(`${path.sep}${name}$`).test(dir) ? '' : name,
-		postfix
+        dir,
+        // If dir name === file name without postfix => do not repeat it
+        new RegExp(`${path.sep}${name}$`).test(dir) ? '' : name,
+        postfix
     ).split(path.sep)
-    // Filter out empty strings if they exist
-    .filter(x => !!x);
+        // Filter out empty strings if they exist
+        .filter(x => !!x);
 }
 
 const preparePackageName = (packageName) => {
@@ -160,7 +160,7 @@ const preparePackageName = (packageName) => {
         return name;
     }
 
-    return `${org.slice(1)}/${name}`;
+    return `${ org.slice(1) }/${ name }`;
 };
 
 const generateNamespace = (node, context) => {
@@ -182,17 +182,19 @@ const generateNamespace = (node, context) => {
     ).split('-').join('');
 
     // Do not transform code to uppercase / lowercase it should be written alright
-    return `${pathname}/${getNodeNamespace(node)}`;
+    return `${ pathname }/${ getNodeNamespace(node) }`
+        // remove first slash if any
+        .replace(/^\//, '');
 }
 
 const extractNamespaceFromComment = ({ value: comment = '' }) => {
-	const {
-		groups: {
-			namespace
-		} = {}
-	} = comment.match(/@namespace +(?<namespace>[^ ]+)/) || {};
+    const {
+        groups: {
+            namespace
+        } = {}
+    } = comment.match(/@namespace +(?<namespace>[^ ]+)/) || {};
 
-	return namespace;
+    return namespace;
 };
 
 module.exports = {
@@ -214,37 +216,37 @@ module.exports = {
             const namespaceComment = getNamespaceCommentForNode(node, context.getSourceCode()) || { value: '' };
             const namespaceCommentString = namespaceComment.value.split('@namespace').pop().trim();
 
-			const namespace = extractNamespaceFromComment(namespaceComment);
-			const generatedNamespace = generateNamespace(node, context);
+            const namespace = extractNamespaceFromComment(namespaceComment);
+            const generatedNamespace = generateNamespace(node, context);
 
             if (!namespaceCommentString) {
                 context.report({
                     node,
-                    message: `Provide namespace for ${types.detectType(node)} by using @namespace magic comment`,
+                    message: `Provide namespace for ${ types.detectType(node) } by using @namespace magic comment`,
                     fix: fixer => fixNamespaceLack(
-						fixer,
-						getProperParentNode(node),
-						context,
-						generatedNamespace
-					) || []
+                        fixer,
+                        getProperParentNode(node),
+                        context,
+                        generatedNamespace
+                    ) || []
                 });
-			} else if (generatedNamespace !== namespaceCommentString) {
-				context.report({
+            } else if (generatedNamespace !== namespaceCommentString) {
+                context.report({
                     node,
-                    message: `Namespace for this node is not valid! Consider changing it to ${generatedNamespace}`,
+                    message: `Namespace for this node is not valid! Consider changing it to ${ generatedNamespace }`,
                     fix: fixer => {
-						const newNamespaceCommentContent = namespaceComment.value.replace(namespace, generatedNamespace);
-						const newNamespaceComment = namespaceComment.type === 'Block'
-							? `/*${newNamespaceCommentContent}*/`
-							: `// ${newNamespaceCommentContent}`;
+                        const newNamespaceCommentContent = namespaceComment.value.replace(namespace, generatedNamespace);
+                        const newNamespaceComment = namespaceComment.type === 'Block'
+                            ? `/*${ newNamespaceCommentContent }*/`
+                            : `// ${ newNamespaceCommentContent }`;
 
-						return fixer.replaceText(
-							namespaceComment,
-							newNamespaceComment
-						)
-					}
+                        return fixer.replaceText(
+                            namespaceComment,
+                            newNamespaceComment
+                        )
+                    }
                 });
-			}
+            }
         }
     })
 };
