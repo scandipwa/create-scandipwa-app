@@ -86,7 +86,7 @@ const generateStyleImport = (
     ) {
         const styleFilename = getStyleFileName(resourceName, chosenStylesOption).replace(/\.s?(c|a)ss$/, '');
 
-        return `import '${styleFilename}';`;
+        return `import './${styleFilename}';`;
     }
 
     return '';
