@@ -32,13 +32,13 @@ const types = {
 
     PromiseHandlerArrowFunction: [
         [
-            "CallExpression",
-            "[callee.type='MemberExpression']",
-            "[callee.object.name!=/.+Dispatcher/]",
-            ":matches(",
-            "[callee.property.name='then'], ",
-            "[callee.property.name='catch']",
-            ")",
+            'CallExpression',
+            '[callee.type=\'MemberExpression\']',
+            '[callee.object.name!=/.+Dispatcher/]',
+            ':matches(',
+            '[callee.property.name=\'then\'], ',
+            '[callee.property.name=\'catch\']',
+            ')'
         ].join(''),
         'ArrowFunctionExpression'
     ].join(' > '),
@@ -51,7 +51,7 @@ const types = {
             node.type === 'ArrowFunctionExpression'
             && parent.type === 'CallExpression'
             && parent.callee.type === 'MemberExpression'
-            && !(parent.callee.object.name || "").endsWith('Dispatcher')
+            && !(parent.callee.object.name || '').endsWith('Dispatcher')
             && promiseHandlerNames.includes(parent.callee.property.name)
         );
     },
@@ -60,9 +60,15 @@ const types = {
         || types.isPromiseHandlerArrowFunction(node),
 
     detectType: node => {
-        if (types.isPromiseHandlerArrowFunction(node)) return 'promise handler arrow function';
-        if (types.isExportedArrowFunction(node)) return 'exported arrow function';
-        if (types.isExportedClass(node)) return 'exported class';
+        if (types.isPromiseHandlerArrowFunction(node)) {
+            return 'promise handler arrow function';
+        }
+        if (types.isExportedArrowFunction(node)) {
+            return 'exported arrow function';
+        }
+        if (types.isExportedClass(node)) {
+            return 'exported class';
+        }
     }
 };
 
@@ -99,13 +105,13 @@ const collectFunctionNamespace = (node, stack) => {
             stack.push(node.callee.name);
         }
     }
-}
+};
 
 const getNodeNamespace = (node) => {
     const stack = [];
 
     if (node.parent.type === 'VariableDeclarator') {
-        stack.push(node.parent.id.name)
+        stack.push(node.parent.id.name);
     } else if (node.type === 'ClassDeclaration') {
         stack.push(node.id.name);
     } else {
@@ -113,8 +119,9 @@ const getNodeNamespace = (node) => {
     }
 
     // not using path.sep on purpose
-    return stack.reverse().join('/');
-}
+    return stack.reverse()
+    .join('/');
+};
 
 const prepareFilePath = (pathname) => {
     const {
@@ -133,10 +140,11 @@ const prepareFilePath = (pathname) => {
         // If dir name === file name without postfix => do not repeat it
         new RegExp(`${path.sep}${name}$`).test(dir) ? '' : name,
         postfix
-    ).split(path.sep)
-        // Filter out empty strings if they exist
-        .filter(x => !!x);
-}
+    )
+    .split(path.sep)
+    // Filter out empty strings if they exist
+    .filter(x => !!x);
+};
 
 const preparePackageName = (packageName) => {
     // This is on purpose not a path.sep (windows support)
@@ -145,7 +153,7 @@ const preparePackageName = (packageName) => {
     if (!name) {
         // if there is no name => there is not ORG
         if (packageName === '<%= name %>') {
-            return 'placeholder'
+            return 'placeholder';
         }
 
         return packageName;
@@ -166,7 +174,8 @@ const preparePackageName = (packageName) => {
 const generateNamespace = (node, context) => {
     const filePath = context.getFilename();
     const modulePath = walkDirectoryUp(filePath).pathname;
-    const fileRelative = path.relative(modulePath, filePath).replace(/^(\.\/)?src\//, '');
+    const fileRelative = path.relative(modulePath, filePath)
+    .replace(/^(\.\/)?src\//, '');
     const { name: packageName } = getPackageJson(modulePath);
 
     // Not using path.join to support windows
@@ -175,17 +184,20 @@ const generateNamespace = (node, context) => {
         preparePackageName(packageName),
         // Trim post-fixes if they are not present
         ...prepareFilePath(fileRelative)
-    ].join('/').replace(
+    ].join('/')
+    .replace(
         // Convert to pascal-case, and trim "-"
         /\b[a-z](?=[a-z]{2})/g,
         (letter) => letter.toUpperCase()
-    ).split('-').join('');
+    )
+    .split('-')
+    .join('');
 
     // Do not transform code to uppercase / lowercase it should be written alright
     return `${ pathname }/${ getNodeNamespace(node) }`
-        // remove first slash if any
-        .replace(/^\//, '');
-}
+    // remove first slash if any
+    .replace(/^\//, '');
+};
 
 const extractNamespaceFromComment = ({ value: comment = '' }) => {
     const {
@@ -214,7 +226,9 @@ module.exports = {
             types.ExportedArrowFunction
         ].join(',')](node) {
             const namespaceComment = getNamespaceCommentForNode(node, context.getSourceCode()) || { value: '' };
-            const namespaceCommentString = namespaceComment.value.split('@namespace').pop().trim();
+            const namespaceCommentString = namespaceComment.value.split('@namespace')
+            .pop()
+            .trim();
 
             const namespace = extractNamespaceFromComment(namespaceComment);
             const generatedNamespace = generateNamespace(node, context);
@@ -243,7 +257,7 @@ module.exports = {
                         return fixer.replaceText(
                             namespaceComment,
                             newNamespaceComment
-                        )
+                        );
                     }
                 });
             }
