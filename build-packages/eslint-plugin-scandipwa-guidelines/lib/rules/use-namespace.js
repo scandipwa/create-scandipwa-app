@@ -114,13 +114,25 @@ const getNodeNamespace = (node) => {
         stack.push(node.parent.id.name);
     } else if (node.type === 'ClassDeclaration') {
         stack.push(node.id.name);
+    } else if (node.parent.type === 'CallExpression') {
+        const {
+            type,
+            property,
+            object
+        } = node.parent.callee;
+        // node is second argument of then call
+        if (type === 'MemberExpression' && property.name === 'then' && node === node.parent.arguments[1]) {
+            stack.push('fail');
+            collectFunctionNamespace(object, stack);
+        } else {
+            collectFunctionNamespace(node.parent, stack);
+        }
     } else {
         collectFunctionNamespace(node.parent, stack);
     }
 
     // not using path.sep on purpose
-    return stack.reverse()
-    .join('/');
+    return stack.reverse();
 };
 
 const prepareFilePath = (pathname) => {
@@ -141,9 +153,9 @@ const prepareFilePath = (pathname) => {
         new RegExp(`${path.sep}${name}$`).test(dir) ? '' : name,
         postfix
     )
-    .split(path.sep)
-    // Filter out empty strings if they exist
-    .filter(x => !!x);
+        .split(path.sep)
+        // Filter out empty strings if they exist
+        .filter(x => !!x);
 };
 
 const preparePackageName = (packageName) => {
@@ -168,14 +180,14 @@ const preparePackageName = (packageName) => {
         return name;
     }
 
-    return `${ org.slice(1) }/${ name }`;
+    return `${org.slice(1)}/${name}`;
 };
 
 const generateNamespace = (node, context) => {
     const filePath = context.getFilename();
     const modulePath = walkDirectoryUp(filePath).pathname;
     const fileRelative = path.relative(modulePath, filePath)
-    .replace(/^(\.\/)?src\//, '');
+        .replace(/^(\.\/)?src\//, '');
     const { name: packageName } = getPackageJson(modulePath);
 
     // Not using path.join to support windows
@@ -185,18 +197,20 @@ const generateNamespace = (node, context) => {
         // Trim post-fixes if they are not present
         ...prepareFilePath(fileRelative)
     ].join('/')
-    .replace(
-        // Convert to pascal-case, and trim "-"
-        /\b[a-z](?=[a-z]{2})/g,
-        (letter) => letter.toUpperCase()
-    )
-    .split('-')
-    .join('');
-
+        .replace(
+            // Convert to pascal-case, and trim "-"
+            /\b[a-z](?=[a-z]{2})/g,
+            (letter) => letter.toUpperCase()
+        )
+        .split('-')
+        .join('');
     // Do not transform code to uppercase / lowercase it should be written alright
-    return `${ pathname }/${ getNodeNamespace(node) }`
-    // remove first slash if any
-    .replace(/^\//, '');
+    return {
+        requiredParts: pathname.split('/')
+            .filter(x => x),
+        optionalParts: getNodeNamespace(node)
+            .filter(x => x)
+    };
 };
 
 const extractNamespaceFromComment = ({ value: comment = '' }) => {
@@ -208,6 +222,12 @@ const extractNamespaceFromComment = ({ value: comment = '' }) => {
 
     return namespace;
 };
+
+const serializeNamespace = ({
+    requiredParts,
+    optionalParts
+}) => requiredParts.concat(optionalParts)
+    .join('/');
 
 module.exports = {
     meta: {
@@ -227,32 +247,38 @@ module.exports = {
         ].join(',')](node) {
             const namespaceComment = getNamespaceCommentForNode(node, context.getSourceCode()) || { value: '' };
             const namespaceCommentString = namespaceComment.value.split('@namespace')
-            .pop()
-            .trim();
+                .pop()
+                .trim();
 
             const namespace = extractNamespaceFromComment(namespaceComment);
             const generatedNamespace = generateNamespace(node, context);
+            const generatedNamespaceString = serializeNamespace(generatedNamespace);
 
             if (!namespaceCommentString) {
                 context.report({
                     node,
-                    message: `Provide namespace for ${ types.detectType(node) } by using @namespace magic comment`,
+                    message: `Provide namespace for ${types.detectType(node)} by using @namespace magic comment`,
                     fix: fixer => fixNamespaceLack(
                         fixer,
                         getProperParentNode(node),
                         context,
-                        generatedNamespace
+                        generatedNamespaceString
                     ) || []
                 });
-            } else if (generatedNamespace !== namespaceCommentString) {
+            } else
+                // the actual namespace must start with required parts of generated namespace
+            if (!namespaceCommentString
+                .split('/')
+                .slice(0, generatedNamespace.requiredParts.length)
+                .every((x, i) => generatedNamespace.requiredParts[i] === x)) {
                 context.report({
                     node,
-                    message: `Namespace for this node is not valid! Consider changing it to ${ generatedNamespace }`,
+                    message: `Namespace for this node is not valid! Consider changing it to ${generatedNamespaceString}`,
                     fix: fixer => {
-                        const newNamespaceCommentContent = namespaceComment.value.replace(namespace, generatedNamespace);
+                        const newNamespaceCommentContent = namespaceComment.value.replace(namespace, generatedNamespaceString);
                         const newNamespaceComment = namespaceComment.type === 'Block'
-                            ? `/*${ newNamespaceCommentContent }*/`
-                            : `// ${ newNamespaceCommentContent }`;
+                            ? `/*${newNamespaceCommentContent}*/`
+                            : `// ${newNamespaceCommentContent}`;
 
                         return fixer.replaceText(
                             namespaceComment,
