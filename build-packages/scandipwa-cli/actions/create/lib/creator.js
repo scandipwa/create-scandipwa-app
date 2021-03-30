@@ -12,8 +12,8 @@ const dispatcherTypeMap = {
 
 const creator = (resourceType) => ({
     name,
-    businessLogic = false,
-    connected = false,
+    container = false,
+    redux = false,
     dispatcherType,
     targetModule
 }) => {
@@ -24,8 +24,8 @@ const creator = (resourceType) => ({
             name,
             {
                 containerFeatures: {
-                    logic: businessLogic,
-                    state: connected
+                    logic: container,
+                    state: redux
                 },
                 dispatcherType: dispatcherTypeMap[dispatcherType]
             },
