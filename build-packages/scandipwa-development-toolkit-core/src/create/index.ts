@@ -3,8 +3,8 @@ import * as path from 'path';
 import getFileMap from './file-map';
 
 import generateFilesFromMap from '../util/generate-files-from-map';
-import fixESLint from '../util/eslint';
 import validateResourceParams from './validate-resource-params';
+import postProcess from './post-process';
 import { ILogger, ResourceType } from '../types';
 import { ResourceParams } from '../types';
 
@@ -38,8 +38,7 @@ const create = (
         logger
     );
 
-    // Prettify!
-    fixESLint(generatedFiles);
+    postProcess(generatedFiles, resourceName);
 
     return generatedFiles;
 };
