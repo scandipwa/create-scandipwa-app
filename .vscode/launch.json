@@ -81,7 +81,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "args": ["override", "component", "AddToCart"],
+            "args": ["create", "component", "--redux", "AddToCart"],
             "cwd": "${workspaceFolder}/runtime-packages/csa",
             "type": "pwa-node"
         },
