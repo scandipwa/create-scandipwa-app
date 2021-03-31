@@ -204,10 +204,17 @@ const generateNamespace = (node, context) => {
         )
         .split('-')
         .join('');
+
+    const requiredParts = pathname.split('/')
+        .filter(x => x);
+
+    // remove index.js from requireParts
+    if (requiredParts[requiredParts.length - 1] === 'Index') {
+        requiredParts.pop();
+    }
     // Do not transform code to uppercase / lowercase it should be written alright
     return {
-        requiredParts: pathname.split('/')
-            .filter(x => x),
+        requiredParts,
         optionalParts: getNodeNamespace(node)
             .filter(x => x)
     };
