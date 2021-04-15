@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
+const { walkDirectoryUp } = require("@tilework/mosaic-dev-utils/get-context");
 
 import { createNewFileWithContents } from '../util/file';
 

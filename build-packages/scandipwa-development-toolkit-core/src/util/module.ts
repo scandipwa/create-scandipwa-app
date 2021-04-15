@@ -1,4 +1,4 @@
-import { getPackageJson } from "@scandipwa/scandipwa-dev-utils/package-json";
+import { getPackageJson } from "@tilework/mosaic-dev-utils/package-json";
 import { ModuleInformation, SourceType } from "../types";
 
 export const getModuleInformation = (sourceModule: string): ModuleInformation => {

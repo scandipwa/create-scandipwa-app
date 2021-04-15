@@ -1,12 +1,12 @@
-const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
+const isValidPackageName = require('@tilework/mosaic-dev-utils/validate-package-name');
 const generateExtension = require('@scandipwa/csa-generator-extension');
-const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
+const installDeps = require('@tilework/mosaic-dev-utils/install-deps');
 const { 
     walkDirectoryUp, 
     contextTypes: { 
         THEME_TYPE
     } 
-} = require('@scandipwa/scandipwa-dev-utils/get-context');
+} = require('@tilework/mosaic-dev-utils/get-context');
 
 import injectScripts from './lib/inject-scripts';
 import addDependency from './lib/add-dependency';

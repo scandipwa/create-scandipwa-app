@@ -1,7 +1,7 @@
 const path = require('path');
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
-const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const writeJson = require('@tilework/mosaic-dev-utils/write-json');
+const { getPackageJson } = require('@tilework/mosaic-dev-utils/package-json');
+const logger = require('@tilework/mosaic-dev-utils/logger');
 
 const injectScripts = (
     contextPathname: string

@@ -1,5 +1,5 @@
-const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
-const { walkDirectoryUp, contextTypes: { THEME_TYPE } } = require('@scandipwa/scandipwa-dev-utils/get-context');
+const installDeps = require('@tilework/mosaic-dev-utils/install-deps');
+const { walkDirectoryUp, contextTypes: { THEME_TYPE } } = require('@tilework/mosaic-dev-utils/get-context');
 
 import { ILogger } from "../types";
 import enableExtension from './lib/enable-extension';

@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const getLatestVersion = require('@tilework/mosaic-dev-utils/latest-version');
+const writeJson = require('@tilework/mosaic-dev-utils/write-json');
 
 /**
  * Adds a dependency to the module

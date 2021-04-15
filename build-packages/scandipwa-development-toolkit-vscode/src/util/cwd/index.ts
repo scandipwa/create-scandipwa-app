@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
+const { walkDirectoryUp } = require("@tilework/mosaic-dev-utils/get-context");
 
 import { proposeFromHistory, unshiftUniqueToHistory, removeDeadFsEntries } from '../history';
 import { HALT, SKIP } from './keys';
