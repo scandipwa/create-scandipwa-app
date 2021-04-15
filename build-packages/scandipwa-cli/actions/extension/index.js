@@ -1,5 +1,5 @@
 const { createExtension, installExtension } = require('@scandipwa/scandipwa-development-toolkit-core');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@tilework/mosaic-dev-utils/logger');
 
 module.exports = (yargs) => {
     yargs.command('extension <command>', 'Interact with extension', (yargs) => {

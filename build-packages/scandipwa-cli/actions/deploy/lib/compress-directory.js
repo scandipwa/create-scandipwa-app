@@ -2,7 +2,7 @@ const archiver = require('archiver');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@tilework/mosaic-dev-utils/logger');
 
 const compressDirectory = (contextPathname, directory) => {
     const archiveName = `build-${Date.now()}.zip`;

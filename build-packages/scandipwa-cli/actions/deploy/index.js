@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const execCommandAsync = require('@scandipwa/scandipwa-dev-utils/exec-command');
-const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
-const { walkDirectoryUp, contextTypes: { THEME_TYPE } } = require('@scandipwa/scandipwa-dev-utils/get-context');
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const shouldUseYarn = require('@tilework/mosaic-dev-utils/should-use-yarn');
+const logger = require('@tilework/mosaic-dev-utils/logger');
+const execCommandAsync = require('@tilework/mosaic-dev-utils/exec-command');
+const { getPackageJson } = require('@tilework/mosaic-dev-utils/package-json');
+const { walkDirectoryUp, contextTypes: { THEME_TYPE } } = require('@tilework/mosaic-dev-utils/get-context');
+const writeJson = require('@tilework/mosaic-dev-utils/write-json');
 
 const compressDirectory = require('./lib/compress-directory');
 const triggerPortal = require('./lib/trigger-portal');

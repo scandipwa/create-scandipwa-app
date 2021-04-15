@@ -9,6 +9,7 @@
     "dependencies": {
         "@scandipwa/csa-generator-extension": "0.0.24",
         "@scandipwa/scandipwa-dev-utils": "0.0.25",
+        "@tilework/mosaic-dev-utils": "0.0.1",
         "@scandipwa/scandipwa-development-toolkit-core": "1.0.9",
         "archiver": "^5.0.2",
         "inquirer": "^7.3.3",

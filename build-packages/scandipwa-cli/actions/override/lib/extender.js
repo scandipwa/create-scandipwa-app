@@ -1,4 +1,4 @@
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@tilework/mosaic-dev-utils/logger');
 const { extend } = require('@scandipwa/scandipwa-development-toolkit-core');
 
 const userInteraction = require('./util/user-interaction');
