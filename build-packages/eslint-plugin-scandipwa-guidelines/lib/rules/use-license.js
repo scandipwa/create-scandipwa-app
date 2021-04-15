@@ -11,7 +11,6 @@ const licenseComment = `
  * See LICENSE for license details.
  *
  * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
 `;
@@ -33,7 +32,7 @@ module.exports = {
 			if (!comments.find(comment => comment.value.includes('@license'))) {
 				context.report({
 					node,
-					message: 'Provide license comments!',
+					message: 'Please, provide license comments!',
 					fix: fixer => fixer.insertTextBefore(node, licenseComment)
 				});
 			}
