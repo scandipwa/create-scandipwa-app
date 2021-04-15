@@ -12,7 +12,7 @@
         "test": "mocha tests --recursive"
     },
     "dependencies": {
-        "@scandipwa/scandipwa-dev-utils": "0.0.25",
+        "@tilework/mosaic-dev-utils": "0.0.1",
         "eslint-traverse": "^1.0.0",
         "requireindex": "~1.1.0"
     },

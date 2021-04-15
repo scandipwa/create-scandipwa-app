@@ -4,10 +4,10 @@
  */
 
 const path = require('path');
-const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
+const { getPackageJson } = require('@tilework/mosaic-dev-utils/package-json');
+const { walkDirectoryUp } = require('@tilework/mosaic-dev-utils/get-context');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
 const getLeadingCommentsForNode = require('../util/get-leading-comments');
-const { walkDirectoryUp } = require('@scandipwa/scandipwa-dev-utils/get-context');
 
 const types = {
     ExportedClass: [
