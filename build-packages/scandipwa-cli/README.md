@@ -182,3 +182,80 @@ extension create [--no-enable] <name>
 Options:
 - `--no-enable` will create and install the extension without enabling it
 
+### Override
+#### `override component`
+Overrides a Scandi component. Will interactively ask for which parts to override.
+
+Syntax:
+```
+override component [--styles=<"extend"|"override"|"keep">] [--source-module=<module>] [--target-module=<module>] <name>
+```
+
+Options:
+- `--styles`/`-S`:
+  - Not specified (default): will prompt interactively
+  - `keep`: don't override styles
+  - `extend`: adjust existing styles
+  - `override`: completely replace existing styles
+- `--source-module`/`-s`: Path to the module to override the component from
+- `--target-module`/`-t`: Path to the module to generate the component in 
+- `name` is the name of the component to be overridden
+
+Example:
+```
+scandipwa override component Header
+? Choose things to extend in Header.component.js Header
+? What would you like to do with styles? Extend
+? Choose things to extend in Header.config.js 
+? Choose things to extend in Header.container.js 
+
+NOTE!
+
+     The following files have been created:
+     src/component/Header/Header.override.style.scss
+     src/component/Header/Header.component.js
+```
+
+#### `override route`
+Overrides a Scandi route
+
+Syntax:
+```
+override route [--styles=<"extend"|"override"|"keep">] [--source-module=<module>] [--target-module=<module>] <name>
+```
+
+Options:
+- `--styles`/`-S`:
+  - Not specified (default): will prompt interactively
+  - `keep`: don't override styles
+  - `extend`: adjust existing styles
+  - `override`: completely replace existing styles
+- `--source-module`/`-s`: Path to the module to override the route from
+- `--target-module`/`-t`: Path to the module to generate the route in 
+- `name` is the name of the route to be overridden
+
+#### `override store`
+Overrides a Scandi store
+
+Syntax:
+```
+override store [--source-module=<module>] [--target-module=<module>] <name>
+```
+
+Options:
+- `--source-module`/`-s`: Path to the module to override the store from
+- `--target-module`/`-t`: Path to the module to generate the store in 
+- `name` is the name of the store to be overridden
+
+#### `override query`
+Overrides a Scandi query
+
+Syntax:
+```
+override query [--source-module=<module>] [--target-module=<module>] <name>
+```
+
+Options:
+- `--source-module`/`-s`: Path to the module to override the query from
+- `--target-module`/`-t`: Path to the module to generate the query in 
+- `name` is the name of the query to be overridden
