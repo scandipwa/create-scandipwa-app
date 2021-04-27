@@ -1,9 +1,13 @@
 # Scandi CLI
-A utlity for accelerating development with [Create Scandipwa App](https://github.com/scandipwa/create-scandipwa-app)
+A utility for accelerating development with [Scandi](https://docs.scandipwa.com/)
+
+Example – with one command, create a component template in src/component/HugeTitle:
 
 ```
-scandipwa create component HugeTitle    # creates a component template in src/component/HugeTitle
+scandipwa create component HugeTitle
 ```
+
+A [VSC plugin for Scandi CLI](https://marketplace.visualstudio.com/items?itemName=ScandiPWA.scandipwa-development-toolkit-vscode) is also available!
 
 ## Installation
 
@@ -18,10 +22,8 @@ Global options:
 - `--help` to get usage help
 - `--version` to print version number and exit
 
-### Create
-
-#### `create component`
-Creates a new Scandi component
+### `create component`
+Creates a new [Scandi component](https://docs.scandipwa.com/structure/building-blocks-summary/components)
 
 Syntax:
 ```
@@ -55,9 +57,9 @@ NOTE!
      src/component/SpecialHeader/index.js
      src/component/SpecialHeader/SpecialHeader.container.js
 ```
-#### `create route`
+### `create route`
 
-Creates a new Scandi route
+Creates a new [Scandi route](https://docs.scandipwa.com/structure/building-blocks-summary/routes)
 
 Syntax:
 ```
@@ -81,8 +83,8 @@ NOTE!
      src/route/MyLandingPage/index.js
 ```
 
-#### `create store`
-Creates a new Scandi Redux store
+### `create store`
+Creates a new [Scandi Redux store](https://docs.scandipwa.com/structure/building-blocks-summary/redux-stores)
 
 Syntax:
 ```
@@ -108,8 +110,8 @@ NOTE!
      src/store/UserPreferences/UserPreferences.reducer.js
 ```
 
-#### `create query`
-Creates a new Scandi query helper for querying with GraphQL
+### `create query`
+Creates a new [Scandi query helper](https://docs.scandipwa.com/structure/building-blocks-summary/constructing-graphql-queries) for querying with GraphQL
 
 Syntax:
 ```
@@ -128,7 +130,7 @@ NOTE!
      src/query/Weather.query.js
 ```
 
-### Deploy
+### `deploy`
 Deploys your app to the cloud
 
 Syntax:
@@ -154,8 +156,7 @@ Build archive successfully removed.
 Congrats, your code will be deployed in a few minutes! You can access it here: https://master.d16zgbgmy9fzgx.amplifyapp.com/
 ```
 
-### Extension
-#### `extension install <name>`
+### `extension install`
 Installs a Scandi extension
 
 Syntax:
@@ -169,9 +170,10 @@ Options:
 - `--use`/`-u`: use a local module from the specified `<path>`
 - `--version`/`-v` specifies the extension version to use
 - `save-dev`/`-D`: install the package as a devDependency
+- `name` is the name of the extension to install
 
 
-#### `extension create <name>`
+### `extension create`
 Creates a new scandi extension
 
 Syntax:
@@ -181,10 +183,10 @@ extension create [--no-enable] <name>
 
 Options:
 - `--no-enable` will create and install the extension without enabling it
+- `name` specifies the name of the new extension
 
-### Override
-#### `override component`
-Overrides a Scandi component. Will interactively ask for which parts to override.
+### `override component`
+Overrides a [Scandi component](https://docs.scandipwa.com/structure/building-blocks-summary/components). Will interactively ask for which parts to override.
 
 Syntax:
 ```
@@ -216,8 +218,8 @@ NOTE!
      src/component/Header/Header.component.js
 ```
 
-#### `override route`
-Overrides a Scandi route
+### `override route`
+Overrides a [Scandi route](https://docs.scandipwa.com/structure/building-blocks-summary/routes)
 
 Syntax:
 ```
@@ -234,8 +236,8 @@ Options:
 - `--target-module`/`-t`: Path to the module to generate the route in 
 - `name` is the name of the route to be overridden
 
-#### `override store`
-Overrides a Scandi store
+### `override store`
+Overrides a [Scandi Redux store](https://docs.scandipwa.com/structure/building-blocks-summary/redux-stores)
 
 Syntax:
 ```
@@ -247,8 +249,8 @@ Options:
 - `--target-module`/`-t`: Path to the module to generate the store in 
 - `name` is the name of the store to be overridden
 
-#### `override query`
-Overrides a Scandi query
+### `override query`
+Overrides a [Scandi query helper](https://docs.scandipwa.com/structure/building-blocks-summary/constructing-graphql-queries)
 
 Syntax:
 ```
