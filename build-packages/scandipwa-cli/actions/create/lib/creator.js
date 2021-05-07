@@ -1,6 +1,7 @@
 const { create } = require('@scandipwa/scandipwa-development-toolkit-core');
 const { DispatcherType } = require('@scandipwa/scandipwa-development-toolkit-core');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const invokeGenerator = require('../../../common/invoke-generator');
 
@@ -33,6 +34,7 @@ const creator = (resourceType) => ({
             logger
         )
     );
+    googleAnalytics.trackEvent('override creation', name, '', 'override');
 };
 
 module.exports = creator;

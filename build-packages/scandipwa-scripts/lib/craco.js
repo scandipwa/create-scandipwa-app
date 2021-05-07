@@ -5,6 +5,7 @@ const chokidar = require('chokidar');
 const kill = require('tree-kill');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { before } = require('./build-plugins');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const args = process.argv.slice(2);
 
@@ -75,6 +76,7 @@ module.exports = (script) => {
 
         child.on('error', (e) => {
             logger.log('error', e);
+            googleAnalytics.trackError(e);
             process.exit(1);
         });
 

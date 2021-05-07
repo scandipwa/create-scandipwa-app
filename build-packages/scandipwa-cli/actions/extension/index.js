@@ -1,5 +1,6 @@
 const { createExtension, installExtension } = require('@scandipwa/scandipwa-development-toolkit-core');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 module.exports = (yargs) => {
     yargs.command('extension <command>', 'Interact with extension', (yargs) => {
@@ -59,6 +60,8 @@ module.exports = (yargs) => {
                 'Success!',
                 `Package ${logger.style.misc(name)} has been installed!`
             );
+
+            googleAnalytics.trackEvent('extension installation', name, version, 'extension');
         });
 
         /* yargs.command('search <query>', 'Search for available extension.', () => {}, (argv) => {
