@@ -67,6 +67,7 @@ class Analytics {
             );
             const jsonResponse = await res.json();
             logger.log(rawBody, jsonResponse);
+            logger.log(jsonResponse.hitParsingResult[0].parserMessage);
         }
     }
 

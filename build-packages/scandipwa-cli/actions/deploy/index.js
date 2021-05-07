@@ -53,7 +53,7 @@ const deploy = async (argv) => {
             'See the error log above.'
         );
 
-        await googleAnalytics.trackError(e);
+        googleAnalytics.trackError(e);
 
         process.exit(1);
     }

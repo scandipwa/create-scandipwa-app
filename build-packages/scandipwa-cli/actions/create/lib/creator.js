@@ -11,14 +11,14 @@ const dispatcherTypeMap = {
     regular: DispatcherType.RegularDispatcher
 };
 
-const creator = (resourceType) => ({
+const creator = (resourceType) => async ({
     name,
     container = false,
     redux = false,
     dispatcherType,
     targetModule
 }) => {
-    invokeGenerator(
+    const isCreatedSuccessfully = await invokeGenerator(
         targetModule,
         (resolvedTargetModule) => create(
             resourceType,
@@ -34,7 +34,10 @@ const creator = (resourceType) => ({
             logger
         )
     );
-    googleAnalytics.trackEvent('override creation', name, '', 'override');
+
+    if (isCreatedSuccessfully) {
+        googleAnalytics.trackEvent(resourceType, name, 0, 'cli-creation');
+    }
 };
 
 module.exports = creator;

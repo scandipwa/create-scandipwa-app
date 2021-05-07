@@ -61,7 +61,7 @@ module.exports = (yargs) => {
                 `Package ${logger.style.misc(name)} has been installed!`
             );
 
-            googleAnalytics.trackEvent('extension installation', name, version, 'extension');
+            googleAnalytics.trackEvent('cli-extension-installation', name, 0, 'extensions');
         });
 
         /* yargs.command('search <query>', 'Search for available extension.', () => {}, (argv) => {
@@ -74,8 +74,12 @@ module.exports = (yargs) => {
                 describe: 'Do not enable installed extension.',
                 default: false
             });
-        }, ({ name, noEnable }) => {
-            createExtension(name, !noEnable, process.cwd(), logger);
+        }, async ({ name, noEnable }) => {
+            const isCreatedSuccessfully = await createExtension(name, !noEnable, process.cwd(), logger);
+
+            if (isCreatedSuccessfully) {
+                googleAnalytics.trackEvent('cli-extension-creation', name, 0, 'extensions');
+            }
         });
 
         yargs.demandCommand();
