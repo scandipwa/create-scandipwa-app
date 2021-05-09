@@ -36,7 +36,7 @@ const creator = (resourceType) => async ({
     );
 
     if (isCreatedSuccessfully) {
-        googleAnalytics.trackEvent(resourceType, name, 0, 'cli-creation');
+        googleAnalytics.trackEvent('cli-creation', name, 0, resourceType);
     }
 };
 

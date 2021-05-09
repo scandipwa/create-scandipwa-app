@@ -1,11 +1,13 @@
 const spawn = require('cross-spawn');
 const path = require('path');
+const paths = require('react-scripts/config/paths');
 const debounce = require('debounce');
 const chokidar = require('chokidar');
 const kill = require('tree-kill');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { before } = require('./build-plugins');
 const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
+const fileSize = require('nodejs-fs-utils/fs/fsize');
 
 const args = process.argv.slice(2);
 
@@ -84,7 +86,8 @@ module.exports = (script) => {
             if (code !== null || isProd) {
                 // if the process exits "voluntarily" stop the parent as well
                 // See more in answer here: https://stackoverflow.com/a/39169784
-                process.exit(code);
+                googleAnalytics.trackEvent('Theme build', 'Bundle size', fileSize.sync(paths.appBuild), 'Bundle')
+                    .finally(() => process.exit(code));
             }
         });
     };
