@@ -1,10 +1,14 @@
+// based on https://github.com/discord/eslint-traverse/blob/master/index.js
+// modification: use evk.KEYS instead of context.getSourceCode().visitorKeys, which doesn't appear to work when testing
+const evk = require("eslint-visitor-keys");
+
 "use strict"
 
 const SKIP = Symbol("skip")
 const STOP = Symbol("stop")
 
-function traverse(context, node, visitor) {
-    let allVisitorKeys = context.getSourceCode().visitorKeys
+function traverse(node, visitor) {
+    let allVisitorKeys = evk.KEYS
     let queue = []
 
     queue.push({
