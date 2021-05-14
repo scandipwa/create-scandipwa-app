@@ -42,8 +42,8 @@ ruleTester.run("derived-class-names", rule, {
         {
             code: "class Test {} export default Test;",
             filename: "my.test.js",
-            output: "class MyTest {} export default Mytest;",
-            errors: [{ rule: "derived-class-names" }],
+            output: "class MyTest {} export default MyTest;",
+            errors: [{ rule: "derived-class-names" }, { rule: "derived-class-names" }],
         },
     ],
 });
