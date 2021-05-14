@@ -1,6 +1,6 @@
 const traverse = require("./eslint-traverse");
 
-function getIdentifierOccurrences(context, actualClassName) {
+function getIdentifierOccurrences(context, name) {
     const nodes = [];
 
     traverse(
@@ -8,7 +8,7 @@ function getIdentifierOccurrences(context, actualClassName) {
         ({ node }) => {
             if (
                 node.type !== 'Identifier'
-                || node.name !== actualClassName
+                || node.name !== name
                 || (node.parent && node.parent.type === 'ImportSpecifier')
             ) {
                 return;
