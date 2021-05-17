@@ -3,29 +3,54 @@
  * @author Jegors Batovs
  */
 
+const { constructMessage } = require('../util/messages');
+
 const CLASS_DECLARATION = 'ClassDeclaration';
 const FUNCTION_DECLARATION = 'FunctionDeclaration';
 const VARIABLE_DECLARATION = 'VariableDeclaration';
+const OBJECT_PATTERN = 'ObjectPattern';
 
-const shouldGetExported = [
+const exportableTypes = [
     CLASS_DECLARATION,
     FUNCTION_DECLARATION,
     VARIABLE_DECLARATION,
 ];
 
-const shouldBeExported = (node) => {
+const isDestructuringAssignment = (node) => {
+    const { type, declarations } = node;
+
     return (
-        node.type !== VARIABLE_DECLARATION ||
-        !node.declarations.find((one) => one.id.type === 'ObjectPattern')
+        type === VARIABLE_DECLARATION &&
+        declarations.some((declaration) => declaration.id.type === OBJECT_PATTERN)
     );
 };
 
-const getName = (node) => {
+const shouldBeExported = (node) => {
+    const { type } = node;
+
+    if (!exportableTypes.includes(type)) {
+        return false;
+    }
+
+    return !isDestructuringAssignment(node)
+};
+
+const getNameFromDeclaration = (node) => {
     if ([CLASS_DECLARATION, FUNCTION_DECLARATION].includes(node.type)) {
         return node.id.name;
     }
 
-    return 'This variable';
+    return 'variable';
+};
+
+const getExportErrorMessage = (exportable) => {
+    const name = getNameFromDeclaration(exportable);
+
+    const error = 'In Scandi, all top-level declaration need to be exported. This ensures that your code remains extensible.';
+    const help = `To fix this error, export the ${ name } declaration by adding "export" before it.`;
+    const documentationLink = 'https://github.com/scandipwa/eslint/blob/master/docs/rules/export-level-one.md';
+
+    return constructMessage(error, help, documentationLink);
 };
 
 module.exports = {
@@ -44,17 +69,13 @@ module.exports = {
             const { body } = node;
 
             body
-                .filter((levelOneNode) => shouldGetExported.includes(levelOneNode.type))
-                .map((exportable) => {
-                    if (shouldBeExported(exportable)) {
-                        context.report({
-                            node: exportable,
-                            message: `${getName(
-                                exportable
-                            )} must be exported (as non default) to allow proper extension`,
-                            fix: (fixer) => fixer.insertTextBefore(exportable, 'export '),
-                        });
-                    }
+                .filter((node) => shouldBeExported(node))
+                .map((declarationNode) => {
+                    context.report({
+                        node: declarationNode,
+                        message: getExportErrorMessage(declarationNode),
+                        fix: (fixer) => fixer.insertTextBefore(declarationNode, 'export '),
+                    });
                 });
         },
     }),
