@@ -6516,7 +6516,7 @@ eslint@^7.11.0, eslint@^7.19.0:
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
 
-eslint@~7.26.0:
+eslint@^7.26.0:
   version "7.26.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.26.0.tgz#d416fdcdcb3236cd8f282065312813f8c13982f6"
   integrity sha512-4R1ieRf52/izcZE7AlLy56uIHHDLT74Yzz2Iv2l6kDaYvEu9x+wMB5dZArVL8SYGXSYV2YAg70FcW5Y5nGGNIg==

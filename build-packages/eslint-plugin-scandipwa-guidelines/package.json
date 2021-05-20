@@ -17,7 +17,6 @@
         "requireindex": "~1.1.0"
     },
     "devDependencies": {
-        "eslint": "~7.26.0",
         "mocha": "^3.1.2"
     },
     "engines": {
@@ -27,5 +26,8 @@
     "publishConfig": {
         "access": "public"
     },
-    "gitHead": "1dc70f97183dc4f826e64114343c51abdb0030ea"
+    "gitHead": "1dc70f97183dc4f826e64114343c51abdb0030ea",
+    "peerDependencies": {
+        "eslint": "^7.26.0"
+    }
 }
