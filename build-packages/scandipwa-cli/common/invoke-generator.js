@@ -1,6 +1,7 @@
 const path = require('path');
 
 const { walkDirectoryUp } = require('@scandipwa/scandipwa-dev-utils/get-context');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
@@ -23,7 +24,9 @@ const invokeGenerator = async (
                 `Or supply a path to a ScandiPWA module by using ${logger.style.command('--target-module [-t]')} flag`
             );
 
-            return;
+            googleAnalytics.trackError(err);
+
+            return false;
         }
     }
 
@@ -34,7 +37,7 @@ const invokeGenerator = async (
     if (!createdFiles.length) {
         logger.note('No files have been generated.');
 
-        return;
+        return false;
     }
 
     // Output paths to the created files
@@ -44,6 +47,8 @@ const invokeGenerator = async (
             (filepath) => logger.style.file(path.relative(process.cwd(), filepath))
         )
     );
+
+    return true;
 };
 
 module.exports = invokeGenerator;

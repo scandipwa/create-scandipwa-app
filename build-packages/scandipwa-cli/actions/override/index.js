@@ -21,7 +21,7 @@ module.exports = (yargs) => {
             (yargs) => withStyles(withTargetDirectory(withSourceDirectory(yargs))),
             extender(ResourceType.Route)
         );
-        
+
         yargs.command(
             'store <name>',
             'Override a store',
