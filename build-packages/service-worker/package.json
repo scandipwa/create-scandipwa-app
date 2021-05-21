@@ -15,7 +15,7 @@
         "extends": "@scandipwa"
     },
     "dependencies": {
-        "@scandipwa/craco": "0.0.4",
+        "@scandipwa/craco": "0.1.1",
         "@scandipwa/webpack-fallback-plugin": "1.2.5",
         "lodash.clonedeep": "^4.5.0"
     },
