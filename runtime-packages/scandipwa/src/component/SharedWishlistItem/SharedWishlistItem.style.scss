@@ -1,0 +1,9 @@
+.WishlistItem {
+    display: block;
+
+    .SharedWishlistItem {
+        &-Row {
+            margin-top: 0;
+        }
+    }
+}
