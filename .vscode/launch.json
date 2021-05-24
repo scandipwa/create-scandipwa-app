@@ -35,8 +35,28 @@
                 "run-script",
                 "start"
             ],
+            "env": {
+                "SKIP_PREFLIGHT_CHECK": true
+            },
             "runtimeExecutable": "npm",
-            "cwd": "${workspaceFolder}/runtime-packages/csa",
+            "cwd": "${workspaceFolder}/runtime-packages/scandipwa",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
+            "name": "Build:Magento",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "build"
+            ],
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}/runtime-packages/scandipwa",
+            "env": {
+                "BUILD_MODE": "magento"
+            },
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -45,29 +65,10 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Build",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "env": {
-                "PORT": 3003
-            },
-            "cwd": "${workspaceFolder}/runtime-packages/csa",
-            "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
-            "args": [
-                "build"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
             "name": "Link",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "env": {
-                "PORT": 3003
-            },
             "cwd": "${workspaceFolder}/runtime-packages/csa",
             "program": "${workspaceFolder}/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
             "args": [
