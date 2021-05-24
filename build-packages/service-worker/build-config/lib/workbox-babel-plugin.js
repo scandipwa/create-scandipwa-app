@@ -21,6 +21,11 @@ const getWorkboxBabelPlugin = (cracoConfig) => ({
             return;
         }
 
+        const { babel: { plugins: babelPlugins } } = cracoConfig;
+        if (!babelPlugins) {
+            return;
+        }
+
         childBabelLoaders.forEach(({ loader }) => {
             const { options: { plugins = [] } } = loader;
 
