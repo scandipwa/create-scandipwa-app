@@ -6,7 +6,6 @@ const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { getComposerDeps } = require('@scandipwa/scandipwa-dev-utils/composer');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
-const makeAnAnnouncement = require('@scandipwa/scandipwa-dev-utils/announcement');
 
 const DEFAULT_PROXY = 'https://40kskudemo.scandipwa.com/';
 
@@ -47,8 +46,6 @@ const greet = (
     logger.log('We suggest that you begin by typing:');
     logger.logT(logger.style.command('cd'), relativePathname);
     logger.logT(logger.style.command(`${displayedCommand} start`));
-
-    makeAnAnnouncement();
 
     logger.log(); // add empty line
     logger.logN('Happy coding! <3');
