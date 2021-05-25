@@ -11,7 +11,7 @@
         "@scandipwa/m2-theme": "^0.1.4",
         "@scandipwa/service-worker": "0.0.9",
         "@scandipwa/webpack-i18n-runtime": "0.0.15",
-        "@tilework/mosaic": "0.1.0",
+        "@tilework/mosaic": "0.1.1",
         "@scandipwa/scandipwa-scripts": "2.3.8",
         "history": "^4.9.0",
         "html-react-parser": "^0.13.0",

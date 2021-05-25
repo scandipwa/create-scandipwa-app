@@ -21,10 +21,10 @@
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "0.0.25",
         "@scandipwa/scandipwa-template-plugin-system": "0.1.5",
-        "@tilework/mosaic-cra-scripts": "0.1.0"
+        "@tilework/mosaic-cra-scripts": "0.1.1"
     },
     "peerDependencies": {
-        "@tilework/mosaic": "0.1.0"
+        "@tilework/mosaic": "0.1.1"
     },
     "license": "OSL-3.0",
     "publishConfig": {
