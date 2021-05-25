@@ -21,3 +21,8 @@ export const FETCH_COUNT = 5;
 
 export function formatInput(){}
 ```
+
+# Why?
+Exporting all declarations ensures that your code is easily extensible using the
+[Override Mechanism](https://docs.scandipwa.com/developing-with-scandi/override-mechanism). This rule helps ensure
+ that your code will work well with the rest of the Scandi ecosystem.
