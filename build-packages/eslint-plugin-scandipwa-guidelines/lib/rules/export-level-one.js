@@ -46,7 +46,8 @@ const getNameFromDeclaration = (node) => {
 const getExportErrorMessage = (exportable) => {
     const name = getNameFromDeclaration(exportable);
 
-    const error = 'In Scandi, all top-level declaration need to be exported. This ensures that your code remains extensible.';
+    const error = 'In Scandi, all top-level declarations need to be exported. This ensures that your code remains' +
+        ' extensible.';
     const help = `To fix this error, export the ${ name } declaration by adding "export" before it.`;
     const documentationLink = 'https://github.com/scandipwa/eslint/blob/master/docs/rules/export-level-one.md';
 
