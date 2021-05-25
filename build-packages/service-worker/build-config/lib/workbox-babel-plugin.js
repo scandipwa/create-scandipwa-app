@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 const cloneDeep = require('lodash.clonedeep');
-const { getLoaders, loaderByName } = require('@scandipwa/craco');
+const { getLoaders, loaderByName } = require('@tilework/mosaic-craco');
 
 const getWorkboxBabelPlugin = (cracoConfig) => ({
     apply: (childCompiler) => {

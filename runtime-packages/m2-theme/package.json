@@ -7,7 +7,7 @@
         "@scandipwa/webpack-fallback-plugin": "1.2.5"
     },
     "peerDependencies": {
-        "@scandipwa/craco": "0.1.1"
+        "@tilework/mosaic-craco": "0.0.3"
     },
     "scandipwa": {
         "type": "extension",
