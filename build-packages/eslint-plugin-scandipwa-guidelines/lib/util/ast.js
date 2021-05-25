@@ -1,9 +1,10 @@
-const traverse = require("./eslint-traverse");
+const traverse = require("eslint-traverse");
 
 function getIdentifierOccurrences(context, name) {
     const nodes = [];
 
     traverse(
+        context,
         context.getSourceCode().ast,
         ({ node }) => {
             if (
