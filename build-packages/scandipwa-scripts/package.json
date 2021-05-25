@@ -23,6 +23,9 @@
         "@scandipwa/scandipwa-template-plugin-system": "0.1.5",
         "@tilework/mosaic-cra-scripts": "0.1.0"
     },
+    "peerDependencies": {
+        "@tilework/mosaic": "0.1.0"
+    },
     "license": "OSL-3.0",
     "publishConfig": {
         "access": "public"
