@@ -10,6 +10,8 @@ const FUNCTION_DECLARATION = 'FunctionDeclaration';
 const VARIABLE_DECLARATION = 'VariableDeclaration';
 const OBJECT_PATTERN = 'ObjectPattern';
 
+const DOCUMENTATION_URL = 'https://github.com/scandipwa/eslint/blob/master/docs/rules/export-level-one.md';
+
 const exportableTypes = [
     CLASS_DECLARATION,
     FUNCTION_DECLARATION,
@@ -49,9 +51,8 @@ const getExportErrorMessage = (exportable) => {
     const error = 'In Scandi, all top-level declarations need to be exported. This ensures that your code remains' +
         ' extensible.';
     const help = `To fix this error, export the ${ name } declaration by adding "export" before it.`;
-    const documentationLink = 'https://github.com/scandipwa/eslint/blob/master/docs/rules/export-level-one.md';
 
-    return constructMessage(error, help, documentationLink);
+    return constructMessage(error, help, DOCUMENTATION_URL);
 };
 
 module.exports = {
@@ -61,6 +62,7 @@ module.exports = {
                 'Everything declared in module on the first nesting level should be exported.',
             category: 'Coding standard',
             recommended: false,
+            url: DOCUMENTATION_URL,
         },
         fixable: 'code',
     },
