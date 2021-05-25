@@ -34,17 +34,17 @@ ruleTester.run("export-level-one", rule, {
         {
             code: "class Header {}",
             output: "export class Header {}",
-            errors: [{ rule: "export-level-one" }],
+            errors: 1,
         },
         {
             code: "const FETCH_COUNT = 5;",
             output: "export const FETCH_COUNT = 5;",
-            errors: [{ rule: "export-level-one" }],
+            errors: 1,
         },
         {
             code: "function formatInput(){}",
             output: "export function formatInput(){}",
-            errors: [{ rule: "export-level-one" }],
+            errors: 1,
         },
     ],
 });
