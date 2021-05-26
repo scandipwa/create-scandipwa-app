@@ -12,7 +12,7 @@ module.exports = (fixer, node, context, namespace) => {
     const leadingComments = getLeadingCommentsForNode(node, sourceCode);
 
     if (leadingComments.find(comment => comment.value.includes('@namespace'))) {
-        return null;
+        throw new Error("Could not add namespace: node already has a namespace comment")
     }
 
     const blockComment = leadingComments.reverse().find(
