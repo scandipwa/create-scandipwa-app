@@ -37,7 +37,7 @@ module.exports = (fixer, node, context, namespace) => {
     return fixer.insertTextBefore(
         node,
         `${
-            context.getSourceCode().text[node.start - 1] === '(' ? '\n' : ''
+            context.getSourceCode().text[node.loc.start - 1] === '(' ? '\n' : ''
         }/** @namespace ${namespace} */\n`
     );
 }

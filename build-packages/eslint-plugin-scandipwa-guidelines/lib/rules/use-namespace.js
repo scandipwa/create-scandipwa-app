@@ -163,11 +163,35 @@ const preparePackageName = (packageName) => {
     return `${org.slice(1)}/${name}`;
 };
 
-const generateNamespace = (node, context) => {
+const getPackageName = (context) => {
     const filePath = context.getFilename();
+
+    // if we are in a unit test, mock the package name
+    if (filePath === "<input>")  {
+        return 'TestPackage';
+    }
+
     const modulePath = walkDirectoryUp(filePath).pathname;
-    const fileRelative = path.relative(modulePath, filePath).replace(/^(\.\/)?src\//, '');
-    const { name: packageName } = getPackageJson(modulePath);
+    const { name } = getPackageJson(modulePath);
+
+    return name;
+}
+
+const getPackageRelativePath = (context) => {
+    const filePath = context.getFilename();
+
+    // if we are in a unit test, mock the package name
+    if (filePath === "<input>")  {
+        return 'test/path';
+    }
+
+    const modulePath = walkDirectoryUp(filePath).pathname;
+    return path.relative(modulePath, filePath).replace(/^(\.\/)?src\//, '');
+}
+
+const generateNamespace = (node, context) => {
+    const packageName = getPackageName(context);
+    const fileRelative = getPackageRelativePath(context);
 
     // Not using path.join to support windows
     const pathname = [
