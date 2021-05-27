@@ -3,6 +3,7 @@
  * @author Jegors Batovs
  */
 
+const { constructMessage } = require('../util/messages.js');
 const {
     getNodeDescription,
     getActualNamespace,
@@ -11,7 +12,29 @@ const {
     getProperParentNode, NAMESPACEABLE_NODE,
 } = require('../util/namespace.js');
 
-const fixNamespaceLack = require('../util/fix-namespace-lack.js');
+const {
+    insertNamespaceFix,
+    createNamespaceComment,
+} = require('../util/fix-namespace-lack.js');
+
+const DOCUMENTATION_LINK =
+    "https://github.com/scandipwa/eslint/blob/master/docs/rules/use-namespace.js";
+
+
+function getWrongNamespaceMessage(itemIdentifier, expectedNamespace, actualNamespace) {
+    const error = `The namespace for this ${itemIdentifier} is incorrect.`;
+    const help = `To fix this error, change the namespace from ${ actualNamespace } to ${ expectedNamespace }.`;
+
+    return constructMessage(error, help, DOCUMENTATION_LINK);
+}
+
+function getMissingNamespaceMessage(itemIdentifier, expectedNamespace) {
+    const error = `This ${itemIdentifier} should have a namespace specified but does not.`;
+    const expectedComment = createNamespaceComment(expectedNamespace);
+    const help = `To fix this error, add a namespace: ${ expectedComment }`;
+
+    return constructMessage(error, help, DOCUMENTATION_LINK);
+}
 
 module.exports = {
     meta: {
@@ -19,6 +42,7 @@ module.exports = {
             description: 'Use @namespace comment-decorators',
             category: 'Extensibility',
             recommended: true,
+            url: DOCUMENTATION_LINK,
         },
         fixable: 'code',
     },
@@ -34,8 +58,8 @@ module.exports = {
             if (!namespaceCommentString) {
                 context.report({
                     node,
-                    message: `Provide namespace for ${ getNodeDescription(node) } by using @namespace magic comment`,
-                    fix: fixer => fixNamespaceLack(
+                    message: getMissingNamespaceMessage(getNodeDescription(node), expectedNamespace),
+                    fix: fixer => insertNamespaceFix(
                         fixer,
                         getProperParentNode(node),
                         context,
@@ -45,7 +69,7 @@ module.exports = {
             } else if (expectedNamespace !== namespaceCommentString) {
                 context.report({
                     node,
-                    message: `Namespace for this node is not valid! Consider changing it to ${ expectedNamespace }`,
+                    message: getWrongNamespaceMessage(getNodeDescription(node), expectedNamespace, actualNamespace),
                     fix: fixer => {
                         const newNamespaceCommentContent = namespaceComment.value.replace(actualNamespace, expectedNamespace);
                         const newNamespaceComment = namespaceComment.type === 'Block'

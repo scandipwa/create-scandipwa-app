@@ -21,7 +21,7 @@ const isInParentheses = (node, context) => {
  * @param {Context} context
  * @param {string} namespace
  */
-module.exports = (fixer, node, context, namespace) => {
+const insertNamespaceFix = (fixer, node, context, namespace) => {
     const sourceCode = context.getSourceCode();
     const leadingComments = getLeadingCommentsForNode(node, sourceCode).reverse();
 
@@ -50,3 +50,8 @@ module.exports = (fixer, node, context, namespace) => {
         `${ isInParentheses(node, context) ? '\n' : '' }${ comment }`,
     );
 };
+
+module.exports = {
+    insertNamespaceFix,
+    createNamespaceComment,
+}
