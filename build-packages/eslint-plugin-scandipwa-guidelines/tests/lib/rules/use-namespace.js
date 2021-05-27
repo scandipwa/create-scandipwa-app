@@ -50,5 +50,27 @@ ruleTester.run("use-namespace", rule, {
                 "export const mapStateToProps = () => {};",
             errors: 1,
         },
+        { // test that eslint-disable comment treated correctly
+            code: "// eslint-disable-next-line whatever\n" +
+                "export const mapStateToProps = () => {};",
+            output: "/** @namespace TestPackage/Test/Path/mapStateToProps */\n" +
+                "// eslint-disable-next-line whatever\n" +
+                "export const mapStateToProps = () => {};",
+            errors: 2, // disabling non-existent rule "whatever" causes error
+        },
+        { // test that license comments are ignored
+            code: "/** @license MIT */\n" +
+                "export const mapStateToProps = () => {};",
+            output: "/** @license MIT */\n" +
+                "/** @namespace TestPackage/Test/Path/mapStateToProps */\n" +
+                "export const mapStateToProps = () => {};",
+            errors: 1,
+        },
+        {
+            code: "export const mapStateToProps = () => {};",
+            output: "/** @namespace TestPackage/Test/Path/mapStateToProps */\n" +
+                "export const mapStateToProps = () => {};",
+            errors: 1,
+        },
     ],
 });
