@@ -121,6 +121,7 @@ const run = async (options) => {
 
     let scandipwaVersion = '0.0.0';
     let scandipwaScriptsVersion = '0.0.0';
+    let mosaicVersion = '0.0.0';
 
     try {
         scandipwaVersion = await getLatestVersion('@scandipwa/scandipwa');
@@ -138,10 +139,19 @@ const run = async (options) => {
         );
     }
 
+    try {
+        mosaicVersion = await getLatestVersion('@tilework/mosaic');
+    } catch (e) {
+        logger.warn(
+            `Unable to determine the latest version of package ${logger.style.misc('@tilework/mosaic')}`
+        );
+    }
+
     const templateOptions = {
         scandipwaVersion,
         scandipwaScriptsVersion,
         name,
+        mosaicVersion,
         proxy: DEFAULT_PROXY
     };
 

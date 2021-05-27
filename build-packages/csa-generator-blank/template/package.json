@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>",
+        "@tilework/mosaic": "<%= mosaicVersion %>",
         "@scandipwa/framework": "0.0.3",
         "@scandipwa/router": "0.0.3"
     },
