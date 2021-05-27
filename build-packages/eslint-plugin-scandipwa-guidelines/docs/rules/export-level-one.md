@@ -1,4 +1,4 @@
-# export-level-one
+# Declarations must be exported (export-level-one)
 In Scandi, all top-level declaration need to be [exported](https://javascript.info/import-export). This ensures that
  your code remains extensible. This rule applies to all top-level class, function and constant declarations.
 
