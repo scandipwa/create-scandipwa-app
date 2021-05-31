@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@scandipwa/common-dev-utils/logger');
 
 const uploadFile = async (filename, uploadUrl) => {
     const stats = fs.statSync(filename);

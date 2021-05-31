@@ -17,6 +17,7 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"dependencies": {
+        "@scandipwa/common-dev-utils": "0.0.1",
 		"@babel/generator": "^7.9.6",
 		"@babel/parser": "^7.9.6",
 		"@babel/traverse": "^7.9.6",

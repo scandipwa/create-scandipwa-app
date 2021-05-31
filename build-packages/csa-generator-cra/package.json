@@ -5,6 +5,7 @@
     "main": "index.js",
     "license": "OSL-3.0",
     "dependencies": {
+        "@scandipwa/common-dev-utils": "0.0.1",
         "@scandipwa/scandipwa-dev-utils": "0.0.25"
     },
     "publishConfig": {

@@ -13,8 +13,8 @@ const ConstDependency = require('webpack/lib/dependencies/ConstDependency');
 const NullFactory = require('webpack/lib/NullFactory');
 const path = require('path');
 const fs = require('fs');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const logger = require('@scandipwa/common-dev-utils/logger');
+const writeJson = require('@scandipwa/common-dev-utils/write-json');
 const extensions = require('@tilework/mosaic-dev-utils/extensions');
 const parentThemeHelper = require('@tilework/mosaic-dev-utils/parent-theme');
 

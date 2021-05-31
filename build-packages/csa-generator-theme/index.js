@@ -1,11 +1,11 @@
 const path = require('path');
 const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
-const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesystem');
+const createFilesystem = require('@scandipwa/common-dev-utils/create-filesystem');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
-const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const shouldUseYarn = require('@scandipwa/common-dev-utils/should-use-yarn');
+const logger = require('@scandipwa/common-dev-utils/logger');
 const { getComposerDeps } = require('@scandipwa/scandipwa-dev-utils/composer');
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const writeJson = require('@scandipwa/common-dev-utils/write-json');
 
 const DEFAULT_PROXY = 'https://40kskudemo.scandipwa.com/';
 

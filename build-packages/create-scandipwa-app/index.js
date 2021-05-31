@@ -5,7 +5,7 @@ const yargs = require('yargs');
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
 const semver = require('semver');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@scandipwa/common-dev-utils/logger');
 
 const templateMap = {
     theme: require('@scandipwa/csa-generator-theme'),

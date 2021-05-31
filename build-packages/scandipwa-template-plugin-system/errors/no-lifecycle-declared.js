@@ -1,4 +1,4 @@
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@scandipwa/common-dev-utils/logger');
 const { DOM_API_KEY, STRING_API_KEY } = require('../util/exposed-api-keys');
 
 module.exports = class NoLifecycleDeclaredException extends Error {

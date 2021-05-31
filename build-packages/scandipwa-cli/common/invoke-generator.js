@@ -2,7 +2,7 @@ const path = require('path');
 
 const { walkDirectoryUp } = require('@tilework/mosaic-dev-utils/get-context');
 
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@scandipwa/common-dev-utils/logger');
 
 const BUBBLE_DEPTH = 5;
 

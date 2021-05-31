@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const writeJson = require('@scandipwa/common-dev-utils/write-json');
 
 const loadJson = require('./loadJson');
 

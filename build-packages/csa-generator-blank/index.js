@@ -1,11 +1,11 @@
 const path = require('path');
 const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
-const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesystem');
+const createFilesystem = require('@scandipwa/common-dev-utils/create-filesystem');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
-const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
-const execCommandAsync = require('@scandipwa/scandipwa-dev-utils/exec-command');
-const getPackagePath = require('@scandipwa/scandipwa-dev-utils/package-path');
+const shouldUseYarn = require('@scandipwa/common-dev-utils/should-use-yarn');
+const logger = require('@scandipwa/common-dev-utils/logger');
+const execCommandAsync = require('@scandipwa/common-dev-utils/exec-command');
+const getPackagePath = require('@scandipwa/common-dev-utils/package-path');
 
 const eslintFix = (destination) => {
     const eslintPath = getPackagePath('eslint', destination);

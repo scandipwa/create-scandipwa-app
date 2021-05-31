@@ -1,4 +1,4 @@
-const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const writeJson = require('@scandipwa/common-dev-utils/write-json');
 
 const enableExtension = (
     themePath: string, 

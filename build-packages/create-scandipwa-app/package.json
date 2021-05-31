@@ -6,6 +6,7 @@
     "bin": "./index.js",
     "license": "OSL-3.0",
     "dependencies": {
+        "@scandipwa/common-dev-utils": "0.0.1",
         "@scandipwa/csa-generator-blank": "0.1.5",
         "@scandipwa/csa-generator-cra": "0.1.5",
         "@scandipwa/csa-generator-theme": "0.2.7",

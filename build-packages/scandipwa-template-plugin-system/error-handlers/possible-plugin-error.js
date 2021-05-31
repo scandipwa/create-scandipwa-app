@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@scandipwa/common-dev-utils/logger');
 
 /**
  * This decorator function handles errors if any are thrown from the subject (cb).

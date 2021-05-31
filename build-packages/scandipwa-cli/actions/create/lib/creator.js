@@ -1,6 +1,6 @@
 const { create } = require('@scandipwa/scandipwa-development-toolkit-core');
 const { DispatcherType } = require('@scandipwa/scandipwa-development-toolkit-core');
-const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const logger = require('@scandipwa/common-dev-utils/logger');
 
 const invokeGenerator = require('../../../common/invoke-generator');
 
