@@ -4,5 +4,10 @@
   "description": "Development utilities used both in create-scandipwa-app and in Mosaic",
   "main": "index.js",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "mem-fs": "^1.2.0",
+    "mem-fs-editor": "^7.0.1",
+    "chalk": "^4.1.0"
+  }
 }
