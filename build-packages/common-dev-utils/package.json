@@ -1,0 +1,8 @@
+{
+  "name": "@scandipwa/common-dev-utils",
+  "version": "0.0.1",
+  "description": "Development utilities used both in create-scandipwa-app and in Mosaic",
+  "main": "index.js",
+  "license": "MIT",
+  "private": false
+}

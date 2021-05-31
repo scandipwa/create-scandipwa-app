@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const chalk = require('chalk');
+// TODO figure out whether necessary
 const clearConsole = require('react-dev-utils/clearConsole');
 
 const logWithBanner = (banner, ...args) => {

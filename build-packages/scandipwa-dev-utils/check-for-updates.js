@@ -1,10 +1,10 @@
 const semver = require('semver');
 const fs = require('fs');
 const path = require('path');
+const logger = require('@scandipwa/common-dev-utils/logger');
+const writeJson = require('@scandipwa/common-dev-utils/write-json');
 
 const getLatestVersion = require('./latest-version');
-const logger = require('./logger');
-const writeJson = require('./write-json');
 
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 const COOLDOWN_FILE_PATH = path.resolve(__dirname, './cooldown.json');

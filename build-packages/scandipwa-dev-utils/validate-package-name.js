@@ -1,4 +1,4 @@
-const logger = require('./logger');
+const logger = require('@scandipwa/common-dev-utils/logger');
 const validatePackageName = require('validate-npm-package-name');
 
 const isValidName = (packageName) => {

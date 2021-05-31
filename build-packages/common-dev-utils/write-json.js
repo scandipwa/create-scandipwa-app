@@ -1,9 +1,11 @@
 const fs = require('fs');
 
+const INDENTATION = 4;
+
 const writeJson = (pathname, json) => {
     fs.writeFileSync(
         pathname,
-        JSON.stringify(json, undefined, 4)
+        JSON.stringify(json, undefined, INDENTATION)
     );
 };
 
