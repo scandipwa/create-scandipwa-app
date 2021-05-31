@@ -6,7 +6,7 @@ const {
     contextTypes: { 
         THEME_TYPE
     } 
-} = require('@scandipwa/scandipwa-dev-utils/get-context');
+} = require('@tilework/mosaic-dev-utils/get-context');
 
 import injectScripts from './lib/inject-scripts';
 import addDependency from './lib/add-dependency';

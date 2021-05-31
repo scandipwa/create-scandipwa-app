@@ -1,6 +1,6 @@
 const path = require('path');
 
-const { walkDirectoryUp } = require('@scandipwa/scandipwa-dev-utils/get-context');
+const { walkDirectoryUp } = require('@tilework/mosaic-dev-utils/get-context');
 
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 

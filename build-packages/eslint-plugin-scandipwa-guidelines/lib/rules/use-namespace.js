@@ -4,10 +4,10 @@
  */
 
 const path = require('path');
+const { walkDirectoryUp } = require('@tilework/mosaic-dev-utils/get-context');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
 const getLeadingCommentsForNode = require('../util/get-leading-comments');
-const { walkDirectoryUp } = require('@scandipwa/scandipwa-dev-utils/get-context');
 
 const types = {
     ExportedClass: [
@@ -168,6 +168,16 @@ const generateNamespace = (node, context) => {
     const modulePath = walkDirectoryUp(filePath).pathname;
     const fileRelative = path.relative(modulePath, filePath).replace(/^(\.\/)?src\//, '');
     const { name: packageName } = getPackageJson(modulePath);
+
+    if (!packageName) {
+        console.log({
+            filePath,
+            modulePath,
+            packageJson: getPackageJson(modulePath)
+        });
+
+        process.exit(1);
+    }
 
     // Not using path.join to support windows
     const pathname = [
