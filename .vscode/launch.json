@@ -46,6 +46,23 @@
             "type": "pwa-node"
         },
         {
+            "name": "ESLint",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "eslint"
+            ],
+            "env": {
+                "SKIP_PREFLIGHT_CHECK": true
+            },
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
             "name": "Build:Magento",
             "request": "launch",
             "runtimeArgs": [
