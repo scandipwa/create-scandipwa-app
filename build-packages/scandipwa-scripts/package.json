@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/scandipwa-scripts",
     "description": "Scripts and configuration used by CSA.",
-    "version": "2.4.1",
+    "version": "2.4.2",
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
