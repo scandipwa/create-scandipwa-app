@@ -1,5 +1,19 @@
 const getLeadingCommentsForNode = require('./get-leading-comments');
 
+
+const isEslintNextLineComment = comment => comment.value.includes('eslint-disable-next-line');
+
+/**
+ * Returns true for block comments that aren't eslint-disable comments, and don't include a @license tag
+ */
+const isLicenseComment = (comment) => comment.value.includes('@license');
+
+const createNamespaceComment = (namespace) => `/** @namespace ${ namespace } */\n`;
+
+const isInParentheses = (node, context) => {
+    return context.getSourceCode().text[node.loc.start - 1] === '(';
+}
+
 /**
  * Insert namespace decorator comment before the appropriate node
  * @param {Fixer} fixer
@@ -7,37 +21,37 @@ const getLeadingCommentsForNode = require('./get-leading-comments');
  * @param {Context} context
  * @param {string} namespace
  */
-module.exports = (fixer, node, context, namespace) => {
+const insertNamespaceFix = (fixer, node, context, namespace) => {
     const sourceCode = context.getSourceCode();
-    const leadingComments = getLeadingCommentsForNode(node, sourceCode);
+    const leadingComments = getLeadingCommentsForNode(node, sourceCode).reverse();
 
-    if (leadingComments.find(comment => comment.value.includes('@namespace'))) {
-        return null;
-    }
+    const regularBlockComment = leadingComments.find(comment => {
+        if (comment.type !== 'Block') return false;
+        return !isLicenseComment(comment) && !isEslintNextLineComment(comment)
+    });
 
-    const blockComment = leadingComments.reverse().find(
-        comment => comment.type === 'Block' && !['eslint-disable-next-line', '@license'].some(cond => comment.value.includes(cond))
-    );
-
-    const eslintComment = leadingComments.find(
-        comment => comment.value.includes('eslint-disable-next-line')
-    );
-
-    if (blockComment) {
+    if (regularBlockComment) {
         return fixer.replaceText(
-            blockComment,
-            '/*' + blockComment.value.concat(`* @namespace ${namespace}`) + '\n */'
+            regularBlockComment,
+            '/*' + regularBlockComment.value.concat(`* @namespace ${ namespace }`) + '\n */',
         );
     }
 
+    const eslintComment = leadingComments.find(isEslintNextLineComment);
+
+    const comment = createNamespaceComment(namespace);
+
     if (eslintComment) {
-        return fixer.insertTextBefore(eslintComment, `/** @namespace ${namespace} */\n`);
+        return fixer.insertTextBefore(eslintComment, comment);
     }
 
     return fixer.insertTextBefore(
         node,
-        `${
-            context.getSourceCode().text[node.start - 1] === '(' ? '\n' : ''
-        }/** @namespace ${namespace} */\n`
+        `${ isInParentheses(node, context) ? '\n' : '' }${ comment }`,
     );
+};
+
+module.exports = {
+    insertNamespaceFix,
+    createNamespaceComment,
 }

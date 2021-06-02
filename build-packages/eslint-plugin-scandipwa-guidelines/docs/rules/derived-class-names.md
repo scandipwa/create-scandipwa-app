@@ -1,27 +1,33 @@
 # Class name must match the name of the file it is declared in. (derived-class-names)
 
-Expected class names for all the files **other than components** are `name + prefix` (e.g. class inside of `AddToCart.container.js` file must be called `AddToCartContainer` and not otherwise).
-
-## Rule Details
-
-Notice, that this rule is not applied to `component` postfix.
+Class names need to be based on the file name. For example, a class declared in `Footer.component.js` must be named
+ `FooterComponent`.
 
 Examples of **incorrect** code for this rule:
 
 ```js
-// in MyComponent.container.js
-class Abc { /** ... */ }
+// in Goodbye.component.js
+class HelloComponent {} // should be GoodbyeComponent
+
+// in Footer.container.js
+class FooterComponent {} // should be FooterContainer
 
 // in Hello.component.js
-class HelloComponent { /** ... */ }
+class Hello {} // should be HelloComponent
 ```
 
 Examples of **correct** code for this rule:
 
 ```js
-// in MyComponent.container.js
-class MyComponentContainer { /** ... */ }
+// in Footer.component.js
+class FooterComponent {}
 
-// in Hello.component.js
-class Hello { /** ... */ }
+// in Footer.container.js
+class FooterContainer {}
 ```
+
+## Why?
+Naming classes according to the filename helps keep class names consistent and predictable across the codebase.
+
+## Note
+Currently, some code in the Scandi core codebase does not follow this rule. However, all new code should adhere to it.
