@@ -1,5 +1,5 @@
-const shouldUseYarn = require('@scandipwa/common-dev-utils/should-use-yarn');
-const execCommandAsync = require('@scandipwa/common-dev-utils/exec-command');
+const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
+const execCommandAsync = require('@scandipwa/scandipwa-dev-utils/exec-command');
 
 const installDeps = (pathname) => {
     const command = shouldUseYarn() ? 'yarnpkg' : 'npm';

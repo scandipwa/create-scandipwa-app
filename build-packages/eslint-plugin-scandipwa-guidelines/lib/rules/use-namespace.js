@@ -5,7 +5,7 @@
 
 const path = require('path');
 const { walkDirectoryUp } = require('@tilework/mosaic-dev-utils/get-context');
-const { getPackageJson } = require('@scandipwa/common-dev-utils/package-json');
+const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const fixNamespaceLack = require('../util/fix-namespace-lack.js');
 const getLeadingCommentsForNode = require('../util/get-leading-comments');
 

@@ -1,7 +1,7 @@
 const path = require('path');
-const writeJson = require('@scandipwa/common-dev-utils/write-json');
-const { getPackageJson } = require('@scandipwa/common-dev-utils/package-json');
-const logger = require('@scandipwa/common-dev-utils/logger');
+const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 const injectScripts = (
     contextPathname: string

@@ -1,5 +1,5 @@
 const path = require('path');
-const createFilesystem = require('@scandipwa/common-dev-utils/create-filesystem');
+const createFilesystem = require('@scandipwa/scandipwa-dev-utils/create-filesystem');
 
 const fileSystemCreator = (templateOptions) => (
     (

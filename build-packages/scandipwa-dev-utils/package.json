@@ -3,7 +3,7 @@
     "description": "Development utilities used by CSA.",
     "version": "0.0.25",
     "dependencies": {
-        "@scandipwa/common-dev-utils": "0.0.1",
+        "@scandipwa/scandipwa-dev-utils": "0.0.25",
         "cross-spawn": "^7.0.3",
         "semver": "^7.3.2",
         "validate-npm-package-name": "^3.0.0"

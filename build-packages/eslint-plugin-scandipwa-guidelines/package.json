@@ -12,7 +12,7 @@
         "test": "mocha tests --recursive tests **/*.test.js"
     },
     "dependencies": {
-        "@scandipwa/common-dev-utils": "0.0.1",
+        "@scandipwa/scandipwa-dev-utils": "0.0.25",
         "@tilework/mosaic-dev-utils": "0.0.5",
         "eslint-traverse": "^1.0.0",
         "requireindex": "~1.1.0"

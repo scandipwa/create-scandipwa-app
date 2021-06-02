@@ -1,8 +1,8 @@
 const semver = require('semver');
 const fs = require('fs');
 const path = require('path');
-const logger = require('@scandipwa/common-dev-utils/logger');
-const writeJson = require('@scandipwa/common-dev-utils/write-json');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 
 const getLatestVersion = require('./latest-version');
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 const path = require('path');
-const writeJson = require('@scandipwa/common-dev-utils/write-json');
+const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
 const afterEmitLogger = require('@scandipwa/webpack-after-emit-logger');
 const corruptedJson = require('../after-emit-logs/write-corrupted-json');
 

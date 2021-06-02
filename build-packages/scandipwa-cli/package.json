@@ -7,7 +7,6 @@
     },
     "license": "OSL-3.0",
     "dependencies": {
-        "@scandipwa/common-dev-utils": "0.0.1",
         "@tilework/mosaic-dev-utils": "0.0.5",
         "@scandipwa/csa-generator-extension": "0.0.24",
         "@scandipwa/scandipwa-dev-utils": "0.0.25",

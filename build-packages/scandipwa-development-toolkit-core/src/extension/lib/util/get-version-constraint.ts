@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { getIsSemver } from "./semver";
-import { getPackageJson } from '@scandipwa/common-dev-utils/package-json';
+import { getPackageJson } from '@scandipwa/scandipwa-dev-utils/package-json';
 
 /**
  * * Priority:
