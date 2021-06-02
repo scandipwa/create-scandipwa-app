@@ -1,10 +1,1 @@
-const { execSync } = require('child_process');
-
-module.exports = () => {
-    try {
-        execSync('yarnpkg --version', { stdio: 'ignore' });
-        return true;
-    } catch (e) {
-        return false;
-    }
-};
+module.exports = require('@tilework/mosaic-dev-utils/should-use-yarn');
