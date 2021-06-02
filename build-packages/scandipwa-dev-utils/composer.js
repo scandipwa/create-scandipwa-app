@@ -1,8 +1,8 @@
 /* eslint-disable guard-for-in, fp/no-let, no-console, max-len, import/no-dynamic-require, global-require, fp/no-loops, no-restricted-syntax */
 const path = require('path');
 const semver = require('semver');
-const logger = require('./logger');
-const { getPackageJson } = require('./package-json');
+const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
+const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
 let visitedDeps = [];
 

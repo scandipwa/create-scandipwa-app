@@ -5,43 +5,23 @@
     "bin": {
         "scandipwa-scripts": "./bin/scandipwa-scripts.js"
     },
-    "scripts": {
-        "postinstall": "node -e \"try{require('@scandipwa/scandipwa-dev-utils/announcement')()}catch(e){}\""
-    },
     "scandipwa": {
         "extensions": {
-            "@scandipwa/scandipwa-extensibility": true,
             "@scandipwa/scandipwa-template-plugin-system": true
         }
     },
     "files": [
-        "bin",
-        "craco.config.js",
-        "/lib"
+        "bin"
     ],
     "engines": {
         "node": ">=12.0.0"
     },
     "dependencies": {
-        "@scandipwa/craco": "0.1.1",
-        "@scandipwa/eslint-config": "0.1.18",
-        "@scandipwa/scandipwa-dev-utils": "0.0.25",
-        "@scandipwa/scandipwa-extensibility": "2.1.5",
         "@scandipwa/scandipwa-template-plugin-system": "0.1.5",
-        "@scandipwa/webpack-extension-import-loader": "0.0.16",
-        "@scandipwa/webpack-fallback-plugin": "1.2.5",
-        "@scandipwa/webpack-i18n-plugin": "0.1.11",
-        "babel-plugin-module-resolver": "^4.0.0",
-        "babel-plugin-transform-rebem-jsx": "^0.3.3",
-        "chokidar": "^3.4.2",
-        "craco-sass-resources-loader": "^1.1.0",
-        "cross-spawn": "^7.0.0",
-        "debounce": "^1.2.0",
-        "node-sass": "4.14.1",
-        "progress-bar-webpack-plugin": "^2.1.0",
-        "react-dev-utils": "^10.2.1",
-        "react-scripts": "4.0.1",
-        "tree-kill": "^1.2.2"
+        "@tilework/mosaic-cra-scripts": "0.1.3"
+    },
+    "peerDependencies": {
+        "@tilework/mosaic": "0.1.1"
     },
     "license": "OSL-3.0",
     "publishConfig": {

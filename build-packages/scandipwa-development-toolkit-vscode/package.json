@@ -83,7 +83,7 @@
 		"@babel/parser": "^7.9.6",
 		"@babel/traverse": "^7.9.6",
 		"@babel/types": "^7.9.6",
-		"@scandipwa/scandipwa-dev-utils": "0.0.25",
+		"@tilework/mosaic-dev-utils": "0.0.5",
 		"@scandipwa/scandipwa-development-toolkit-core": "1.0.9"
 	},
 	"devDependencies": {

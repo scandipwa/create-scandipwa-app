@@ -1,5 +1,5 @@
-const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
-const { walkDirectoryUp } = require("@scandipwa/scandipwa-dev-utils/get-context");
+const FallbackPlugin = require('@tilework/mosaic-webpack-fallback-plugin');
+const { walkDirectoryUp } = require('@tilework/mosaic-dev-utils/get-context');
 
 import * as path from 'path';
 

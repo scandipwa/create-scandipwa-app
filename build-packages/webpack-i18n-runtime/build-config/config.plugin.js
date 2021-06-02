@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-const webpack = require('webpack');
 const path = require('path');
 const WebpackI18nTracker = require('./webpack-i18n-tracker');
 
@@ -28,7 +27,7 @@ const addImportInjector = (config) => {
 // Provide the __ function with the ProvidePlugin
 const provideTranslationFunction = (config) => {
     config.plugins.forEach(((plugin) => {
-        if (plugin instanceof webpack.ProvidePlugin) {
+        if (plugin.constructor.name === 'ProvidePlugin') {
             plugin.definitions.__ = [require.resolve(path.join(__dirname, '../src/util/__.js')), 'default'];
         }
     }));

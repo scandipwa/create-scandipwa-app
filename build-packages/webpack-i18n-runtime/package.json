@@ -5,6 +5,7 @@
     "license": "OSL-3.0",
     "dependencies": {
         "@scandipwa/scandipwa-dev-utils": "0.0.25",
+        "@tilework/mosaic-dev-utils": "0.0.5",
         "@scandipwa/webpack-after-emit-logger": "0.0.8",
         "loader-utils": "^2.0.0"
     },

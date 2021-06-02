@@ -15,8 +15,8 @@ const path = require('path');
 const fs = require('fs');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
-const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
-const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
+const extensions = require('@tilework/mosaic-dev-utils/extensions');
+const parentThemeHelper = require('@tilework/mosaic-dev-utils/parent-theme');
 
 const addParsedVariableToModule = (parser, name) => {
     if (!parser.state.current.addVariable) {
