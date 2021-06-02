@@ -130,6 +130,16 @@ const run = async (options) => {
         process.exit(1);
     }
 
+    let eslintConfigVersion = '0.0.0';
+
+    try {
+        eslintConfigVersion = await getLatestVersion('@scandipwa/eslint-config');
+    } catch (e) {
+        logger.warn(
+            `Unable to determine the latest version of package ${logger.style.misc('@tilework/mosaic')}`
+        );
+    }
+
     let mosaicVersion = '0.0.0';
 
     try {
@@ -145,6 +155,7 @@ const run = async (options) => {
         reactDomVersion,
         scandipwaScriptsVersion,
         mosaicVersion,
+        eslintConfigVersion,
         name
     };
 
