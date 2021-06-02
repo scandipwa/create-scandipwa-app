@@ -34,6 +34,12 @@ ruleTester.run("derived-class-names", rule, {
             errors: 1,
         },
         {
+            code: "class Hello {}",
+            filename: "Hello.component.js",
+            output: "class HelloComponent {}",
+            errors: 1,
+        },
+        {
             code: "export class FooterComponent {}",
             filename: "Footer.container.js",
             output: "export class FooterContainer {}",

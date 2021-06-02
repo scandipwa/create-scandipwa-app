@@ -7,10 +7,13 @@ Examples of **incorrect** code for this rule:
 
 ```js
 // in Goodbye.component.js
-class HelloComponent {}
+class HelloComponent {} // should be GoodbyeComponent
 
 // in Footer.container.js
-class FooterComponent {}
+class FooterComponent {} // should be FooterContainer
+
+// in Hello.component.js
+class Hello {} // should be HelloComponent
 ```
 
 Examples of **correct** code for this rule:
@@ -25,3 +28,6 @@ class FooterContainer {}
 
 ## Why?
 Naming classes according to the filename helps keep class names consistent and predictable across the codebase.
+
+## Note
+Currently, some code in the Scandi core codebase does not follow this rule. However, all new code should adhere to it.
