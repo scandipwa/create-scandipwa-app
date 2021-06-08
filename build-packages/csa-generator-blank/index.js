@@ -117,10 +117,21 @@ const run = async (options) => {
         );
     }
 
+    let eslintConfigVersion = '0.0.0';
+
+    try {
+        eslintConfigVersion = await getLatestVersion('@scandipwa/eslint-config');
+    } catch (e) {
+        logger.warn(
+            `Unable to determine the latest version of package ${logger.style.misc('@tilework/mosaic')}`
+        );
+    }
+
     const templateOptions = {
         scandipwaScriptsVersion,
         mosaicVersion,
-        name
+        name,
+        eslintConfigVersion
     };
 
     // create filesystem from template
