@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "@scandipwa/scandipwa-template-plugin-system": "0.1.11",
-        "@tilework/mosaic-cra-scripts": "0.1.7"
+        "@tilework/mosaic-cra-scripts": "^0.1.9"
     },
     "peerDependencies": {
         "@tilework/mosaic": "0.1.1"
