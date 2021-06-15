@@ -18,6 +18,9 @@ const actions = [
         .scriptName('scandipwa')
         .demandCommand();
 
+    yargs
+        .alias('v', 'version');
+
     // Initialize program actions
     actions.forEach((action) => action(yargs));
 
