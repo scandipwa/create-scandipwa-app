@@ -20,7 +20,7 @@ const addResolveLoader = (config) => {
 const addImportInjector = (config) => {
     config.module.rules.push({
         test: require.resolve(path.join(__dirname, '../src/util/localeMap.js')),
-        loader: 'webpack-i18n-import-loader'
+        loader: require.resolve('./webpack-i18n-import-loader')
     });
 };
 
