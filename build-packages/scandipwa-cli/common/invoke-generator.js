@@ -26,7 +26,7 @@ const invokeGenerator = async (
 
             googleAnalytics.trackError(err);
 
-            return false;
+            return;
         }
     }
 
@@ -37,7 +37,7 @@ const invokeGenerator = async (
     if (!createdFiles.length) {
         logger.note('No files have been generated.');
 
-        return false;
+        return;
     }
 
     // Output paths to the created files
@@ -47,8 +47,6 @@ const invokeGenerator = async (
             (filepath) => logger.style.file(path.relative(process.cwd(), filepath))
         )
     );
-
-    return true;
 };
 
 module.exports = invokeGenerator;
