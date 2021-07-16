@@ -7,7 +7,7 @@ const kill = require('tree-kill');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { before } = require('./build-plugins');
 const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
-const fileSize = require('nodejs-fs-utils/fs/fsize');
+const getFolderSize = require('@scandipwa/scandipwa-dev-utils/get-folder-size');
 
 const args = process.argv.slice(2);
 
@@ -86,8 +86,12 @@ module.exports = (script) => {
             if (code !== null || isProd) {
                 // if the process exits "voluntarily" stop the parent as well
                 // See more in answer here: https://stackoverflow.com/a/39169784
-                googleAnalytics.trackEvent('Theme build', 'Bundle size', fileSize.sync(paths.appBuild), 'Bundle')
-                    .finally(() => process.exit(code));
+
+                try {
+                    googleAnalytics.trackEvent('Theme build', 'Bundle size', getFolderSize(paths.appBuild), 'Bundle')
+                        .finally(() => process.exit(code));
+                // eslint-disable-next-line no-empty
+                } catch (e) {}
             }
         });
     };

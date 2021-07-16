@@ -23,8 +23,7 @@ const createApp = async (options) => {
 
         if (generator) {
             // Run generator if it is available
-            await generator(options);
-            googleAnalytics.trackTiming('CSA installation time with generator', Date.now() / 1000 - timeStamp);
+            generator(options);
             return;
         }
 
@@ -39,10 +38,10 @@ const createApp = async (options) => {
         );
 
         googleAnalytics.trackTiming('CSA installation time', Date.now() / 1000 - timeStamp);
+        googleAnalytics.printAboutAnalytics();
     } catch (e) {
         logger.logN(e);
         logger.error('Something went wrong during setup. Error log above.');
-
         googleAnalytics.trackError((e.message || e));
     }
 };
