@@ -6,7 +6,6 @@ const shouldUseYarn = require('@scandipwa/scandipwa-dev-utils/should-use-yarn');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { getComposerDeps } = require('@scandipwa/scandipwa-dev-utils/composer');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
-const makeAnAnnouncement = require('@scandipwa/scandipwa-dev-utils/announcement');
 
 const DEFAULT_PROXY = 'https://40kskudemo.scandipwa.com/';
 
@@ -47,8 +46,6 @@ const greet = (
     logger.log('We suggest that you begin by typing:');
     logger.logT(logger.style.command('cd'), relativePathname);
     logger.logT(logger.style.command(`${displayedCommand} start`));
-
-    makeAnAnnouncement();
 
     logger.log(); // add empty line
     logger.logN('Happy coding! <3');
@@ -124,6 +121,8 @@ const run = async (options) => {
 
     let scandipwaVersion = '0.0.0';
     let scandipwaScriptsVersion = '0.0.0';
+    let mosaicVersion = '0.0.0';
+    let eslintConfigVersion = '0.0.0';
 
     try {
         scandipwaVersion = await getLatestVersion('@scandipwa/scandipwa');
@@ -141,11 +140,29 @@ const run = async (options) => {
         );
     }
 
+    try {
+        mosaicVersion = await getLatestVersion('@tilework/mosaic');
+    } catch (e) {
+        logger.warn(
+            `Unable to determine the latest version of package ${logger.style.misc('@tilework/mosaic')}`
+        );
+    }
+
+    try {
+        eslintConfigVersion = await getLatestVersion('@scandipwa/eslint-config');
+    } catch (e) {
+        logger.warn(
+            `Unable to determine the latest version of package ${logger.style.misc('@tilework/mosaic')}`
+        );
+    }
+
     const templateOptions = {
         scandipwaVersion,
         scandipwaScriptsVersion,
         name,
-        proxy: DEFAULT_PROXY
+        mosaicVersion,
+        proxy: DEFAULT_PROXY,
+        eslintConfigVersion
     };
 
     // create filesystem from template

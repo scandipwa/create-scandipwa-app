@@ -22,8 +22,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-runtime-packages
-runtime-packages/**/*
+# runtime-packages
+# runtime-packages/**/*
+runtime-packages/csa
 
 # build specifc files
 lerna-debug.log

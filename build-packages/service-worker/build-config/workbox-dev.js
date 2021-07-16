@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 const fs = require('fs');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-const FallbackPlugin = require('@scandipwa/webpack-fallback-plugin');
+const FallbackPlugin = require('@tilework/mosaic-webpack-fallback-plugin');
 const getWorkboxBabelPlugin = require('./lib/workbox-babel-plugin');
 const getWarningPlugin = require('./lib/workbox-warning-plugin');
 

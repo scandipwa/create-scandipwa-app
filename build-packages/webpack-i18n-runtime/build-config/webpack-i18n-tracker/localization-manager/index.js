@@ -1,7 +1,7 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax, fp/no-delete, guard-for-in */
-const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
-const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
+const extensions = require('@tilework/mosaic-dev-utils/extensions');
+const parentThemeHelper = require('@tilework/mosaic-dev-utils/parent-theme');
 
 const afterEmitLogger = require('@scandipwa/webpack-after-emit-logger');
 const getEnabledLocales = require('../../../shared/getEnabledLocales');
