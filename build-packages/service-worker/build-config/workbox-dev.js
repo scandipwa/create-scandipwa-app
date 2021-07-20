@@ -13,6 +13,10 @@ module.exports = {
         overrideCracoConfig: ({
             cracoConfig
         }) => {
+            if (!cracoConfig.paths) {
+                Object.assign(cracoConfig, { paths: {} });
+            }
+
             // Modify the default path to ServiceWorker (in case CRA changes something)
             cracoConfig.paths.swSrc = swSrc;
             return cracoConfig;
