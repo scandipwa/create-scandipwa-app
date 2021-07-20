@@ -54,6 +54,7 @@ const deploy = async (argv) => {
         );
 
         googleAnalytics.trackError(e);
+        googleAnalytics.printAboutAnalytics();
 
         process.exit(1);
     }
@@ -77,6 +78,7 @@ const deploy = async (argv) => {
             if (err) {
                 logger.error(err);
                 googleAnalytics.trackError(err);
+                googleAnalytics.printAboutAnalytics();
                 process.exit(1);
             }
 
@@ -112,7 +114,7 @@ const deploy = async (argv) => {
         );
 
         googleAnalytics.trackError(e);
-
+        googleAnalytics.printAboutAnalytics();
         process.exit(1);
     }
 };

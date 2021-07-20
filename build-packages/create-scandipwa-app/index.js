@@ -42,6 +42,8 @@ const createApp = async (options) => {
     } catch (e) {
         logger.logN(e);
         logger.error('Something went wrong during setup. Error log above.');
+        logger.logN();
+        googleAnalytics.printAboutAnalytics();
         googleAnalytics.trackError((e.message || e));
     }
 };

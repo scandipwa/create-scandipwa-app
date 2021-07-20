@@ -24,6 +24,7 @@ const extender = (resourceType) => async ({
 
     if (isExtendedSuccessfully) {
         googleAnalytics.trackEvent('cli-override', name, 0, resourceType);
+        googleAnalytics.printAboutAnalytics();
     }
 };
 

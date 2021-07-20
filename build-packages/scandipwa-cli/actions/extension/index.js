@@ -62,6 +62,7 @@ module.exports = (yargs) => {
             );
 
             googleAnalytics.trackEvent('cli-extension-installation', name, 0, 'extension');
+            googleAnalytics.printAboutAnalytics();
         });
 
         /* yargs.command('search <query>', 'Search for available extension.', () => {}, (argv) => {
@@ -79,6 +80,7 @@ module.exports = (yargs) => {
 
             if (isCreatedSuccessfully) {
                 googleAnalytics.trackEvent('cli-extension-creation', name, 0, 'extension');
+                googleAnalytics.printAboutAnalytics();
             }
         });
 

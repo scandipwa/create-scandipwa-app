@@ -25,6 +25,7 @@ const invokeGenerator = async (
             );
 
             googleAnalytics.trackError(err);
+            googleAnalytics.printAboutAnalytics();
 
             return;
         }
