@@ -1,13 +1,13 @@
 const withComponentOptions = (yargs) => yargs
-    .option('business-logic', {
-        describe: 'Contains business logic',
-        alias: 'b',
+    .option('container', {
+        describe: 'Create a container',
+        alias: 'c',
         type: 'boolean',
         default: false
     })
-    .option('connected', {
-        describe: 'Connected to the global state',
-        alias: 'c',
+    .option('redux', {
+        describe: 'Connect to redux',
+        alias: 'r',
         type: 'boolean',
         default: false
     });

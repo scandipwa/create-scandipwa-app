@@ -1,5 +1,6 @@
 const { createExtension, installExtension } = require('@scandipwa/scandipwa-development-toolkit-core');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 module.exports = (yargs) => {
     yargs.command('extension <command>', 'Interact with extension', (yargs) => {
@@ -59,6 +60,9 @@ module.exports = (yargs) => {
                 'Success!',
                 `Package ${logger.style.misc(name)} has been installed!`
             );
+
+            googleAnalytics.trackEvent('cli-extension-installation', name, 0, 'extension');
+            googleAnalytics.printAboutAnalytics();
         });
 
         /* yargs.command('search <query>', 'Search for available extension.', () => {}, (argv) => {
@@ -71,8 +75,13 @@ module.exports = (yargs) => {
                 describe: 'Do not enable installed extension.',
                 default: false
             });
-        }, ({ name, noEnable }) => {
-            createExtension(name, !noEnable, process.cwd(), logger);
+        }, async ({ name, noEnable }) => {
+            const isCreatedSuccessfully = await createExtension(name, !noEnable, process.cwd(), logger);
+
+            if (isCreatedSuccessfully) {
+                googleAnalytics.trackEvent('cli-extension-creation', name, 0, 'extension');
+                googleAnalytics.printAboutAnalytics();
+            }
         });
 
         yargs.demandCommand();

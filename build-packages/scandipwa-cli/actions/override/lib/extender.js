@@ -1,5 +1,6 @@
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 const { extend } = require('@scandipwa/scandipwa-development-toolkit-core');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const userInteraction = require('./util/user-interaction');
 const invokeGenerator = require('../../../common/invoke-generator');
@@ -9,7 +10,7 @@ const extender = (resourceType) => async ({
     targetModule = process.cwd(),
     sourceModule
 }) => {
-    await invokeGenerator(
+    const isExtendedSuccessfully = await invokeGenerator(
         targetModule,
         (resolvedTargetModule) => extend(
             resourceType,
@@ -20,6 +21,11 @@ const extender = (resourceType) => async ({
             sourceModule
         )
     );
+
+    if (isExtendedSuccessfully) {
+        googleAnalytics.trackEvent('cli-override', name, 0, resourceType);
+        googleAnalytics.printAboutAnalytics();
+    }
 };
 
 module.exports = extender;

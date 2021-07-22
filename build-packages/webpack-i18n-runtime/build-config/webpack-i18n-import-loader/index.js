@@ -2,8 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const loaderUtils = require('loader-utils');
 
-const parentThemeHelper = require('@scandipwa/scandipwa-dev-utils/parent-theme');
-const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
+const parentThemeHelper = require('@tilework/mosaic-dev-utils/parent-theme');
+const extensions = require('@tilework/mosaic-dev-utils/extensions');
 const getEnabledLocales = require('../../shared/getEnabledLocales');
 
 const childRoot = process.cwd();

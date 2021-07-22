@@ -1,5 +1,1 @@
-const escapeRegex = (string) => string
-    .replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-    .replace(/-/g, '\\x2d');
-
-module.exports = escapeRegex;
+module.exports = require('@tilework/mosaic-dev-utils/escape-regex');

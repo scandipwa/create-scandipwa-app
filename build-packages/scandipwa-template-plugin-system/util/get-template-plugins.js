@@ -1,5 +1,5 @@
 const path = require('path');
-const extensions = require('@scandipwa/scandipwa-dev-utils/extensions');
+const extensions = require('@tilework/mosaic-dev-utils/extensions');
 
 /**
  * Collect all the default exports from the templatePlugins files

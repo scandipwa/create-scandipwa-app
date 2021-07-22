@@ -9,7 +9,9 @@
     "dependencies": {
         "react": "^<%= reactVersion %>",
         "react-dom": "^<%= reactDomVersion %>",
-        "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>"
+        "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>",
+        "@scandipwa/eslint-config": "<%= eslintConfigVersion %>",
+        "@tilework/mosaic": "<%= mosaicVersion %>"
     },
     "scandipwa": {
         "themeAlias": "Blank",

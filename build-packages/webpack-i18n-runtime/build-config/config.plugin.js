@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-const webpack = require('webpack');
 const path = require('path');
 const WebpackI18nTracker = require('./webpack-i18n-tracker');
 
@@ -21,14 +20,14 @@ const addResolveLoader = (config) => {
 const addImportInjector = (config) => {
     config.module.rules.push({
         test: require.resolve(path.join(__dirname, '../src/util/localeMap.js')),
-        loader: 'webpack-i18n-import-loader'
+        loader: require.resolve('./webpack-i18n-import-loader')
     });
 };
 
 // Provide the __ function with the ProvidePlugin
 const provideTranslationFunction = (config) => {
     config.plugins.forEach(((plugin) => {
-        if (plugin instanceof webpack.ProvidePlugin) {
+        if (plugin.constructor.name === 'ProvidePlugin') {
             plugin.definitions.__ = [require.resolve(path.join(__dirname, '../src/util/__.js')), 'default'];
         }
     }));

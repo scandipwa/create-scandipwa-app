@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 const cloneDeep = require('lodash.clonedeep');
-const { getLoaders, loaderByName } = require('@scandipwa/craco');
+const { getLoaders, loaderByName } = require('@tilework/mosaic-craco');
 
 const getWorkboxBabelPlugin = (cracoConfig) => ({
     apply: (childCompiler) => {
@@ -18,6 +18,11 @@ const getWorkboxBabelPlugin = (cracoConfig) => ({
         } = getLoaders(childCompiler.options, loaderByName('babel-loader'));
 
         if (!hasAnyChildBabelLoaders) {
+            return;
+        }
+
+        const { babel: { plugins: babelPlugins } } = cracoConfig;
+        if (!babelPlugins) {
             return;
         }
 
