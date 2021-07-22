@@ -6,6 +6,7 @@ const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-pack
 const semver = require('semver');
 const getLatestVersion = require('@scandipwa/scandipwa-dev-utils/latest-version');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const templateMap = {
     theme: require('@scandipwa/csa-generator-theme'),
@@ -18,6 +19,7 @@ const createApp = async (options) => {
 
     try {
         const generator = templateMap[template];
+        const timeStamp = Date.now() / 1000;
 
         if (generator) {
             // Run generator if it is available
@@ -34,9 +36,15 @@ const createApp = async (options) => {
             `The required template ${ logger.style.misc(template) } does not exist.`,
             `The available templates are: ${ templatesAvailable.join(', ') }.`
         );
+
+        googleAnalytics.trackTiming('CSA installation time', Date.now() / 1000 - timeStamp);
+        googleAnalytics.printAboutAnalytics();
     } catch (e) {
         logger.logN(e);
         logger.error('Something went wrong during setup. Error log above.');
+        logger.logN();
+        googleAnalytics.printAboutAnalytics();
+        googleAnalytics.trackError((e.message || e));
     }
 };
 

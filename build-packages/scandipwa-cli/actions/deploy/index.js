@@ -7,6 +7,7 @@ const execCommandAsync = require('@scandipwa/scandipwa-dev-utils/exec-command');
 const { getPackageJson } = require('@scandipwa/scandipwa-dev-utils/package-json');
 const { walkDirectoryUp, contextTypes: { THEME_TYPE } } = require('@tilework/mosaic-dev-utils/get-context');
 const writeJson = require('@scandipwa/scandipwa-dev-utils/write-json');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const compressDirectory = require('./lib/compress-directory');
 const triggerPortal = require('./lib/trigger-portal');
@@ -52,6 +53,9 @@ const deploy = async (argv) => {
             'See the error log above.'
         );
 
+        googleAnalytics.trackError(e);
+        googleAnalytics.printAboutAnalytics();
+
         process.exit(1);
     }
 
@@ -73,6 +77,8 @@ const deploy = async (argv) => {
         fs.unlink(archivePath, (err) => {
             if (err) {
                 logger.error(err);
+                googleAnalytics.trackError(err);
+                googleAnalytics.printAboutAnalytics();
                 process.exit(1);
             }
 
@@ -107,6 +113,8 @@ const deploy = async (argv) => {
             'See the error log above.'
         );
 
+        googleAnalytics.trackError(e);
+        googleAnalytics.printAboutAnalytics();
         process.exit(1);
     }
 };

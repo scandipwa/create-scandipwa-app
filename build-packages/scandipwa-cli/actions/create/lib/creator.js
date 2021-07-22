@@ -1,6 +1,7 @@
 const { create } = require('@scandipwa/scandipwa-development-toolkit-core');
 const { DispatcherType } = require('@scandipwa/scandipwa-development-toolkit-core');
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const invokeGenerator = require('../../../common/invoke-generator');
 
@@ -10,14 +11,14 @@ const dispatcherTypeMap = {
     regular: DispatcherType.RegularDispatcher
 };
 
-const creator = (resourceType) => ({
+const creator = (resourceType) => async ({
     name,
     container = false,
     redux = false,
     dispatcherType,
     targetModule
 }) => {
-    invokeGenerator(
+    const isCreatedSuccessfully = await invokeGenerator(
         targetModule,
         (resolvedTargetModule) => create(
             resourceType,
@@ -33,6 +34,11 @@ const creator = (resourceType) => ({
             logger
         )
     );
+
+    if (isCreatedSuccessfully) {
+        googleAnalytics.trackEvent('cli-creation', name, 0, resourceType);
+        googleAnalytics.printAboutAnalytics();
+    }
 };
 
 module.exports = creator;

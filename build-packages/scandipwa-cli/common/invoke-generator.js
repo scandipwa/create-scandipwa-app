@@ -1,6 +1,7 @@
 const path = require('path');
 
-const { walkDirectoryUp } = require('@tilework/mosaic-dev-utils/get-context');
+const { walkDirectoryUp } = require('@scandipwa/scandipwa-dev-utils/get-context');
+const googleAnalytics = require('@scandipwa/scandipwa-dev-utils/analytics');
 
 const logger = require('@scandipwa/scandipwa-dev-utils/logger');
 
@@ -22,6 +23,9 @@ const invokeGenerator = async (
                 'Please make sure the command is ran in a ScandiPWA module',
                 `Or supply a path to a ScandiPWA module by using ${logger.style.command('--target-module [-t]')} flag`
             );
+
+            googleAnalytics.trackError(err);
+            googleAnalytics.printAboutAnalytics();
 
             return;
         }
