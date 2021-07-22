@@ -27,6 +27,7 @@
             "build-packages/craco/**",
             "runtime-packages/scandipwa/**",
             "runtime-packages/cma/**",
+            "build-packages/csa-generator-*/template/**",
             "build-packages/eslint-plugin-scandipwa-guidelines/**",
             "build-packages/scandipwa-development-toolkit-vscode/**",
             "build-packages/scandipwa-development-toolkit-core/**",
