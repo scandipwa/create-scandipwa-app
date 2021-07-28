@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/service-worker",
     "description": "Service-worker capabilities for CSA.",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "license": "OSL-3.0",
     "scandipwa": {
         "type": "extension",
