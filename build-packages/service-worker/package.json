@@ -15,11 +15,11 @@
         "extends": "@scandipwa"
     },
     "dependencies": {
-        "@tilework/mosaic-webpack-fallback-plugin": "0.0.5",
+        "@tilework/mosaic-webpack-fallback-plugin": "0.0.10",
         "lodash.clonedeep": "^4.5.0"
     },
     "peerDependencies": {
-        "@tilework/mosaic-craco": "0.0.3"
+        "@tilework/mosaic-craco": "0.0.5"
     },
     "publishConfig": {
         "access": "public"

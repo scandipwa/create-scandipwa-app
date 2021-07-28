@@ -3,9 +3,9 @@
     "description": "Development utilities used by CSA.",
     "version": "0.1.4",
     "dependencies": {
-        "@tilework/mosaic-dev-utils": "0.1.2",
+        "@tilework/mosaic-dev-utils": "0.1.4",
         "cross-spawn": "^7.0.3",
-        "react-dev-utils": "^10.2.1",
+        "react-dev-utils": "^11.0.4",
         "semver": "^7.3.2",
         "validate-npm-package-name": "^3.0.0"
     },
