@@ -1,7 +1,7 @@
 {
     "name": "@scandipwa/scandipwa-dev-utils",
     "description": "Development utilities used by CSA.",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "dependencies": {
         "@tilework/mosaic-dev-utils": "0.1.4",
         "cross-spawn": "^7.0.3",
