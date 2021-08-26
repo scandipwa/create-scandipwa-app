@@ -6,7 +6,8 @@
         "@scandipwa/scandipwa": "<%= scandipwaVersion %>",
         "@scandipwa/scandipwa-scripts": "<%= scandipwaScriptsVersion %>",
         "@scandipwa/eslint-config": "<%= eslintConfigVersion %>",
-        "@tilework/mosaic": "<%= mosaicVersion %>"
+        "@tilework/mosaic": "<%= mosaicVersion %>",
+        "@tilework/mosaic-craco": "<%= mosaicCracoVersion %>"
     },
     "scandipwa": {
         "type": "theme",
