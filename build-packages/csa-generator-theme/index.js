@@ -123,6 +123,7 @@ const run = async (options) => {
     let scandipwaScriptsVersion = '0.0.0';
     let mosaicVersion = '0.0.0';
     let eslintConfigVersion = '0.0.0';
+    let mosaicCracoVersion = '0.0.0';
 
     try {
         scandipwaVersion = await getLatestVersion('@scandipwa/scandipwa');
@@ -156,11 +157,20 @@ const run = async (options) => {
         );
     }
 
+    try {
+        mosaicCracoVersion = await getLatestVersion('@tilework/mosaic-craco');
+    } catch (e) {
+        logger.warn(
+            `Unable to determine the latest version of package ${logger.style.misc('@tilework/mosaic-craco')}`
+        );
+    }
+
     const templateOptions = {
         scandipwaVersion,
         scandipwaScriptsVersion,
         name,
         mosaicVersion,
+        mosaicCracoVersion,
         proxy: DEFAULT_PROXY,
         eslintConfigVersion
     };
