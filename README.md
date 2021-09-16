@@ -1,3 +1,5 @@
+### NOTE! The development has moved to the https://github.com/scandipwa/scandipwa repository.
+
 ![Create ScandiPWA App](https://user-images.githubusercontent.com/29531824/104035489-ddbfff80-51da-11eb-8efc-88adb4283cf5.png)
 
 A zero-configuration tool-chain which allows for front-end application theming, extension and translation.
