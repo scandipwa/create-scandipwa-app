@@ -3,7 +3,7 @@ import { ResourceType, SourceType } from "../types";
 import { capitalize } from './misc';
 
 export const getImportPath = (
-    resourceName: string, 
+    resourceName: string,
     resourceType: ResourceType,
     relativeResourceDirectory: string,
     sourceAlias: string,

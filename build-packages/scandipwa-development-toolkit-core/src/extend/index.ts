@@ -22,11 +22,11 @@ import validateResourceExistance from './validate-resource-existance';
  * @param resourceType Type of resource to extend
  * @param resourceName Name of resource to extend
  * @param targetModulePath Module to create new resource in
- * @param logger 
- * @param userInteraction 
+ * @param logger
+ * @param userInteraction
  */
 const extend = async (
-    resourceType: ResourceType, 
+    resourceType: ResourceType,
     resourceName: string,
     targetModulePath: string,
     logger: ILogger,
@@ -36,9 +36,9 @@ const extend = async (
     const relativeResourceDirectory = getRelativeResourceDirectory(resourceName, resourceType);
 
     // Resolve the source resource using the target module as CWD
-    const sourceResourcePath = resolveExtendableResourcePath(    
-        resourceName, 
-        resourceType, 
+    const sourceResourcePath = resolveExtendableResourcePath(
+        resourceName,
+        resourceType,
         optionalSourceModulePath,
         targetModulePath
     );
@@ -56,7 +56,7 @@ const extend = async (
         return [];
     }
 
-    const { 
+    const {
         name: sourceModuleName,
         type: sourceModuleType,
         alias: sourceModuleAlias
@@ -121,7 +121,7 @@ const extend = async (
                 // If selected option is "keep styles" => skip style creation
                 if (stylesOption && stylesOption !== StylesOption.keep) {
                     const styleFilePath = createStyleFile(
-                        resourceName, 
+                        resourceName,
                         targetResourceDirectory,
                         stylesOption,
                         logger
@@ -132,8 +132,8 @@ const extend = async (
             }
 
             // Handle not extending anything in the file
-            if (!chosenExports || !chosenExports.length) { 
-                return createdFiles; 
+            if (!chosenExports || !chosenExports.length) {
+                return createdFiles;
             }
 
             // Generate contents for the new file
@@ -151,7 +151,7 @@ const extend = async (
                 sourceModuleType,
                 sourceModuleAlias
             });
-            
+
             // Attempt actual file creation
             const fileIsCreated = createNewFileWithContents(newFilePath, newFileContents, logger);
 

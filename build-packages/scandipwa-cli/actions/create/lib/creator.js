@@ -15,6 +15,7 @@ const creator = (resourceType) => async ({
     name,
     container = false,
     redux = false,
+    typescript = false,
     dispatcherType,
     targetModule
 }) => {
@@ -28,7 +29,8 @@ const creator = (resourceType) => async ({
                     logic: container,
                     state: redux
                 },
-                dispatcherType: dispatcherTypeMap[dispatcherType]
+                dispatcherType: dispatcherTypeMap[dispatcherType],
+                isTypescript: typescript,
             },
             resolvedTargetModule,
             logger

@@ -8,7 +8,7 @@ import installExtension from './extension/install';
 
 import { getRelativeResourceDirectory } from './extend/fs-interactions';
 
-export { 
+export {
     create,
     extend,
     createExtension,

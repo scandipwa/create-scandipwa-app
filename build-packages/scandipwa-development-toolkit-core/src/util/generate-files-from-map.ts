@@ -3,22 +3,21 @@ import * as fs from 'fs-extra';
 import { FileMap, ILogger, ResourceType } from '../types';
 import { createNewFileFromTemplate } from './file';
 
-const templateDirectory = path.resolve(__dirname, '..', 'templates');
-
 const getIsNested = (resourceType: ResourceType) => resourceType !== ResourceType.Query;
 
 /**
  * Generate files from the filemap
  * Returns relative paths to the created files
- * 
- * @param fileMap 
- * @param options 
+ *
+ * @param fileMap
+ * @param options
  * @returns {string[]}
  */
 const generateFilesFromMap = (
-    fileMap: FileMap, 
-    resourceName: string, 
-    resourceType: ResourceType, 
+    fileMap: FileMap,
+    resourceName: string,
+    resourceType: ResourceType,
+    isTypescript: boolean,
     targetModulePath: string,
     logger: ILogger
 ): string[] => {
@@ -27,6 +26,8 @@ const generateFilesFromMap = (
     const resourceDirectory = getIsNested(resourceType)
         ? path.join(resourceTypeDirectory, resourceName)
         : resourceTypeDirectory;
+
+    const templateDirectory = path.resolve(__dirname, '..', `templates/${isTypescript ? 'typescript' : 'javascript'}`);
 
     // Ensure parent direcotory exists for files which'll be generated below
     fs.ensureDirSync(resourceDirectory);
@@ -44,7 +45,7 @@ const generateFilesFromMap = (
 
             // Index.js is not a postfix, it should be handled differently
             const newFileName = postfix === 'index.js'
-                ? 'index.js' 
+                ? 'index.js'
                 : `${resourceName}.${postfix}`;
 
             // Calculate the new file path

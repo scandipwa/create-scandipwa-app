@@ -19,7 +19,7 @@ const validateResourceExistance = (
     if (sourceModule !== targetModule) {
         return true;
     }
-    
+
     // Handle resource falling back to the invoker directory
     const resourceIdentifier = [capitalize(resourceType), resourceName].join('/');
 

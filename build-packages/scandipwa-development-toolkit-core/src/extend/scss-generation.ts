@@ -5,11 +5,11 @@ import { ILogger, IUserInteraction, StylesOption } from "../types";
 import { createNewFileFromTemplate } from '../util/file';
 
 // Initial paths' calculation
-const templateDirectory = path.join(__dirname, '..', 'templates');
+const templateDirectory = path.join(__dirname, '..', 'templates/javascript');
 const templatePath = path.join(templateDirectory, 'stylesheet.scss');
 
 export const getStyleFileName = (
-    resourceName: string, 
+    resourceName: string,
     stylesOption: StylesOption
 ) => {
     if (stylesOption === StylesOption.extend) {
@@ -37,12 +37,12 @@ export const createStyleFile = (
 
     // Create the file
     createNewFileFromTemplate(
-        templatePath, 
-        targetPath, 
+        templatePath,
+        targetPath,
         [{
             pattern: /Placeholder/g,
             replacement: resourceName
-        }], 
+        }],
         logger
     );
 

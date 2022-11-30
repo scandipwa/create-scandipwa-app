@@ -31,15 +31,15 @@ export const getModuleInformation = (sourceModule: string): ModuleInformation =>
 
     if (type === SourceType.Extension) {
         return buildModuleInformationObject(
-            name, 
-            type as SourceType, 
+            name,
+            type as SourceType,
             'Base'
         );
     }
 
     return buildModuleInformationObject(
-        name, 
-        type as SourceType, 
+        name,
+        type as SourceType,
         themeAlias!
     );
 }

@@ -14,12 +14,13 @@ export const extensionRoot = path.resolve(__dirname, '..', '..', 'src');
  * Entry: validate input and create files
  */
 const create = (
-    resourceType: ResourceType, 
-    resourceName: string, 
+    resourceType: ResourceType,
+    resourceName: string,
     resourceParams: ResourceParams,
     targetModulePath: string,
     logger: ILogger
 ) => {
+    const { isTypescript } = resourceParams
     // Validate input data
     const validationErrors = validateResourceParams(resourceName, resourceType, resourceParams);
     if (validationErrors.length) {
@@ -31,9 +32,10 @@ const create = (
 
     // Create the files
     const generatedFiles = generateFilesFromMap(
-        fileMap, 
-        resourceName, 
-        resourceType, 
+        fileMap,
+        resourceName,
+        resourceType,
+        isTypescript,
         targetModulePath,
         logger
     );

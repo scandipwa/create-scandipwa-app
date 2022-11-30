@@ -29,8 +29,8 @@ const getPrefixedName = (name: string, moduleAlias: string) => {
 }
 
 const generateAdditionalImportString = (originalCode: string, defaultExportCode?: string): string => {
-    if (!defaultExportCode) { 
-        return ''; 
+    if (!defaultExportCode) {
+        return '';
     }
 
     const exdfWords = [
@@ -74,9 +74,9 @@ const generateAdditionalImportString = (originalCode: string, defaultExportCode?
 };
 
 const generateStyleImport = (
-    fileName: string, 
+    fileName: string,
     resourceName: string,
-    extendableType: ResourceType, 
+    extendableType: ResourceType,
     chosenStylesOption: StylesOption
 ): string => {
     if (
@@ -95,16 +95,18 @@ const generateStyleImport = (
 const generateImportString = (
     sourceFilePath: string,
     sourceModuleAlias: string,
-    chosenExports: ExportData[], 
+    chosenExports: ExportData[],
     notChosenExports: ExportData[]
 ): string => {
     if (!chosenExports.length) {
         return '';
     }
 
+    const exportsWithoutInterface = chosenExports.filter((exportItem)  => exportItem.type !== ExportType.ts_interface);
+
     return [
         'import {',
-        ...chosenExports.map(({ name }) => `    ${name} as ${getPrefixedName(name, sourceModuleAlias)},`),
+        ...exportsWithoutInterface.map(({ name  }) => `    ${name} as ${getPrefixedName(name, sourceModuleAlias)},`),
         ...notChosenExports.map(({ name }) => `    ${name},`),
         `} from '${sourceFilePath}';`
     ].join('\n');
@@ -152,7 +154,7 @@ const generateMappingsExtends = (chosenExports: ExportData[], sourceModuleAlias:
                     `    // TODO extend ${name}`,
                     `});`
                 ].join('\n')
-                
+
                 return newExport;
             }
         );
@@ -164,21 +166,65 @@ const generateExtendStrings = (chosenExports: ExportData[], sourceModuleAlias: s
     }
 
     return chosenExports
-        .filter(one => one.type !== ExportType.class && !isMapping(one.name))
+        .filter(one => one.type === ExportType.variable && !isMapping(one.name))
         .map(({ name }) => [
             `//TODO: implement ${name}`,
             `export const ${name} = ${getPrefixedName(name, sourceModuleAlias)};`
         ].join('\n'));
 };
 
+const generateTSInterfaceExtend = (sourceFilePath: string, chosenExports: ExportData[], sourceModuleAlias: string): string => {
+    if (!chosenExports.length) {
+        return '';
+    }
+
+    const mappedInterfaces = [
+        `declare module '${sourceFilePath}' {`,
+        chosenExports
+        .filter(one => [one.type === ExportType.ts_interface && !isMapping(one.name)])
+        .map(({ name }) => [
+            `export interface ${name} {}`,
+        ]).join('\n\n'),
+        `}`
+    ].join('\n');
+
+    return mappedInterfaces;
+}
+
+const generateTSTypes = (chosenExports: ExportData[], sourceModuleAlias: string): Array<string> => {
+    if (!chosenExports.length) {
+        return [];
+    }
+
+    return chosenExports
+        .filter(one => one.type === ExportType.ts_type)
+        .map(({ name }) => [
+            `//TODO: extend type ${name}`,
+            `export type ${name} = ${getPrefixedName(name, sourceModuleAlias)} | {};`
+        ].join('\n'));
+}
+
+const generateTSEnums = (chosenExports: ExportData[], sourceModuleAlias: string): Array<string> => {
+    if (!chosenExports.length) {
+        return [];
+    }
+
+    return chosenExports
+        .filter(one => one.type === ExportType.ts_enum)
+        .map(({ name }) => [
+            `enum ${name} {}`,
+            `export type ${name}Type = ${getPrefixedName(name, sourceModuleAlias)} & ${name};`
+        ].join('\n\n'));
+}
+
 /**
  * Generate all necessary contents for the created file
  */
-const generateNewFileContents = ({ 
-    fileName, 
-    allExports, 
-    chosenExports, 
-    defaultExportCode, 
+const generateNewFileContents = ({
+    fileName,
+    allExports,
+    chosenExports,
+    defaultExportCode,
     originalCode,
     resourceType,
     resourceName,
@@ -199,8 +245,9 @@ const generateNewFileContents = ({
     );
 
     const notChosenExports = allExports.filter(one => !chosenExports.includes(one));
+    const interfacesExports = chosenExports.filter((exportItem) => exportItem.type === ExportType.ts_interface);
 
-    // Generate new file: imports + exports from source + all extendables + class template + exdf
+    // Generate new file: imports + exports from source + all extendables + class template + exdf + interface + types + enums
     const result = [
         generateAdditionalImportString(originalCode, defaultExportCode),
         generateImportString(importPath, sourceModuleAlias, chosenExports, notChosenExports),
@@ -209,6 +256,9 @@ const generateNewFileContents = ({
         ...generateExtendStrings(chosenExports, sourceModuleAlias),
         ...generateMappingsExtends(chosenExports, sourceModuleAlias),
         generateClassExtend(chosenExports, sourceModuleAlias),
+        generateTSInterfaceExtend(importPath, interfacesExports, sourceModuleAlias),
+        ...generateTSTypes(chosenExports, sourceModuleAlias),
+        ...generateTSEnums(chosenExports, sourceModuleAlias),
         defaultExportCode
     ].filter(Boolean).join('\n\n').concat('\n');
 
