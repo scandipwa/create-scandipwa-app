@@ -4,7 +4,9 @@ import {
     Identifier,
     ExportNamedDeclaration,
     ExportDefaultDeclaration,
-    SourceLocation
+    SourceLocation,
+    VariableDeclaration,
+    VariableDeclarator
 } from '@babel/types';
 
 import {
@@ -44,7 +46,8 @@ export const getExportPathsFromCode = (originalCode: string) : ExportsPaths => {
             'dynamicImport',
             'optionalCatchBinding',
             'optionalChaining',
-            'objectRestSpread'
+            'objectRestSpread',
+            'typescript'
         ]
     });
 
@@ -76,16 +79,21 @@ export const getExportPathsFromCode = (originalCode: string) : ExportsPaths => {
 export const getNamedExportsNames = (exports: ExportsPaths) : ExportData[] => {
     const processNamedExport = (path: NodePath<ExportNamedDeclaration>) : ExportData => {
         const getNameFromDeclaration = (declaration: any) : ExportData => {
-            const id = <Identifier>declaration.declarations[0].id;
-            const { name } = id;
+            const { declarations, id: { name = '' } = {}, type } = declaration;
 
-            return { name, type: ExportType.variable };
+            if (Array.isArray(declarations)) {
+                const [{ id: { name: declarationName }, type: declarationType }] = declarations;
+
+                return { name: declarationName, type: declarationType };
+            }
+
+            return { name, type };
         };
 
         const getDataByTraverse = () : ExportData => {
-            let searchResult: ExportData = { 
-                name: '', 
-                type: ExportType.not_yet_assigned 
+            let searchResult: ExportData = {
+                name: '',
+                type: ExportType.not_yet_assigned
             };
 
             traverse(headNode, {
@@ -157,9 +165,9 @@ export const getDefaultExportCode = (exports: ExportsPaths, code: string) : stri
     };
 
     const exportDefaultPaths = exports.filter(e => e.type === 'ExportDefaultDeclaration');
-    if (!exportDefaultPaths.length) { 
-        return; 
+    if (!exportDefaultPaths.length) {
+        return;
     }
-    
+
     return processDefaultExport(<NodePath<ExportDefaultDeclaration>>exportDefaultPaths[0]);
 }

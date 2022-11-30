@@ -19,7 +19,7 @@ export const preventOverwrite = (dest: string, logger: ILogger): boolean => {
 }
 
 export const createNewFileFromTemplate = (
-    src: string, 
+    src: string,
     dest: string,
     replace: ReplacementInstruction[],
     logger: ILogger
@@ -33,7 +33,7 @@ export const createNewFileFromTemplate = (
 
     // Replace all the necessary patterns
     const content = replace.reduce(
-        (data, { pattern, replacement }) => data.replace(pattern, replacement), 
+        (data, { pattern, replacement }) => data.replace(pattern, replacement),
         template
     );
 
@@ -53,7 +53,7 @@ export const createNewFileFromTemplate = (
  * @param contents
  */
 export const createNewFileWithContents = (
-    newFilePath: string, 
+    newFilePath: string,
     contents: string,
     logger: ILogger
 ): boolean => {

@@ -1,11 +1,11 @@
 const isValidPackageName = require('@scandipwa/scandipwa-dev-utils/validate-package-name');
 const generateExtension = require('@scandipwa/csa-generator-extension');
 const installDeps = require('@scandipwa/scandipwa-dev-utils/install-deps');
-const { 
-    walkDirectoryUp, 
-    contextTypes: { 
+const {
+    walkDirectoryUp,
+    contextTypes: {
         THEME_TYPE
-    } 
+    }
 } = require('@tilework/mosaic-dev-utils/get-context');
 
 import injectScripts from './lib/inject-scripts';
@@ -21,9 +21,9 @@ const createExtension = async (
     targetModule = process.cwd(),
     logger: ILogger
 ): Promise<string | null> => {
-    const { 
-        type: context, 
-        pathname: contextPathname 
+    const {
+        type: context,
+        pathname: contextPathname
     } = walkDirectoryUp(targetModule, THEME_TYPE);
 
     if (!context) {
@@ -85,7 +85,7 @@ const createExtension = async (
         `Package ${logger.style.misc(packageName)} has been created successfully!`,
         `See it at ${logger.style.file(relativePackagePath)}`
     );
-    
+
     return relativePackagePath;
 };
 

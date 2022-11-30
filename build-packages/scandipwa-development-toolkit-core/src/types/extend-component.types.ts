@@ -12,10 +12,13 @@ export type ExportsPaths = Array<
 >;
 
 export enum ExportType {
-    class,
-    specifier,
-    variable,
-    not_yet_assigned
+    class = 'Class',
+    specifier = 'Specifier',
+    variable = 'VariableDeclarator',
+    not_yet_assigned = 'NotYeatAssigned',
+    ts_interface = 'TSInterfaceDeclaration',
+    ts_enum = 'TSEnumDeclaration',
+    ts_type = 'TSTypeAliasDeclaration'
 }
 
 export interface ExportData {

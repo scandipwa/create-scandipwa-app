@@ -14,7 +14,7 @@ import { getRelativeResourceDirectory } from "./fs-interactions";
  * @param {*} resourceType string
  */
 export const resolveExtendableResourcePath = (
-    resourceName: string, 
+    resourceName: string,
     resourceType: ResourceType,
     strictSourceModule?: string,
     cwd?: string

@@ -23,7 +23,7 @@ const ensureProperIndex = (generatedFiles: string[], resourceName: string): void
 }
 
 const postProcess = (
-    generatedFiles: string[], 
+    generatedFiles: string[],
     resourceName: string
 ) => {
     // Ensure proper export from index file
